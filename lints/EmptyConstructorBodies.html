@@ -4,18 +4,16 @@
 
 <p>In Dart, a constructor with an empty body can be terminated with just a semicolon. This is required for const constructors. For consistency and brevity, other constructors should also do this.</p>
 
-<p><strong>GOOD:</strong>
-<code>
-class Point { 
+<p><strong>GOOD:</strong></p>
+
+<pre><code>class Point { 
   int x, y; 
   Point(this.x, this.y);
-}
-</code></p>
+}</code></pre>
 
-<p><strong>BAD:</strong>
-<code>
-class Point { 
+<p><strong>BAD:</strong></p>
+
+<pre><code>class Point { 
   int x, y;
   Point(this.x, this.y) {}
-}
-</code></p>
+}</code></pre>
