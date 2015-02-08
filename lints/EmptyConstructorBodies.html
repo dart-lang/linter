@@ -1,0 +1,21 @@
+<p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
+
+<p><strong>DO</strong> use <code>;</code> instead of <code>{}</code> for empty constructor bodies.</p>
+
+<p>In Dart, a constructor with an empty body can be terminated with just a semicolon. This is required for const constructors. For consistency and brevity, other constructors should also do this.</p>
+
+<p><strong>GOOD:</strong>
+<code>
+class Point { 
+  int x, y; 
+  Point(this.x, this.y);
+}
+</code></p>
+
+<p><strong>BAD:</strong>
+<code>
+class Point { 
+  int x, y;
+  Point(this.x, this.y) {}
+}
+</code></p>
