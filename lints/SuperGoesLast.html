@@ -30,15 +30,15 @@
 <p><strong>DO</strong> place the <code>super()</code> call last in a constructor initialization list.</p>
 <p>Field initializers are evaluated in the order that they appear in the 
 constructor initialization list. If you place a <code>super()</code> call in the 
-middle of an initializer list, the superclass‚Äôs initializers will be evaluated 
-right then before evaluating the rest of the subclass‚Äôs initializers.</p>
-<p>What it doesn‚Äôt mean is that the superclass‚Äôs constructor body will be executed 
+middle of an initializer list, the superclass's initializers will be evaluated 
+right then before evaluating the rest of the subclass's initializers.</p>
+<p>What it doesn't mean is that the superclass's constructor body will be executed 
 then. That always happens after all initializers are run regardless of where 
-<code>super()</code> appears. It‚Äôs vanishingly rare that the order of initializers 
+<code>super()</code> appears. It's vanishingly rare that the order of initializers 
 matters, so the placement of <code>super()</code> in the list almost never matters 
 either.</p>
 <p>Getting in the habit of placing it last improves consistency, visually 
-reinforces when the superclass‚Äôs constructor body is run, and may help 
+reinforces when the superclass's constructor body is run, and may help 
 performance.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>View(Style style, List children)
