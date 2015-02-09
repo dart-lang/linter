@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>SuperGoesLast</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>Super Goes Last</h1>
+            <p>Group: Style Guide</p>
+            <p>Kind: Do</p>
+            <p class="view"><a href="https://github.com/dart-lang/dart_lint">View the Project on GitHub <small>dart-lang/dart_lint</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="https://github.com/dart-lang/dart_lint">View On <strong>GitHub</strong></a></li>
+            </ul>
+         </header>
+         <section>
+  
+            <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
+<p><strong>DO</strong> place the <code>`super()</code>` call last in a constructor initialization list.</p>
+<p>Field initializers are evaluated in the order that they appear in the 
+constructor initialization list. If you place a <code>`super()</code>` call in the 
+middle of an initializer list, the superclass’s initializers will be evaluated 
+right then before evaluating the rest of the subclass’s initializers.</p>
+<p>What it doesn’t mean is that the superclass’s constructor body will be executed 
+then. That always happens after all initializers are run regardless of where </p>
+<pre class="super()``` appears. It’s vanishingly rare that the order of initializers "><code>matters, so the placement of ```super()``` in the list almost never matters 
+either.
+
+Getting in the habit of placing it last improves consistency, visually 
+reinforces when the superclass’s constructor body is run, and may help 
+performance.
+
+**GOOD:**
+</code></pre>
+<p>View(Style style, List children)</p>
+<pre><code>: _children = children,
+  super(style) {
+</code></pre>
+<pre><code>
+**BAD:**
+</code></pre>
+<p>View(Style style, List children)</p>
+<pre><code>: super(style),
+  _children = children {
+</code></pre>
+<pre><code>
+</code></pre>
+          
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
