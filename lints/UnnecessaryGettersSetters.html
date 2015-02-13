@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>UnnecessaryGettersSetters</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>Unnecessary Getters Setters</h1>
+            <p>Group: Style Guide</p>
+            <p>Kind: Avoid</p>
+            <p>Maturity: STABLE</p>
+            <p class="view"><a href="https://github.com/dart-lang/dart_lint">View the Project on GitHub <small>dart-lang/dart_lint</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="https://github.com/dart-lang/dart_lint">View On <strong>GitHub</strong></a></li>
+            </ul>
+         </header>
+         <section>
+  
+            <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
+<p><em>AVOID</em>* wrapping fields in getters and setters just to be "safe".</p>
+<p>In Java and C#, it's common to hide all fields behind getters and setters 
+(or properties in C#), even if the implementation just forwards to the field. 
+That way, if you ever need to do more work in those members, you can without 
+needing to touch the callsites. This is because calling a getter method is 
+different than accessing a field in Java, and accessing a property isn't 
+binary-compatible with accessing a raw field in C#.</p>
+<p>Dart doesn't have this limitation. Fields and getters/setters are completely 
+indistinguishable. You can expose a field in a class and later wrap it in a 
+getter and setter without having to touch any code that uses that field.</p>
+<p><strong>GOOD:</strong></p>
+<pre><code>class Box {
+  var contents;
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>class Box {
+  var _contents;
+  get contents =&gt; _contents;
+  set contents(value) {
+    _contents = value;
+  }
+}
+</code></pre>
+          
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
