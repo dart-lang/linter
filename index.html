@@ -1,103 +1,53 @@
 <!doctype html>
 <html>
-   <head>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>Dart Lint</title>
-      <link rel="stylesheet" href="../stylesheets/styles.css">
-      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
-      <script src="javascripts/scale.fix.js"></script>
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-      <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-      <![endif]-->
-   </head>
-   <body>
-      <div class="wrapper">
-         <header>
-            <a href="http://dart-lang.github.io/dart_lint/">
-               <h1>Dart Lint</h1>
-            </a>
-            <p>Lint Rules</p>
-            <p class="view"><a href="https://github.com/dart-lang/dart_lint">View the Project on GitHub <small>dartlang/dart_lint</small></a></p>
-            <ul>
-               <li><a href="https://github.com/dart-lang/dart_lint">View On <strong>GitHub</strong></a></li>
-            </ul>
-         </header>
-         <section>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Linter for Dart by dart-lang</title>
 
-            <h1 id="supported-lints">Supported Lint Rules</h1>
-            <p>
-               This list is auto-generated from our sources.
-            </p>
-            <p>
-               <p>Lint rules are grouped by imperatives inline with the Dart 
-<a href="https://www.dartlang.org/articles/style-guide/">style guide</a>.</p>
-<p>In summary:</p>
-            </p>
-            <ul>
-               <p>
-                  <li><p><strong>DO</strong> guidelines describe practices that should always be followed. 
-There will almost never be a valid reason to stray from them.</p></li>
-<li><p><strong>DON'T</strong> guidelines are the converse: things that are almost never a good idea. 
-You'll note there are few of these here. Guidelines like these in other 
-languages help to avoid the pitfalls that appear over time. Dart is new enough 
-that we can just fix those pitfalls directly instead of putting up ropes around 
-them.</p></li>
-<li><p><strong>PREFER</strong> guidelines are practices that you should follow. However, there 
-may be circumstances where it makes sense to do otherwise. Just make sure you 
-understand the full implications of ignoring the guideline when you do.</p></li>
-<li><p><strong>AVOID</strong> guidelines are the dual to "prefer": stuff you shouldn't do but where 
-there may be good reasons to on rare occasions.</p></li>
-<li><p><strong>CONSIDER</strong> guidelines are practices that you might or might not want to 
-follow, depending on circumstances, precedents, and your own preference.</p></li>
-               </p>
-            </ul>
-            <p>
-               <p>In addition, rules can be further distinguished by <em>maturity</em>.  Unqualified
-rules are considered stable, while others may be marked <strong>EXPERIMENTAL</strong> 
-to indicate that they are under review.</p>
-<p>These rules are under active development.  Feedback is 
-<a href="https://github.com/dart-lang/dart_lint/issues">welcome</a>!</p>
-            </p>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-            <h2 id="styleguide-rules">Style Guide Rules</h2>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Linter for Dart</h1>
+        <p>Style linter for Dart.</p>
+        <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+        <ul>
+          <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+          <li><a href="https://github.com/dart-lang/linter">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="linter-for-dart" class="anchor" href="#linter-for-dart" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linter for Dart</h1>
 
-               <strong><a href = "CamelCaseTypes.html">CamelCaseTypes</a></strong><br/><p>DO name types using UpperCamelCase.</p>
+<p>A Dart style linter.</p>
 
-<strong><a href = "EmptyConstructorBodies.html">EmptyConstructorBodies</a></strong><br/><p>DO use ; instead of {} for empty constructor bodies.</p>
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
-<strong><a href = "LibraryNames.html">LibraryNames</a></strong><br/><p>DO name libraries and source files using lowercase<em>with</em>underscores.</p>
+<p>Contributions welcome! Please read the
+<a href="CONTRIBUTING.md">contribution guidelines</a>.</p>
 
-<strong><a href = "SuperGoesLast.html">SuperGoesLast</a></strong><br/><p>DO place the super() call last in a constructor initialization list.</p>
+<h2>
+<a id="features-and-bugs" class="anchor" href="#features-and-bugs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features and bugs</h2>
 
-<strong><a href = "TypeInitFormals.html">TypeInitFormals</a></strong><br/><p>DON'T type annotate initializing formals</p>
-
-<strong><a href = "UnnecessaryGetters.html">UnnecessaryGetters</a></strong><br/><p>PREFER using a public final field instead of a private field with 
-a public getter.</p>
-
-<strong><a href = "OneMemberAbstracts.html">OneMemberAbstracts</a></strong><br/><p>AVOID defining a one-member abstract class when a simple function will do.</p>
-
-<strong><a href = "UnnecessaryBraceInStringInterp.html">UnnecessaryBraceInStringInterp</a></strong><br/><p>AVOID using braces in interpolation when not needed.</p>
-
-<strong><a href = "UnnecessaryGettersSetters.html">UnnecessaryGettersSetters</a></strong><br/><p>AVOID wrapping fields in getters and setters just to be "safe".</p>
-            
-         </section>
-      </div>
-      <footer>
-         <p>Project maintained by <a href="https://github.com/google">google</a></p>
-         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-      </footer>
-      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-      <script type="text/javascript">
-         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-         document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-      </script>
-      <script type="text/javascript">
-         try {
-           var pageTracker = _gat._getTracker("UA-34425814-2");
-         pageTracker._trackPageview();
-         } catch(err) {}
-      </script>
-   </body>
+<p>Please file feature requests and bugs at the <a href="https://github.com/dart-lang/linter/issues">issue tracker</a>.</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
 </html>
