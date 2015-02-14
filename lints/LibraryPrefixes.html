@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>UnnecessaryBraceInStringInterp</title>
+      <title>LibraryPrefixes</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>Unnecessary Brace In String Interp</h1>
+            <h1>Library Prefixes</h1>
             <p>Group: Style Guide</p>
             <p>Kind: Avoid</p>
             <p>Maturity: STABLE</p>
@@ -27,14 +27,18 @@
          </header>
          <section>
   
-            <p><strong>AVOID</strong> using braces in interpolation when not needed. </p>
-<p>If you're just interpolating a simple identifier, and it's not immediately 
-followed by more alphanumeric text, the <code>{}</code> can and should be omitted.</p>
+            <p><strong>DO</strong> use lowercase<em>with</em>underscores when specifying a library prefix.</p>
 <p><strong>GOOD:</strong></p>
-<pre class="dart"><code>print("Hi, $name!");
+<pre><code>import 'dart:math' as math;
+import 'dart:json' as json;
+import 'package:js/js.dart' as js;
+import 'package:javascript_utils/javascript_utils.dart' as js_utils;
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre class="dart"><code>print("Hi, ${name}!");
+<pre><code>import 'dart:math' as Math;
+import 'dart:json' as JSON;
+import 'package:js/js.dart' as JS;
+import 'package:javascript_utils/javascript_utils.dart' as jsUtils;
 </code></pre>
           
          </section>
