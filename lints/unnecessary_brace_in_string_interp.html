@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>PubPackageNames</title>
+      <title>unnecessary_brace_in_string_interp</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,9 +15,9 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>Pub Package Names</h1>
-            <p>Group: Pub</p>
-            <p>Kind: Do</p>
+            <h1>unnecessary_brace_in_string_interp</h1>
+            <p>Group: Style Guide</p>
+            <p>Kind: Avoid</p>
             <p>Maturity: STABLE</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -27,12 +27,15 @@
          </header>
          <section>
   
-            <p><strong>DO</strong> use <code>lowercase_with_underscores</code> for package names.</p>
-<p>From the <a href="https://www.dartlang.org/tools/pub/pubspec.html">Pubspec format description</a>:</p>
-<p>Package names should be all lowercase, with underscores to separate words,
-<code>just_like_this</code>. Use only basic Latin letters and Arabic digits: [a-z0-9_].
-Also, make sure the name is a valid Dart identifier -- that it doesn't start
-with digits and isn't a reserved word.</p>
+            <p><strong>AVOID</strong> using braces in interpolation when not needed. </p>
+<p>If you're just interpolating a simple identifier, and it's not immediately 
+followed by more alphanumeric text, the <code>{}</code> can and should be omitted.</p>
+<p><strong>GOOD:</strong></p>
+<pre class="dart"><code>print("Hi, $name!");
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre class="dart"><code>print("Hi, ${name}!");
+</code></pre>
           
          </section>
       </div>

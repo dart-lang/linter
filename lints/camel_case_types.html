@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>LibraryPrefixes</title>
+      <title>camel_case_types</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,9 +15,9 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>Library Prefixes</h1>
+            <h1>camel_case_types</h1>
             <p>Group: Style Guide</p>
-            <p>Kind: Avoid</p>
+            <p>Kind: Do</p>
             <p>Maturity: STABLE</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -27,18 +27,20 @@
          </header>
          <section>
   
-            <p><strong>DO</strong> use <code>lowercase_with_underscores</code> when specifying a library prefix.</p>
+            <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
+<p><strong>DO</strong> name types using UpperCamelCase.</p>
+<p>Classes and typedefs should capitalize the first letter of each word 
+(including the first word), and use no separators.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>import 'dart:math' as math;
-import 'dart:json' as json;
-import 'package:js/js.dart' as js;
-import 'package:javascript_utils/javascript_utils.dart' as js_utils;
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code>import 'dart:math' as Math;
-import 'dart:json' as JSON;
-import 'package:js/js.dart' as JS;
-import 'package:javascript_utils/javascript_utils.dart' as jsUtils;
+<pre><code>class SliderMenu {
+  // ...
+}
+
+class HttpRequest {
+  // ...
+}
+
+typedef num Adder(num x, num y);
 </code></pre>
           
          </section>

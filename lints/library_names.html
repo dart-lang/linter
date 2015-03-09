@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>OneMemberAbstracts</title>
+      <title>library_names</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,9 +15,9 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>One Member Abstracts</h1>
+            <h1>library_names</h1>
             <p>Group: Style Guide</p>
-            <p>Kind: Avoid</p>
+            <p>Kind: Do</p>
             <p>Maturity: STABLE</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -27,21 +27,14 @@
          </header>
          <section>
   
-            <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
-<p><strong>AVOID</strong> defining a one-member abstract class when a simple function will do.</p>
-<p>Unlike Java, Dart has first-class functions, closures, and a nice light syntax 
-for using them. If all you need is something like a callback, just use a 
-function. If you're defining an class and it only has a single abstract member 
-with a meaningless name like <code>call</code> or <code>invoke</code>, there is a good chance 
-you just want a function.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>typedef bool Predicate(item);
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code>abstract class Predicate {
-  bool test(item);
-}
-</code></pre>
+            <p><strong>DO</strong> name libraries and source files using <code>lowercase_with_underscores</code>.</p>
+<p>Some file systems are not case-sensitive, so many projects require filenames 
+to be all lowercase. Using a separate character allows names to still be 
+readable in that form. Using underscores as the separator ensures that the name 
+is still a valid Dart identifier, which may be helpful if the language later 
+supports symbolic imports.</p>
+<p><strong>GOOD:</strong></p><ul><li><code>slider_menu.dart</code></li><li><code>file_system.dart</code></li><li><code>library peg_parser;</code></li></ul>
+<p><strong>BAD:</strong></p><ul><li><code>SliderMenu.dart</code></li><li><code>filesystem.dart</code></li><li><code>library peg-parser;</code></li></ul>
           
          </section>
       </div>

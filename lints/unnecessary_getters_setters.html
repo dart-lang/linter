@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>TypeInitFormals</title>
+      <title>unnecessary_getters_setters</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,9 +15,9 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>Type Init Formals</h1>
+            <h1>unnecessary_getters_setters</h1>
             <p>Group: Style Guide</p>
-            <p>Kind: Don't</p>
+            <p>Kind: Avoid</p>
             <p>Maturity: STABLE</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,19 +28,28 @@
          <section>
   
             <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
-<p><strong>DON'T</strong> type annotate initializing formals.</p>
-<p>If a constructor parameter is using <code>this</code>. to initialize a field, then the 
-type of the parameter is understood to be the same type as the field.</p>
+<p><em>AVOID</em>* wrapping fields in getters and setters just to be "safe".</p>
+<p>In Java and C#, it's common to hide all fields behind getters and setters 
+(or properties in C#), even if the implementation just forwards to the field. 
+That way, if you ever need to do more work in those members, you can without 
+needing to touch the callsites. This is because calling a getter method is 
+different than accessing a field in Java, and accessing a property isn't 
+binary-compatible with accessing a raw field in C#.</p>
+<p>Dart doesn't have this limitation. Fields and getters/setters are completely 
+indistinguishable. You can expose a field in a class and later wrap it in a 
+getter and setter without having to touch any code that uses that field.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Point {
-  int x, y;
-  Point(this.x, this.y);
+<pre><code>class Box {
+  var contents;
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class Point {
-  int x, y;
-  Point(int this.x, int this.y);
+<pre><code>class Box {
+  var _contents;
+  get contents =&gt; _contents;
+  set contents(value) {
+    _contents = value;
+  }
 }
 </code></pre>
           

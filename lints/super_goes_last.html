@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>EmptyConstructorBodies</title>
+      <title>super_goes_last</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>Empty Constructor Bodies</h1>
+            <h1>super_goes_last</h1>
             <p>Group: Style Guide</p>
             <p>Kind: Do</p>
             <p>Maturity: STABLE</p>
@@ -28,21 +28,28 @@
          <section>
   
             <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
-<p><strong>DO</strong> use ; instead of {} for empty constructor bodies.</p>
-<p>In Dart, a constructor with an empty body can be terminated with just a 
-semicolon. This is required for const constructors. For consistency and 
-brevity, other constructors should also do this.</p>
+<p><strong>DO</strong> place the <code>super()</code> call last in a constructor initialization list.</p>
+<p>Field initializers are evaluated in the order that they appear in the 
+constructor initialization list. If you place a <code>super()</code> call in the 
+middle of an initializer list, the superclass's initializers will be evaluated 
+right then before evaluating the rest of the subclass's initializers.</p>
+<p>What it doesn't mean is that the superclass's constructor body will be executed 
+then. That always happens after all initializers are run regardless of where 
+<code>super()</code> appears. It's vanishingly rare that the order of initializers 
+matters, so the placement of <code>super()</code> in the list almost never matters 
+either.</p>
+<p>Getting in the habit of placing it last improves consistency, visually 
+reinforces when the superclass's constructor body is run, and may help 
+performance.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Point {
-  int x, y;
-  Point(this.x, this.y);
-}
+<pre><code>View(Style style, List children)
+    : _children = children,
+      super(style) {
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class Point {
-  int x, y;
-  Point(this.x, this.y) {}
-}
+<pre><code>View(Style style, List children)
+    : super(style),
+      _children = children {
 </code></pre>
           
          </section>
