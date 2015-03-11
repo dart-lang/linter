@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>slash_for_doc_comments</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>slash_for_doc_comments</h1>
+            <p>Group: Style Guide</p>
+            <p>Kind: Prefer</p>
+            <p>Maturity: STABLE</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+  
+            <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
+<p><strong>PREFER</strong> to use <code>///</code> for doc comments.</p>
+<p>Although Dart supports two syntaxes of doc comments (<code>///</code> and <code>/**</code>), we 
+prefer using <code>///</code> for doc comments.</p>
+<p><strong>GOOD:</strong></p>
+<pre><code>/// Parses a set of option strings. For each option:
+///
+/// * If it is `null`, then it is ignored.
+/// * If it is a string, then [validate] is called on it.
+/// * If it is any other type, it is *not* validated.
+void parse(List options) {
+  // ...
+}
+</code></pre>
+<p>Within a doc comment, you can use markdown for formatting.</p>
+          
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
