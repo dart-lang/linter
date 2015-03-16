@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>constant_identifier_names</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>constant_identifier_names</h1>
+            <p>Group: Style Guide</p>
+            <p>Kind: Prefer</p>
+            <p>Maturity: STABLE</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+  
+            <p><strong>PREFER</strong> using lowerCamelCase for constant names.</p>
+<p>In new code, use <code>lowerCamelCase</code> for constant variables, including enum values.</p>
+<p>In existing code that uses <code>ALL_CAPS_WITH_UNDERSCORES</code> for constants, you may 
+continue to use all caps to stay consistent.</p>
+<p><strong>GOOD:</strong></p>
+<pre><code>const pi = 3.14;
+const defaultTimeout = 1000;
+final urlScheme = new RegExp('^([a-z]+):');
+
+class Dice {
+  static final numberGenerator = new Random();
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>const PI = 3.14;
+const kDefaultTimeout = 1000;
+final URL_SCHEME = new RegExp('^([a-z]+):');
+
+class Dice {
+  static final NUMBER_GENERATOR = new Random();
+}
+</code></pre>
+          
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
