@@ -3,4 +3,3 @@
 // BSD-style license that can be found in the LICENSE file.
 
 library linter.not_where_it_should_be; //LINT
-

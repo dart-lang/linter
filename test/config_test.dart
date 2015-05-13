@@ -5,16 +5,9 @@
 library linter.test.config;
 
 import 'package:linter/src/config.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
-main() {
-  groupSep = ' | ';
-
-  defineTests();
-}
-
-defineTests() {
-  const src = """
+const src = """
 files:
   include: foo # un-quoted
   exclude:
@@ -28,6 +21,10 @@ rules:
     package_names: false
 """;
 
+final _config = new LintConfig.parse(src);
+
+void main() {
+
 // In the future, options might be marshaled in maps and passed to rules.
 //  acme:
 //    some_rule:
@@ -35,35 +32,31 @@ rules:
 //        - param1
 //        - param2
 
-  var config = new LintConfig.parse(src);
-
-  group('lint config', () {
-    group('file', () {
-      test('includes', () {
-        expect(config.fileIncludes, unorderedEquals(['foo']));
-      });
-      test('excludes', () {
-        expect(
-            config.fileExcludes, unorderedEquals(['test/**', '**/_data.dart']));
-      });
+  group('file', () {
+    test('includes', () {
+      expect(_config.fileIncludes, unorderedEquals(['foo']));
     });
-    group('rule', () {
-      test('configs', () {
-        expect(config.ruleConfigs, hasLength(3));
-      });
+    test('excludes', () {
+      expect(
+          _config.fileExcludes, unorderedEquals(['test/**', '**/_data.dart']));
+    });
+  });
+  group('rule', () {
+    test('configs', () {
+      expect(_config.ruleConfigs, hasLength(3));
+    });
 
-      test('config', () {
-        config = new LintConfig.parse('''
+    test('config', () {
+      var config = new LintConfig.parse('''
 rules:
   style_guide:
     unnecessary_getters: false''');
-        expect(config.ruleConfigs, hasLength(1));
-        var ruleConfig = config.ruleConfigs[0];
-        expect(ruleConfig.group, equals('style_guide'));
-        expect(ruleConfig.name, equals('unnecessary_getters'));
-        expect(ruleConfig.args, equals({'enabled': false}));
-        expect(ruleConfig.disables('unnecessary_getters'), isTrue);
-      });
+      expect(config.ruleConfigs, hasLength(1));
+      var ruleConfig = config.ruleConfigs[0];
+      expect(ruleConfig.group, equals('style_guide'));
+      expect(ruleConfig.name, equals('unnecessary_getters'));
+      expect(ruleConfig.args, equals({'enabled': false}));
+      expect(ruleConfig.disables('unnecessary_getters'), isTrue);
     });
   });
 }

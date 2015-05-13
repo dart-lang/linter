@@ -6,17 +6,11 @@ library linter.test.io;
 
 import 'package:linter/src/io.dart';
 import 'package:mockito/mockito.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import 'mocks.dart';
 
-main() {
-  groupSep = ' | ';
-
-  defineTests();
-}
-
-defineTests() {
+void main() {
   // TODO: redefine tests
 
 //  group('commandline args', () {

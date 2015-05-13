@@ -9,18 +9,11 @@ import 'dart:io';
 import 'package:linter/src/pub.dart';
 import 'package:mockito/mockito.dart';
 import 'package:source_span/source_span.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import 'mocks.dart';
 
-main() {
-  groupSep = ' | ';
-
-  defineTests();
-}
-
-defineTests() {
-  const src = """
+const src = """
 name: linter
 version: 0.0.1
 author: Dart Team <misc@dartlang.org>
@@ -50,98 +43,95 @@ dev_dependencies:
   unittest: '>=0.11.0 <0.12.0'
 """;
 
-  Pubspec ps = new Pubspec.parse(src);
+final Pubspec ps = new Pubspec.parse(src);
 
-  group('pubspec', () {
-    group('basic', () {
-      test('toString()', () {
-        // For now just confirm it doesn't blow up
-        expect(ps.toString(), isNotNull);
+void main() {
+  group('basic', () {
+    test('toString()', () {
+      // For now just confirm it doesn't blow up
+      expect(ps.toString(), isNotNull);
+    });
+  });
+  group('entries', () {
+    testValue('name', ps.name, equals('linter'));
+    testKeySpan('name', ps.name, startOffset: 0, endOffset: 4);
+    testValueSpan('name', ps.name, startOffset: 6, endOffset: 12);
+    group('documentation', () {
+      test('no value', () {
+        expect(ps.documentation.value.text, isNull);
       });
     });
-    group('entries', () {
-      testValue('name', ps.name, equals('linter'));
-      testKeySpan('name', ps.name, startOffset: 0, endOffset: 4);
-      testValueSpan('name', ps.name, startOffset: 6, endOffset: 12);
-      group('documentation', () {
-        test('no value', () {
-          expect(ps.documentation.value.text, isNull);
-        });
+    testValue(
+        'homepage', ps.homepage, equals('https://github.com/dart-lang/linter'));
+    testValue('description', ps.description, equals('Style linter for Dart.'));
+    testValue('version', ps.version, equals('0.0.1'));
+    testValue('author', ps.author, equals('Dart Team <misc@dartlang.org>'));
+
+    group('authors', () {
+      PSNodeList authors = ps.authors;
+      test('contents', () {
+        expect(authors, isNotNull);
+        expect(authors.any((PSNode n) => n.text == 'Bill'), isTrue);
+        expect(authors.any((PSNode n) => n.text == 'Ted'), isTrue);
       });
-      testValue('homepage', ps.homepage,
-          equals('https://github.com/dart-lang/linter'));
+    });
+
+    testDepListContains(
+        'dependencies', ps.dependencies, [{'analyzer': '0.24.0-dev.1'}]);
+
+    testDepListContains('dev_dependencies', ps.devDependencies,
+        [{'markdown': '>=0.7.1+2 <0.8.0'}]);
+
+    group('hosted', () {
+      PSDependency dep = findDependency(ps.dependencies, name: 'transmogrify');
+      PSHost host = dep.host;
+      testValue('name', host.name, equals('transmogrify'));
+      testValue('url', host.url, equals('http://your-package-server.com'));
+      testKeySpan('name', host.name, startOffset: 237, endOffset: 241);
+      testValueSpan('name', host.name, startOffset: 243, endOffset: 255);
+    });
+
+    group('git', () {
+      PSDependency dep = findDependency(ps.dependencies, name: 'kittens');
+      PSGitRepo git = dep.git;
+      testValue('ref', git.ref, equals('some-branch'));
       testValue(
-          'description', ps.description, equals('Style linter for Dart.'));
-      testValue('version', ps.version, equals('0.0.1'));
-      testValue('author', ps.author, equals('Dart Team <misc@dartlang.org>'));
-
-      group('authors', () {
-        PSNodeList authors = ps.authors;
-        test('contents', () {
-          expect(authors, isNotNull);
-          expect(authors.any((PSNode n) => n.text == 'Bill'), isTrue);
-          expect(authors.any((PSNode n) => n.text == 'Ted'), isTrue);
-        });
-      });
-
-      testDepListContains(
-          'dependencies', ps.dependencies, [{'analyzer': '0.24.0-dev.1'}]);
-
-      testDepListContains('dev_dependencies', ps.devDependencies,
-          [{'markdown': '>=0.7.1+2 <0.8.0'}]);
-
-      group('hosted', () {
-        PSDependency dep =
-            findDependency(ps.dependencies, name: 'transmogrify');
-        PSHost host = dep.host;
-        testValue('name', host.name, equals('transmogrify'));
-        testValue('url', host.url, equals('http://your-package-server.com'));
-        testKeySpan('name', host.name, startOffset: 237, endOffset: 241);
-        testValueSpan('name', host.name, startOffset: 243, endOffset: 255);
-      });
-
-      group('git', () {
-        PSDependency dep = findDependency(ps.dependencies, name: 'kittens');
-        PSGitRepo git = dep.git;
-        testValue('ref', git.ref, equals('some-branch'));
-        testValue(
-            'url', git.url, equals('git://github.com/munificent/kittens.git'));
-      });
+          'url', git.url, equals('git://github.com/munificent/kittens.git'));
     });
-    group('visiting', () {
-      test('smoke', () {
-        var mock = new MockPubVisitor();
-        ps.accept(mock);
-        verify(mock.visitPackageAuthor(any)).called(1);
-        verify(mock.visitPackageAuthors(any)).called(1);
-        verify(mock.visitPackageDependencies(any)).called(1);
-        verify(mock.visitPackageDependency(any)).called(7);
-        verify(mock.visitPackageDescription(any)).called(1);
-        verify(mock.visitPackageDevDependencies(any)).called(1);
-        verify(mock.visitPackageDevDependency(any)).called(2);
-        verify(mock.visitPackageDocumentation(any)).called(1);
-        verify(mock.visitPackageHomepage(any)).called(1);
-        verify(mock.visitPackageName(any)).called(1);
-        verify(mock.visitPackageVersion(any)).called(1);
-      });
+  });
+  group('visiting', () {
+    test('smoke', () {
+      var mock = new MockPubVisitor();
+      ps.accept(mock);
+      verify(mock.visitPackageAuthor(any)).called(1);
+      verify(mock.visitPackageAuthors(any)).called(1);
+      verify(mock.visitPackageDependencies(any)).called(1);
+      verify(mock.visitPackageDependency(any)).called(7);
+      verify(mock.visitPackageDescription(any)).called(1);
+      verify(mock.visitPackageDevDependencies(any)).called(1);
+      verify(mock.visitPackageDevDependency(any)).called(2);
+      verify(mock.visitPackageDocumentation(any)).called(1);
+      verify(mock.visitPackageHomepage(any)).called(1);
+      verify(mock.visitPackageName(any)).called(1);
+      verify(mock.visitPackageVersion(any)).called(1);
     });
-    group('initialization', () {
-      test('sourceUrl', () {
-        File ps = new File('test/_data/p1/_pubspec.yaml');
-        Pubspec spec =
-            new Pubspec.parse(ps.readAsStringSync(), sourceUrl: ps.path);
-        expect(spec.name.key.span.sourceUrl.toFilePath(),
-            equals('test/_data/p1/_pubspec.yaml'));
-      });
+  });
+  group('initialization', () {
+    test('sourceUrl', () {
+      File ps = new File('test/_data/p1/_pubspec.yaml');
+      Pubspec spec =
+          new Pubspec.parse(ps.readAsStringSync(), sourceUrl: ps.path);
+      expect(spec.name.key.span.sourceUrl.toFilePath(),
+          equals('test/_data/p1/_pubspec.yaml'));
     });
-    group('parsing', () {
-      test('bad yaml', () {
-        File ps = new File('test/_data/p3/_pubspec.yaml');
-        Pubspec spec =
-            new Pubspec.parse(ps.readAsStringSync(), sourceUrl: ps.path);
-        expect(spec.name, isNull);
-        expect(spec.description, isNull);
-      });
+  });
+  group('parsing', () {
+    test('bad yaml', () {
+      File ps = new File('test/_data/p3/_pubspec.yaml');
+      Pubspec spec =
+          new Pubspec.parse(ps.readAsStringSync(), sourceUrl: ps.path);
+      expect(spec.name, isNull);
+      expect(spec.description, isNull);
     });
   });
 }
@@ -149,7 +139,7 @@ dev_dependencies:
 PSDependency findDependency(PSDependencyList deps, {String name}) =>
     deps.firstWhere((dep) => dep.name.text == name, orElse: () => null);
 
-testDepListContains(
+void testDepListContains(
     String label, PSDependencyList list, List<Map<String, String>> exp) {
   test(label, () {
     exp.forEach((Map<String, String> entry) {
@@ -162,7 +152,7 @@ testDepListContains(
   });
 }
 
-testEntry(String label, PSEntry node, Matcher m) {
+void testEntry(String label, PSEntry node, Matcher m) {
   group(label, () {
     test('entry', () {
       expect(node, m);
@@ -170,7 +160,7 @@ testEntry(String label, PSEntry node, Matcher m) {
   });
 }
 
-testKeySpan(String label, PSEntry node, {int startOffset, int endOffset}) {
+void testKeySpan(String label, PSEntry node, {int startOffset, int endOffset}) {
   group(label, () {
     group('key', () {
       testSpan(node.key.span, startOffset: startOffset, endOffset: endOffset);
@@ -178,7 +168,7 @@ testKeySpan(String label, PSEntry node, {int startOffset, int endOffset}) {
   });
 }
 
-testSpan(SourceSpan span, {int startOffset, int endOffset}) {
+void testSpan(SourceSpan span, {int startOffset, int endOffset}) {
   test('span', () {
     var start = span.start;
     expect(start, isNotNull);
@@ -189,7 +179,7 @@ testSpan(SourceSpan span, {int startOffset, int endOffset}) {
   });
 }
 
-testValue(String label, PSEntry node, Matcher m) {
+void testValue(String label, PSEntry node, Matcher m) {
   group(label, () {
     test('value', () {
       expect(node.value.text, m);
@@ -197,7 +187,8 @@ testValue(String label, PSEntry node, Matcher m) {
   });
 }
 
-testValueSpan(String label, PSEntry node, {int startOffset, int endOffset}) {
+void testValueSpan(String label, PSEntry node,
+    {int startOffset, int endOffset}) {
   group(label, () {
     group('value', () {
       testSpan(node.value.span, startOffset: startOffset, endOffset: endOffset);
