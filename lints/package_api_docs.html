@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>empty_constructor_bodies</title>
+      <title>package_api_docs</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>empty_constructor_bodies</h1>
+            <h1>package_api_docs</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,23 +26,37 @@
          </header>
          <section>
   
-            <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
-<p><strong>DO</strong> use ; instead of {} for empty constructor bodies.</p>
-<p>In Dart, a constructor with an empty body can be terminated with just a 
-semicolon. This is required for const constructors. For consistency and 
-brevity, other constructors should also do this.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>class Point {
-  int x, y;
-  Point(this.x, this.y);
+            <p><strong>DO</strong> provide doc comments for all public APIs.</p>
+<p>As described in the <a href="https://www.dartlang.org/tools/pub/package-layout.html#implementation-files">pub package layout doc</a>, 
+public APIs consist in everything in your package's <code>lib</code> folder, minus 
+implementation files in <code>lib/src</code>, adding elements explicitly exported with an 
+<code>export</code> directive.</p>
+<p>For example, given <code>lib/foo.dart</code>:</p>
+<pre><code>export 'src/bar.dart' show Bar;
+export 'src/baz.dart';
+
+class Foo { }
+
+class _Foo { }
+</code></pre>
+<p>it's API includes:</p><ul><li><code>Foo</code> (but not <code>_Foo</code>)</li><li><code>Bar</code> (exported) and</li><li>all <em>public</em> elements in <code>src/baz.dart</code></li></ul>
+<p>All public API members should be documented with <code>///</code> doc-style comments. </p>
+<p><strong>Good:</strong></p>
+<pre><code>/// A Foo.
+abstract class Foo {
+  /// Start foo-ing.
+  void start() =&gt; _start();
+
+  _start(); 
 }
 </code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code>class Point {
-  int x, y;
-  Point(this.x, this.y) {}
+<p><strong>Bad:</strong></p>
+<pre><code>class Bar {
+  void bar();
 }
 </code></pre>
+<p>Advice for writing good doc comments can be found in the 
+<a href="https://www.dartlang.org/articles/doc-comment-guidelines">Doc Writing Guidelines</a>.</p>
 
           
          </section>

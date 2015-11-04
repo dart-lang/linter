@@ -31,65 +31,85 @@
                This list is auto-generated from our sources.
             </p>
             <p>
-               <p>Lint rules are grouped by imperatives inline with the Dart 
-<a href="https://www.dartlang.org/articles/style-guide/">style guide</a>.</p>
-<p>In summary:</p>
+               <p>Rules are organized into familiar rule groups.</p>
+
             </p>
             <ul>
                <p>
-                  <li><p><strong>DO</strong> guidelines describe practices that should always be followed. 
-There will almost never be a valid reason to stray from them.</p></li>
-<li><p><strong>DON'T</strong> guidelines are the converse: things that are almost never a good idea. 
-You'll note there are few of these here. Guidelines like these in other 
-languages help to avoid the pitfalls that appear over time. Dart is new enough 
-that we can just fix those pitfalls directly instead of putting up ropes around 
-them.</p></li>
-<li><p><strong>PREFER</strong> guidelines are practices that you should follow. However, there 
-may be circumstances where it makes sense to do otherwise. Just make sure you 
-understand the full implications of ignoring the guideline when you do.</p></li>
-<li><p><strong>AVOID</strong> guidelines are the dual to "prefer": stuff you shouldn't do but where 
-there may be good reasons to on rare occasions.</p></li>
-<li><p><strong>CONSIDER</strong> guidelines are practices that you might or might not want to 
-follow, depending on circumstances, precedents, and your own preference.</p></li>
+                  <li><strong>errors</strong> - <p>Possible coding errors.</p>
+</li>
+<li><strong>style</strong> - <p>Matters of style, largely derived from the official Dart Style Guide.</p>
+</li>
+<li><strong>pub</strong> - <p>Pub-related rules.</p>
+</li>
                </p>
             </ul>
             <p>
                <p>In addition, rules can be further distinguished by <em>maturity</em>.  Unqualified
-rules are considered stable, while others may be marked <strong>EXPERIMENTAL</strong> 
+rules are considered stable, while others may be marked <strong>experimental</strong> 
 to indicate that they are under review.</p>
 <p>These rules are under active development.  Feedback is 
 <a href="https://github.com/dart-lang/linter/issues">welcome</a>!</p>
+
             </p>
 
-            <h2 id="styleguide-rules">Style Guide Rules</h2>
+            <h2 id="styleguide-rules">Style Rules</h2>
 
-               <strong><a href = "camel_case_types.html">camel_case_types</a></strong><br/><p>DO name types using UpperCamelCase.</p>
+               <strong><a href = "always_declare_return_types.html">always_declare_return_types</a></strong><br/><p>Declare method return types.</p>
 
-<strong><a href = "empty_constructor_bodies.html">empty_constructor_bodies</a></strong><br/><p>DO use ; instead of {} for empty constructor bodies.</p>
 
-<strong><a href = "library_names.html">library_names</a></strong><br/><p>DO name libraries and source files using <code>lowercase_with_underscores</code>.</p>
+<strong><a href = "always_specify_types.html">always_specify_types</a></strong><br/><p>Specify type annotations.</p>
 
-<strong><a href = "super_goes_last.html">super_goes_last</a></strong><br/><p>DO place the super() call last in a constructor initialization list.</p>
 
-<strong><a href = "type_init_formals.html">type_init_formals</a></strong><br/><p>DON'T type annotate initializing formals</p>
+<strong><a href = "camel_case_types.html">camel_case_types</a></strong><br/><p>Name types using UpperCamelCase.</p>
 
-<strong><a href = "constant_identifier_names.html">constant_identifier_names</a></strong><br/><p>PREFER using lowerCamelCase for constant names.</p>
 
-<strong><a href = "slash_for_doc_comments.html">slash_for_doc_comments</a></strong><br/><p>PREFER to use /// for doc comments</p>
+<strong><a href = "constant_identifier_names.html">constant_identifier_names</a></strong><br/><p>Prefer using lowerCamelCase for constant names.</p>
 
-<strong><a href = "library_prefixes.html">library_prefixes</a></strong><br/><p>DO use <code>lowercase_with_underscores</code> when specifying a library prefix.</p>
 
-<strong><a href = "non_constant_identifier_names.html">non_constant_identifier_names</a></strong><br/><p>DO name non-constant identifiers using lowerCamelCase.</p>
+<strong><a href = "empty_constructor_bodies.html">empty_constructor_bodies</a></strong><br/><p>Use <code>;</code> instead of <code>{}</code> for empty constructor bodies.</p>
 
-<strong><a href = "one_member_abstracts.html">one_member_abstracts</a></strong><br/><p>AVOID defining a one-member abstract class when a simple function will do.</p>
 
-<strong><a href = "unnecessary_brace_in_string_interp.html">unnecessary_brace_in_string_interp</a></strong><br/><p>AVOID using braces in interpolation when not needed.</p>
+<strong><a href = "implementation_imports.html">implementation_imports</a></strong><br/><p>Don't import implementation files from another package.</p>
 
-<strong><a href = "unnecessary_getters_setters.html">unnecessary_getters_setters</a></strong><br/><p>AVOID wrapping fields in getters and setters just to be "safe".</p>
+
+<strong><a href = "library_names.html">library_names</a></strong><br/><p>Name libraries and source files using <code>lowercase_with_underscores</code>.</p>
+
+
+<strong><a href = "library_prefixes.html">library_prefixes</a></strong><br/><p>Use <code>lowercase_with_underscores</code> when specifying a library prefix.</p>
+
+
+<strong><a href = "non_constant_identifier_names.html">non_constant_identifier_names</a></strong><br/><p>Name non-constant identifiers using lowerCamelCase.</p>
+
+
+<strong><a href = "one_member_abstracts.html">one_member_abstracts</a></strong><br/><p>Avoid defining a one-member abstract class when a simple function will do.</p>
+
+
+<strong><a href = "package_api_docs.html">package_api_docs</a></strong><br/><p>Provide doc comments for all public APIs</p>
+
+
+<strong><a href = "package_prefixed_library_names.html">package_prefixed_library_names</a></strong><br/><p>Prefix library names with the package name and a dot-separated path.</p>
+
+
+<strong><a href = "slash_for_doc_comments.html">slash_for_doc_comments</a></strong><br/><p>Prefer to use /// for doc comments</p>
+
+
+<strong><a href = "super_goes_last.html">super_goes_last</a></strong><br/><p>Place the super() call last in a constructor initialization list.</p>
+
+
+<strong><a href = "type_init_formals.html">type_init_formals</a></strong><br/><p>Don't type annotate initializing formals.</p>
+
+
+<strong><a href = "unnecessary_brace_in_string_interp.html">unnecessary_brace_in_string_interp</a></strong><br/><p>Avoid using braces in interpolation when not needed.</p>
+
+
+<strong><a href = "unnecessary_getters_setters.html">unnecessary_getters_setters</a></strong><br/><p>Avoid wrapping fields in getters and setters just to be "safe".</p>
+
 
             <h2 id="styleguide-rules">Pub Rules</h2>
 
-               <strong><a href = "package_names.html">package_names</a></strong><br/><p>DO use <code>lowercase_with_underscores</code> for package names.</p>
+               <strong><a href = "package_names.html">package_names</a></strong><br/><p>Use <code>lowercase_with_underscores</code> for package names.</p>
+
             
          </section>
       </div>
