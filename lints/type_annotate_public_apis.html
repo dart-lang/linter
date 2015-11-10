@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>type_annotate_public_apis</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>type_annotate_public_apis</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+  
+            <p>From <a href="https://www.dartlang.org/effective-dart/design/#do-type-annotate-public-apis">effective dart</a>:</p>
+<p><strong>DO</strong> type annotate public APIs.</p>
+<p>Type annotations are important documentation for how a library should be used.
+Annotating the parameter and return types of public methods and functions helps
+users understand what the API expects and what it provides.</p>
+<p>Note that if a public API accepts a range of values that Dart's type system
+cannot express, then it is acceptable to leave that untyped. In that case, the
+implicit <code>dynamic</code> is the correct type for the API.</p>
+<p>For code internal to a library (either private, or things like nested functions)
+annotate where you feel it helps, but don't feel that you <em>must</em> provide them.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>install(id, destination) {
+  // ...
+}
+</code></pre>
+<p>Here, it's unclear what <code>id</code> is. A string? And what is <code>destination</code>? A string
+or a <code>File</code> object? Is this method synchronous or asynchronous?</p>
+<p><strong>GOOD:</strong></p>
+<pre><code>Future&lt;bool&gt; install(PackageId id, String destination) {
+  // ...
+}
+</code></pre>
+<p>With types, all of this is clarified.</p>
+
+          
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
