@@ -48,10 +48,24 @@
                <p>In addition, rules can be further distinguished by <em>maturity</em>.  Unqualified
 rules are considered stable, while others may be marked <strong>experimental</strong> 
 to indicate that they are under review.</p>
+<p>Rules can be selectively enabled in the analyzer using
+<a href="https://pub.dartlang.org/packages/analyzer">analysis options</a>.  An
+auto-generated list enabling all options is provided
+<a href="options/options.html">here</a>.  As some lints may contradict each other, only
+some lints will be enabled in practice, but this list should provide a
+convenient jumping-off point.</p>
 <p>These rules are under active development.  Feedback is 
 <a href="https://github.com/dart-lang/linter/issues">welcome</a>!</p>
 
             </p>
+
+            <h2 id="styleguide-rules">Error Rules</h2>
+
+               <strong><a href = "avoid_empty_else.html">avoid_empty_else</a></strong><br/><p>Avoid empty else statements.</p>
+
+
+<strong><a href = "hash_and_equals.html">hash_and_equals</a></strong><br/><p>Always override <code>hashCode</code> if overriding <code>==</code></p>
+
 
             <h2 id="styleguide-rules">Style Rules</h2>
 
@@ -61,7 +75,16 @@ to indicate that they are under review.</p>
 <strong><a href = "always_specify_types.html">always_specify_types</a></strong><br/><p>Specify type annotations.</p>
 
 
+<strong><a href = "annotate_overrides.html">annotate_overrides</a></strong><br/><p>Annotate overridden methods</p>
+
+
 <strong><a href = "avoid_as.html">avoid_as</a></strong><br/><p>Avoid using <code>as</code>.</p>
+
+
+<strong><a href = "avoid_init_to_null.html">avoid_init_to_null</a></strong><br/><p>Don't explicitly initialize variables to null</p>
+
+
+<strong><a href = "avoid_return_types_on_setters.html">avoid_return_types_on_setters</a></strong><br/><p>Avoid return types on setters.</p>
 
 
 <strong><a href = "camel_case_types.html">camel_case_types</a></strong><br/><p>Name types using UpperCamelCase.</p>
@@ -97,7 +120,16 @@ to indicate that they are under review.</p>
 <strong><a href = "prefer_is_not_empty.html">prefer_is_not_empty</a></strong><br/><p>Use isNotEmpty for Iterables and Maps.</p>
 
 
+<strong><a href = "public_member_api_docs.html">public_member_api_docs</a></strong><br/><p>Document all public memmbers</p>
+
+
 <strong><a href = "slash_for_doc_comments.html">slash_for_doc_comments</a></strong><br/><p>Prefer to use /// for doc comments</p>
+
+
+<strong><a href = "sort_constructors_first.html">sort_constructors_first</a></strong><br/><p>Sort constructor declarations before method declarations.</p>
+
+
+<strong><a href = "sort_unnamed_constructors_first.html">sort_unnamed_constructors_first</a></strong><br/><p>Sort unnamed constructor declarations first</p>
 
 
 <strong><a href = "super_goes_last.html">super_goes_last</a></strong><br/><p>Place the super() call last in a constructor initialization list.</p>
@@ -115,16 +147,11 @@ to indicate that they are under review.</p>
 <strong><a href = "unnecessary_getters_setters.html">unnecessary_getters_setters</a></strong><br/><p>Avoid wrapping fields in getters and setters just to be "safe".</p>
 
 
-            <h2 id="styleguide-rules">Error Rules</h2>
-
-               <strong><a href = "avoid_empty_else.html">avoid_empty_else</a></strong><br/><p>Avoid empty else statements.</p>
-
-
             <h2 id="styleguide-rules">Pub Rules</h2>
 
                <strong><a href = "package_names.html">package_names</a></strong><br/><p>Use <code>lowercase_with_underscores</code> for package names.</p>
 
-            
+
          </section>
       </div>
       <footer>

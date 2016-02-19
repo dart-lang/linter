@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>non_constant_identifier_names</title>
+      <title>avoid_init_to_null</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>non_constant_identifier_names</h1>
+            <h1>avoid_init_to_null</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,17 +26,38 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> name non-constant identifiers using lowerCamelCase.</p>
-<p>Class members, top-level definitions, variables, parameters, and
-named parameters should capitalize the first letter of each word
-except the first word, and use no separators.</p>
+            <p>From <a href="https://www.dartlang.org/effective-dart/usage/#dont-explicitly-initialize-variables-to-null">effective dart</a>:</p>
+<p><strong>DON'T</strong> explicitly initialize variables to null.</p>
+<p>In Dart, a variable or field that is not explicitly initialized automatically
+gets initialized to null. This is reliably specified by the language. There's
+no concept of "uninitialized memory" in Dart. Adding <code>= null</code> is redundant and
+unneeded.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>var item;
+<pre><code>int _nextId;
 
-HttpRequest httpRequest;
+class LazyId {
+  int _id;
 
-align(clearItems) {
-  // ...
+  int get id {
+    if (_nextId == null) _nextId = 0;
+    if (_id == null) _id = _nextId++;
+
+    return _id;
+  }
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>int _nextId = null;
+
+class LazyId {
+  int _id = null;
+
+  int get id {
+    if (_nextId == null) _nextId = 0;
+    if (_id == null) _id = _nextId++;
+
+    return _id;
+  }
 }
 </code></pre>
 
