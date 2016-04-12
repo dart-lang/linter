@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>one_member_abstracts</title>
+      <title>overriden_field</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>one_member_abstracts</h1>
+            <h1>overriden_field</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,19 +26,35 @@
          </header>
          <section>
 
-            <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
-<p><strong>AVOID</strong> defining a one-member abstract class when a simple function will do.</p>
-<p>Unlike Java, Dart has first-class functions, closures, and a nice light syntax
-for using them. If all you need is something like a callback, just use a
-function. If you're defining an class and it only has a single abstract member
-with a meaningless name like <code>call</code> or <code>invoke</code>, there is a good chance
-you just want a function.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>typedef bool Predicate(item);
-</code></pre>
+            <p><strong>DO</strong> Do not override fields.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>abstract class Predicate {
-  bool test(item);
+<pre><code>class Base {
+  Object field = 'lorem';
+
+  Object something = 'change';
+}
+
+class Bad1 extends Base {
+  @override
+  final field = 'ipsum'; // LINT
+}
+
+class Bad2 extends Base {
+  @override
+  Object something = 'done'; // LINT
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>class Base {
+  Object field = 'lorem';
+
+  Object something = 'change';
+}
+
+class Ok extends Base {
+  Object newField; // OK
+
+  final Object newFinal = 'ignore'; // OK
 }
 </code></pre>
 

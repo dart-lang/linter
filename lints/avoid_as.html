@@ -51,6 +51,11 @@ person.firstName = 'Seth';
 } on CastError { }
 
 </code></pre>
+<p>Note that an exception is made in the case of <code>dynamic</code> since the cast has no
+performance impact.</p>
+<p><strong>OK:</strong></p>
+<pre><code>HasScrollDirection scrollable = renderObject as dynamic;
+</code></pre>
 
 
          </section>

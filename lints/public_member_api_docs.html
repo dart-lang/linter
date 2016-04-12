@@ -27,7 +27,8 @@
          <section>
 
             <p><strong>DO</strong> document all public members.</p>
-<p>All public members should be documented with <code>///</code> doc-style comments.</p>
+<p>All non-overriding public members should be documented with <code>///</code> doc-style
+comments.</p>
 <p><strong>Good:</strong></p>
 <pre><code>/// A good thing.
 abstract class Good {
@@ -39,7 +40,23 @@ abstract class Good {
 </code></pre>
 <p><strong>Bad:</strong></p>
 <pre><code>class Bad {
-  void meh();
+  void meh() { }
+}
+</code></pre>
+<p>In case a public member overrides a member it is up to the declaring member
+to provide documentation.  For example, in the following, <code>Sub</code> needn't
+document <code>init</code> (though it certainly may, if there's need).</p>
+<p><strong>Good:</strong></p>
+<pre><code>/// Base of all things.
+abstract class Base {
+  /// Initialize the base.
+  void init();
+}
+
+/// A sub base.
+class Sub extends Base {
+  @override
+  void init() { ... }
 }
 </code></pre>
 
