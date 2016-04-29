@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>empty_constructor_bodies</title>
+      <title>await_only_futures</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>empty_constructor_bodies</h1>
+            <h1>await_only_futures</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,21 +26,15 @@
          </header>
          <section>
 
-            <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
-<p><strong>DO</strong> use ; instead of {} for empty constructor bodies.</p>
-<p>In Dart, a constructor with an empty body can be terminated with just a
-semicolon. This is required for const constructors. For consistency and
-brevity, other constructors should also do this.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>class Point {
-  int x, y;
-  Point(this.x, this.y);
+            <p><strong>AVOID</strong> await on anything other than a future.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>main() async {
+  print(await 23);
 }
 </code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code>class Point {
-  int x, y;
-  Point(this.x, this.y) {}
+<p><strong>GOOD:</strong></p>
+<pre><code>main() async {
+  print(await new Future.value(23));
 }
 </code></pre>
 
