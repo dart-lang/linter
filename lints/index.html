@@ -46,7 +46,7 @@
             </ul>
             <p>
                <p>In addition, rules can be further distinguished by <em>maturity</em>.  Unqualified
-rules are considered stable, while others may be marked <strong>experimental</strong> 
+rules are considered stable, while others may be marked <strong>experimental</strong>
 to indicate that they are under review.</p>
 <p>Rules can be selectively enabled in the analyzer using
 <a href="https://pub.dartlang.org/packages/analyzer">analysis options</a>.  An
@@ -54,7 +54,7 @@ auto-generated list enabling all options is provided
 <a href="options/options.html">here</a>.  As some lints may contradict each other, only
 some lints will be enabled in practice, but this list should provide a
 convenient jumping-off point.</p>
-<p>These rules are under active development.  Feedback is 
+<p>These rules are under active development.  Feedback is
 <a href="https://github.com/dart-lang/linter/issues">welcome</a>!</p>
 
             </p>
@@ -64,16 +64,25 @@ convenient jumping-off point.</p>
                <strong><a href = "avoid_empty_else.html">avoid_empty_else</a></strong><br/><p>Avoid empty else statements.</p>
 
 
+<strong><a href = "comment_references.html">comment_references</a></strong><br/><p>Only reference in scope identifers in doc comments.</p>
+
+
 <strong><a href = "control_flow_in_finally.html">control_flow_in_finally</a></strong><br/><p>Avoid control flow in <code>finally</code> block.</p>
 
 
 <strong><a href = "hash_and_equals.html">hash_and_equals</a></strong><br/><p>Always override <code>hashCode</code> if overriding <code>==</code></p>
 
 
+<strong><a href = "iterable_contains_unrelated_type.html">iterable_contains_unrelated_type (stable)</a></strong><br/><p>Invocation of Iterable&lt;E>.contains with references of unrelated types.</p>
+
+
 <strong><a href = "test_types_in_equals.html">test_types_in_equals</a></strong><br/><p>Test type arguments in operator ==(Object other).</p>
 
 
 <strong><a href = "throw_in_finally.html">throw_in_finally</a></strong><br/><p>Avoid <code>throw</code> in finally block.</p>
+
+
+<strong><a href = "unrelated_type_equality_checks.html">unrelated_type_equality_checks (stable)</a></strong><br/><p>Equality operator (==) invocation with references of unrelated types.</p>
 
 
             <h2 id="styleguide-rules">Style Rules</h2>
@@ -123,7 +132,7 @@ convenient jumping-off point.</p>
 <strong><a href = "one_member_abstracts.html">one_member_abstracts</a></strong><br/><p>Avoid defining a one-member abstract class when a simple function will do.</p>
 
 
-<strong><a href = "overriden_field.html">overriden_field</a></strong><br/><p>Do not override fields.</p>
+<strong><a href = "overriden_field.html">overriden_field (stable)</a></strong><br/><p>Do not override fields.</p>
 
 
 <strong><a href = "package_api_docs.html">package_api_docs</a></strong><br/><p>Provide doc comments for all public APIs</p>

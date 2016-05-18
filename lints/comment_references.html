@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>public_member_api_docs</title>
+      <title>comment_references</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,8 +15,8 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>public_member_api_docs</h1>
-            <p>Group: style</p>
+            <h1>comment_references</h1>
+            <p>Group: errors</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -26,42 +26,20 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> document all public members.</p>
-<p>All non-overriding public members should be documented with <code>///</code> doc-style
-comments.</p>
-<p><strong>Good:</strong></p>
-<pre><code>/// A good thing.
-abstract class Good {
-  /// Start doing your thing.
-  void start() =&gt; _start();
-
-  _start();
-}
+            <p><strong>DO</strong> reference only in scope identifers in doc comments.</p>
+<p>If you surround things like variable, method, or type names in square brackets,
+then <a href="https://www.dartlang.org/effective-dart/documentation/">dartdoc</a> will look
+up the name and link to its docs.  For this all to work, ensure that all
+identifiers in docs wrapped in brackets are in scope.</p>
+<p>For example,</p>
+<p><strong>GOOD:</strong></p>
+<pre><code>/// Return the larger of [a] or [b].
+int max_int(int a, int b) { ... }
 </code></pre>
-<p><strong>Bad:</strong></p>
-<pre><code>class Bad {
-  void meh() { }
-}
+<p>On the other hand, assuming <code>outOfScopeId</code> is out of scope:</p>
+<p><strong>BAD:</strong></p>
+<pre><code>void f(int outOfScopeId) { ... }
 </code></pre>
-<p>In case a public member overrides a member it is up to the declaring member
-to provide documentation.  For example, in the following, <code>Sub</code> needn't
-document <code>init</code> (though it certainly may, if there's need).</p>
-<p><strong>Good:</strong></p>
-<pre><code>/// Base of all things.
-abstract class Base {
-  /// Initialize the base.
-  void init();
-}
-
-/// A sub base.
-class Sub extends Base {
-  @override
-  void init() { ... }
-}
-</code></pre>
-<p>Note that consistent with <code>dartdoc</code>, an exception to the rule is made when
-documented getters have corresponding undocumented setters. In this case the
-setters inherit the docs from the getters.</p>
 
 
          </section>

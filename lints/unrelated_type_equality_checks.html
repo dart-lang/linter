@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>unrelated_type_equality_checks</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>unrelated_type_equality_checks</h1>
+            <p>Group: errors</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><strong>DON'T</strong> Compare references of unrelated types for equality.
+Comparing references of a type where neither is a subtype of the other most
+likely will return false and might not reflect programmer's intent.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>void someFunction() {
+  var x = '1';
+  if (x == 1) print('someFunction'); // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void someFunction1() {
+  String x = '1';
+  if (x == 1) print('someFunction1'); // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void someFunction13(DerivedClass2 instance) {
+  var other = new DerivedClass3();
+
+  if (other == instance) print('someFunction13'); // LINT
+}
+
+class ClassBase {}
+
+class DerivedClass1 extends ClassBase {}
+
+abstract class Mixin {}
+
+class DerivedClass2 extends ClassBase with Mixin {}
+
+class DerivedClass3 extends ClassBase implements Mixin {}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction2() {
+  var x = '1';
+  var y = '2';
+  if (x == y) print(someFunction2); // OK
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction3() {
+  for (var i = 0; i &lt; 10; i++) {
+    if (i == 0) print(someFunction3); // OK
+  }
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction4() {
+  var x = '1';
+  if (x == null) print(someFunction4); // OK
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction7() {
+  List someList;
+
+  if (someList.length == 0) print('someFunction7'); // OK
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction8(ClassBase instance) {
+  DerivedClass1 other;
+
+  if (other == instance) print('someFunction8'); // OK
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction10(unknown) {
+  var what = unknown - 1;
+  for (var index = 0; index &lt; unknown; index++) {
+    if (what == index) print('someFunction10'); // OK
+  }
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction11(Mixin instance) {
+  var other = new DerivedClass2();
+
+  if (other == instance) print('someFunction11'); // OK
+  if (other != instance) print('!someFunction11'); // OK
+}
+
+class ClassBase {}
+
+abstract class Mixin {}
+
+class DerivedClass2 extends ClassBase with Mixin {}
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>

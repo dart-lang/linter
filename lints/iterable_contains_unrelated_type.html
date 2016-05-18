@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>iterable_contains_unrelated_type</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>iterable_contains_unrelated_type</h1>
+            <p>Group: errors</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><strong>DON'T</strong> Invoke <code>contains</code> on <code>Iterable</code> with an instance of different type than
+the parameter type since it will invoke <code>==</code> on its elements and most likely will
+return <code>false</code>. Strictly speaking it could evaluate to true since in Dart it
+is possible for an Iterable to contain elements of type unrelated to its
+parameter type, but this practice also should be avoided.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>void someFunction() {
+  var list = &lt;int&gt;[];
+  if (list.contains('1')) print('someFunction'); // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void someFunction3() {
+  List&lt;int&gt; list = &lt;int&gt;[];
+  if (list.contains('1')) print('someFunction3'); // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void someFunction8() {
+  List&lt;DerivedClass2&gt; list = &lt;DerivedClass2&gt;[];
+  DerivedClass3 instance;
+  if (list.contains(instance)) print('someFunction8'); // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>abstract class SomeIterable&lt;E&gt; implements Iterable&lt;E&gt; {}
+
+abstract class MyClass implements SomeIterable&lt;int&gt; {
+  bool badMethod(String thing) =&gt; this.contains(thing); // LINT
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction10() {
+  var list = [];
+  if (list.contains(1)) print('someFunction10'); // OK
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction1() {
+  var list = &lt;int&gt;[];
+  if (list.contains(1)) print('someFunction1'); // OK
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction4() {
+  List&lt;int&gt; list = &lt;int&gt;[];
+  if (list.contains(1)) print('someFunction4'); // OK
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction5() {
+  List&lt;ClassBase&gt; list = &lt;ClassBase&gt;[];
+  DerivedClass1 instance;
+  if (list.contains(instance)) print('someFunction5'); // OK
+}
+
+abstract class ClassBase {}
+
+class DerivedClass1 extends ClassBase {}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction6() {
+  List&lt;Mixin&gt; list = &lt;Mixin&gt;[];
+  DerivedClass2 instance;
+  if (list.contains(instance)) print('someFunction6'); // OK
+}
+
+abstract class ClassBase {}
+
+abstract class Mixin {}
+
+class DerivedClass2 extends ClassBase with Mixin {}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void someFunction7() {
+  List&lt;Mixin&gt; list = &lt;Mixin&gt;[];
+  DerivedClass3 instance;
+  if (list.contains(instance)) print('someFunction7'); // OK
+}
+
+abstract class ClassBase {}
+
+abstract class Mixin {}
+
+class DerivedClass3 extends ClassBase implements Mixin {}
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>

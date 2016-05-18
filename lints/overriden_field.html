@@ -57,6 +57,16 @@ class Ok extends Base {
   final Object newFinal = 'ignore'; // OK
 }
 </code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>abstract class BaseLoggingHandler {
+  Base transformer;
+}
+
+class LogPrintHandler implements BaseLoggingHandler {
+  @override
+  Derived transformer; // OK
+}
+</code></pre>
 
 
          </section>
