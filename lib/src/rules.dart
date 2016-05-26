@@ -13,6 +13,7 @@ import 'package:linter/src/rules/always_specify_types.dart';
 import 'package:linter/src/rules/annotate_overrides.dart';
 import 'package:linter/src/rules/avoid_as.dart';
 import 'package:linter/src/rules/avoid_empty_else.dart';
+import 'package:linter/src/rules/avoid_importing_for_sdk.dart';
 import 'package:linter/src/rules/avoid_init_to_null.dart';
 import 'package:linter/src/rules/avoid_return_types_on_setters.dart';
 import 'package:linter/src/rules/await_only_futures.dart';
@@ -53,6 +54,7 @@ final Registry ruleRegistry = new Registry()
   ..register(new AvoidAs())
   ..register(new AvoidEmptyElse())
   ..register(new AvoidReturnTypesOnSetters())
+  ..register(new AvoidImportingForSdk())
   ..register(new AvoidInitToNull())
   ..register(new AwaitOnlyFutures())
   ..register(new CamelCaseTypes())
