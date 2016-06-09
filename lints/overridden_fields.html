@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>comment_references</title>
+      <title>overridden_fields</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,8 +15,8 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>comment_references</h1>
-            <p>Group: errors</p>
+            <h1>overridden_fields</h1>
+            <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -26,19 +26,46 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> reference only in scope identifiers in doc comments.</p>
-<p>If you surround things like variable, method, or type names in square brackets,
-then <a href="https://www.dartlang.org/effective-dart/documentation/">dartdoc</a> will look
-up the name and link to its docs.  For this all to work, ensure that all
-identifiers in docs wrapped in brackets are in scope.</p>
-<p>For example,</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>/// Return the larger of [a] or [b].
-int max_int(int a, int b) { ... }
-</code></pre>
-<p>On the other hand, assuming <code>outOfScopeId</code> is out of scope:</p>
+            <p><strong>DO</strong> Do not override fields.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void f(int outOfScopeId) { ... }
+<pre><code>class Base {
+  Object field = 'lorem';
+
+  Object something = 'change';
+}
+
+class Bad1 extends Base {
+  @override
+  final field = 'ipsum'; // LINT
+}
+
+class Bad2 extends Base {
+  @override
+  Object something = 'done'; // LINT
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>class Base {
+  Object field = 'lorem';
+
+  Object something = 'change';
+}
+
+class Ok extends Base {
+  Object newField; // OK
+
+  final Object newFinal = 'ignore'; // OK
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>abstract class BaseLoggingHandler {
+  Base transformer;
+}
+
+class LogPrintHandler implements BaseLoggingHandler {
+  @override
+  Derived transformer; // OK
+}
 </code></pre>
 
 
