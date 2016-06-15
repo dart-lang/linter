@@ -30,6 +30,7 @@ import 'package:linter/src/rules/iterable_contains_unrelated_type.dart';
 import 'package:linter/src/rules/library_names.dart';
 import 'package:linter/src/rules/library_prefixes.dart';
 import 'package:linter/src/rules/non_constant_identifier_names.dart';
+import 'package:linter/src/rules/no_implicit_dynamic.dart';
 import 'package:linter/src/rules/one_member_abstracts.dart';
 import 'package:linter/src/rules/overridden_fields.dart';
 import 'package:linter/src/rules/package_api_docs.dart';
@@ -53,6 +54,7 @@ import 'package:linter/src/rules/unrelated_type_equality_checks.dart';
 final Registry ruleRegistry = new Registry()
   ..register(new AlwaysDeclareReturnTypes())
   ..register(new AlwaysSpecifyTypes())
+  ..register(new NoImplicitDynamic())
   ..register(new AnnotateOverrides())
   ..register(new AvoidAs())
   ..register(new AvoidEmptyElse())
