@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>whitespace_around_ops</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>whitespace_around_ops</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><strong>DO</strong> ensure that there are spaces around binary operators and before any
+unary ones.</p>
+<p>Improper whitespace can create confusion, especially when applied to operators
+where it's possible to get a binary operator when you mean a unary one.  For
+example, the mistyping of <code>5 /~ 10</code> when you mean <code>5 ~/ 10</code> is hidden by the
+improper spacing.  (Properly spaced, the mistake is more clear: <code>5 / ~10</code>.)
+Whenever possible, use the formatter to cleanup whitespace.  Otherwise, take
+care to ensure that there are spaces around binary operators and before any
+unary ones.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>print(5 /~ 10); //whoops
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>print(5 / ~10); //aha!
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
