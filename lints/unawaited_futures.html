@@ -31,7 +31,7 @@ ignore those cases.</p>
 <p>It's easy to forget await in async methods as naming conventions usually don't
 tell us if a method is sync or async (except for some in <code>dart:io</code>).</p>
 <p><strong>GOOD:</strong></p>
-<pre class="dart"><code>Future doSomething() =&gt; ...;
+<pre><code class="language-dart">Future doSomething() =&gt; ...;
 
 void main() async {
   await doSomething();
@@ -41,7 +41,7 @@ void main() async {
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre class="dart"><code>void main() async {
+<pre><code class="language-dart">void main() async {
   doSomething(); // Likely a bug.
 }
 </code></pre>

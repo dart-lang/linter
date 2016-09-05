@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>literal_only_boolean_expressions</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>literal_only_boolean_expressions</h1>
+            <p>Group: errors</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><strong>DON'T</strong> test for conditions composed only by literals, since the value can be
+inferred at compile time.
+Conditional statements using a condition which cannot be anything but FALSE have
+the effect of making blocks of code non-functional. If the condition cannot
+evaluate to anything but TRUE, the conditional statement is completely
+redundant, and makes the code less readable.
+It is quite likely that the code does not match the programmer's intent.
+Either the condition should be removed or it should be updated so that it does
+not always evaluate to TRUE or FALSE.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>void bad() {
+  if (true) {} // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void bad() {
+  if (true &amp;&amp; 1 != 0) {} // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void bad() {
+  if (1 != 0 &amp;&amp; true) {} // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void bad() {
+  if (1 &lt; 0 &amp;&amp; true) {} // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void bad() {
+  if (true &amp;&amp; false) {} // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void bad() {
+  if (1 != 0) {} // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void bad() {
+  if (true &amp;&amp; 1 != 0 || 3 &lt; 4) {} // LINT
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void bad() {
+  if (1 != 0 || 3 &lt; 4 &amp;&amp; true) {} // LINT
+}
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>invariant_booleans</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>invariant_booleans</h1>
+            <p>Group: errors</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><strong>DON'T</strong> test for conditions that can be inferred at compile time or test the
+same condition twice.
+Conditional statements using a condition which cannot be anything but FALSE have
+the effect of making blocks of code non-functional. If the condition cannot
+evaluate to anything but TRUE, the conditional statement is completely
+redundant, and makes the code less readable.
+It is quite likely that the code does not match the programmer's intent.
+Either the condition should be removed or it should be updated so that it does
+not always evaluate to TRUE or FALSE and does not perform redundant tests.
+This rule will hint to the test conflicting with the linted one.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>//foo can't be both equal and not equal to bar in the same expression
+if(foo == bar &amp;&amp; something &amp;&amp; foo != bar) {...}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void compute(int foo) {
+  if (foo == 4) {
+    doSomething();
+    // We know foo is equal to 4 at this point, so the next condition is always false
+    if (foo &gt; 4) {...}
+    ...
+  }
+  ...
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void compute(boolean foo) {
+  if (foo) {
+    return;
+  }
+  doSomething();
+  // foo is always false here
+  if (foo){...}
+  ...
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void nestedOK() {
+  if (foo == bar) {
+    foo = baz;
+    if (foo != bar) {...}
+  }
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void nestedOk2() {
+  if (foo == bar) {
+    return;
+  }
+
+  foo = baz;
+  if (foo == bar) {...} // OK
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void nestedOk5() {
+  if (foo != null) {
+    if (bar != null) {
+      return;
+    }
+  }
+
+  if (bar != null) {...} // OK
+}
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
