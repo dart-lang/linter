@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>prefer_final_fields</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>prefer_final_fields</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><strong>DO</strong> prefer declaring private fields as final if they are not reassigned later
+ in the class.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>class BadImmutable {
+  var _label = 'hola mundo! BadImmutable'; // LINT
+  var label = 'hola mundo! BadImmutable'; // OK
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>class MultipleMutable {
+  var _label = 'hola mundo! GoodMutable', _offender = 'mumble mumble!'; // LINT
+  var _someOther; // LINT
+
+
+  MultipleMutable() : _someOther = 5;
+
+
+  MultipleMutable(this._someOther);
+
+  void changeLabel() {
+    _label= 'hello world! GoodMutable';
+  }
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>class GoodImmutable {
+  final label = 'hola mundo! BadImmutable', bla = 5; // OK
+  final _label = 'hola mundo! BadImmutable', _bla = 5; // OK
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>class GoodMutable {
+  var _label = 'hola mundo! GoodMutable';
+
+  void changeLabel() {
+    _label = 'hello world! GoodMutable';
+  }
+}
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
