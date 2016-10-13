@@ -237,6 +237,36 @@ defineTests() {
         exitCode = 0;
       });
 
+      group('angular_template_metadata', () {
+        IOSink currentOut = outSink;
+        CollectingSink collectingOut = new CollectingSink();
+        setUp(() {
+          exitCode = 0;
+          outSink = collectingOut;
+        });
+        tearDown(() {
+          collectingOut.buffer.clear();
+          outSink = currentOut;
+          exitCode = 0;
+        });
+
+        test('angular_template_metadata', () {
+          dartlint.main([
+            'test/_data/angular_template_metadata',
+            '--packages=.packages',
+            '--rules=angular_template_metadata'
+          ]);
+          expect(exitCode, 1);
+          expect(
+              collectingOut.trim(),
+              stringContainsInOrder([
+                "@Component(templateUrl: 'someUrl', template: '<some-node></some-node>') // LINT",
+                "@Component() // LINT",
+                '1 file analyzed, 2 issues found, in'
+              ]));
+        });
+      });
+
       test('only throw errors', () {
         dartlint.main(
             ['test/_data/only_throw_errors', '--rules=only_throw_errors']);

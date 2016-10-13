@@ -10,6 +10,7 @@ import 'package:linter/src/config.dart';
 import 'package:linter/src/linter.dart';
 import 'package:linter/src/rules/always_declare_return_types.dart';
 import 'package:linter/src/rules/always_specify_types.dart';
+import 'package:linter/src/rules/angular_template_metadata.dart';
 import 'package:linter/src/rules/annotate_overrides.dart';
 import 'package:linter/src/rules/avoid_as.dart';
 import 'package:linter/src/rules/avoid_empty_else.dart';
@@ -62,6 +63,7 @@ import 'package:linter/src/rules/valid_regexps.dart';
 final Registry ruleRegistry = new Registry()
   ..register(new AlwaysDeclareReturnTypes())
   ..register(new AlwaysSpecifyTypes())
+  ..register(new AngularTemplateMetadata())
   ..register(new AnnotateOverrides())
   ..register(new AvoidAs())
   ..register(new AvoidEmptyElse())
