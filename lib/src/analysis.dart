@@ -214,6 +214,9 @@ class DriverOptions {
   /// The path to the dart SDK.
   String dartSdkPath;
 
+  /// Whether to use Dart's Strong Mode analyzer.
+  bool strongMode = true;
+
   /// Whether to show lint warnings.
   bool enableLints = true;
 
