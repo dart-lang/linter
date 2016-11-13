@@ -1,5 +1,5 @@
 name: linter
-version: 0.1.28
+version: 0.1.29
 author: Dart Team <misc@dartlang.org>
 description: Style linter for Dart.
 homepage: https://github.com/dart-lang/linter
@@ -13,6 +13,7 @@ dependencies:
   plugin: ^0.2.0
   source_span: ^1.0.2
   yaml: ^2.1.2
+  json_schema: any
 dev_dependencies:
   grinder: ^0.8.0
   markdown: ^0.11.0
