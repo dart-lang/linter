@@ -6,6 +6,7 @@ library linter.src.rules.cascade_invocations;
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/linter.dart';
 
 const _desc = r'Cascade consecutive method invocations on the same reference.';
@@ -50,6 +51,14 @@ someReference
 ```
 
 ''';
+
+Element _findElement(SimpleIdentifier identifier) {
+  if (identifier.bestElement is PropertyAccessorElement) {
+    return (identifier.bestElement as PropertyAccessorElement).variable;
+  }
+
+  return identifier.bestElement;
+}
 
 SimpleIdentifier _findTarget(AstNode node) {
   Expression expression;
@@ -122,6 +131,24 @@ class _Visitor extends SimpleAstVisitor {
       _reportIfDeclarationFollowedByMethodInvocation(
           previousNode, prefixIdentifier, node);
     }
+
+    if (previousNode is ExpressionStatement &&
+        previousNode.expression is AssignmentExpression) {
+      _reportIfAssignmentFollowedByMethodInvocation(
+          previousNode.expression, prefixIdentifier, node);
+    }
+  }
+
+  void _reportIfAssignmentFollowedByMethodInvocation(
+      AssignmentExpression assignment,
+      SimpleIdentifier prefixIdentifier,
+      ExpressionStatement node) {
+    if (assignment.leftHandSide is SimpleIdentifier &&
+        node.expression is PrefixedIdentifier &&
+        _findElement(assignment.leftHandSide) ==
+            _findElement((node.expression as PrefixedIdentifier).prefix)) {
+      rule.reportLint(node);
+    }
   }
 
   void _reportIfDeclarationFollowedByMethodInvocation(
@@ -130,7 +157,7 @@ class _Visitor extends SimpleAstVisitor {
       AstNode node) {
     final variables = variablesDeclaration.variables.variables;
     if (variables.length == 1 &&
-        variables.first.name.staticElement == simpleIdentifier.staticElement) {
+        _findElement(variables.first.name) == _findElement(simpleIdentifier)) {
       rule.reportLint(node);
     }
   }
