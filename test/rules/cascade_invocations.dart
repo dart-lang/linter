@@ -62,3 +62,22 @@ void withDifferentTypes() {
   foo.foo();
   if (foo.bar > 5) {}
 }
+
+class FieldInScope {
+  Foo foo;
+
+  void someMethod() {
+    foo = new Foo();
+    foo.bar; // LINT
+    foo.baz(); // LINT
+  }
+}
+
+class VariableInScope {
+  void someMethod() {
+    Foo foo;
+    foo = new Foo();
+    foo.bar; // LINT
+    foo.baz(); // LINT
+  }
+}
