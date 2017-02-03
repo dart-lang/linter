@@ -6,15 +6,15 @@ library linter.src.rules.annotate_types;
 
 import 'package:analyzer/dart/ast/ast.dart'
     show
-    AstVisitor,
-    DeclaredIdentifier,
-    IsExpression,
-    ListLiteral,
-    MapLiteral,
-    NamedType,
-    SimpleFormalParameter,
-    TypedLiteral,
-    VariableDeclarationList;
+        AstVisitor,
+        DeclaredIdentifier,
+        IsExpression,
+        ListLiteral,
+        MapLiteral,
+        NamedType,
+        SimpleFormalParameter,
+        TypedLiteral,
+        VariableDeclarationList;
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
@@ -85,16 +85,16 @@ bool _isOptionallyParameterized(ParameterizedType type) {
 
 bool _isOptionalTypeArgs(Element element) =>
     element is PropertyAccessorElement &&
-        element.name == _OPTIONAL_TYPE_ARGS_VAR_NAME &&
-        element.library?.name == _META_LIB_NAME;
+    element.name == _OPTIONAL_TYPE_ARGS_VAR_NAME &&
+    element.library?.name == _META_LIB_NAME;
 
 class AlwaysSpecifyTypes extends LintRule {
   AlwaysSpecifyTypes()
       : super(
-      name: 'always_specify_types',
-      description: desc,
-      details: details,
-      group: Group.style);
+            name: 'always_specify_types',
+            description: desc,
+            details: details,
+            group: Group.style);
 
   @override
   AstVisitor getVisitor() => new Visitor(this);

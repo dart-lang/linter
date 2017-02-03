@@ -170,7 +170,8 @@ bool isSimpleSetter(MethodDeclaration setter) {
 }
 
 /// Returns `true` if the given [id] is a valid Dart identifier.
-bool isValidDartIdentifier(String id) => !isKeyWord(id) && Analyzer.facade.isIdentifier(id);
+bool isValidDartIdentifier(String id) =>
+    !isKeyWord(id) && Analyzer.facade.isIdentifier(id);
 
 /// Returns `true` if the keyword associated with this token is `var`.
 bool isVar(Token token) => isKeyword(token, Keyword.VAR);

@@ -51,7 +51,8 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitImportDirective(ImportDirective node) {
-    if (node.prefix != null && !Analyzer.facade.isLowerCaseUnderScore(node.prefix.toString())) {
+    if (node.prefix != null &&
+        !Analyzer.facade.isLowerCaseUnderScore(node.prefix.toString())) {
       rule.reportLint(node.prefix);
     }
   }

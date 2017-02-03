@@ -138,7 +138,7 @@ bool _hasMatch(Map<DartTypePredicate, String> predicates, DartType type,
             previous || p(type) && predicates[p] == methodName);
 
 bool _isInvocationThroughCascadeExpression(
-        MethodInvocation invocation, VariableDeclaration variable) {
+    MethodInvocation invocation, VariableDeclaration variable) {
   if (invocation.realTarget is! SimpleIdentifier) {
     return false;
   }
@@ -150,7 +150,8 @@ bool _isInvocationThroughCascadeExpression(
       return element.variable == variable.element;
     }
   }
-  return false;}
+  return false;
+}
 
 bool _isSimpleIdentifierElementEqualToVariable(
         AstNode n, VariableDeclaration variable) =>

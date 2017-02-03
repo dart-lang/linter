@@ -122,7 +122,8 @@ class _VisitorHelper extends RecursiveAstVisitor {
 
   @override
   visitSimpleFormalParameter(SimpleFormalParameter param) {
-    if (param.type == null && !Analyzer.facade.isJustUnderscores(param.identifier.name)) {
+    if (param.type == null &&
+        !Analyzer.facade.isJustUnderscores(param.identifier.name)) {
       rule.reportLint(param);
     }
   }

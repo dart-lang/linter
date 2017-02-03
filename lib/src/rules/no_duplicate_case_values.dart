@@ -104,8 +104,8 @@ class Visitor extends SimpleAstVisitor {
     });
 
     final ConstantVisitor constantVisitor = new ConstantVisitor(
-        new ConstantEvaluationEngine(
-            typeProvider, declaredVariables, typeSystem: typeSystem),
+        new ConstantEvaluationEngine(typeProvider, declaredVariables,
+            typeSystem: typeSystem),
         new ErrorReporter(
             AnalysisErrorListener.NULL_LISTENER, rule.reporter.source));
 
