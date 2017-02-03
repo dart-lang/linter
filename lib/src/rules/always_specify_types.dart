@@ -6,20 +6,19 @@ library linter.src.rules.annotate_types;
 
 import 'package:analyzer/dart/ast/ast.dart'
     show
-        AstVisitor,
-        DeclaredIdentifier,
-        IsExpression,
-        ListLiteral,
-        MapLiteral,
-        NamedType,
-        SimpleFormalParameter,
-        TypedLiteral,
-        VariableDeclarationList;
+    AstVisitor,
+    DeclaredIdentifier,
+    IsExpression,
+    ListLiteral,
+    MapLiteral,
+    NamedType,
+    SimpleFormalParameter,
+    TypedLiteral,
+    VariableDeclarationList;
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/src/lint/linter.dart';
-import 'package:analyzer/src/lint/util.dart';
+import 'package:linter/src/analyzer.dart';
 
 const desc = 'Specify type annotations.';
 
@@ -86,16 +85,16 @@ bool _isOptionallyParameterized(ParameterizedType type) {
 
 bool _isOptionalTypeArgs(Element element) =>
     element is PropertyAccessorElement &&
-    element.name == _OPTIONAL_TYPE_ARGS_VAR_NAME &&
-    element.library?.name == _META_LIB_NAME;
+        element.name == _OPTIONAL_TYPE_ARGS_VAR_NAME &&
+        element.library?.name == _META_LIB_NAME;
 
 class AlwaysSpecifyTypes extends LintRule {
   AlwaysSpecifyTypes()
       : super(
-            name: 'always_specify_types',
-            description: desc,
-            details: details,
-            group: Group.style);
+      name: 'always_specify_types',
+      description: desc,
+      details: details,
+      group: Group.style);
 
   @override
   AstVisitor getVisitor() => new Visitor(this);
@@ -103,6 +102,7 @@ class AlwaysSpecifyTypes extends LintRule {
 
 class Visitor extends SimpleAstVisitor {
   final LintRule rule;
+
   Visitor(this.rule);
 
   void checkLiteral(TypedLiteral literal) {
@@ -142,7 +142,8 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitSimpleFormalParameter(SimpleFormalParameter param) {
-    if (param.type == null && !isJustUnderscores(param.identifier.name)) {
+    if (param.type == null &&
+        !Analyzer.facade.isJustUnderscores(param.identifier.name)) {
       if (param.keyword != null) {
         rule.reportLintForToken(param.keyword);
       } else {

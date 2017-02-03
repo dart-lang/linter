@@ -4,7 +4,7 @@
 
 library linter.src.rules;
 
-import 'package:analyzer/src/lint/registry.dart';
+import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules/always_declare_return_types.dart';
 import 'package:linter/src/rules/always_specify_types.dart';
 import 'package:linter/src/rules/annotate_overrides.dart';
@@ -62,62 +62,48 @@ import 'package:linter/src/rules/unrelated_type_equality_checks.dart';
 import 'package:linter/src/rules/valid_regexps.dart';
 
 void registerLintRules() {
-  Registry.ruleRegistry
-    ..register(new AlwaysDeclareReturnTypes())
-    ..register(new AlwaysSpecifyTypes())
-    ..register(new AnnotateOverrides())
-    ..register(new AvoidAs())
-    ..register(new AvoidEmptyElse())
-    ..register(new AvoidInitToNull())
-    ..register(new AvoidReturnTypesOnSetters())
-    ..register(new AvoidSlowAsyncIo())
-    ..register(new AwaitOnlyFutures())
+  Analyzer.facade
+    ..register(new AlwaysDeclareReturnTypes())..register(
+      new AlwaysSpecifyTypes())..register(new AnnotateOverrides())..register(
+      new AvoidAs())..register(new AvoidEmptyElse())..register(
+      new AvoidInitToNull())..register(
+      new AvoidReturnTypesOnSetters())..register(
+      new AvoidSlowAsyncIo())..register(new AwaitOnlyFutures())
     ..registerDefault(new CamelCaseTypes())
-    ..register(new CancelSubscriptions())
-    ..register(new CascadeInvocations())
-    ..register(new CloseSinks())
-    ..register(new CommentReferences())
-    ..register(new ControlFlowInFinally())
+    ..register(new CancelSubscriptions())..register(
+      new CascadeInvocations())..register(new CloseSinks())..register(
+      new CommentReferences())..register(new ControlFlowInFinally())
     ..registerDefault(new ConstantIdentifierNames())
     ..register(new EmptyCatches())
     ..registerDefault(new EmptyConstructorBodies())
-    ..register(new EmptyStatements())
-    ..register(new HashAndEquals())
-    ..register(new ImplementationImports())
-    ..register(new InvariantBooleans())
-    ..register(new IterableContainsUnrelatedType())
-    ..registerDefault(new LibraryNames())
-    ..registerDefault(new LibraryPrefixes())
-    ..register(new ListRemoveUnrelatedType())
-    ..register(new LiteralOnlyBooleanExpressions())
-    ..register(new NoAdjacentStringsInList())
-    ..register(new NoDuplicateCaseValues())
-    ..registerDefault(new NonConstantIdentifierNames())
-    ..registerDefault(new OneMemberAbstracts())
-    ..register(new OnlyThrowErrors())
-    ..register(new OverriddenFields())
-    ..register(new PackageApiDocs())
-    ..register(new PackagePrefixedLibraryNames())
-    ..register(new ParameterAssignments())
-    ..register(new PreferFinalFields())
-    ..register(new PreferFinalLocals())
-    ..register(new PreferIsNotEmpty())
-    ..register(new PublicMemberApiDocs())
-    ..register(new PubPackageNames())
-    ..register(new RecursiveGetter())
+    ..register(new EmptyStatements())..register(new HashAndEquals())..register(
+      new ImplementationImports())..register(new InvariantBooleans())..register(
+      new IterableContainsUnrelatedType())
+    ..registerDefault(new LibraryNames())..registerDefault(
+      new LibraryPrefixes())
+    ..register(new ListRemoveUnrelatedType())..register(
+      new LiteralOnlyBooleanExpressions())..register(
+      new NoAdjacentStringsInList())..register(new NoDuplicateCaseValues())
+    ..registerDefault(new NonConstantIdentifierNames())..registerDefault(
+      new OneMemberAbstracts())
+    ..register(new OnlyThrowErrors())..register(
+      new OverriddenFields())..register(new PackageApiDocs())..register(
+      new PackagePrefixedLibraryNames())..register(
+      new ParameterAssignments())..register(new PreferFinalFields())..register(
+      new PreferFinalLocals())..register(new PreferIsNotEmpty())..register(
+      new PublicMemberApiDocs())..register(new PubPackageNames())..register(
+      new RecursiveGetter())
     ..registerDefault(new SlashForDocComments())
-    ..register(new SortConstructorsFirst())
-    ..register(new SortUnnamedConstructorsFirst())
+    ..register(new SortConstructorsFirst())..register(
+      new SortUnnamedConstructorsFirst())
     ..registerDefault(new SuperGoesLast())
-    ..register(new TestTypesInEquals())
-    ..register(new ThrowInFinally())
-    ..register(new TypeAnnotatePublicApis())
+    ..register(new TestTypesInEquals())..register(
+      new ThrowInFinally())..register(new TypeAnnotatePublicApis())
     ..registerDefault(new TypeInitFormals())
     ..register(new UnawaitedFutures())
     ..registerDefault(new UnnecessaryBraceInStringInterp())
-    // Disabled pending fix: https://github.com/dart-lang/linter/issues/35
-    //..register(new UnnecessaryGetters())
-    ..register(new UnnecessaryGettersSetters())
-    ..register(new UnrelatedTypeEqualityChecks())
-    ..register(new ValidRegExps());
+  // Disabled pending fix: https://github.com/dart-lang/linter/issues/35
+  //..register(new UnnecessaryGetters())
+    ..register(new UnnecessaryGettersSetters())..register(
+      new UnrelatedTypeEqualityChecks())..register(new ValidRegExps());
 }
