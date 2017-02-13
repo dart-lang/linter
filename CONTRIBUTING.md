@@ -61,9 +61,6 @@ Once you've gotten an LGTM from a project maintainer, submit your changes to the
   request (requires commit access)
 * `git push upstream name_of_your_branch:master` (requires commit access)
 
-
-Alternatively, you can create a pull request.
-
 ### The small print
 Contributions made by corporations are covered by a different agreement than the
 one above, the
