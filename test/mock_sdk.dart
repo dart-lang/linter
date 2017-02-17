@@ -97,6 +97,7 @@ class Iterator<E> {
 abstract class Iterable<E> {
   Iterator<E> get iterator;
   bool contains(Object element);
+  E firstWhere(bool test(E element), { E orElse()});
   bool get isEmpty;
   bool get isNotEmpty;
   E get first;
@@ -120,6 +121,7 @@ abstract class Map<K, V> extends Object {
   bool get isEmpty;
   bool get isNotEmpty;
   int get length;
+  V putIfAbsent(K key, V ifAbsent());
 }
 
 external bool identical(Object a, Object b);
