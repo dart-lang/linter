@@ -39,6 +39,7 @@ import 'package:linter/src/rules/one_member_abstracts.dart';
 import 'package:linter/src/rules/only_throw_errors.dart';
 import 'package:linter/src/rules/overridden_fields.dart';
 import 'package:linter/src/rules/package_api_docs.dart';
+import 'package:linter/src/rules/package_imports_before_relative.dart';
 import 'package:linter/src/rules/package_prefixed_library_names.dart';
 import 'package:linter/src/rules/parameter_assignments.dart';
 import 'package:linter/src/rules/prefer_const_constructors.dart';
@@ -102,6 +103,7 @@ void registerLintRules() {
     ..register(new OnlyThrowErrors())
     ..register(new OverriddenFields())
     ..register(new PackageApiDocs())
+    ..register(new PackageImportsBeforeRelative())
     ..register(new PackagePrefixedLibraryNames())
     ..register(new ParameterAssignments())
     ..register(new PreferConstConstructors())
