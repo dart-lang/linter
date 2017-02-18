@@ -224,6 +224,38 @@ defineTests() {
       });
     });
 
+    group('package_imports_before_relative', () {
+      IOSink currentOut = outSink;
+      CollectingSink collectingOut = new CollectingSink();
+      setUp(() {
+        exitCode = 0;
+        outSink = collectingOut;
+      });
+      tearDown(() {
+        collectingOut.buffer.clear();
+        outSink = currentOut;
+        exitCode = 0;
+      });
+
+      test('package_imports_before_relative', () {
+        var packagesFilePath = new File('.packages').absolute.path;
+        dartlint.main([
+          '--packages',
+          packagesFilePath,
+          'test/_data/package_imports_before_relative',
+          '--rules=package_imports_before_relative'
+        ]);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              "import 'package:async/async.dart';  // LINT",
+              "import 'package:yaml/yaml.dart';  // LINT",
+              '2 files analyzed, 2 issues found, in'
+            ]));
+      });
+    });
+
     group('only_throw_errors', () {
       IOSink currentOut = outSink;
       CollectingSink collectingOut = new CollectingSink();
