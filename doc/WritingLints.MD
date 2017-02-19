@@ -94,7 +94,6 @@ You'll notice when authoring a new rule that failures cause the AST of the test 
     
 would dump the AST of `rules.dart`.
 
-
 # Feedback is Welcome!
 
 Details are under active development.  Feedback is most [welcome](https://github.com/dart-lang/linter/issues)!
