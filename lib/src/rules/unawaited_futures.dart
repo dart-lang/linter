@@ -62,6 +62,7 @@ class Visitor extends SimpleAstVisitor {
     if (type?.isDartAsyncFuture == true) {
       // Ignore a couple of special known cases.
       if (_isFutureDelayedInstanceCreationWithComputation(expr) ||
+          _isTestExpectCall(expr) ||
           _isMapPutIfAbsentInvocation(expr)) {
         return;
       }
@@ -75,6 +76,17 @@ class Visitor extends SimpleAstVisitor {
       // while this is legal, it's a very frequent sign of an error.
       rule.reportLint(node);
     }
+  }
+
+  /// Detects `expect(actual, matcher)` calls, with `expect` from
+  /// `package:test` or `package:unittest`.
+  bool _isTestExpectCall(Expression expr) {
+    // Note: we don't check if parent.target is null because the test/unittest
+    // import may have been aliased (e.g. `test.expect(...)`).
+    return expr is MethodInvocation &&
+      _isTestExpectFunction(
+          resolutionMap.staticElementForIdentifier(expr.methodName)) &&
+      expr.argumentList.length >= 2;
   }
 
   /// Detects `new Future.delayed(duration, [computation])` creations with a
@@ -92,6 +104,16 @@ class Visitor extends SimpleAstVisitor {
 
   bool _isMapClass(Element e) =>
       e is ClassElement && e.name == 'Map' && e.library?.name == 'dart.core';
+
+  bool _isTestExpectFunction(Element e) {
+    if (e is! FunctionElement || e.name != 'expect') return false;
+
+    final libUri = e.library?.source?.uri?.toString();
+    if (libUri == null) return false;
+
+    return libUri.startsWith('package:test/') ||
+        libUri.startsWith('package:unittest/');
+  }
 
   /// Detects Map.putIfAbsent invocations.
   bool _isMapPutIfAbsentInvocation(Expression expr) =>

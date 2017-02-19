@@ -21,3 +21,14 @@ foo6() async {
   var map = <String, Future>{};
   map.putIfAbsent('foo', fut());
 }
+foo7() async {
+  expect(fut(), throws);
+}
+
+// Note: we cheat a bit here: this function's library source URI will actually
+// be 'package:test/rules/unawaited_futures.dart', so the rule is happy that
+// it starts with 'package:test/' (which "sounds" like the actual function we
+// are targetting). It seems non-trivial to have the linter resolve the actual
+// package:test here, so living with this workaround for now.
+Future expect(dynamic a, dynamic b) async {}
+final throws = null;
