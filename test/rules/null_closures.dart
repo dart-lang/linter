@@ -8,8 +8,10 @@ import 'dart:core';
 
 void list_firstWhere() {
   // firstWhere has a named closure argument.
-  <int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: null); // LINT
-  <int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: () => null); // OK
+  <
+      int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: null); // LINT
+  <
+      int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: () => null); // OK
 }
 
 void map_putIfAbsent() {
@@ -22,6 +24,8 @@ void map_putIfAbsent() {
 typedef void Callback(String);
 
 void typedef_parameter() {
-  var fn = (Callback c) { c('Hello'); };
+  var fn = (Callback c) {
+    c('Hello');
+  };
   fn(null); // LINT
 }
