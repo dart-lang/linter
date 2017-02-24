@@ -6,6 +6,7 @@ library linter.src.rules.null_closures;
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
@@ -18,6 +19,8 @@ const _details = r'''
 Often a closure that is passed to a method will only be called conditionally,
 so that tests and "happy path" production calls do not reveal that `null` will
 result in an exception being thrown.
+
+This rule only catches null literals being passed where closures are expected.
 
 **BAD:**
 ```
@@ -48,29 +51,24 @@ class Visitor extends SimpleAstVisitor {
   Visitor(this.rule);
 
   @override
-  void visitMethodInvocation(MethodInvocation node) {
+  void visitArgumentList(ArgumentList node) {
     _checkNullArgForClosure(node);
     return;
   }
 
-  void _checkNullArgForClosure(MethodInvocation node) {
-    ArgumentList argumentList = node.argumentList;
-    NodeList<Expression> args = argumentList.arguments;
-    List<ParameterElement> params = argumentList.correspondingStaticParameters;
+  void _checkNullArgForClosure(ArgumentList node) {
+    NodeList<Expression> args = node.arguments;
+    List<ParameterElement> params = node.correspondingStaticParameters;
     if (params == null) {
-      return;}
+      return;
+    }
     for (int i = 0; i < args.length; i++) {
       var arg = args[i];
       if (arg is NamedExpression) {
         arg = arg.expression;
       }
-      if (arg is NullLiteral) {
-        // [name] is null when the type represents the type of an unnamed
-        // function.
-        // https://www.dartdocs.org/documentation/analyzer/latest/analyzer.dart.element.type/DartType/name.html
-        if (params[i].type.name == null) {
-          rule.reportLint(arg);
-        }
+      if (arg is NullLiteral && params[i].type is FunctionType) {
+        rule.reportLint(arg);
       }
     }
   }

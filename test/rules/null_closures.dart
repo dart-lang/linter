@@ -18,3 +18,10 @@ void map_putIfAbsent() {
   map.putIfAbsent(7, null); // LINT
   map.putIfAbsent(7, () => null); // OK
 }
+
+typedef void Callback(String);
+
+void typedef_parameter() {
+  var fn = (Callback c) { c('Hello'); };
+  fn(null); // LINT
+}
