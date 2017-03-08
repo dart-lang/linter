@@ -5,6 +5,7 @@
 library linter.src.rules;
 
 import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/rules/adjacent_strings_to_concatenate_literals.dart';
 import 'package:linter/src/rules/always_declare_return_types.dart';
 import 'package:linter/src/rules/always_specify_types.dart';
 import 'package:linter/src/rules/annotate_overrides.dart';
@@ -77,6 +78,7 @@ import 'package:linter/src/rules/valid_regexps.dart';
 
 void registerLintRules() {
   Analyzer.facade
+    ..register(new AdjacentStringsToConcatenateLiterals())
     ..register(new AlwaysDeclareReturnTypes())
     ..register(new AlwaysSpecifyTypes())
     ..register(new AnnotateOverrides())
