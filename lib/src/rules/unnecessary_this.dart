@@ -7,6 +7,7 @@ library linter.src.rules.unnecessary_this;
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/util/dart_type_utilities.dart';
 import 'package:linter/src/util/environment_visitors.dart';
 
 const _desc = r'Don’t use this. when not needed to avoid shadowing.';
@@ -62,10 +63,10 @@ class UnnecessaryThis extends LintRule {
   }
 
   @override
-  AstVisitor getVisitor() => _visitor.getVisitor();
+  AstVisitor getVisitor() => _visitor.mainCallVisitor;
 }
 
-class _Visitor extends LookUpVisitor {
+class _Visitor extends ElementScopeVisitor {
   final LintRule rule;
 
   _Visitor(this.rule);
@@ -77,17 +78,17 @@ class _Visitor extends LookUpVisitor {
       Element element = parent.propertyName?.name != null
           ? lookUp(parent.propertyName.name)
           : null;
-      final localAccessor = parent.propertyName.bestElement;
-      if (localAccessor is PropertyAccessorElement &&
-          element == localAccessor.variable) {
+      final localElement =
+          DartTypeUtilities.getCanonicalElement(parent.propertyName.bestElement);
+      if (element == localElement) {
         rule.reportLint(parent);
       }
     } else if (parent is MethodInvocation) {
       Element element = parent.methodName?.name != null
           ? lookUp(parent.methodName.name)
           : null;
-      final localAccessor = parent.methodName.bestElement;
-      if (localAccessor is MethodElement && element == localAccessor) {
+      final localElement = parent.methodName.bestElement;
+      if (localElement is MethodElement && element == localElement) {
         rule.reportLint(parent);
       }
     }

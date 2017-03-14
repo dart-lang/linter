@@ -7,10 +7,11 @@ library linter.src.rules.invariant_booleans;
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/ast/token.dart';
-import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/boolean_expression_utilities.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
+import 'package:linter/src/util/environment_visitors.dart';
 import 'package:linter/src/util/tested_expressions.dart';
 
 const _desc =
@@ -103,149 +104,27 @@ in the meantime, this lint should be sparingly enabled in large projects or when
 is a concern._
 ''';
 
-Set<Expression> _findConditionsCausingReturns(
-        Expression node, Iterable<AstNode> nodesInDFS) =>
-    nodesInDFS
-        .where(_isAnalyzedNode)
-        .where(_isConditionalStatementWithReturn(nodesInDFS))
-        .takeWhile((n) => n != node.parent)
-        .where((_noFurtherAssignmentInvalidatingCondition(node, nodesInDFS)))
-        .fold(<Expression>[], (List<Expression> previous, AstNode statement) {
-      previous.add(_getCondition(statement));
-      return previous;
-    }).toSet();
-
-Set<Expression> _findConditionsOfElseStatementAncestor(
-    Statement statement, Iterable<AstNode> nodesInDFS) {
-  return _findConditionsUnderStatementBranch(
-      statement,
-      (n) =>
-          n is IfStatement &&
-          statement.getAncestor((a) => a == n.elseStatement) != null,
-      nodesInDFS);
+Element _getRealElement(AstNode node) {
+  Element element;
+  if (node is SimpleIdentifier) {
+    element = node.bestElement;
+  } else if (node is PropertyAccess) {
+    element = node.propertyName.bestElement;
+  }
+  return DartTypeUtilities.getCanonicalElement(element);
 }
 
-Set<Expression> _findConditionsOfStatementAncestor(
-    Statement statement, Iterable<AstNode> nodesInDFS) {
-  return _findConditionsUnderStatementBranch(
-      statement,
-      (n) =>
-          _isAnalyzedNode(n) &&
-          (n is! IfStatement ||
-              statement.getAncestor(
-                      (a) => a == (n as IfStatement).thenStatement) !=
-                  null),
-      nodesInDFS);
-}
-
-Set<Expression> _findConditionsUnderStatementBranch(Statement statement,
-    AstNodePredicate predicate, Iterable<AstNode> nodesInDFS) {
-  Expression condition = _getCondition(statement);
-  AstNodePredicate noFurtherAssignmentInvalidatingCondition =
-      _noFurtherAssignmentInvalidatingCondition(condition, nodesInDFS);
-  return nodesInDFS
-      .where((n) => n == statement.getAncestor((a) => a == n && a != statement))
-      .where(_isAnalyzedNode)
-      .where(predicate)
-      .where(noFurtherAssignmentInvalidatingCondition)
-      .fold(<Expression>[], (List<Expression> previous, AstNode statement) {
-    previous.add(_getCondition(statement));
-    return previous;
-  }).toSet();
-}
-
-TestedExpressions _findPreviousTestedExpressions(Expression node) {
-  Block block = node.getAncestor((a) => a is Block && a.parent is FunctionBody);
-  Iterable<AstNode> nodesInDFS = DartTypeUtilities.traverseNodesInDFS(block,
-      excludeCriteria: (n) => n is FunctionDeclarationStatement);
-  Iterable<Expression> conjunctions =
-      _findConditionsOfStatementAncestor(node.parent, nodesInDFS)
-          .map(_splitConjunctions)
-          .expand((iterable) => iterable)
-          .toSet();
-  Iterable<Expression> negations = (_findConditionsCausingReturns(
-          node, nodesInDFS)
-        ..addAll(
-            _findConditionsOfElseStatementAncestor(node.parent, nodesInDFS)))
-      .toSet();
-  return new TestedExpressions(node, conjunctions, negations);
-}
-
-Set<Identifier> _findStatementIdentifiers(Statement statement) =>
+Iterable<Element> _getRealElementsInExpression(Expression node) =>
     DartTypeUtilities
-        .traverseNodesInDFS(statement)
-        .where((n) => n is Identifier)
-        .toSet();
-
-Expression _getCondition(Statement statement) {
-  if (statement is IfStatement) {
-    return statement.condition;
-  }
-
-  if (statement is DoStatement) {
-    return statement.condition;
-  }
-
-  if (statement is ForStatement) {
-    return statement.condition;
-  }
-
-  if (statement is WhileStatement) {
-    return statement.condition;
-  }
-
-  return null;
-}
+        .traverseNodesInDFS(node)
+        .where((e) => (e is SimpleIdentifier || e is PropertyAccess))
+        .map(_getRealElement);
 
 bool _isAnalyzedNode(AstNode node) =>
     node is IfStatement ||
     node is DoStatement ||
     node is ForStatement ||
     node is WhileStatement;
-
-AstNodePredicate _isConditionalStatementWithReturn(
-        Iterable<AstNode> blockNodes) =>
-    (AstNode node) {
-      Block block =
-          node.getAncestor((a) => a is Block && a.parent is BlockFunctionBody);
-      Iterable<AstNode> nodesInDFS = DartTypeUtilities.traverseNodesInDFS(node);
-      return nodesInDFS.any((n) => n is ReturnStatement) &&
-          // Ignore nested if statements.
-          !nodesInDFS.any(_isAnalyzedNode) &&
-          node.getAncestor((n) =>
-                  n != node &&
-                  _isAnalyzedNode(n) &&
-                  n.getAncestor((a) => a == block) == block) ==
-              null;
-    };
-
-AstNodePredicate _noFurtherAssignmentInvalidatingCondition(
-    Expression node, Iterable<AstNode> nodesInDFS) {
-  Set<Identifier> identifiers = _findStatementIdentifiers(node.parent);
-  return (AstNode statement) {
-    bool isMutation(AstNode n) {
-      if (n is AssignmentExpression) {
-        return !identifiers.contains(n.leftHandSide);
-      } else if (n is PostfixExpression) {
-        TokenType type = n.operator.type;
-        return (type == TokenType.PLUS_PLUS || type == TokenType.MINUS_MINUS) &&
-            !identifiers.contains(n.operand);
-      } else if (n is PrefixExpression) {
-        TokenType type = n.operator.type;
-        return (type == TokenType.PLUS_PLUS || type == TokenType.MINUS_MINUS) &&
-            !identifiers.contains(n.operand);
-      }
-
-      return false;
-    }
-
-    return nodesInDFS
-        .skipWhile((n) => n != statement)
-        .takeWhile((n) => n != node)
-        .where(isMutation)
-        .isEmpty;
-  };
-}
 
 List<Expression> _splitConjunctions(Expression expression) {
   if (expression is BinaryExpression &&
@@ -271,7 +150,7 @@ class InvariantBooleans extends LintRule {
   }
 
   @override
-  AstVisitor getVisitor() => _visitor;
+  AstVisitor getVisitor() => _visitor.mainCallVisitor;
 }
 
 /// The only purpose of this rule is to report the second node on a contradictory
@@ -286,7 +165,7 @@ class _ContradictionReportRule extends LintRule {
             maturity: Maturity.stable);
 }
 
-class _Visitor extends SimpleAstVisitor {
+class _Visitor extends ConditionScopeVisitor {
   final LintRule rule;
 
   _Visitor(this.rule);
@@ -309,6 +188,16 @@ class _Visitor extends SimpleAstVisitor {
   @override
   visitWhileStatement(WhileStatement node) {
     _reportExpressionIfConstantValue(node.condition);
+  }
+
+  TestedExpressions _findPreviousTestedExpressions(Expression node) {
+    final elements = _getRealElementsInExpression(node);
+    Iterable<Expression> conjunctions = getTrueExpressions(elements)
+        .map(_splitConjunctions)
+        .expand((iterable) => iterable)
+        .toSet();
+    Iterable<Expression> negations = getFalseExpressions(elements).toSet();
+    return new TestedExpressions(node, conjunctions, negations);
   }
 
   _reportExpressionIfConstantValue(Expression node) {
