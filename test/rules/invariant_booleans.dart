@@ -81,7 +81,6 @@ void nestedBad2() {
   if (foo == bar) {
     return;
   }
-
   if (foo == bar) {} // LINT
 }
 
@@ -290,3 +289,24 @@ void test337_5() {
     }
   }
 }
+
+ foobar() => null;
+
+class falsePositiveInSdk {
+  int bar() {
+    var interceptor = foo();
+    if (interceptor != null) {
+      return interceptor;
+    }
+    // This takes care of dispatch-record based caching, but not constructor based
+    // caching of [UnknownJavaScriptObject]s.
+    interceptor = foobar();
+    if (interceptor != null) {
+      return interceptor;
+    }
+  }
+  foo() {
+    return null;
+  }
+}
+
