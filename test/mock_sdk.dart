@@ -160,6 +160,10 @@ class Future<T> {
   factory Future.delayed(Duration duration, [T computation()]) => null;
   factory Future.value([value]) => null;
   static Future wait(List<Future> futures) => null;
+  Future<T> catchError(Function onError, {bool test(Object error)});
+  Future<T> whenComplete(action());
+  Future<T> then(FutureOr<T> onValue(T value), { Function onError });
+  // Original is Future<S> then<S>(FutureOr<S> onValue(T value), { Function onError });
 }
 
 class FutureOr<T> {}
