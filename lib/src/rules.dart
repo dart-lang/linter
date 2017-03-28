@@ -8,6 +8,7 @@ import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules/always_declare_return_types.dart';
 import 'package:linter/src/rules/always_specify_types.dart';
 import 'package:linter/src/rules/annotate_overrides.dart';
+import 'package:linter/src/rules/avoid_annotating_types_on_function_expressions.dart';
 import 'package:linter/src/rules/avoid_as.dart';
 import 'package:linter/src/rules/avoid_catches_without_on_clauses.dart';
 import 'package:linter/src/rules/avoid_classes_with_only_static_members.dart';
@@ -89,6 +90,7 @@ void registerLintRules() {
     ..register(new AlwaysDeclareReturnTypes())
     ..register(new AlwaysSpecifyTypes())
     ..register(new AnnotateOverrides())
+    ..register(new AvoidAnnotatingTypesOnFunctionExpressions())
     ..register(new AvoidAs())
     ..register(new AvoidCatchesWithoutOnClauses())
     ..register(new AvoidClassesWithOnlyStaticMembers())
