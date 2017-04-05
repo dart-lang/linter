@@ -51,6 +51,7 @@ import 'package:linter/src/rules/overridden_fields.dart';
 import 'package:linter/src/rules/package_api_docs.dart';
 import 'package:linter/src/rules/package_prefixed_library_names.dart';
 import 'package:linter/src/rules/parameter_assignments.dart';
+import 'package:linter/src/rules/place_undefined_optional_positional_parameters_last.dart';
 import 'package:linter/src/rules/prefer_adjacent_string_concatenation.dart';
 import 'package:linter/src/rules/prefer_collection_literals.dart';
 import 'package:linter/src/rules/prefer_const_constructors.dart';
@@ -135,6 +136,7 @@ void registerLintRules() {
     ..register(new PackageApiDocs())
     ..register(new PackagePrefixedLibraryNames())
     ..register(new ParameterAssignments())
+    ..register(new PlaceUndefinedOptionalPositionalParametersLast())
     ..register(new PreferAdjacentStringConcatenation())
     ..register(new PreferCollectionLiterals())
     ..register(new PreferConstConstructors())
