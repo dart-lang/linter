@@ -33,6 +33,16 @@
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
+<pre><code>void badFunction(int required, {int optional: 42}) { // LINT
+  optional ??= 8;
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>void badFunctionPositional(int required, [int optional = 42]) { // LINT
+  optional ??= 8;
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
 <pre><code>class A {
     void badMethod(int parameter) { // LINT
     parameter = 4;
@@ -42,6 +52,16 @@
 <p><strong>GOOD:</strong></p>
 <pre><code>void ok(String parameter) {
   print(parameter);
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void actuallyGood(int required, {int optional}) { // OK
+  optional ??= ...;
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void actuallyGoodPositional(int required, [int optional]) { // OK
+  optional ??= ...;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>

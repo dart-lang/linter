@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>package_prefixed_library_names</title>
+      <title>omit_local_variable_types</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>package_prefixed_library_names</h1>
+            <h1>omit_local_variable_types</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,26 +26,26 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> prefix library names with the package name and a dot-separated path.</p>
-<p>This guideline helps avoid the warnings you get when two libraries have the
-same name. Here are the rules we recommend:</p><ul><li>Prefix all library names with the package name.</li><li>Make the entry library have the same name as the package.</li><li>For all other libraries in a package, after the package name add the dot-separated path to the library's Dart file.</li><li>For libraries under <code>lib</code>, omit the top directory name.</li></ul>
-<p>For example, say the package name is <code>my_package</code>. Here are the library names
-for various files in the package:</p>
+            <p><strong>CONSIDER</strong> omitting the types for local variables.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>Map&lt;int, List&lt;Person&gt;&gt; groupByZip(Iterable&lt;Person&gt; people) {
+  Map&lt;int, List&lt;Person&gt;&gt; peopleByZip = &lt;int, List&lt;Person&gt;&gt;{};
+  for (Person person in people) {
+    peopleByZip.putIfAbsent(person.zip, () =&gt; &lt;Person&gt;[]);
+    peopleByZip[person.zip].add(person);
+  }
+  return peopleByZip;
+}
+</code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>// In lib/my_package.dart
-library my_package;
-
-// In lib/other.dart
-library my_package.other;
-
-// In lib/foo/bar.dart
-library my_package.foo.bar;
-
-// In example/foo/bar.dart
-library my_package.example.foo.bar;
-
-// In lib/src/private.dart
-library my_package.src.private;
+<pre><code>Map&lt;int, List&lt;Person&gt;&gt; groupByZip(Iterable&lt;Person&gt; people) {
+  var peopleByZip = &lt;int, List&lt;Person&gt;&gt;{};
+  for (var person in people) {
+    peopleByZip.putIfAbsent(person.zip, () =&gt; &lt;Person&gt;[]);
+    peopleByZip[person.zip].add(person);
+  }
+  return peopleByZip;
+}
 </code></pre>
 
 

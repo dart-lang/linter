@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>package_prefixed_library_names</title>
+      <title>prefer_is_empty</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>package_prefixed_library_names</h1>
+            <h1>prefer_is_empty</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,26 +26,19 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> prefix library names with the package name and a dot-separated path.</p>
-<p>This guideline helps avoid the warnings you get when two libraries have the
-same name. Here are the rules we recommend:</p><ul><li>Prefix all library names with the package name.</li><li>Make the entry library have the same name as the package.</li><li>For all other libraries in a package, after the package name add the dot-separated path to the library's Dart file.</li><li>For libraries under <code>lib</code>, omit the top directory name.</li></ul>
-<p>For example, say the package name is <code>my_package</code>. Here are the library names
-for various files in the package:</p>
+            <p><strong>DO NOT</strong> use <code>.length</code> to see if a collection is empty.</p>
+<p>The <code>Iterable</code> contract does not require that a collection know its length or be
+able to provide it in constant time. Calling <code>.length</code> just to see if the
+collection contains anything can be painfully slow.</p>
+<p>Instead, there are faster and more readable getters: <code>.isEmpty</code> and
+<code>.isNotEmpty</code>. Use the one that doesn’t require you to negate the result.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>// In lib/my_package.dart
-library my_package;
-
-// In lib/other.dart
-library my_package.other;
-
-// In lib/foo/bar.dart
-library my_package.foo.bar;
-
-// In example/foo/bar.dart
-library my_package.example.foo.bar;
-
-// In lib/src/private.dart
-library my_package.src.private;
+<pre><code>if (lunchBox.isEmpty) return 'so hungry...';
+if (words.isNotEmpty) return words.join(' ');
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>if (lunchBox.length == 0) return 'so hungry...';
+if (words.length != 0) return words.join(' ');
 </code></pre>
 
 

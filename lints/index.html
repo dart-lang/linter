@@ -49,10 +49,11 @@
 rules are considered stable, while others may be marked <strong>experimental</strong>
 to indicate that they are under review.</p>
 <p>Rules can be selectively enabled in the analyzer using
-<a href="https://pub.dartlang.org/packages/analyzer">analysis options</a>.  An
-auto-generated list enabling all options is provided
-<a href="options/options.html">here</a>.  As some lints may contradict each other, only
-some lints will be enabled in practice, but this list should provide a
+<a href="https://pub.dartlang.org/packages/analyzer">analysis options</a>
+or through an
+<a href="https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file">analysis options file</a>. </p><ul><li><strong><a href="options/options.html">An auto-generated list enabling all options is providedhere.</a></strong> </li></ul>
+<p>As some lints may contradict each other, only a subset of these will be
+enabled in practice, but this list should provide a
 convenient jumping-off point.</p>
 <p>These rules are under active development.  Feedback is
 <a href="https://github.com/dart-lang/linter/issues">welcome</a>!</p>
@@ -62,6 +63,9 @@ convenient jumping-off point.</p>
             <h2 id="styleguide-rules">Error Rules</h2>
 
                <strong><a href = "avoid_empty_else.html">avoid_empty_else</a></strong><br/><p>Avoid empty else statements.</p>
+
+
+<strong><a href = "avoid_slow_async_io.html">avoid_slow_async_io</a></strong><br/><p>Avoid slow async dart:io methods.</p>
 
 
 <strong><a href = "cancel_subscriptions.html">cancel_subscriptions</a></strong><br/><p>Cancel instances of dart.async.StreamSubscription.</p>
@@ -82,7 +86,7 @@ convenient jumping-off point.</p>
 <strong><a href = "hash_and_equals.html">hash_and_equals</a></strong><br/><p>Always override <code>hashCode</code> if overriding <code>==</code></p>
 
 
-<strong><a href = "invariant_booleans.html">invariant_booleans (stable)</a></strong><br/><p>Conditions should not unconditionally evaluate to "TRUE" or to "FALSE"</p>
+<strong><a href = "invariant_booleans.html">invariant_booleans</a></strong><br/><p>Conditions should not unconditionally evaluate to "TRUE" or to "FALSE"</p>
 
 
 <strong><a href = "iterable_contains_unrelated_type.html">iterable_contains_unrelated_type</a></strong><br/><p>Invocation of Iterable<E>.contains with references of unrelated types.</p>
@@ -92,6 +96,12 @@ convenient jumping-off point.</p>
 
 
 <strong><a href = "literal_only_boolean_expressions.html">literal_only_boolean_expressions (stable)</a></strong><br/><p>Conditions should not unconditionally evaluate to "TRUE" or to "FALSE"</p>
+
+
+<strong><a href = "no_adjacent_strings_in_list.html">no_adjacent_strings_in_list</a></strong><br/><p>Do not use adjacent strings in list</p>
+
+
+<strong><a href = "no_duplicate_case_values.html">no_duplicate_case_values</a></strong><br/><p>Do not use more the one case with same value</p>
 
 
 <strong><a href = "test_types_in_equals.html">test_types_in_equals</a></strong><br/><p>Test type arguments in operator ==(Object other).</p>
@@ -120,6 +130,9 @@ convenient jumping-off point.</p>
 <strong><a href = "avoid_as.html">avoid_as</a></strong><br/><p>Avoid using <code>as</code>.</p>
 
 
+<strong><a href = "avoid_function_literals_in_foreach_calls.html">avoid_function_literals_in_foreach_calls</a></strong><br/><p>Avoid using Iterable.forEach() with a function literal.</p>
+
+
 <strong><a href = "avoid_init_to_null.html">avoid_init_to_null</a></strong><br/><p>Don't explicitly initialize variables to null</p>
 
 
@@ -132,7 +145,13 @@ convenient jumping-off point.</p>
 <strong><a href = "camel_case_types.html">camel_case_types</a></strong><br/><p>Name types using UpperCamelCase.</p>
 
 
+<strong><a href = "cascade_invocations.html">cascade_invocations</a></strong><br/><p>Cascade consecutive method invocations on the same reference.</p>
+
+
 <strong><a href = "constant_identifier_names.html">constant_identifier_names</a></strong><br/><p>Prefer using lowerCamelCase for constant names.</p>
+
+
+<strong><a href = "directives_ordering.html">directives_ordering</a></strong><br/><p>Adhere to Effective Dart Guide directives sorting conventions.</p>
 
 
 <strong><a href = "empty_catches.html">empty_catches</a></strong><br/><p>Avoid empty catch blocks.</p>
@@ -153,6 +172,9 @@ convenient jumping-off point.</p>
 <strong><a href = "non_constant_identifier_names.html">non_constant_identifier_names</a></strong><br/><p>Name non-constant identifiers using lowerCamelCase.</p>
 
 
+<strong><a href = "omit_local_variable_types.html">omit_local_variable_types</a></strong><br/><p>Omit the types for local variables.</p>
+
+
 <strong><a href = "one_member_abstracts.html">one_member_abstracts</a></strong><br/><p>Avoid defining a one-member abstract class when a simple function will do.</p>
 
 
@@ -171,16 +193,46 @@ convenient jumping-off point.</p>
 <strong><a href = "parameter_assignments.html">parameter_assignments</a></strong><br/><p>Don't reassign references to parameters of functions or methods.</p>
 
 
+<strong><a href = "prefer_adjacent_string_concatenation.html">prefer_adjacent_string_concatenation</a></strong><br/><p>Use adjacent strings to concatenate string literals.</p>
+
+
+<strong><a href = "prefer_collection_literals.html">prefer_collection_literals</a></strong><br/><p>Use collection literals when possible.</p>
+
+
+<strong><a href = "prefer_const_constructors.html">prefer_const_constructors</a></strong><br/><p>Prefer const with constant constructors.</p>
+
+
+<strong><a href = "prefer_contains.html">prefer_contains</a></strong><br/><p>Use contains for Lists and Strings.</p>
+
+
+<strong><a href = "prefer_expression_function_bodies.html">prefer_expression_function_bodies</a></strong><br/><p>Use => for short members whose body is a single return statement.</p>
+
+
 <strong><a href = "prefer_final_fields.html">prefer_final_fields</a></strong><br/><p>Private field could be final.</p>
 
 
 <strong><a href = "prefer_final_locals.html">prefer_final_locals</a></strong><br/><p>Prefer final for variable declaration if reference is not reassigned.</p>
 
 
+<strong><a href = "prefer_function_declarations_over_variables.html">prefer_function_declarations_over_variables</a></strong><br/><p>Use a function declaration to bind a function to a name.</p>
+
+
+<strong><a href = "prefer_initializing_formals.html">prefer_initializing_formals</a></strong><br/><p>Use initializing formals when possible.</p>
+
+
+<strong><a href = "prefer_interpolation_to_compose_strings.html">prefer_interpolation_to_compose_strings</a></strong><br/><p>Use interpolation to compose strings and values.</p>
+
+
+<strong><a href = "prefer_is_empty.html">prefer_is_empty</a></strong><br/><p>Use isNotEmpty for Iterables and Maps.</p>
+
+
 <strong><a href = "prefer_is_not_empty.html">prefer_is_not_empty</a></strong><br/><p>Use isNotEmpty for Iterables and Maps.</p>
 
 
 <strong><a href = "public_member_api_docs.html">public_member_api_docs</a></strong><br/><p>Document all public members</p>
+
+
+<strong><a href = "recursive_getters.html">recursive_getters</a></strong><br/><p>Property getter recursivlely returns itself.</p>
 
 
 <strong><a href = "slash_for_doc_comments.html">slash_for_doc_comments</a></strong><br/><p>Prefer to use /// for doc comments</p>
@@ -204,10 +256,22 @@ convenient jumping-off point.</p>
 <strong><a href = "unawaited_futures.html">unawaited_futures</a></strong><br/><p>Await for future expression statements inside async function bodies.</p>
 
 
-<strong><a href = "unnecessary_brace_in_string_interp.html">unnecessary_brace_in_string_interp</a></strong><br/><p>Avoid using braces in interpolation when not needed.</p>
+<strong><a href = "unnecessary_brace_in_string_interps.html">unnecessary_brace_in_string_interps</a></strong><br/><p>Avoid using braces in interpolation when not needed.</p>
 
 
 <strong><a href = "unnecessary_getters_setters.html">unnecessary_getters_setters</a></strong><br/><p>Avoid wrapping fields in getters and setters just to be "safe".</p>
+
+
+<strong><a href = "unnecessary_lambdas.html">unnecessary_lambdas</a></strong><br/><p>Don't create a lambda when a tear-off will do.</p>
+
+
+<strong><a href = "unnecessary_null_aware_assignments.html">unnecessary_null_aware_assignments</a></strong><br/><p>Avoid null in null-aware assignment</p>
+
+
+<strong><a href = "unnecessary_null_in_if_null_operators.html">unnecessary_null_in_if_null_operators</a></strong><br/><p>Avoid null in if null operator</p>
+
+
+<strong><a href = "unnecessary_this.html">unnecessary_this</a></strong><br/><p>Don’t use this. when not needed to avoid shadowing.</p>
 
 
             <h2 id="styleguide-rules">Pub Rules</h2>

@@ -29,7 +29,10 @@
 
             <h1 id="analysis-options">Analysis Options</h1>
             <p>
-               Auto-generated options enabling all lints; tailor to fit!
+               Auto-generated options enabling all lints.
+               Add these to your
+               [.analysis-options file](https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file)
+               and tailor to fit!
             </p>
 
 <pre><code>linter:
@@ -39,15 +42,19 @@
     - annotate_overrides
     - avoid_as
     - avoid_empty_else
+    - avoid_function_literals_in_foreach_calls
     - avoid_init_to_null
     - avoid_return_types_on_setters
+    - avoid_slow_async_io
     - await_only_futures
     - camel_case_types
     - cancel_subscriptions
+    - cascade_invocations
     - close_sinks
     - comment_references
     - constant_identifier_names
     - control_flow_in_finally
+    - directives_ordering
     - empty_catches
     - empty_constructor_bodies
     - empty_statements
@@ -59,7 +66,10 @@
     - library_prefixes
     - list_remove_unrelated_type
     - literal_only_boolean_expressions
+    - no_adjacent_strings_in_list
+    - no_duplicate_case_values
     - non_constant_identifier_names
+    - omit_local_variable_types
     - one_member_abstracts
     - only_throw_errors
     - overridden_fields
@@ -67,10 +77,20 @@
     - package_names
     - package_prefixed_library_names
     - parameter_assignments
+    - prefer_adjacent_string_concatenation
+    - prefer_collection_literals
+    - prefer_const_constructors
+    - prefer_contains
+    - prefer_expression_function_bodies
     - prefer_final_fields
     - prefer_final_locals
+    - prefer_function_declarations_over_variables
+    - prefer_initializing_formals
+    - prefer_interpolation_to_compose_strings
+    - prefer_is_empty
     - prefer_is_not_empty
     - public_member_api_docs
+    - recursive_getters
     - slash_for_doc_comments
     - sort_constructors_first
     - sort_unnamed_constructors_first
@@ -80,8 +100,12 @@
     - type_annotate_public_apis
     - type_init_formals
     - unawaited_futures
-    - unnecessary_brace_in_string_interp
+    - unnecessary_brace_in_string_interps
     - unnecessary_getters_setters
+    - unnecessary_lambdas
+    - unnecessary_null_aware_assignments
+    - unnecessary_null_in_if_null_operators
+    - unnecessary_this
     - unrelated_type_equality_checks
     - valid_regexps
 </code></pre>

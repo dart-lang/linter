@@ -28,9 +28,9 @@
 
             <p><strong>DO</strong> provide doc comments for all public APIs.</p>
 <p>As described in the [pub package layout doc]
-(https://www.dartlang.org/tools/pub/package-layout.html#implementation-files), 
-public APIs consist in everything in your package's <code>lib</code> folder, minus 
-implementation files in <code>lib/src</code>, adding elements explicitly exported with an 
+(https://www.dartlang.org/tools/pub/package-layout.html#implementation-files),
+public APIs consist in everything in your package's <code>lib</code> folder, minus
+implementation files in <code>lib/src</code>, adding elements explicitly exported with an
 <code>export</code> directive.</p>
 <p>For example, given <code>lib/foo.dart</code>:</p>
 <pre><code>export 'src/bar.dart' show Bar;
@@ -41,14 +41,14 @@ class Foo { }
 class _Foo { }
 </code></pre>
 <p>it's API includes:</p><ul><li><code>Foo</code> (but not <code>_Foo</code>)</li><li><code>Bar</code> (exported) and</li><li>all <em>public</em> elements in <code>src/baz.dart</code></li></ul>
-<p>All public API members should be documented with <code>///</code> doc-style comments. </p>
+<p>All public API members should be documented with <code>///</code> doc-style comments.</p>
 <p><strong>Good:</strong></p>
 <pre><code>/// A Foo.
 abstract class Foo {
   /// Start foo-ing.
   void start() =&gt; _start();
 
-  _start(); 
+  _start();
 }
 </code></pre>
 <p><strong>Bad:</strong></p>
@@ -56,7 +56,7 @@ abstract class Foo {
   void bar();
 }
 </code></pre>
-<p>Advice for writing good doc comments can be found in the 
+<p>Advice for writing good doc comments can be found in the
 [Doc Writing Guidelines]
 (https://www.dartlang.org/articles/doc-comment-guidelines).</p>
 
