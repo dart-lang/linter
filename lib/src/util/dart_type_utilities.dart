@@ -10,6 +10,7 @@ import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:linter/src/util/collector_visitors.dart';
 
 typedef bool AstNodePredicate(AstNode node);
 
@@ -32,6 +33,12 @@ class DartTypeUtilities {
       }
     }
     return null;
+  }
+
+  static Iterable<Element> getCanonicalElementsInNode(AstNode node) {
+    final visitor = new ElementCollectorVisitor();
+    node?.accept(visitor);
+    return visitor.elements;
   }
 
   static Iterable<InterfaceType> getImplementedInterfaces(InterfaceType type) {
@@ -64,6 +71,12 @@ class DartTypeUtilities {
       return getLastStatementInBlock(lastStatement);
     }
     return lastStatement;
+  }
+
+  static Iterable<SimpleIdentifier> getSimpleIdentifiersInNode(AstNode node) {
+    final visitor = new SimpleIdentifierCollectorVisitor();
+    node?.accept(visitor);
+    return visitor.simpleIdentifiers;
   }
 
   static bool hasInheritedMethod(MethodDeclaration node) =>

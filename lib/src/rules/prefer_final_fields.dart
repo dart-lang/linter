@@ -63,23 +63,11 @@ class GoodMutable {
 ```
 ''';
 
-bool _isMutated(
-        VariableDeclaration variable, CompilationUnit compilationUnit) =>
-    DartTypeUtilities
-        .traverseNodesInDFS(compilationUnit)
-        .any((n) =>
-            (n is AssignmentExpression &&
-                DartTypeUtilities
-                        .getCanonicalElementFromIdentifier(n.leftHandSide) ==
-                    variable.element) ||
-            (n is PrefixExpression &&
-                DartTypeUtilities
-                        .getCanonicalElementFromIdentifier(n.operand) ==
-                    variable.element) ||
-            (n is PostfixExpression &&
-                DartTypeUtilities
-                        .getCanonicalElementFromIdentifier(n.operand) ==
-                    variable.element));
+bool _isMutated(VariableDeclaration variable, CompilationUnit compilationUnit) {
+  final visitor = new _IsMutatedVisitor(variable);
+  compilationUnit.accept(visitor);
+  return visitor.isMutated;
+}
 
 class PreferFinalFields extends LintRule {
   _Visitor _visitor;
@@ -95,6 +83,45 @@ class PreferFinalFields extends LintRule {
 
   @override
   AstVisitor getVisitor() => _visitor;
+}
+
+class _IsMutatedVisitor extends UnifyingAstVisitor {
+  VariableDeclaration variable;
+  var isMutated = false;
+
+  _IsMutatedVisitor(this.variable);
+
+  @override
+  visitAssignmentExpression(AssignmentExpression node) {
+    isMutated = isMutated ||
+        DartTypeUtilities
+                .getCanonicalElementFromIdentifier(node.leftHandSide) ==
+            variable.element;
+    visitNode(node);
+  }
+
+  @override
+  visitNode(AstNode node) {
+    if (!isMutated) {
+      node.visitChildren(this);
+    }
+  }
+
+  @override
+  visitPostfixExpression(PostfixExpression node) {
+    isMutated = isMutated ||
+        DartTypeUtilities.getCanonicalElementFromIdentifier(node.operand) ==
+            variable.element;
+    visitNode(node);
+  }
+
+  @override
+  visitPrefixExpression(PrefixExpression node) {
+    isMutated = isMutated ||
+        DartTypeUtilities.getCanonicalElementFromIdentifier(node.operand) ==
+            variable.element;
+    visitNode(node);
+  }
 }
 
 class _Visitor extends SimpleAstVisitor {

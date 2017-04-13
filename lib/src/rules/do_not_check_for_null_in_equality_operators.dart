@@ -55,17 +55,6 @@ bool _isParameter(Expression expression, Element parameter) {
       parameter;
 }
 
-bool _isParameterWithQuestion(AstNode node, Element parameter) {
-  return (node is PropertyAccess &&
-          node.operator?.type == TokenType.QUESTION_PERIOD &&
-          DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) ==
-              parameter) ||
-      (node is MethodInvocation &&
-          node.operator?.type == TokenType.QUESTION_PERIOD &&
-          DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) ==
-              parameter);
-}
-
 bool _isParameterWithQuestionQuestion(
         BinaryExpression node, Element parameter) =>
     node.operator.type == TokenType.QUESTION_QUESTION &&
@@ -86,6 +75,45 @@ class DoNotCheckForNullInEqualityOperators extends LintRule {
   AstVisitor getVisitor() => _visitor;
 }
 
+class _ChecksIfParameterIsNullVisitor extends RecursiveAstVisitor {
+  LintRule rule;
+  Element parameter;
+
+  _ChecksIfParameterIsNullVisitor(this.rule, this.parameter);
+
+  @override
+  visitBinaryExpression(BinaryExpression node) {
+    if (_isParameterWithQuestionQuestion(node, parameter) ||
+        _isComparingParameterWithNull(node, parameter)) {
+      rule.reportLint(node);
+    } else {
+      super.visitBinaryExpression(node);
+    }
+  }
+
+  @override
+  visitMethodInvocation(MethodInvocation node) {
+    if (node.operator?.type == TokenType.QUESTION_PERIOD &&
+        DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) ==
+            parameter) {
+      rule.reportLint(node);
+    } else {
+      super.visitMethodInvocation(node);
+    }
+  }
+
+  @override
+  visitPropertyAccess(PropertyAccess node) {
+    if (node.operator?.type == TokenType.QUESTION_PERIOD &&
+        DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) ==
+            parameter) {
+      rule.reportLint(node);
+    } else {
+      super.visitPropertyAccess(node);
+    }
+  }
+}
+
 class _Visitor extends SimpleAstVisitor {
   final LintRule rule;
   _Visitor(this.rule);
@@ -96,17 +124,8 @@ class _Visitor extends SimpleAstVisitor {
     if (node.name.token?.type == TokenType.EQ_EQ && parameters?.length == 1) {
       final parameter = DartTypeUtilities
           .getCanonicalElementFromIdentifier(parameters.first.identifier);
-      bool checkIfParameterIsNull(AstNode node) {
-        return _isParameterWithQuestion(node, parameter) ||
-            (node is BinaryExpression &&
-                (_isParameterWithQuestionQuestion(node, parameter) ||
-                    _isComparingParameterWithNull(node, parameter)));
-      }
-
-      DartTypeUtilities
-          .traverseNodesInDFS(node.body)
-          .where(checkIfParameterIsNull)
-          .forEach(rule.reportLint);
+      final visitor = new _ChecksIfParameterIsNullVisitor(rule, parameter);
+      node.body.accept(visitor);
     }
   }
 }
