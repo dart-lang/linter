@@ -55,10 +55,10 @@ class Visitor extends SimpleAstVisitor {
     for (InterpolationExpression expression in expressions) {
       if (expression.expression is SimpleIdentifier) {
         SimpleIdentifier identifier = expression.expression;
-        Token bracket = expression.rightBracket;
+        final bracket = expression.rightBracket;
         if (bracket != null &&
             !isIdentifierPart(bracket.next) &&
-            identifier.name.indexOf('\$') == -1) {
+            !identifier.name.contains('\$')) {
           rule.reportLint(expression);
         }
       }

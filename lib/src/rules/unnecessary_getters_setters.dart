@@ -66,8 +66,8 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitClassDeclaration(ClassDeclaration node) {
-    Map<String, MethodDeclaration> getters = {};
-    Map<String, MethodDeclaration> setters = {};
+    final getters = <String, MethodDeclaration>{};
+    final setters = <String, MethodDeclaration>{};
 
     // Build getter/setter maps
     var methods = node.members.where(isMethod);

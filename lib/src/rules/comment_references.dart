@@ -52,7 +52,7 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitCommentReference(CommentReference node) {
-    Identifier identifier = node.identifier;
+    final identifier = node.identifier;
     if (!identifier.isSynthetic && identifier.bestElement == null) {
       rule.reportLint(identifier);
     }

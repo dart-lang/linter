@@ -7,7 +7,6 @@ library linter.src.rules.valid_regexps;
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 
 const desc = r'Use valid regular expression syntax.';
@@ -48,22 +47,22 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitInstanceCreationExpression(InstanceCreationExpression node) {
-    ClassElement element = resolutionMap
+    final element = resolutionMap
         .staticElementForConstructorReference(node)
         ?.enclosingElement;
     if (element?.name == 'RegExp' && element?.library?.name == 'dart.core') {
-      NodeList<Expression> args = node.argumentList.arguments;
+      final args = node.argumentList.arguments;
       if (args.isEmpty) {
         return;
       }
 
-      Expression sourceExpression = args.first;
+      final sourceExpression = args.first;
       if (sourceExpression is StringLiteral) {
-        String source = sourceExpression.stringValue;
+        final source = sourceExpression.stringValue;
         if (source != null) {
           try {
             new RegExp(source);
-          } catch (_) {
+          } on Exception {
             rule.reportLint(sourceExpression);
           }
         }

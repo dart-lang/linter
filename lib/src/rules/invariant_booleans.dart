@@ -128,7 +128,7 @@ class _ContradictionReportRule extends LintRule {
   _ContradictionReportRule(ContradictoryComparisons comparisons)
       : super(
             name: 'invariant_booleans',
-            description: _desc + ' verify: ${comparisons.first}.',
+            description: '$_desc verify: ${comparisons.first}.',
             details: _details,
             group: Group.errors,
             maturity: Maturity.stable);
@@ -147,18 +147,18 @@ class _InvariantBooleansVisitor extends ConditionScopeVisitor {
       return;
     }
 
-    TestedExpressions testedNodes = _findPreviousTestedExpressions(node);
-    testedNodes.evaluateInvariant().forEach((ContradictoryComparisons e) {
-      final reportRule = new _ContradictionReportRule(e);
+    final testedNodes = _findPreviousTestedExpressions(node);
+    final comparisons = testedNodes.evaluateInvariant();
+    for (final comparison in comparisons) {
+      final reportRule = new _ContradictionReportRule(comparison);
       reportRule
         ..reporter = rule.reporter
-        ..reportLint(e.second);
-    });
+        ..reportLint(comparison.second);
+    }
 
     // In dart booleanVariable == true is a valid comparison since the variable
     // can be null.
-    final BinaryExpression binaryExpression =
-        node is BinaryExpression ? node : null;
+    final binaryExpression = node is BinaryExpression ? node : null;
     if (binaryExpression != null &&
         !BooleanExpressionUtilities.EQUALITY_OPERATIONS
             .contains(binaryExpression.operator.type) &&

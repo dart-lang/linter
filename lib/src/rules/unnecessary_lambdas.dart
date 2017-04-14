@@ -117,7 +117,7 @@ class _Visitor extends SimpleAstVisitor {
         nodeToLint.parameters.parameters.map((e) => e.identifier.bestElement);
     final arguments = node.argumentList.arguments
         .map((e) => (e as SimpleIdentifier).bestElement);
-    for (int i = 0; i < parameters.length; i++) {
+    for (var i = 0; i < parameters.length; i++) {
       if (parameters.elementAt(i) != arguments.elementAt(i)) {
         return;
       }

@@ -6,16 +6,16 @@
 library linter.src.ast;
 
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/standard_resolution_map.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
 /// Returns direct children of [parent].
 List<Element> getChildren(Element parent, [String name]) {
-  List<Element> children = <Element>[];
-  visitChildren(parent, (Element element) {
+  final children = <Element>[];
+  visitChildren(parent, (element) {
     if (name == null || element.displayName == name) {
       children.add(element);
     }
@@ -25,18 +25,19 @@ List<Element> getChildren(Element parent, [String name]) {
 
 /// Returns the most specific AST node appropriate for associating errors.
 AstNode getNodeToAnnotate(Declaration node) {
-  AstNode mostSpecific = _getNodeToAnnotate(node);
+  final mostSpecific = _getNodeToAnnotate(node);
   return mostSpecific ?? node;
 }
 
 /// Returns `true` if this [node] has an `@override` annotation.
-bool hasOverrideAnnotation(Declaration node) =>
-    node.metadata.map((Annotation a) => a.name.name).contains('override');
+bool hasOverrideAnnotation(Declaration node) => node.metadata
+    .map((annotation) => annotation.name.name)
+    .contains('override');
 
 /// Returns `true` if this [node] is the child of a private compilation unit
 /// member.
 bool inPrivateMember(AstNode node) {
-  AstNode parent = node.parent;
+  final parent = node.parent;
   if (parent is NamedCompilationUnitMember) {
     return isPrivate(parent.name);
   }
@@ -72,8 +73,8 @@ bool isPrivate(SimpleIdentifier identifier) =>
     identifier != null ? Identifier.isPrivateName(identifier.name) : false;
 
 /// Returns `true` if the given [declaration] is annotated `@protected`.
-bool isProtected(Declaration declaration) =>
-    declaration.metadata.any((Annotation a) => a.name.name == 'protected');
+bool isProtected(Declaration declaration) => declaration.metadata
+    .any((annotation) => annotation.name.name == 'protected');
 
 /// Returns `true` if the given [ClassMember] is a public method.
 bool isPublicMethod(ClassMember m) =>
@@ -97,7 +98,7 @@ bool isSimpleGetter(MethodDeclaration declaration) {
     return _checkForSimpleGetter(declaration, body.expression);
   } else if (declaration.body is BlockFunctionBody) {
     BlockFunctionBody body = declaration.body;
-    Block block = body.block;
+    final block = body.block;
     if (block.statements.length == 1) {
       if (block.statements[0] is ReturnStatement) {
         ReturnStatement returnStatement = block.statements[0];
@@ -128,7 +129,7 @@ bool isSimpleSetter(MethodDeclaration setter) {
     return _checkForSimpleSetter(setter, body.expression);
   } else if (setter.body is BlockFunctionBody) {
     BlockFunctionBody body = setter.body;
-    Block block = body.block;
+    final block = body.block;
     if (block.statements.length == 1) {
       if (block.statements[0] is ExpressionStatement) {
         ExpressionStatement statement = block.statements[0];
@@ -253,8 +254,7 @@ class _ElementVisitorAdapter extends GeneralizingElementVisitor {
 
   @override
   void visitElement(Element element) {
-    bool visitChildren = processor(element);
-    if (visitChildren == true) {
+    if (processor(element) == true) {
       element.visitChildren(this);
     }
   }

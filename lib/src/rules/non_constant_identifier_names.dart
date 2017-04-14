@@ -58,11 +58,11 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitFormalParameterList(FormalParameterList node) {
-    node.parameters.forEach((FormalParameter p) {
-      if (p is! FieldFormalParameter) {
-        checkIdentifier(p.identifier, underscoresOk: true);
+    for (final parameter in node.parameters) {
+      if (parameter is! FieldFormalParameter) {
+        checkIdentifier(parameter.identifier, underscoresOk: true);
       }
-    });
+    }
   }
 
   @override
@@ -79,10 +79,10 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitVariableDeclarationList(VariableDeclarationList node) {
-    node.variables.forEach((VariableDeclaration v) {
-      if (!v.isConst) {
-        checkIdentifier(v.name);
+    for (final variable in node.variables) {
+      if (!variable.isConst) {
+        checkIdentifier(variable.name);
       }
-    });
+    }
   }
 }

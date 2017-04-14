@@ -77,6 +77,16 @@ SimpleIdentifier _findTarget(AstNode node) {
   return null;
 }
 
+bool _isInvokedWithoutNullAwareOperator(AstNode node) {
+  if (node is ExpressionStatement && node.expression is MethodInvocation) {
+    final tokenType = (node.expression as MethodInvocation).operator.type;
+    return tokenType == TokenType.PERIOD ||
+        tokenType == TokenType.PERIOD_PERIOD;
+  }
+
+  return false;
+}
+
 /// Rule to lint consecutive invocations of methods or getters on the same
 /// reference that could be done with the cascade operator.
 class CascadeInvocations extends LintRule {
@@ -114,7 +124,7 @@ class _Visitor extends SimpleAstVisitor {
     }
 
     final previousNode = previousNodes.last;
-    final SimpleIdentifier previousIdentifier = _findTarget(previousNode);
+    final previousIdentifier = _findTarget(previousNode);
     if (previousIdentifier != null &&
         previousIdentifier.staticElement == prefixIdentifier.staticElement &&
         previousIdentifier.staticElement is! PrefixElement &&
@@ -139,14 +149,4 @@ class _Visitor extends SimpleAstVisitor {
       rule.reportLint(node);
     }
   }
-}
-
-bool _isInvokedWithoutNullAwareOperator(AstNode node) {
-  if (node is ExpressionStatement && node.expression is MethodInvocation) {
-    final tokenType = (node.expression as MethodInvocation).operator.type;
-    return tokenType == TokenType.PERIOD ||
-        tokenType == TokenType.PERIOD_PERIOD;
-  }
-
-  return false;
 }

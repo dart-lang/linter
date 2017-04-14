@@ -5,11 +5,9 @@
 library linter.src.rules.prefer_contains;
 
 import 'package:analyzer/analyzer.dart';
-import 'package:analyzer/context/declared_variables.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:linter/src/analyzer.dart';
@@ -63,6 +61,16 @@ class PreferContainsOverIndexOf extends LintRule {
   }
 }
 
+class _LintCode extends LintCode {
+  static final registry = <String, LintCode>{};
+
+  factory _LintCode(String name, String message) => registry.putIfAbsent(
+      '$name$message', () => new _LintCode._(name, message));
+
+  _LintCode._(String name, String message) : super(name, message);
+}
+
+// TODO create common MultiMessageLintCode class
 class _Visitor extends SimpleAstVisitor {
   final PreferContainsOverIndexOf rule;
 
@@ -71,7 +79,7 @@ class _Visitor extends SimpleAstVisitor {
   @override
   visitSimpleIdentifier(SimpleIdentifier identifier) {
     // Should be "indexOf".
-    final Element propertyElement = identifier.bestElement;
+    final propertyElement = identifier.bestElement;
     if (propertyElement?.name != 'indexOf') {
       return;
     }
@@ -79,7 +87,7 @@ class _Visitor extends SimpleAstVisitor {
     AstNode indexOfAccess;
     InterfaceType type;
 
-    final AstNode parent = identifier.parent;
+    final parent = identifier.parent;
     if (parent is MethodInvocation && identifier == parent.methodName) {
       indexOfAccess = parent;
       if (parent.target?.bestType is! InterfaceType) {
@@ -101,7 +109,7 @@ class _Visitor extends SimpleAstVisitor {
     // Going up in AST structure to find binary comparison operator for this
     // `indexOf` access. Most of the time it will be a parent, but sometimes
     // it can be wrapped in parentheses or `as` operator.
-    AstNode search = indexOfAccess;
+    var search = indexOfAccess;
     while (
         search != null && search is Expression && search is! BinaryExpression) {
       search = search.parent;
@@ -112,32 +120,30 @@ class _Visitor extends SimpleAstVisitor {
     }
 
     final BinaryExpression binaryExpression = search;
-    final Token operator = binaryExpression.operator;
+    final operator = binaryExpression.operator;
 
-    final AnalysisContext context = propertyElement.context;
-    final TypeProvider typeProvider = context.typeProvider;
-    final TypeSystem typeSystem = context.typeSystem;
+    final context = propertyElement.context;
+    final typeProvider = context.typeProvider;
+    final typeSystem = context.typeSystem;
 
-    final DeclaredVariables declaredVariables = context.declaredVariables;
+    final declaredVariables = context.declaredVariables;
 
     // Comparing constants with result of indexOf.
 
-    final ConstantVisitor visitor = new ConstantVisitor(
+    final visitor = new ConstantVisitor(
         new ConstantEvaluationEngine(typeProvider, declaredVariables,
             typeSystem: typeSystem),
         new ErrorReporter(
             AnalysisErrorListener.NULL_LISTENER, rule.reporter.source));
 
-    final DartObjectImpl rightValue =
-        binaryExpression.rightOperand.accept(visitor);
+    final rightValue = binaryExpression.rightOperand.accept(visitor);
     if (rightValue?.type?.name == "int") {
       // Constant is on right side of comparison operator
       _checkConstant(binaryExpression, rightValue.toIntValue(), operator.type);
       return;
     }
 
-    final DartObjectImpl leftValue =
-        binaryExpression.leftOperand.accept(visitor);
+    final leftValue = binaryExpression.leftOperand.accept(visitor);
     if (leftValue?.type?.name == "int") {
       // Constants is on left side of comparison operator
       _checkConstant(binaryExpression, leftValue.toIntValue(),
@@ -198,14 +204,4 @@ class _Visitor extends SimpleAstVisitor {
         return type;
     }
   }
-}
-
-// TODO create common MultiMessageLintCode class
-class _LintCode extends LintCode {
-  static final registry = <String, LintCode>{};
-
-  factory _LintCode(String name, String message) => registry.putIfAbsent(
-      name + message, () => new _LintCode._(name, message));
-
-  _LintCode._(String name, String message) : super(name, message);
 }

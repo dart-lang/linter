@@ -34,7 +34,7 @@ void defineLinterEngineTests() {
       _test(String label, String expected, report(PrintingReporter r)) {
         test(label, () {
           String msg;
-          PrintingReporter reporter = new PrintingReporter((m) => msg = m);
+          final reporter = new PrintingReporter((m) => msg = m);
           report(reporter);
           expect(msg, expected);
         });
@@ -150,8 +150,8 @@ void defineLinterEngineTests() {
         errorSink = stderr;
       });
       test('smoke', () {
-        FileSystemEntity firstRuleTest =
-            new Directory(ruleDir).listSync().firstWhere((f) => isDartFile(f));
+        final firstRuleTest =
+            new Directory(ruleDir).listSync().firstWhere(isDartFile);
         dartlint.main([firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
       });
@@ -170,16 +170,16 @@ void defineLinterEngineTests() {
       });
       test('custom sdk path', () {
         // Smoke test to ensure a custom sdk path doesn't sink the ship
-        FileSystemEntity firstRuleTest =
-            new Directory(ruleDir).listSync().firstWhere((f) => isDartFile(f));
+        final firstRuleTest =
+            new Directory(ruleDir).listSync().firstWhere(isDartFile);
         var sdk = getSdkDir();
         dartlint.main(['--dart-sdk', sdk.path, firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
       });
       test('custom package root', () {
         // Smoke test to ensure a custom package root doesn't sink the ship
-        FileSystemEntity firstRuleTest =
-            new Directory(ruleDir).listSync().firstWhere((f) => isDartFile(f));
+        final firstRuleTest =
+            new Directory(ruleDir).listSync().firstWhere(isDartFile);
         var packageDir = new Directory('.').path;
         dartlint.main(['--package-root', packageDir, firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
@@ -189,12 +189,11 @@ void defineLinterEngineTests() {
     group('dtos', () {
       group('hyperlink', () {
         test('html', () {
-          Hyperlink link = new Hyperlink('dart', 'http://dartlang.org');
+          final link = new Hyperlink('dart', 'http://dartlang.org');
           expect(link.html, equals('<a href="http://dartlang.org">dart</a>'));
         });
         test('html - strong', () {
-          Hyperlink link =
-              new Hyperlink('dart', 'http://dartlang.org', bold: true);
+          final link = new Hyperlink('dart', 'http://dartlang.org', bold: true);
           expect(
               link.html,
               equals(
@@ -215,8 +214,8 @@ void defineLinterEngineTests() {
       group('maturity', () {
         test('comparing', () {
           // Custom
-          Maturity m1 = new Maturity('foo', ordinal: 0);
-          Maturity m2 = new Maturity('bar', ordinal: 1);
+          final m1 = new Maturity('foo', ordinal: 0);
+          final m2 = new Maturity('bar', ordinal: 1);
           expect(m1.compareTo(m2), equals(-1));
           // Builtin
           expect(Maturity.stable.compareTo(Maturity.experimental), equals(-1));

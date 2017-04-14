@@ -42,6 +42,9 @@ void mutableCase() {
 ```
 ''';
 
+FunctionBody _getFunctionBodyAncestor(AstNode node) =>
+    node.getAncestor((node) => node is FunctionBody);
+
 class PreferFinalLocals extends LintRule {
   _Visitor _visitor;
   PreferFinalLocals()
@@ -69,8 +72,7 @@ class _Visitor extends SimpleAstVisitor {
         node.initializer == null) {
       return;
     }
-
-    FunctionBody function = node.getAncestor((a) => a is FunctionBody);
+    final function = _getFunctionBodyAncestor(node);
     if (function != null &&
         !function.isPotentiallyMutatedInScope(node.element)) {
       rule.reportLint(node);

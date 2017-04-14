@@ -35,6 +35,8 @@ List<String> list = <String>[
 ```
 ''';
 
+bool _isAdjacentString(AstNode node) => node is AdjacentStrings;
+
 class NoAdjacentStringsInList extends LintRule {
   NoAdjacentStringsInList()
       : super(
@@ -54,10 +56,6 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   void visitListLiteral(ListLiteral node) {
-    node.elements.forEach((Expression e) {
-      if (e is AdjacentStrings) {
-        rule.reportLint(e);
-      }
-    });
+    node.elements.where(_isAdjacentString).forEach(rule.reportLint);
   }
 }

@@ -51,7 +51,8 @@ class ConditionScope {
     environment.addAll(expressions);
   }
 
-  Iterable<Expression> getExpressions(Iterable<Element> elements, bool value) {
+  Iterable<Expression> getExpressions(Iterable<Element> elements,
+      {bool value}) {
     final expressions = <Expression>[];
     _recursiveGetExpressions(expressions, elements, value);
     return expressions;
@@ -296,15 +297,15 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
   }
 
   void _addTrueCondition(Expression expression) {
-    _splitConjunctions(expression).forEach((e) {
-      _addElementToEnvironment(new _ConditionExpression(e));
-    });
+    final expressions = _splitConjunctions(expression);
+    for (final expression in expressions) {
+      _addElementToEnvironment(new _ConditionExpression(expression));
+    }
   }
 
   Iterable<Expression> _getExpressions(Iterable<Element> elements,
-      {bool value: true}) {
-    return outerScope.getExpressions(elements, value);
-  }
+          {bool value: true}) =>
+      outerScope.getExpressions(elements, value: value);
 
   bool _isLastStatementAnExitStatement(Statement statement) {
     if (statement is Block) {

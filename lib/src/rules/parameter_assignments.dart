@@ -93,14 +93,13 @@ bool _isFormalParameterReassigned(
     (assignment.leftHandSide as SimpleIdentifier).staticElement ==
         parameter.element;
 
-bool _preOrPostFixExpressionMutation(FormalParameter parameter, AstNode n) {
-  return n is PrefixExpression &&
-          n.operand is SimpleIdentifier &&
-          (n.operand as SimpleIdentifier).staticElement == parameter.element ||
-      n is PostfixExpression &&
-          n.operand is SimpleIdentifier &&
-          (n.operand as SimpleIdentifier).staticElement == parameter.element;
-}
+bool _preOrPostFixExpressionMutation(FormalParameter parameter, AstNode n) =>
+    n is PrefixExpression &&
+        n.operand is SimpleIdentifier &&
+        (n.operand as SimpleIdentifier).staticElement == parameter.element ||
+    n is PostfixExpression &&
+        n.operand is SimpleIdentifier &&
+        (n.operand as SimpleIdentifier).staticElement == parameter.element;
 
 class ParameterAssignments extends LintRule {
   _Visitor _visitor;
@@ -125,28 +124,28 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    FormalParameterList parameters = node.functionExpression.parameters;
+    final parameters = node.functionExpression.parameters;
     if (parameters != null) {
       // Getter do not have formal parameters.
-      parameters.parameters.forEach((e) {
+      for (final parameter in parameters.parameters) {
         if (node.functionExpression.body
-            .isPotentiallyMutatedInScope(e.element)) {
-          _reportIfSimpleParameterOrWithDefaultValue(e, node);
+            .isPotentiallyMutatedInScope(parameter.element)) {
+          _reportIfSimpleParameterOrWithDefaultValue(parameter, node);
         }
-      });
+      }
     }
   }
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    FormalParameterList parameterList = node?.parameters;
+    final parameterList = node?.parameters;
     if (parameterList != null) {
       // Getters don't have parameters.
-      parameterList.parameters.forEach((e) {
-        if (node.body.isPotentiallyMutatedInScope(e.element)) {
-          _reportIfSimpleParameterOrWithDefaultValue(e, node);
+      for (final parameter in parameterList.parameters) {
+        if (node.body.isPotentiallyMutatedInScope(parameter.element)) {
+          _reportIfSimpleParameterOrWithDefaultValue(parameter, node);
         }
-      });
+      }
     }
   }
 
@@ -161,9 +160,7 @@ class _Visitor extends SimpleAstVisitor {
           (n is AssignmentExpression &&
               _isFormalParameterReassigned(parameter, n)) ||
           _preOrPostFixExpressionMutation(parameter, n));
-      mutatedNodes.forEach((n) {
-        rule.reportLint(n);
-      });
+      mutatedNodes.forEach(rule.reportLint);
       return;
     }
 
@@ -180,7 +177,7 @@ class _Visitor extends SimpleAstVisitor {
 
     if (assignmentsNodes.length > 1 ||
         nonNullCoalescingAssignments.isNotEmpty) {
-      AstNode node = assignmentsNodes.length > 1
+      final node = assignmentsNodes.length > 1
           ? assignmentsNodes.last
           : nonNullCoalescingAssignments.isNotEmpty
               ? nonNullCoalescingAssignments.first

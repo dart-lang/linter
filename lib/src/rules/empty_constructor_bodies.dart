@@ -57,7 +57,7 @@ class Visitor extends SimpleAstVisitor {
   @override
   visitConstructorDeclaration(ConstructorDeclaration node) {
     if (node.body is BlockFunctionBody) {
-      Block block = (node.body as BlockFunctionBody).block;
+      final block = (node.body as BlockFunctionBody).block;
       if (block.statements.length == 0) {
         if (block.endToken is! TokenWithComment) {
           rule.reportLint(block);

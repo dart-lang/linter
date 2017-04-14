@@ -14,7 +14,6 @@ import 'package:analyzer/dart/ast/ast.dart'
         SimpleIdentifier;
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart' show Element;
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/ast.dart';
 
@@ -62,7 +61,7 @@ class Visitor extends SimpleAstVisitor {
     AstNode isEmptyAccess;
     SimpleIdentifier isEmptyIdentifier;
 
-    AstNode parent = identifier.parent;
+    final parent = identifier.parent;
     if (parent is PropertyAccess) {
       isEmptyIdentifier = parent.propertyName;
       isEmptyAccess = parent;
@@ -76,12 +75,12 @@ class Visitor extends SimpleAstVisitor {
     }
 
     // Should be "isEmpty".
-    Element propertyElement = isEmptyIdentifier.bestElement;
+    final propertyElement = isEmptyIdentifier.bestElement;
     if (propertyElement == null || 'isEmpty' != propertyElement.name) {
       return;
     }
     // Should have "isNotEmpty".
-    Element propertyTarget = propertyElement.enclosingElement;
+    final propertyTarget = propertyElement.enclosingElement;
     if (propertyTarget == null ||
         getChildren(propertyTarget, 'isNotEmpty').isEmpty) {
       return;
@@ -90,8 +89,7 @@ class Visitor extends SimpleAstVisitor {
     if (isEmptyAccess.parent is! PrefixExpression) {
       return;
     }
-    PrefixExpression prefixExpression =
-        isEmptyAccess.parent as PrefixExpression;
+    final prefixExpression = isEmptyAccess.parent as PrefixExpression;
     // Should be !
     if (prefixExpression.operator.type != TokenType.BANG) {
       return;

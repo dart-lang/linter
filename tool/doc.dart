@@ -4,9 +4,9 @@
 
 import 'dart:io';
 
-import 'package:linter/src/analyzer.dart';
 import 'package:analyzer/src/lint/registry.dart';
 import 'package:args/args.dart';
+import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';
 import 'package:markdown/markdown.dart';
 
@@ -60,8 +60,8 @@ String get enumerateErrorRules => rules
     .join('\n\n');
 
 String get enumerateGroups => Group.builtin
-    .map((Group g) =>
-        '<li><strong>${g.name}</strong> - ${markdownToHtml(g.description)}</li>')
+    .map((group) =>
+        '<li><strong>${group.name}</strong> - ${markdownToHtml(group.description)}</li>')
     .join('\n');
 
 String get enumeratePubRules => rules
@@ -77,15 +77,15 @@ String get enumerateStyleRules => rules
 List<String> get sortedRules => rules.map((r) => r.name).toList()..sort();
 
 void generateDocs(String dir) {
-  String outDir = dir;
+  var outDir = dir;
   if (outDir != null) {
-    Directory d = new Directory(outDir);
+    final d = new Directory(outDir);
     if (!d.existsSync()) {
       print("Directory '${d.path}' does not exist");
       return;
     }
     if (!new File('$outDir/options').existsSync()) {
-      Directory lintsChildDir = new Directory('$outDir/lints');
+      final lintsChildDir = new Directory('$outDir/lints');
       if (lintsChildDir.existsSync()) {
         outDir = lintsChildDir.path;
       }
@@ -98,7 +98,9 @@ void generateDocs(String dir) {
   new Indexer(Registry.ruleRegistry).generate(outDir);
 
   // Generate rule files
-  rules.forEach((l) => new Generator(l).generate(outDir));
+  for (final rule in rules) {
+    new Generator(rule).generate(outDir);
+  }
 
   // Generate options samples.
   new OptionsSample(rules).generate(outDir);
@@ -117,8 +119,7 @@ ${parser.usage}
 }
 
 String qualify(LintRule r) =>
-    r.name.toString() +
-    (r.maturity == Maturity.stable ? '' : ' (${r.maturity.name})');
+    '${r.name.toString()}${(r.maturity == Maturity.stable ? '' : ' (${r.maturity.name})')}';
 
 String toDescription(LintRule r) =>
     '<strong><a href = "${r.name}.html">${qualify(r)}</a></strong><br/>${markdownToHtml(r.description)}';
@@ -297,12 +298,12 @@ class OptionsSample {
   }
 
   String generateOptions() {
-    StringBuffer sb = new StringBuffer('''
+    final sb = new StringBuffer('''
 ```
 linter:
   rules:
 ''');
-    for (String rule in sortedRules) {
+    for (final rule in sortedRules) {
       sb.write('    - $rule\n');
     }
     sb.write('```');

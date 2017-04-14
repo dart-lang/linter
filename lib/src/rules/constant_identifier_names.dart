@@ -76,10 +76,10 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitVariableDeclarationList(VariableDeclarationList node) {
-    node.variables.forEach((VariableDeclaration v) {
-      if (v.isConst) {
-        checkIdentifier(v.name);
+    for (final variable in node.variables) {
+      if (variable.isConst) {
+        checkIdentifier(variable.name);
       }
-    });
+    }
   }
 }
