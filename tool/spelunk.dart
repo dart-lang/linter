@@ -10,5 +10,7 @@ void main([List<String> args]) {
   var parser = new ArgParser(allowTrailingOptions: true);
 
   var options = parser.parse(args);
-  options.rest.forEach((path) => new Spelunker(path).spelunk());
+  for (final path in options.rest) {
+    new Spelunker(path).spelunk();
+  }
 }

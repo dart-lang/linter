@@ -127,15 +127,15 @@ import 'a.dart'; // OK
 import 'a/b.dart'; // OK
 
 ''';
-const _importKeyword = 'import';
-
-const _exportKeyword = 'export';
-
 const _directiveSectionOrderedAlphabetically =
     'Sort directive sections alphabetically.';
 
 const _exportDirectiveAfterImportDirectives =
     'Specify exports in a separate section after all imports.';
+
+const _exportKeyword = 'export';
+
+const _importKeyword = 'import';
 
 String _dartDirectiveGoFirst(String type) =>
     "Place 'dart:' ${type}s before other ${type}s.";
@@ -237,7 +237,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    Set<AstNode> lintedNodes = new Set<AstNode>();
+    final lintedNodes = new Set<AstNode>();
     _checkDartDirectiveGoFirst(lintedNodes, node);
     _checkPackageDirectiveBeforeRelative(lintedNodes, node);
     _checkThirdPartyDirectiveBeforeOwn(lintedNodes, node);
@@ -288,7 +288,7 @@ class _Visitor extends SimpleAstVisitor {
     _checkSectionInOrder(lintedNodes, relativeExports);
 
     if (project != null) {
-      _PackageBox packageBox = new _PackageBox(project.name);
+      final packageBox = new _PackageBox(project.name);
 
       final thirdPartyPackageImports =
           importDirectives.where(packageBox._isNotOwnPackageDirective);
@@ -361,7 +361,7 @@ class _Visitor extends SimpleAstVisitor {
     }
 
     NamespaceDirective previousDirective;
-    for (NamespaceDirective directive in nodes) {
+    for (final directive in nodes) {
       if (previousDirective != null &&
           previousDirective.uriContent.compareTo(directive.uriContent) > 0) {
         reportDirective(directive);
@@ -392,7 +392,7 @@ class _Visitor extends SimpleAstVisitor {
 
     Iterable<NamespaceDirective> getNodesToLint(
         Iterable<NamespaceDirective> directives) {
-      _PackageBox box = new _PackageBox(project.name);
+      final box = new _PackageBox(project.name);
       return directives
           .where(_isPackageDirective)
           .skipWhile(box._isNotOwnPackageDirective)

@@ -17,7 +17,7 @@ import '../rule_test.dart';
 ///     pub run test -N valid_regexps
 ///
 main(List<String> args) {
-  String ruleName = args[0];
-  Directory dir = new Directory(ruleDir).absolute;
+  final ruleName = args[0];
+  final dir = new Directory(ruleDir).absolute;
   testRule(ruleName, new File(p.join(dir.path, '$ruleName.dart')), debug: true);
 }

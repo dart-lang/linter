@@ -65,21 +65,20 @@ class GoodMutable {
 
 bool _isMutated(
         VariableDeclaration variable, CompilationUnit compilationUnit) =>
-    DartTypeUtilities
-        .traverseNodesInDFS(compilationUnit)
-        .any((n) =>
-            (n is AssignmentExpression &&
-                DartTypeUtilities
-                        .getCanonicalElementFromIdentifier(n.leftHandSide) ==
-                    variable.element) ||
-            (n is PrefixExpression &&
-                DartTypeUtilities
-                        .getCanonicalElementFromIdentifier(n.operand) ==
-                    variable.element) ||
-            (n is PostfixExpression &&
-                DartTypeUtilities
-                        .getCanonicalElementFromIdentifier(n.operand) ==
-                    variable.element));
+    DartTypeUtilities.traverseNodesInDFS(compilationUnit).any((n) =>
+        (n is AssignmentExpression &&
+            DartTypeUtilities
+                    .getCanonicalElementFromIdentifier(n.leftHandSide) ==
+                variable.element) ||
+        (n is PrefixExpression &&
+            DartTypeUtilities.getCanonicalElementFromIdentifier(n.operand) ==
+                variable.element) ||
+        (n is PostfixExpression &&
+            DartTypeUtilities.getCanonicalElementFromIdentifier(n.operand) ==
+                variable.element));
+
+_isPrivate(VariableDeclaration variable) =>
+    resolutionMap.elementDeclaredByVariableDeclaration(variable).isPrivate;
 
 class PreferFinalFields extends LintRule {
   _Visitor _visitor;
@@ -108,31 +107,18 @@ class _Visitor extends SimpleAstVisitor {
       return;
     }
 
-    CompilationUnit compilationUnit =
+    final compilationUnit =
         node.getAncestor((a) => a is CompilationUnit);
     if (compilationUnit == null) {
       return;
     }
 
-    fields.variables.forEach((VariableDeclaration variable) {
-      if (variable == null ||
-          !resolutionMap
-              .elementDeclaredByVariableDeclaration(variable)
-              .isPrivate) {
-        return;
-      }
+    bool _isVariableToLint(VariableDeclaration variable) =>
+        variable != null &&
+        variable.initializer != null &&
+        _isPrivate(variable) &&
+        !_isMutated(variable, compilationUnit);
 
-      if (variable.initializer == null) {
-        return;
-      }
-
-      final isMutated = _isMutated(variable, compilationUnit);
-
-      if (isMutated) {
-        return;
-      }
-
-      rule.reportLint(variable);
-    });
+    fields.variables.where(_isVariableToLint).forEach(rule.reportLint);
   }
 }

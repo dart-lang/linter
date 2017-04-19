@@ -12,13 +12,12 @@ import 'rule.dart';
 
 main([List<String> args]) {
   _addTask('rule',
-      parser: (String name) =>
-          generateRule(name, outDir: Directory.current.path),
+      parser: (name) => generateRule(name, outDir: Directory.current.path),
       description: 'Generate a lint rule stub.',
       valueHelp: 'Name of rule to generate.');
 
   _addTask('docs',
-      parser: (String outDir) => generateDocs(outDir),
+      parser: generateDocs,
       description: 'Generate lint rule docs.',
       valueHelp: 'Documentation `lints/` directory.');
 

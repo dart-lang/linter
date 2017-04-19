@@ -75,10 +75,10 @@ String _META_LIB_NAME = "meta";
 String _OPTIONAL_TYPE_ARGS_VAR_NAME = "optionalTypeArgs";
 
 bool _isOptionallyParameterized(ParameterizedType type) {
-  List<ElementAnnotation> metadata = type.element?.metadata;
+  final metadata = type.element?.metadata;
   if (metadata != null) {
     return metadata
-        .any((ElementAnnotation a) => _isOptionalTypeArgs(a.element));
+        .any((annotation) => _isOptionalTypeArgs(annotation.element));
   }
   return false;
 }
@@ -129,7 +129,7 @@ class Visitor extends SimpleAstVisitor {
   }
 
   visitNamedType(NamedType namedType) {
-    DartType type = namedType.type;
+    final type = namedType.type;
     if (type is ParameterizedType) {
       if (type.typeParameters.isNotEmpty &&
           namedType.typeArguments == null &&
@@ -154,7 +154,7 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitTypeName(NamedType typeName) {
-    DartType type = typeName.type;
+    final type = typeName.type;
     if (type is ParameterizedType) {
       if (type.typeParameters.isNotEmpty &&
           typeName.typeArguments == null &&

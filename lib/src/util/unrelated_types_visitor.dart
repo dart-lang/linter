@@ -13,7 +13,7 @@ import 'package:linter/src/util/dart_type_utilities.dart';
 
 _InterfaceTypePredicate _buildImplementsDefinitionPredicate(
         InterfaceTypeDefinition definition) =>
-    (InterfaceType interface) =>
+    (interface) =>
         interface.name == definition.name &&
         interface.element.library.name == definition.library;
 
@@ -23,7 +23,7 @@ List<InterfaceType> _findImplementedInterfaces(InterfaceType type,
         ? acc
         : type.interfaces.fold(
             <InterfaceType>[type],
-            (List<InterfaceType> acc, InterfaceType e) => new List.from(acc)
+            (acc, e) => new List.from(acc)
               ..addAll(_findImplementedInterfaces(e, acc: acc)));
 
 DartType _findIterableTypeArgument(
@@ -36,14 +36,13 @@ DartType _findIterableTypeArgument(
     return null;
   }
 
-  _InterfaceTypePredicate predicate =
-      _buildImplementsDefinitionPredicate(definition);
+  final predicate = _buildImplementsDefinitionPredicate(definition);
   if (predicate(type)) {
     return type.typeArguments.first;
   }
 
-  List<InterfaceType> implementedInterfaces = _findImplementedInterfaces(type);
-  InterfaceType interface =
+  final implementedInterfaces = _findImplementedInterfaces(type);
+  final interface =
       implementedInterfaces.firstWhere(predicate, orElse: () => null);
   if (interface != null && interface.typeArguments.isNotEmpty) {
     return interface.typeArguments.first;
@@ -90,7 +89,7 @@ abstract class UnrelatedTypesVisitor extends SimpleAstVisitor {
               .elementDeclaredByClassDeclaration(classDeclaration)
               ?.type;
     }
-    Expression argument = node.argumentList.arguments.first;
+    final argument = node.argumentList.arguments.first;
     if (type is InterfaceType &&
         DartTypeUtilities.unrelatedTypes(
             argument.bestType, _findIterableTypeArgument(definition, type))) {

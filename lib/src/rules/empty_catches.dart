@@ -67,13 +67,13 @@ class Visitor extends SimpleAstVisitor {
   @override
   void visitCatchClause(CatchClause node) {
     // Skip exceptions named with underscores.
-    SimpleIdentifier exceptionParameter = node.exceptionParameter;
+    final exceptionParameter = node.exceptionParameter;
     if (exceptionParameter != null &&
         Analyzer.facade.isJustUnderscores(exceptionParameter.name)) {
       return;
     }
 
-    Block body = node.body;
+    final body = node.body;
     if (node.body.statements.isEmpty &&
         body.rightBracket is! TokenWithComment) {
       rule.reportLint(body);

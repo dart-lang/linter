@@ -7,7 +7,6 @@ library linter.src.rules.avoid_slow_async_io;
 import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
@@ -51,6 +50,15 @@ Future<Null> someFunction() async {
 ```
 ''';
 
+const _fileMethodNames = const ['lastModified', 'exists', 'stat'];
+
+const _fileSystemEntityMethodNames = const [
+  'isDirectory',
+  'isFile',
+  'isLink',
+  'type',
+];
+
 class AvoidSlowAsyncIo extends LintRule {
   _Visitor _visitor;
 
@@ -67,19 +75,6 @@ class AvoidSlowAsyncIo extends LintRule {
   AstVisitor getVisitor() => _visitor;
 }
 
-const List<String> _fileSystemEntityMethodNames = const <String>[
-  'isDirectory',
-  'isFile',
-  'isLink',
-  'type',
-];
-
-const List<String> _fileMethodNames = const <String>[
-  'lastModified',
-  'exists',
-  'stat'
-];
-
 class _Visitor extends SimpleAstVisitor {
   final LintRule rule;
   _Visitor(this.rule);
@@ -95,23 +90,23 @@ class _Visitor extends SimpleAstVisitor {
     }
   }
 
-  void _checkFileSystemEntityMethods(MethodInvocation node) {
-    Expression target = node.target;
-    if (target is Identifier) {
-      Element elem = target?.bestElement;
-      if (elem is ClassElement && elem.name == 'FileSystemEntity') {
-        if (_fileSystemEntityMethodNames.contains(node.methodName?.name)) {
-          rule.reportLint(node);
-        }
+  void _checkFileMethods(MethodInvocation node) {
+    final type = node.target?.bestType;
+    if (DartTypeUtilities.extendsClass(type, 'File', 'dart.io')) {
+      if (_fileMethodNames.contains(node.methodName?.name)) {
+        rule.reportLint(node);
       }
     }
   }
 
-  void _checkFileMethods(MethodInvocation node) {
-    DartType type = node.target?.bestType;
-    if (DartTypeUtilities.extendsClass(type, 'File', 'dart.io')) {
-      if (_fileMethodNames.contains(node.methodName?.name)) {
-        rule.reportLint(node);
+  void _checkFileSystemEntityMethods(MethodInvocation node) {
+    final target = node.target;
+    if (target is Identifier) {
+      final elem = target?.bestElement;
+      if (elem is ClassElement && elem.name == 'FileSystemEntity') {
+        if (_fileSystemEntityMethodNames.contains(node.methodName?.name)) {
+          rule.reportLint(node);
+        }
       }
     }
   }

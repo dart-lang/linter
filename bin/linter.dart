@@ -151,7 +151,7 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
 
   final linter = new DartLinter(lintOptions);
 
-  List<File> filesToLint = [];
+  final filesToLint = <File>[];
   for (var path in options.rest) {
     filesToLint.addAll(collectFiles(path));
   }
@@ -173,8 +173,9 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
         fileRoot: commonRoot,
         showStatistics: stats,
         machineOutput: options['machine'],
-        quiet: options['quiet'])..write();
-  } catch (err, stack) {
+        quiet: options['quiet'])
+      ..write();
+  } on Exception catch (err, stack) {
     errorSink.writeln('''An error occurred while linting
   Please report it at: github.com/dart-lang/linter/issues
 $err
@@ -184,16 +185,15 @@ $stack''');
 
 Iterable<AnalysisError> _filtered(
         List<AnalysisError> errors, LintFilter filter) =>
-    (filter == null)
-        ? errors
-        : errors.where((AnalysisError e) => !filter.filter(e));
+    (filter == null) ? errors : errors.where((e) => !filter.filter(e));
 
 int _maxSeverity(List<AnalysisErrorInfo> errors, LintFilter filter) {
-  int max = 0;
-  for (AnalysisErrorInfo info in errors) {
-    _filtered(info.errors, filter).forEach((AnalysisError e) {
-      max = math.max(max, e.errorCode.errorSeverity.ordinal);
-    });
+  var max = 0;
+  for (final info in errors) {
+    final filteredErrors = _filtered(info.errors, filter);
+    for (final error in filteredErrors) {
+      max = math.max(max, error.errorCode.errorSeverity.ordinal);
+    }
   }
   return max;
 }

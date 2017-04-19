@@ -72,7 +72,7 @@ Iterable<InterfaceType> _findAllSupertypesAndMixins(
   }
 
   accumulator.add(interface);
-  InterfaceType superclass = interface.superclass;
+  final superclass = interface.superclass;
   Iterable<InterfaceType> interfaces = [superclass]
     ..addAll(interface.element.mixins)
     ..addAll(_findAllSupertypesAndMixins(superclass, accumulator));
@@ -106,17 +106,17 @@ class _Visitor extends SimpleAstVisitor {
       return;
     }
 
-    node.fields.variables.forEach((VariableDeclaration variable) {
-      PropertyAccessorElement field = _getOverriddenMember(variable.element);
+    for (final variable in node.fields.variables) {
+      final field = _getOverriddenMember(variable.element);
       if (field != null) {
         rule.reportLint(variable.name);
       }
-    });
+    }
   }
 
   PropertyAccessorElement _getOverriddenMember(Element member) {
-    String memberName = member.name;
-    LibraryElement library = member.library;
+    final memberName = member.name;
+    final library = member.library;
     bool isOverriddenMember(PropertyAccessorElement a) {
       if (a.isSynthetic && a.name == memberName) {
         // Ensure that private members are overriding a member of the same library.
@@ -132,9 +132,9 @@ class _Visitor extends SimpleAstVisitor {
         i.accessors.any(isOverriddenMember);
     ClassElement classElement = member.enclosingElement;
 
-    Iterable<InterfaceType> interfaces =
+    final interfaces =
         _findAllSupertypesAndMixins(classElement.type, <InterfaceType>[]);
-    InterfaceType interface =
+    final interface =
         interfaces.firstWhere(containsOverriddenMember, orElse: () => null);
     return interface == null
         ? null

@@ -22,8 +22,8 @@ main() {
 defineTests() {
   group('integration', () {
     group('p2', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -59,8 +59,8 @@ defineTests() {
       });
     });
     group('p3', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() => outSink = collectingOut);
       tearDown(() {
         collectingOut.buffer.clear();
@@ -73,8 +73,8 @@ defineTests() {
       });
     });
     group('p4', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() => outSink = collectingOut);
       tearDown(() {
         collectingOut.buffer.clear();
@@ -91,8 +91,8 @@ defineTests() {
     });
 
     group('p5', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -114,8 +114,8 @@ defineTests() {
     });
 
     group('p8', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -139,8 +139,8 @@ defineTests() {
     });
 
     group('overridden_fields', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -164,8 +164,8 @@ defineTests() {
     });
 
     group('close_sinks', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -196,8 +196,8 @@ defineTests() {
     });
 
     group('cancel_subscriptions', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -225,8 +225,8 @@ defineTests() {
     });
 
     group('directives_ordering', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -389,8 +389,8 @@ defineTests() {
     });
 
     group('only_throw_errors', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -419,8 +419,8 @@ defineTests() {
     });
 
     group('prefer_collection_literals', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = new CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;

@@ -68,6 +68,9 @@ class Bad {
 ```
 ''';
 
+MethodDeclaration _getMethodDeclarationAncestor(AstNode node) =>
+    node.getAncestor((node) => node is MethodDeclaration);
+
 class TestTypesInEquals extends LintRule {
   TestTypesInEquals()
       : super(
@@ -87,16 +90,15 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitAsExpression(AsExpression node) {
-    MethodDeclaration declaration =
-        node.getAncestor((n) => n is MethodDeclaration);
+    final declaration = _getMethodDeclarationAncestor(node);
     if (!_isEqualsOverride(declaration) ||
         node.expression is! SimpleIdentifier) {
       return;
     }
 
     SimpleIdentifier identifier = node.expression;
-    var parameters = declaration.parameters;
-    String parameterName = parameters == null
+    final parameters = declaration.parameters;
+    final parameterName = parameters == null
         ? null
         : resolutionMap
             .parameterElementsForFormalParameterList(parameters)

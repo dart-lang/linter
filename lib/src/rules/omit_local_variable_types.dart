@@ -69,7 +69,7 @@ class _Visitor extends SimpleAstVisitor {
     if (node.iterable.bestType is! InterfaceType) {
       return;
     }
-    DartType iterableType = node.iterable.bestType;
+    final iterableType = node.iterable.bestType;
     if (iterableType is InterfaceType &&
         iterableType.typeArguments.single == staticType.type) {
       rule.reportLint(node);

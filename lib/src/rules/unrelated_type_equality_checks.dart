@@ -158,7 +158,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
-    bool isDartCoreBoolean =
+    final isDartCoreBoolean =
         resolutionMap.bestTypeForExpression(node).name == _boolClassName &&
             resolutionMap.bestTypeForExpression(node).element?.library?.name ==
                 _dartCoreLibraryName;

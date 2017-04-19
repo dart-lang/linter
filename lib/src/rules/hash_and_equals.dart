@@ -61,7 +61,7 @@ class Visitor extends SimpleAstVisitor {
   @override
   visitClassDeclaration(ClassDeclaration node) {
     MethodDeclaration eq, hash;
-    for (ClassMember member in node.members) {
+    for (final member in node.members) {
       if (isEquals(member)) {
         eq = member;
       } else if (isHashCode(member)) {

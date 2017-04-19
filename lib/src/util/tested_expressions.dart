@@ -19,7 +19,7 @@ void _addNodeComparisons(Expression node, HashSet<Expression> comparisons) {
 }
 
 HashSet<Expression> _extractComparisons(BinaryExpression node) {
-  final HashSet<Expression> comparisons = new HashSet<Expression>.identity();
+  final comparisons = new HashSet<Expression>.identity();
   if (_isComparison(node)) {
     comparisons.add(node);
   }
@@ -44,12 +44,12 @@ bool _isComparison(Expression expression) =>
 
 bool _isNegationOrComparison(
     TokenType cOperatorType, TokenType eOperatorType, TokenType tokenType) {
-  final bool isNegationOperation =
+  final isNegationOperation =
       cOperatorType == BooleanExpressionUtilities.NEGATIONS[eOperatorType] ||
           BooleanExpressionUtilities.IMPLICATIONS[cOperatorType] ==
               BooleanExpressionUtilities.NEGATIONS[eOperatorType];
 
-  final bool isTrichotomyConjunction = BooleanExpressionUtilities
+  final isTrichotomyConjunction = BooleanExpressionUtilities
           .TRICHOTOMY_OPERATORS
           .contains(eOperatorType) &&
       BooleanExpressionUtilities.TRICHOTOMY_OPERATORS.contains(cOperatorType) &&
@@ -60,9 +60,9 @@ bool _isNegationOrComparison(
 
 bool _sameOperands(String eLeftOperand, String bcLeftOperand,
     String eRightOperand, String bcRightOperand) {
-  final bool sameOperandsSameOrder =
+  final sameOperandsSameOrder =
       eLeftOperand == bcLeftOperand && eRightOperand == bcRightOperand;
-  final bool sameOperandsInverted =
+  final sameOperandsInverted =
       eRightOperand == bcLeftOperand && eLeftOperand == bcRightOperand;
   return sameOperandsSameOrder || sameOperandsInverted;
 }
@@ -104,7 +104,9 @@ class TestedExpressions {
     if (_contradictions.isEmpty) {
       HashSet<Expression> set = (binaryExpression != null
           ? _extractComparisons(testingExpression)
-          : [testingExpression].toSet())..addAll(truths)..addAll(negations);
+          : [testingExpression].toSet())
+        ..addAll(truths)
+        ..addAll(negations);
       // Here and in several places we proceed only for
       // TokenType.AMPERSAND_AMPERSAND because we then know that all comparisons
       // must be true.
@@ -123,8 +125,8 @@ class TestedExpressions {
       HashSet<Expression> comparisons, TokenType tokenType) {
     final Iterable<Expression> binaryExpressions =
         comparisons.where((e) => e is BinaryExpression).toSet();
-    LinkedHashSet<ContradictoryComparisons> contradictions =
-        new LinkedHashSet.identity();
+    final contradictions =
+        new LinkedHashSet<ContradictoryComparisons>.identity();
 
     if (testingExpression is SimpleIdentifier) {
       SimpleIdentifier identifier = testingExpression;
@@ -137,45 +139,44 @@ class TestedExpressions {
       }
     }
 
-    binaryExpressions.forEach((Expression ex) {
+    for (final ex in binaryExpressions) {
       if (contradictions.isNotEmpty) {
-        return;
+        continue;
       }
 
-      BinaryExpression expression = ex as BinaryExpression;
-      final String eLeftOperand = expression.leftOperand.toString();
-      final String eRightOperand = expression.rightOperand.toString();
-      final TokenType eOperatorType = expression.operator.type;
-      comparisons
-          .where((comparison) =>
-              comparison != null &&
-              comparison.offset < expression.offset &&
-              comparison is BinaryExpression)
-          .forEach((Expression c) {
+      final expression = ex as BinaryExpression;
+      final eLeftOperand = expression.leftOperand.toString();
+      final eRightOperand = expression.rightOperand.toString();
+      final eOperatorType = expression.operator.type;
+      final relevantComparisons = comparisons.where((comparison) =>
+          comparison != null &&
+          comparison.offset < expression.offset &&
+          comparison is BinaryExpression);
+      for (final comparison in relevantComparisons) {
         if (contradictions.isNotEmpty) {
-          return;
+          continue;
         }
 
-        final BinaryExpression otherExpression = c;
+        final BinaryExpression otherExpression = comparison;
 
-        final String bcLeftOperand = otherExpression.leftOperand.toString();
-        final String bcRightOperand = otherExpression.rightOperand.toString();
-        final bool sameOperands = _sameOperands(
+        final bcLeftOperand = otherExpression.leftOperand.toString();
+        final bcRightOperand = otherExpression.rightOperand.toString();
+        final sameOperands = _sameOperands(
             eLeftOperand, bcLeftOperand, eRightOperand, bcRightOperand);
 
-        final TokenType cOperatorType = negations.contains(c)
+        final cOperatorType = negations.contains(comparison)
             ? BooleanExpressionUtilities
                 .NEGATIONS[otherExpression.operator.type]
             : otherExpression.operator.type;
-        final bool isNegationOrComparison =
+        final isNegationOrComparison =
             _isNegationOrComparison(cOperatorType, eOperatorType, tokenType);
 
         if (isNegationOrComparison && sameOperands) {
           contradictions
               .add(new ContradictoryComparisons(otherExpression, expression));
         }
-      });
-    });
+      }
+    }
 
     if (contradictions.isEmpty) {
       binaryExpressions.forEach(_recurseOnChildNodes(contradictions));
@@ -186,16 +187,15 @@ class TestedExpressions {
 
   _recurseCallback _recurseOnChildNodes(
           LinkedHashSet<ContradictoryComparisons> expressions) =>
-      (Expression e) {
-        BinaryExpression ex = e as BinaryExpression;
+      (expression) {
+        final ex = expression as BinaryExpression;
         if (ex.operator.type != TokenType.AMPERSAND_AMPERSAND) {
           return;
         }
 
-        LinkedHashSet<ContradictoryComparisons> set =
-            _findContradictoryComparisons(
-                new HashSet.from([ex.leftOperand, ex.rightOperand]),
-                ex.operator.type);
+        final set = _findContradictoryComparisons(
+            new HashSet.from([ex.leftOperand, ex.rightOperand]),
+            ex.operator.type);
         expressions.addAll(set);
       };
 }

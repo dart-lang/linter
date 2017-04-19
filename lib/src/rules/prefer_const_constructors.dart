@@ -4,7 +4,6 @@
 
 library linter.src.rules.prefer_const_constructors;
 
-import 'package:analyzer/context/declared_variables.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/error/listener.dart';
@@ -75,27 +74,26 @@ class _Visitor extends SimpleAstVisitor {
     if (!node.isConst &&
         node.staticElement != null &&
         node.staticElement.isConst) {
-      TypeProvider typeProvider = node.staticElement.context.typeProvider;
+      final typeProvider = node.staticElement.context.typeProvider;
 
       if (node.staticElement.enclosingElement.type == typeProvider.objectType) {
         // Skip lint for `new Object()`, because it can be used for Id creation.
         return;
       }
 
-      TypeSystem typeSystem = node.staticElement.context.typeSystem;
-      DeclaredVariables declaredVariables =
-          node.staticElement.context.declaredVariables;
+      final typeSystem = node.staticElement.context.typeSystem;
+      final declaredVariables = node.staticElement.context.declaredVariables;
 
-      final ConstantVisitor constantVisitor = new ConstantVisitor(
+      final constantVisitor = new ConstantVisitor(
           new ConstantEvaluationEngine(typeProvider, declaredVariables,
               typeSystem: typeSystem),
           new ErrorReporter(
               AnalysisErrorListener.NULL_LISTENER, rule.reporter.source));
 
-      bool allConst = node.argumentList.arguments.every((Expression argument) {
-        Expression realArgument =
+      final allConst = node.argumentList.arguments.every((argument) {
+        final realArgument =
             argument is NamedExpression ? argument.expression : argument;
-        DartObjectImpl result = realArgument.accept(constantVisitor);
+        final result = realArgument.accept(constantVisitor);
 
         return result != null;
       });

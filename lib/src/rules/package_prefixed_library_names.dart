@@ -84,7 +84,7 @@ class Visitor extends SimpleAstVisitor {
     if (project == null) {
       return;
     }
-    Source source = resolutionMap.elementDeclaredByDirective(node).source;
+    final source = resolutionMap.elementDeclaredByDirective(node).source;
     var prefix = Analyzer.facade.createLibraryNamePrefix(
         libraryPath: source.fullName,
         projectRoot: project.root.absolute.path,

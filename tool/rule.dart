@@ -6,8 +6,6 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 
-typedef String _Generator(String libName, String className);
-
 /// Generates rule and rule test stub files (into `src/rules` and `test/rules`
 /// respectively), as well as the rule index (`rules.dart`).
 void main([List<String> args]) {
@@ -45,7 +43,8 @@ void main([List<String> args]) {
   generateRule(libName, outDir: outDir);
 }
 
-String capitalize(String s) => s.substring(0, 1).toUpperCase() + s.substring(1);
+String capitalize(String s) =>
+    '${s.substring(0, 1).toUpperCase()}${s.substring(1)}';
 
 void generateRule(String libName, {String outDir}) {
   // Generate rule stub.
@@ -84,8 +83,7 @@ ${parser.usage}
 ''');
 }
 
-String toClassName(String libName) =>
-    libName.split('_').map((bit) => capitalize(bit)).join();
+String toClassName(String libName) => libName.split('_').map(capitalize).join();
 
 void updateRuleRegistry(String libName) {
   print("Don't forget to update lib/rules.dart with a line like:");
@@ -151,3 +149,5 @@ String _generateTest(String libName, String className) => '''
 // test w/ `pub run test -N $libName`
 
 ''';
+
+typedef String _Generator(String libName, String className);

@@ -8,15 +8,14 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:analyzer/analyzer.dart';
-
 import 'package:linter/src/analyzer.dart';
 
 final int _pipeCodeUnit = '|'.codeUnitAt(0);
 final int _slashCodeUnit = '\\'.codeUnitAt(0);
 
 String getLineContents(int lineNumber, AnalysisError error) {
-  String path = error.source.fullName;
-  File file = new File(path);
+  final path = error.source.fullName;
+  final file = new File(path);
   String failureDetails;
   if (!file.existsSync()) {
     failureDetails = 'file at $path does not exist';
@@ -138,7 +137,7 @@ class SimpleFormatter implements ReportFormatter {
   /// Override to influence error sorting
   int compare(AnalysisError error1, AnalysisError error2) {
     // Severity
-    int compare = error2.errorCode.errorSeverity
+    var compare = error2.errorCode.errorSeverity
         .compareTo(error1.errorCode.errorSeverity);
     if (compare != 0) {
       return compare;
@@ -166,17 +165,16 @@ class SimpleFormatter implements ReportFormatter {
   void writeCounts() {
     var codes = stats.keys.toList()..sort();
     var largestCountGuess = 8;
-    var longest =
-        codes.fold(0, (int prev, element) => max(prev, element.length));
+    var longest = codes.fold(0, _maxBetweenIntAndStringLength);
     var tableWidth = max(_summaryLength, longest + largestCountGuess);
     var pad = tableWidth - longest;
     var line = ''.padLeft(tableWidth, '-');
     out.writeln(line);
-    codes.forEach((c) {
+    for (final code in codes) {
       out
-        ..write('${c.padRight(longest)}')
-        ..writeln('${stats[c].toString().padLeft(pad)}');
-    });
+        ..write('${code.padRight(longest)}')
+        ..writeln('${stats[code].toString().padLeft(pad)}');
+    }
     out.writeln(line);
   }
 
@@ -209,17 +207,20 @@ class SimpleFormatter implements ReportFormatter {
   }
 
   void writeLints() {
-    errors.forEach((info) => (info.errors.toList()..sort(compare)).forEach((e) {
-          if (filter != null && filter.filter(e)) {
-            filteredLintCount++;
-          } else {
-            ++errorCount;
-            if (!quiet) {
-              _writeLint(e, info.lineInfo);
-            }
-            _recordStats(e);
+    for (final info in errors) {
+      final errors = info.errors.toList()..sort(compare);
+      for (final error in errors) {
+        if (filter != null && filter.filter(error)) {
+          filteredLintCount++;
+        } else {
+          ++errorCount;
+          if (!quiet) {
+            _writeLint(error, info.lineInfo);
           }
-        }));
+          _recordStats(error);
+        }
+      }
+    }
     if (!quiet) {
       out.writeln();
     }
@@ -240,24 +241,23 @@ class SimpleFormatter implements ReportFormatter {
   }
 
   void writeTimings() {
-    Map<String, Stopwatch> timers = lintRegistry.timers;
-    List<String> names = timers.keys.toList()..sort();
+    final timers = lintRegistry.timers;
+    final names = timers.keys.toList()..sort();
 
-    int longestName =
-        names.fold(0, (prev, element) => max(prev, element.length));
-    int longestTime = 8;
-    int tableWidth = max(_summaryLength, longestName + longestTime);
-    int pad = tableWidth - longestName;
-    String line = ''.padLeft(tableWidth, '-');
+    final longestName = names.fold(0, _maxBetweenIntAndStringLength);
+    final longestTime = 8;
+    final tableWidth = max(_summaryLength, longestName + longestTime);
+    final pad = tableWidth - longestName;
+    final line = ''.padLeft(tableWidth, '-');
 
     out
       ..writeln()
       ..writeln(line)
       ..writeln('${'Timings'.padRight(longestName)}${'ms'.padLeft(pad)}')
       ..writeln(line);
-    int totalTime = 0;
-    for (String name in names) {
-      Stopwatch stopwatch = timers[name];
+    var totalTime = 0;
+    for (final name in names) {
+      final stopwatch = timers[name];
       totalTime += stopwatch.elapsedMilliseconds;
       out.writeln(
           '${name.padRight(longestName)}${stopwatch.elapsedMilliseconds.toString().padLeft(pad)}');
@@ -268,6 +268,9 @@ class SimpleFormatter implements ReportFormatter {
           '${'Total'.padRight(longestName)}${totalTime.toString().padLeft(pad)}')
       ..writeln(line);
   }
+
+  int _maxBetweenIntAndStringLength(int number, String string) =>
+      max(number, string.length);
 
   void _recordStats(AnalysisError error) {
     var codeName = error.errorCode.name;

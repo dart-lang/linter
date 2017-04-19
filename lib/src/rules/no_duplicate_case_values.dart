@@ -5,8 +5,8 @@
 library linter.src.rules.no_duplicate_case_values;
 
 import 'dart:collection';
+
 import 'package:analyzer/analyzer.dart';
-import 'package:analyzer/context/declared_variables.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
@@ -14,9 +14,6 @@ import 'package:analyzer/error/listener.dart';
 import 'package:linter/src/analyzer.dart';
 
 const desc = 'Do not use more the one case with same value';
-
-String message(String value1, String value2) =>
-    'Do not use more the one case with same value ($value1 and $value2)';
 
 const details = r'''
 **DO NOT** use more the one case with same value. This can be
@@ -45,6 +42,9 @@ switch (v) {
 ```
 ''';
 
+String message(String value1, String value2) =>
+    'Do not use more the one case with same value ($value1 and $value2)';
+
 class NoDuplicateCaseValues extends LintRule {
   NoDuplicateCaseValues()
       : super(
@@ -63,15 +63,6 @@ class NoDuplicateCaseValues extends LintRule {
   }
 }
 
-class _LintCode extends LintCode {
-  static final registry = <String, LintCode>{};
-
-  factory _LintCode(String name, String message) => registry.putIfAbsent(
-      name + message, () => new _LintCode._(name, message));
-
-  _LintCode._(String name, String message) : super(name, message);
-}
-
 class Visitor extends SimpleAstVisitor {
   NoDuplicateCaseValues rule;
 
@@ -79,7 +70,7 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   void visitSwitchStatement(SwitchStatement node) {
-    AnalysisContext context = node?.expression == null
+    final context = node?.expression == null
         ? null
         : resolutionMap
             .bestTypeForExpression(node.expression)
@@ -88,34 +79,33 @@ class Visitor extends SimpleAstVisitor {
     if (context == null) {
       return;
     }
-    TypeProvider typeProvider = context.typeProvider;
-    TypeSystem typeSystem = context.typeSystem;
-    DeclaredVariables declaredVariables = context.declaredVariables;
+    final typeProvider = context.typeProvider;
+    final typeSystem = context.typeSystem;
+    final declaredVariables = context.declaredVariables;
 
-    Map<DartObjectImpl, Expression> values =
-        new HashMap<DartObjectImpl, Expression>(
-            equals: (DartObjectImpl key1, DartObjectImpl key2) {
-      DartObjectImpl equals = key1.isIdentical(typeProvider, key2);
+    final values =
+        new HashMap<DartObjectImpl, Expression>(equals: (key1, key2) {
+      final equals = key1.isIdentical(typeProvider, key2);
       return equals.isBool && equals.toBoolValue();
     });
 
-    final ConstantVisitor constantVisitor = new ConstantVisitor(
+    final constantVisitor = new ConstantVisitor(
         new ConstantEvaluationEngine(typeProvider, declaredVariables,
             typeSystem: typeSystem),
         new ErrorReporter(
             AnalysisErrorListener.NULL_LISTENER, rule.reporter.source));
 
-    for (SwitchMember member in node.members) {
+    for (final member in node.members) {
       if (member is SwitchCase) {
-        Expression expression = member.expression;
+        final expression = member.expression;
 
-        DartObjectImpl result = expression.accept(constantVisitor);
+        final result = expression.accept(constantVisitor);
 
         if (result == null) {
           continue;
         }
 
-        Expression duplicateValue = values[result];
+        final duplicateValue = values[result];
         if (duplicateValue != null) {
           rule.reportLintWithDescription(member,
               message(duplicateValue.toString(), expression.toString()));
@@ -125,4 +115,13 @@ class Visitor extends SimpleAstVisitor {
       }
     }
   }
+}
+
+class _LintCode extends LintCode {
+  static final registry = <String, LintCode>{};
+
+  factory _LintCode(String name, String message) => registry.putIfAbsent(
+      '$name$message', () => new _LintCode._(name, message));
+
+  _LintCode._(String name, String message) : super(name, message);
 }

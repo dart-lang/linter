@@ -5,22 +5,17 @@
 library linter.src.rules.prefer_is_empty;
 
 import 'package:analyzer/analyzer.dart';
-import 'package:analyzer/context/declared_variables.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:linter/src/analyzer.dart';
 
-const desc = 'Use isNotEmpty for Iterables and Maps.';
-
-const useIsNotEmpty = 'Use isNotEmpty instead of length';
-const useIsEmpty = 'Use isEmpty instead of length';
 const alwaysFalse = 'Always false because length is always greater or equal 0.';
-const alwaysTrue = 'Always true because length is always greater or equal 0.';
 
+const alwaysTrue = 'Always true because length is always greater or equal 0.';
+const desc = 'Use isNotEmpty for Iterables and Maps.';
 const details = '''
 **DO NOT** use `.length` to see if a collection is empty.
 
@@ -43,15 +38,9 @@ if (lunchBox.length == 0) return 'so hungry...';
 if (words.length != 0) return words.join(' ');
 ```
 ''';
+const useIsEmpty = 'Use isEmpty instead of length';
 
-class _LintCode extends LintCode {
-  static final registry = <String, LintCode>{};
-
-  factory _LintCode(String name, String message) => registry.putIfAbsent(
-      name + message, () => new _LintCode._(name, message));
-
-  _LintCode._(String name, String message) : super(name, message);
-}
+const useIsNotEmpty = 'Use isNotEmpty instead of length';
 
 class PreferIsEmpty extends LintRule {
   PreferIsEmpty()
@@ -78,7 +67,7 @@ class Visitor extends SimpleAstVisitor {
   @override
   visitSimpleIdentifier(SimpleIdentifier identifier) {
     // Should be "length".
-    Element propertyElement = identifier.bestElement;
+    final propertyElement = identifier.bestElement;
     if (propertyElement?.name != 'length') {
       return;
     }
@@ -86,7 +75,7 @@ class Visitor extends SimpleAstVisitor {
     AstNode lengthAccess;
     InterfaceType type;
 
-    AstNode parent = identifier.parent;
+    final parent = identifier.parent;
     if (parent is PropertyAccess && identifier == parent.propertyName) {
       lengthAccess = parent;
       if (parent.target?.bestType is! InterfaceType) {
@@ -105,9 +94,9 @@ class Visitor extends SimpleAstVisitor {
     }
 
     // Should be subtype of Iterable, Map or String.
-    AnalysisContext context = propertyElement.context;
-    TypeProvider typeProvider = context.typeProvider;
-    TypeSystem typeSystem = context.typeSystem;
+    final context = propertyElement.context;
+    final typeProvider = context.typeProvider;
+    final typeSystem = context.typeSystem;
 
     if (typeSystem.mostSpecificTypeArgument(type, typeProvider.iterableType) ==
             null &&
@@ -117,7 +106,7 @@ class Visitor extends SimpleAstVisitor {
       return;
     }
 
-    AstNode search = lengthAccess;
+    var search = lengthAccess;
     while (
         search != null && search is Expression && search is! BinaryExpression) {
       search = search.parent;
@@ -128,22 +117,22 @@ class Visitor extends SimpleAstVisitor {
     }
     BinaryExpression binaryExpression = search;
 
-    Token operator = binaryExpression.operator;
-    DeclaredVariables declaredVariables = context.declaredVariables;
+    final operator = binaryExpression.operator;
+    final declaredVariables = context.declaredVariables;
 
     // Comparing constants with length.
 
-    ConstantVisitor visitor = new ConstantVisitor(
+    final visitor = new ConstantVisitor(
         new ConstantEvaluationEngine(typeProvider, declaredVariables,
             typeSystem: typeSystem),
         new ErrorReporter(
             AnalysisErrorListener.NULL_LISTENER, rule.reporter.source));
 
-    DartObjectImpl rightValue = binaryExpression.rightOperand.accept(visitor);
+    final rightValue = binaryExpression.rightOperand.accept(visitor);
 
     if (rightValue?.type?.name == "int") {
       // Constants is on right side of comparison operator
-      int value = rightValue.toIntValue();
+      final value = rightValue.toIntValue();
       if (value == 0) {
         if (operator.type == TokenType.EQ_EQ ||
             operator.type == TokenType.LT_EQ) {
@@ -179,11 +168,11 @@ class Visitor extends SimpleAstVisitor {
       return;
     }
 
-    DartObjectImpl leftValue = binaryExpression.leftOperand.accept(visitor);
+    final leftValue = binaryExpression.leftOperand.accept(visitor);
 
     if (leftValue?.type?.name == "int") {
       // Constants is on left side of comparison operator
-      int value = leftValue.toIntValue();
+      final value = leftValue.toIntValue();
 
       if (value == 0) {
         if (operator.type == TokenType.EQ_EQ ||
@@ -219,4 +208,13 @@ class Visitor extends SimpleAstVisitor {
       }
     }
   }
+}
+
+class _LintCode extends LintCode {
+  static final registry = <String, LintCode>{};
+
+  factory _LintCode(String name, String message) => registry.putIfAbsent(
+      '$name$message', () => new _LintCode._(name, message));
+
+  _LintCode._(String name, String message) : super(name, message);
 }

@@ -63,8 +63,7 @@ defineRuleUnitTests() {
       [
         Uri.parse('package:foo/src/bar.dart'),
         Uri.parse('package:foo/src/baz/bar.dart')
-      ]
-        ..forEach((uri) {
+      ]..forEach((uri) {
           test(uri.toString(), () {
             expect(isPackage(uri), isTrue);
           });
@@ -73,8 +72,7 @@ defineRuleUnitTests() {
         Uri.parse('foo/bar.dart'),
         Uri.parse('src/bar.dart'),
         Uri.parse('dart:async')
-      ]
-        ..forEach((uri) {
+      ]..forEach((uri) {
           test(uri.toString(), () {
             expect(isPackage(uri), isFalse);
           });
@@ -100,8 +98,7 @@ defineRuleUnitTests() {
       [
         Uri.parse('package:foo/src/bar.dart'),
         Uri.parse('package:foo/src/baz/bar.dart')
-      ]
-        ..forEach((uri) {
+      ]..forEach((uri) {
           test(uri.toString(), () {
             expect(isImplementation(uri), isTrue);
           });
@@ -237,7 +234,9 @@ defineRuleUnitTests() {
     group('libary_name_prefixes', () {
       testEach(
           Iterable<List<String>> values, dynamic f(List<String> s), Matcher m) {
-        values.forEach((s) => test('${s[3]}', () => expect(f(s), m)));
+        for (final value in values) {
+          test('${value[3]}', () => expect(f(value), m));
+        }
       }
 
       bool isGoodPrefx(List<String> v) => matchesOrIsPrefixedBy(
@@ -318,8 +317,8 @@ defineSanityTests() {
   group('reporting', () {
     //https://github.com/dart-lang/linter/issues/193
     group('ignore synthetic nodes', () {
-      String path = p.join('test', '_data', 'synthetic', 'synthetic.dart');
-      File file = new File(path);
+      final path = p.join('test', '_data', 'synthetic', 'synthetic.dart');
+      final file = new File(path);
       testRule('non_constant_identifier_names', file);
     });
   });
@@ -337,11 +336,11 @@ defineSoloRuleTest(String ruleToTest) {
 }
 
 Annotation extractAnnotation(String line) {
-  int index = line.indexOf(new RegExp(r'(//|#)[ ]?LINT'));
+  final index = line.indexOf(new RegExp(r'(//|#)[ ]?LINT'));
 
   // Grab the first comment to see if there's one preceding the annotation.
   // Check for '#' first to allow for lints on dartdocs.
-  int comment = line.indexOf('#');
+  var comment = line.indexOf('#');
   if (comment == -1) {
     comment = line.indexOf('//');
   }
@@ -358,7 +357,7 @@ Annotation extractAnnotation(String line) {
       length = int.parse(annotation.substring(sep + 1, rightBrace));
     }
 
-    int msgIndex = annotation.indexOf(']') + 1;
+    var msgIndex = annotation.indexOf(']') + 1;
     if (msgIndex < 1) {
       msgIndex = annotation.indexOf('T') + 1;
     }
@@ -379,11 +378,15 @@ AnnotationMatcher matchesAnnotation(
     new AnnotationMatcher(new Annotation(message, type, lineNumber));
 
 testEach(Iterable<Object> values, bool f(String s), Matcher m) {
-  values.forEach((s) => test('"$s"', () => expect(f(s), m)));
+  for (final value in values) {
+    test('"$value"', () => expect(f(value), m));
+  }
 }
 
 testEachInt(Iterable<Object> values, bool f(int s), Matcher m) {
-  values.forEach((s) => test('"$s"', () => expect(f(s), m)));
+  for (final value in values) {
+    test('"$value"', () => expect(f(value), m));
+  }
 }
 
 testRule(String ruleName, File file, {bool debug: false}) {
@@ -396,7 +399,7 @@ testRule(String ruleName, File file, {bool debug: false}) {
 
     var expected = <AnnotationMatcher>[];
 
-    int lineNumber = 1;
+    var lineNumber = 1;
     for (var line in file.readAsLinesSync()) {
       var annotation = extractAnnotation(line);
       if (annotation != null) {
@@ -406,31 +409,31 @@ testRule(String ruleName, File file, {bool debug: false}) {
       ++lineNumber;
     }
 
-    LintRule rule = Registry.ruleRegistry[ruleName];
+    final rule = Registry.ruleRegistry[ruleName];
     if (rule == null) {
       print('WARNING: Test skipped -- rule `$ruleName` is not registered.');
       return;
     }
 
-    LinterOptions options = new LinterOptions([rule])
+    final options = new LinterOptions([rule])
       ..mockSdk = new MockSdk()
       ..packageRootPath = '.';
 
-    DartLinter driver = new DartLinter(options);
+    final driver = new DartLinter(options);
 
-    Iterable<AnalysisErrorInfo> lints = driver.lintFiles([file]);
+    final lints = driver.lintFiles([file]);
 
-    List<Annotation> actual = [];
-    lints.forEach((AnalysisErrorInfo info) {
-      info.errors.forEach((AnalysisError error) {
+    final actual = <Annotation>[];
+    for (final info in lints) {
+      for (final error in info.errors) {
         if (error.errorCode.type == ErrorType.LINT) {
           actual.add(new Annotation.forError(error, info.lineInfo));
         }
-      });
-    });
+      }
+    }
     try {
       expect(actual, unorderedMatches(expected));
-    } catch (e) {
+    } on Exception {
       if (debug) {
         // Dump results for debugging purposes.
 
@@ -441,8 +444,7 @@ testRule(String ruleName, File file, {bool debug: false}) {
         new ResultReporter(lints)..write();
       }
 
-      // Rethrow and fail.
-      throw e;
+      rethrow;
     }
   });
 }
@@ -471,9 +473,10 @@ class Annotation {
       '[$type]: "$message" (line: $lineNumber) - [$column:$length]';
 
   static Iterable<Annotation> fromErrors(AnalysisErrorInfo error) {
-    List<Annotation> annotations = [];
-    error.errors.forEach(
-        (e) => annotations.add(new Annotation.forError(e, error.lineInfo)));
+    final annotations = <Annotation>[];
+    for (final containedError in error.errors) {
+      annotations.add(new Annotation.forError(containedError, error.lineInfo));
+    }
     return annotations;
   }
 }

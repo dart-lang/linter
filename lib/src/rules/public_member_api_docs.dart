@@ -92,7 +92,7 @@ class Visitor extends GeneralizingAstVisitor {
       return null;
     }
 
-    ClassElement classElement =
+    final classElement =
         member.getAncestor((element) => element is ClassElement);
     if (classElement == null) {
       return null;
@@ -113,14 +113,14 @@ class Visitor extends GeneralizingAstVisitor {
 
     // Check methods
 
-    Map<String, MethodDeclaration> getters = <String, MethodDeclaration>{};
-    Map<String, MethodDeclaration> setters = <String, MethodDeclaration>{};
+    final getters = <String, MethodDeclaration>{};
+    final setters = <String, MethodDeclaration>{};
 
     // Non-getters/setters.
-    List<MethodDeclaration> methods = <MethodDeclaration>[];
+    final methods = <MethodDeclaration>[];
 
     // Identify getter/setter pairs.
-    for (ClassMember member in node.members) {
+    for (final member in node.members) {
       if (member is MethodDeclaration && !isPrivate(member.name)) {
         if (member.isGetter) {
           getters[member.name.name] = member;
@@ -133,20 +133,19 @@ class Visitor extends GeneralizingAstVisitor {
     }
 
     // Check all getters, and collect offenders along the way.
-    List<MethodDeclaration> missingDocs = <MethodDeclaration>[];
-    for (MethodDeclaration getter in getters.values) {
+    final missingDocs = <MethodDeclaration>[];
+    for (final getter in getters.values) {
       if (check(getter)) {
         missingDocs.add(getter);
       }
     }
 
     // But only setters whose getter is missing a doc.
-    for (MethodDeclaration setter in setters.values) {
-      MethodDeclaration getter = getters[setter.name.name];
+    for (final setter in setters.values) {
+      final getter = getters[setter.name.name];
       if (getter == null) {
         //Look for an inherited getter.
-        ExecutableElement getter =
-            manager.lookupMember(node.element, setter.name.name);
+        final getter = manager.lookupMember(node.element, setter.name.name);
         if (getter is PropertyAccessorElement) {
           if (getter.documentationComment != null) {
             continue;
@@ -171,21 +170,21 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitCompilationUnit(CompilationUnit node) {
-    LibraryElement library = node == null
+    final library = node == null
         ? null
         : resolutionMap.elementDeclaredByCompilationUnit(node)?.library;
     manager = library == null ? null : new InheritanceManager(library);
 
-    Map<String, FunctionDeclaration> getters = <String, FunctionDeclaration>{};
-    Map<String, FunctionDeclaration> setters = <String, FunctionDeclaration>{};
+    final getters = <String, FunctionDeclaration>{};
+    final setters = <String, FunctionDeclaration>{};
 
     // Check functions.
 
     // Non-getters/setters.
-    List<FunctionDeclaration> functions = <FunctionDeclaration>[];
+    final functions = <FunctionDeclaration>[];
 
     // Identify getter/setter pairs.
-    for (CompilationUnitMember member in node.declarations) {
+    for (final member in node.declarations) {
       if (member is FunctionDeclaration) {
         Identifier name = member.name;
         if (!isPrivate(name) && name.name != 'main') {
@@ -201,16 +200,16 @@ class Visitor extends GeneralizingAstVisitor {
     }
 
     // Check all getters, and collect offenders along the way.
-    List<FunctionDeclaration> missingDocs = <FunctionDeclaration>[];
-    for (FunctionDeclaration getter in getters.values) {
+    final missingDocs = <FunctionDeclaration>[];
+    for (final getter in getters.values) {
       if (check(getter)) {
         missingDocs.add(getter);
       }
     }
 
     // But only setters whose getter is missing a doc.
-    for (FunctionDeclaration setter in setters.values) {
-      FunctionDeclaration getter = getters[setter.name.name];
+    for (final setter in setters.values) {
+      final getter = getters[setter.name.name];
       if (getter != null && missingDocs.contains(getter)) {
         check(setter);
       }
@@ -246,7 +245,7 @@ class Visitor extends GeneralizingAstVisitor {
   @override
   visitFieldDeclaration(FieldDeclaration node) {
     if (!inPrivateMember(node)) {
-      for (VariableDeclaration field in node.fields.variables) {
+      for (final field in node.fields.variables) {
         if (!isPrivate(field.name)) {
           check(field);
         }
@@ -263,7 +262,7 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
-    for (VariableDeclaration decl in node.variables.variables) {
+    for (final decl in node.variables.variables) {
       if (!isPrivate(decl.name)) {
         check(decl);
       }

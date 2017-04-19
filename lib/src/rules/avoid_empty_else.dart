@@ -40,7 +40,7 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitIfStatement(IfStatement node) {
-    Statement elseStatement = node.elseStatement;
+    final elseStatement = node.elseStatement;
     if (elseStatement is EmptyStatement) {
       rule.reportLint(elseStatement);
     }
