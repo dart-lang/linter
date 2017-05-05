@@ -8,7 +8,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
-import 'package:linter/src/util/dart_type_utilities.dart';
 
 const _desc =
     r'Prefer defining constructors instead of static methods to create instances.';
@@ -43,13 +42,9 @@ class Point {
 ''';
 
 bool _hasNewInvocation(DartType returnType, FunctionBody body) {
-  bool _isInstanceCreationExpression(AstNode node) {
-    return node is InstanceCreationExpression && node.bestType == returnType;
-  }
-
-  return DartTypeUtilities
-      .traverseNodesInDFS(body)
-      .any(_isInstanceCreationExpression);
+  final visitor = new _HasNewInvocationVisitor(returnType);
+  body.accept(visitor);
+  return visitor.hasNewInvocationVisitor;
 }
 
 class PreferConstructorsInsteadOfStaticMethods extends LintRule {
@@ -65,6 +60,27 @@ class PreferConstructorsInsteadOfStaticMethods extends LintRule {
 
   @override
   AstVisitor getVisitor() => _visitor;
+}
+
+class _HasNewInvocationVisitor extends UnifyingAstVisitor {
+  var hasNewInvocationVisitor = false;
+  final DartType _returnType;
+
+  _HasNewInvocationVisitor(this._returnType);
+
+  @override
+  visitInstanceCreationExpression(InstanceCreationExpression node) {
+    hasNewInvocationVisitor =
+        hasNewInvocationVisitor || node.bestType == _returnType;
+    visitNode(node);
+  }
+
+  @override
+  visitNode(AstNode node) {
+    if (!hasNewInvocationVisitor) {
+      node.visitChildren(this);
+    }
+  }
 }
 
 class _Visitor extends SimpleAstVisitor {

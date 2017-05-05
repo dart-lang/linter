@@ -101,12 +101,9 @@ class _PreferForEachVisitor extends SimpleAstVisitor {
         DartTypeUtilities.getCanonicalElementFromIdentifier(arguments.first) ==
             element &&
         (node.target == null ||
-            (DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) !=
-                    element &&
-                !DartTypeUtilities
-                    .traverseNodesInDFS(node.target)
-                    .map(DartTypeUtilities.getCanonicalElementFromIdentifier)
-                    .contains(element)))) {
+            !DartTypeUtilities
+                .getCanonicalElementsInNode(node.target)
+                .contains(element))) {
       rule.reportLint(forEachStatement);
     }
   }

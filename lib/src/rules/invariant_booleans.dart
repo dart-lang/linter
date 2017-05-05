@@ -8,7 +8,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/boolean_expression_utilities.dart';
 import 'package:linter/src/util/condition_scope_visitor.dart';
@@ -100,11 +99,6 @@ void nestedOk5() {
 
 ''';
 
-Iterable<Element> _getElementsInExpression(Expression node) => DartTypeUtilities
-    .traverseNodesInDFS(node)
-    .map(DartTypeUtilities.getCanonicalElementFromIdentifier)
-    .where((e) => e != null);
-
 class InvariantBooleans extends LintRule {
   _Visitor _visitor;
 
@@ -170,7 +164,7 @@ class _InvariantBooleansVisitor extends ConditionScopeVisitor {
   }
 
   TestedExpressions _findPreviousTestedExpressions(Expression node) {
-    final elements = _getElementsInExpression(node);
+    final elements = DartTypeUtilities.getCanonicalElementsInNode(node);
     Iterable<Expression> conjunctions = getTrueExpressions(elements).toSet();
     Iterable<Expression> negations = getFalseExpressions(elements).toSet();
     return new TestedExpressions(node, conjunctions, negations);
