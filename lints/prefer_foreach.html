@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>prefer_foreach</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>prefer_foreach</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><strong>DO</strong> use forEach call if you are only going to apply a function or a method to all the elements of an iterable.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>for (final key in map.keys.toList()) {
+  map.remove(key);
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>map.keys.toList().forEach(map.remove);
+</code></pre>
+<p><strong>NOTE:</strong> Replacing a for each statement with a forEach call may change the behavior in the case there are side-effects on the iterable itself.</p>
+<pre><code>for (final v in myList) {
+  foo().f(v); // This code invokes foo() many times.
+}
+
+myList.forEach(foo().f); // But this one invokes foo() just once.
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>

@@ -51,7 +51,7 @@ to indicate that they are under review.</p>
 <p>Rules can be selectively enabled in the analyzer using
 <a href="https://pub.dartlang.org/packages/analyzer">analysis options</a>
 or through an
-<a href="https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file">analysis options file</a>. </p><ul><li><strong><a href="options/options.html">An auto-generated list enabling all options is providedhere.</a></strong> </li></ul>
+<a href="https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file">analysis options file</a>. </p><ul><li><strong>An auto-generated list enabling all options is provided <a href="options/options.html">here</a>.</strong> </li></ul>
 <p>As some lints may contradict each other, only a subset of these will be
 enabled in practice, but this list should provide a
 convenient jumping-off point.</p>
@@ -121,13 +121,31 @@ convenient jumping-off point.</p>
                <strong><a href = "always_declare_return_types.html">always_declare_return_types</a></strong><br/><p>Declare method return types.</p>
 
 
+<strong><a href = "always_put_control_body_on_new_line.html">always_put_control_body_on_new_line</a></strong><br/><p>Separate the control structure expression from its statement.</p>
+
+
+<strong><a href = "always_require_non_null_named_parameters.html">always_require_non_null_named_parameters</a></strong><br/><p>Use @required.</p>
+
+
 <strong><a href = "always_specify_types.html">always_specify_types</a></strong><br/><p>Specify type annotations.</p>
 
 
 <strong><a href = "annotate_overrides.html">annotate_overrides</a></strong><br/><p>Annotate overridden members</p>
 
 
+<strong><a href = "avoid_annotating_with_dynamic.html">avoid_annotating_with_dynamic</a></strong><br/><p>Avoid annotating with dynamic when not required.</p>
+
+
 <strong><a href = "avoid_as.html">avoid_as</a></strong><br/><p>Avoid using <code>as</code>.</p>
+
+
+<strong><a href = "avoid_catches_without_on_clauses.html">avoid_catches_without_on_clauses</a></strong><br/><p>Avoid catches without on clauses.</p>
+
+
+<strong><a href = "avoid_catching_errors.html">avoid_catching_errors</a></strong><br/><p>Don’t explicitly catch Error or types that implement it.</p>
+
+
+<strong><a href = "avoid_classes_with_only_static_members.html">avoid_classes_with_only_static_members</a></strong><br/><p>Avoid defining a class that contains only static members.</p>
 
 
 <strong><a href = "avoid_function_literals_in_foreach_calls.html">avoid_function_literals_in_foreach_calls</a></strong><br/><p>Avoid using Iterable.forEach() with a function literal.</p>
@@ -136,7 +154,25 @@ convenient jumping-off point.</p>
 <strong><a href = "avoid_init_to_null.html">avoid_init_to_null</a></strong><br/><p>Don't explicitly initialize variables to null</p>
 
 
+<strong><a href = "avoid_null_checks_in_equality_operators.html">avoid_null_checks_in_equality_operators</a></strong><br/><p>Don’t check for null in custom == operators.</p>
+
+
+<strong><a href = "avoid_positional_boolean_parameters.html">avoid_positional_boolean_parameters (stable)</a></strong><br/><p>Avoid positional boolean parameters.</p>
+
+
 <strong><a href = "avoid_return_types_on_setters.html">avoid_return_types_on_setters</a></strong><br/><p>Avoid return types on setters.</p>
+
+
+<strong><a href = "avoid_returning_null.html">avoid_returning_null</a></strong><br/><p>Avoid returning null from members whose return type is bool, double, int, or num.</p>
+
+
+<strong><a href = "avoid_returning_this.html">avoid_returning_this</a></strong><br/><p>Avoid returning this from methods just to enable a fluent interface.</p>
+
+
+<strong><a href = "avoid_setters_without_getters.html">avoid_setters_without_getters</a></strong><br/>
+
+
+<strong><a href = "avoid_types_on_closure_parameters.html">avoid_types_on_closure_parameters</a></strong><br/><p>Avoid annotating types on function expression parameters.</p>
 
 
 <strong><a href = "await_only_futures.html">await_only_futures</a></strong><br/><p>Await only futures.</p>
@@ -161,6 +197,9 @@ convenient jumping-off point.</p>
 
 
 <strong><a href = "implementation_imports.html">implementation_imports</a></strong><br/><p>Don't import implementation files from another package.</p>
+
+
+<strong><a href = "join_return_with_assignment.html">join_return_with_assignment</a></strong><br/><p>Join return statement with assignment when possible.</p>
 
 
 <strong><a href = "library_names.html">library_names</a></strong><br/><p>Name libraries and source files using <code>lowercase_with_underscores</code>.</p>
@@ -199,7 +238,13 @@ convenient jumping-off point.</p>
 <strong><a href = "prefer_collection_literals.html">prefer_collection_literals</a></strong><br/><p>Use collection literals when possible.</p>
 
 
+<strong><a href = "prefer_conditional_assignment.html">prefer_conditional_assignment</a></strong><br/><p>Prefer ??= over testing for null.</p>
+
+
 <strong><a href = "prefer_const_constructors.html">prefer_const_constructors</a></strong><br/><p>Prefer const with constant constructors.</p>
+
+
+<strong><a href = "prefer_constructors_over_static_methods.html">prefer_constructors_over_static_methods</a></strong><br/><p>Prefer defining constructors instead of static methods to create instances.</p>
 
 
 <strong><a href = "prefer_contains.html">prefer_contains</a></strong><br/><p>Use contains for Lists and Strings.</p>
@@ -212,6 +257,9 @@ convenient jumping-off point.</p>
 
 
 <strong><a href = "prefer_final_locals.html">prefer_final_locals</a></strong><br/><p>Prefer final for variable declaration if reference is not reassigned.</p>
+
+
+<strong><a href = "prefer_foreach.html">prefer_foreach (stable)</a></strong><br/><p>Use forEach call to only apply a function to all the elements.</p>
 
 
 <strong><a href = "prefer_function_declarations_over_variables.html">prefer_function_declarations_over_variables</a></strong><br/><p>Use a function declaration to bind a function to a name.</p>
@@ -271,7 +319,22 @@ convenient jumping-off point.</p>
 <strong><a href = "unnecessary_null_in_if_null_operators.html">unnecessary_null_in_if_null_operators</a></strong><br/><p>Avoid null in if null operator</p>
 
 
+<strong><a href = "unnecessary_overrides.html">unnecessary_overrides</a></strong><br/><p>Don't override a method to do a super method invocation with the same parameters.</p>
+
+
 <strong><a href = "unnecessary_this.html">unnecessary_this</a></strong><br/><p>Don’t use this. when not needed to avoid shadowing.</p>
+
+
+<strong><a href = "use_rethrow_when_possible.html">use_rethrow_when_possible</a></strong><br/><p>Use rethrow to rethrow a caught exception</p>
+
+
+<strong><a href = "use_setters_to_change_properties.html">use_setters_to_change_properties</a></strong><br/><p>Use a setter for operations that conceptually change a property.</p>
+
+
+<strong><a href = "use_string_buffers.html">use_string_buffers</a></strong><br/><p>Use string buffer to compose strings.</p>
+
+
+<strong><a href = "use_to_and_as_if_applicable.html">use_to_and_as_if_applicable</a></strong><br/><p>Start the name of the method with to/_to or as/_as if applicable.</p>
 
 
             <h2 id="styleguide-rules">Pub Rules</h2>

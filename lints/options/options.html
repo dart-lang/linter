@@ -31,21 +31,33 @@
             <p>
                Auto-generated options enabling all lints.
                Add these to your
-               [.analysis-options file](https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file)
+               <a href="https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file">analysis_options.yaml file</a>
                and tailor to fit!
             </p>
 
 <pre><code>linter:
   rules:
     - always_declare_return_types
+    - always_put_control_body_on_new_line
+    - always_require_non_null_named_parameters
     - always_specify_types
     - annotate_overrides
+    - avoid_annotating_with_dynamic
     - avoid_as
+    - avoid_catches_without_on_clauses
+    - avoid_catching_errors
+    - avoid_classes_with_only_static_members
     - avoid_empty_else
     - avoid_function_literals_in_foreach_calls
     - avoid_init_to_null
+    - avoid_null_checks_in_equality_operators
+    - avoid_positional_boolean_parameters
     - avoid_return_types_on_setters
+    - avoid_returning_null
+    - avoid_returning_this
+    - avoid_setters_without_getters
     - avoid_slow_async_io
+    - avoid_types_on_closure_parameters
     - await_only_futures
     - camel_case_types
     - cancel_subscriptions
@@ -62,6 +74,7 @@
     - implementation_imports
     - invariant_booleans
     - iterable_contains_unrelated_type
+    - join_return_with_assignment
     - library_names
     - library_prefixes
     - list_remove_unrelated_type
@@ -79,11 +92,14 @@
     - parameter_assignments
     - prefer_adjacent_string_concatenation
     - prefer_collection_literals
+    - prefer_conditional_assignment
     - prefer_const_constructors
+    - prefer_constructors_over_static_methods
     - prefer_contains
     - prefer_expression_function_bodies
     - prefer_final_fields
     - prefer_final_locals
+    - prefer_foreach
     - prefer_function_declarations_over_variables
     - prefer_initializing_formals
     - prefer_interpolation_to_compose_strings
@@ -105,8 +121,13 @@
     - unnecessary_lambdas
     - unnecessary_null_aware_assignments
     - unnecessary_null_in_if_null_operators
+    - unnecessary_overrides
     - unnecessary_this
     - unrelated_type_equality_checks
+    - use_rethrow_when_possible
+    - use_setters_to_change_properties
+    - use_string_buffers
+    - use_to_and_as_if_applicable
     - valid_regexps
 </code></pre>
 
