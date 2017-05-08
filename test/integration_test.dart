@@ -113,31 +113,6 @@ defineTests() {
       });
     });
 
-    group('p8', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
-      setUp(() {
-        exitCode = 0;
-        outSink = collectingOut;
-      });
-      tearDown(() {
-        collectingOut.buffer.clear();
-        outSink = currentOut;
-        exitCode = 0;
-      });
-      group('config', () {
-        test('filtered', () {
-          dartlint
-              .main(['test/_data/p8', '-c', 'test/_data/p8/lintconfig.yaml']);
-          expect(exitCode, 0);
-          expect(
-              collectingOut.trim(),
-              stringContainsInOrder(
-                  ['2 files analyzed, 0 issues found (1 filtered), in']));
-        });
-      });
-    });
-
     group('overridden_fields', () {
       IOSink currentOut = outSink;
       CollectingSink collectingOut = new CollectingSink();
