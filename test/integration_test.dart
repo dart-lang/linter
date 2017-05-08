@@ -6,7 +6,6 @@ library linter.test.integration;
 
 import 'dart:io';
 
-import 'package:analyzer/src/lint/config.dart';
 import 'package:analyzer/src/lint/io.dart';
 import 'package:analyzer/src/lint/linter.dart';
 import 'package:mockito/mockito.dart';
@@ -421,20 +420,16 @@ defineTests() {
       });
     });
 
-    group('examples', () {
-      test('lintconfig.yaml', () {
-        var src = readFile('example/lintconfig.yaml');
-        var config = new LintConfig.parse(src);
-        expect(config.fileIncludes, unorderedEquals(['foo/**']));
-        expect(
-            config.fileExcludes, unorderedEquals(['**/_data.dart', 'test/**']));
-        expect(config.ruleConfigs, hasLength(1));
-        var ruleConfig = config.ruleConfigs[0];
-        expect(ruleConfig.group, 'style_guide');
-        expect(ruleConfig.name, 'unnecessary_getters');
-        expect(ruleConfig.args, {'enabled': false});
-      });
-    });
+//    group('examples', () {
+//      test('all.yaml', () {
+//TODO(pq): update LintConfig to read analysis options format
+//        var src = readFile('example/all.yaml');
+//        var config = new LintConfig.parse(src);
+//        List<String> configuredRules = config.ruleConfigs.map((c) => c.name).toList();
+//        expect(configuredRules, unorderedEquals(Registry.ruleRegistry.map((r)=>r.name)));
+//      });
+//    });
+
   });
 }
 
