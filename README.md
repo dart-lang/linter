@@ -42,6 +42,9 @@ If a specific lint warning should be ignored, it can be flagged with a comment. 
 tells the `dartanalyzer` to ignore this instance of `avoid_as` warning.  As lints are treated the same as errors and warnings by the analyzer, their severity can similarly be configured in an options file.  For example, an analysis options file that specifies
 
 ```
+linter:
+  rules:
+    - avoid_as
 analyzer:
   errors:
     avoid_as: error
