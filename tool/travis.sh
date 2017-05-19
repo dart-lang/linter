@@ -17,6 +17,9 @@ echo ""
 if [ "$LINTER_BOT" = "benchmark" ]; then
   echo "Running the linter benchmark..."
 
+  # The actual lints can have errors - we don't want to fail the benchmark bot.
+  set +e
+
   dart bin/linter.dart -s -q .
 else
   echo "Running main linter bot"
