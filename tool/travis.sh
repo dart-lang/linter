@@ -21,6 +21,8 @@ if [ "$LINTER_BOT" = "benchmark" ]; then
   set +e
 
   dart bin/linter.dart -s -q .
+
+  echo ""
 else
   echo "Running main linter bot"
 
