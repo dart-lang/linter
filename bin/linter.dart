@@ -55,8 +55,7 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
         abbr: "h", negatable: false, help: "Show usage information.")
     ..addFlag("stats",
         abbr: "s", negatable: false, help: "Show lint statistics.")
-    ..addFlag("benchmark",
-        abbr: "b", negatable: false, help: "Show lint benchmarks.")
+    ..addFlag("benchmark", negatable: false, help: "Show lint benchmarks.")
     ..addFlag('visit-transitive-closure',
         help: 'Visit the transitive closure of imported/exported libraries.')
     ..addFlag('quiet', abbr: 'q', help: "Don't show individual lint errors.")
@@ -145,7 +144,7 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
 
   var stats = options['stats'];
   var benchmark = options['benchmark'];
-  if (stats == true || benchmark == true) {
+  if (stats || benchmark) {
     lintOptions.enableTiming = true;
   }
 

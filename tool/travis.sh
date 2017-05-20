@@ -21,7 +21,7 @@ if [ "$LINTER_BOT" = "benchmark" ]; then
   set +e
 
   # Benchmark linter with all lints enabled.
-  dart bin/linter.dart -b -q -c example/all.yaml .
+  dart bin/linter.dart --benchmark -q -c example/all.yaml .
 
   echo ""
 else
