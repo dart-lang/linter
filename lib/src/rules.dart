@@ -33,6 +33,7 @@ import 'package:linter/src/rules/close_sinks.dart';
 import 'package:linter/src/rules/comment_references.dart';
 import 'package:linter/src/rules/constant_identifier_names.dart';
 import 'package:linter/src/rules/control_flow_in_finally.dart';
+import 'package:linter/src/rules/declare_const_constructor_when_possible.dart';
 import 'package:linter/src/rules/directives_ordering.dart';
 import 'package:linter/src/rules/empty_catches.dart';
 import 'package:linter/src/rules/empty_constructor_bodies.dart';
@@ -130,6 +131,7 @@ void registerLintRules() {
     ..register(new CommentReferences())
     ..register(new ControlFlowInFinally())
     ..registerDefault(new ConstantIdentifierNames())
+    ..register(new DeclareConstConstructorWhenPossible())
     ..register(new DirectivesOrdering())
     ..register(new EmptyCatches())
     ..registerDefault(new EmptyConstructorBodies())
