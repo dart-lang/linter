@@ -16,6 +16,7 @@
 * fixes to `literal_only_boolean_expressions` false positives
 * fix to ensure `cascade_invocations` only lints method invocations if target is a simple identifier 
 * fixes to `use_string_buffers` false positives
+* fixes to `prefer_const_constructors`
 
 # 0.1.32
 
