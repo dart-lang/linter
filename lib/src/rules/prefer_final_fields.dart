@@ -65,19 +65,15 @@ class GoodMutable {
 ''';
 
 class PreferFinalFields extends LintRule {
-  _Visitor _visitor;
-
   PreferFinalFields()
       : super(
             name: 'prefer_final_fields',
             description: _desc,
             details: _details,
-            group: Group.style) {
-    _visitor = new _Visitor(this);
-  }
+            group: Group.style);
 
   @override
-  AstVisitor getVisitor() => _visitor;
+  AstVisitor getVisitor() => new _Visitor(this);
 }
 
 class _Visitor extends SimpleAstVisitor {
@@ -104,7 +100,7 @@ class _Visitor extends SimpleAstVisitor {
       }
     }
 
-    node.childEntities.forEach(recurse);
+    recurse(node);
   }
 
   @override
