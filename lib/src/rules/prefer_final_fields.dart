@@ -2,9 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:collection';
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
@@ -61,24 +64,6 @@ class GoodMutable {
 ```
 ''';
 
-bool _isMutated(
-        VariableDeclaration variable, CompilationUnit compilationUnit) =>
-    DartTypeUtilities
-        .traverseNodesInDFS(compilationUnit)
-        .any((n) =>
-            (n is AssignmentExpression &&
-                DartTypeUtilities
-                        .getCanonicalElementFromIdentifier(n.leftHandSide) ==
-                    variable.element) ||
-            (n is PrefixExpression &&
-                DartTypeUtilities
-                        .getCanonicalElementFromIdentifier(n.operand) ==
-                    variable.element) ||
-            (n is PostfixExpression &&
-                DartTypeUtilities
-                        .getCanonicalElementFromIdentifier(n.operand) ==
-                    variable.element));
-
 class PreferFinalFields extends LintRule {
   _Visitor _visitor;
 
@@ -97,18 +82,35 @@ class PreferFinalFields extends LintRule {
 
 class _Visitor extends SimpleAstVisitor {
   final LintRule rule;
+  final Set<Element> _mutatedElements = new HashSet<Element>();
+
   _Visitor(this.rule);
+
+  @override
+  void visitCompilationUnit(CompilationUnit node) {
+    void recurse(node) {
+      if (node is AstNode) {
+        if (node is AssignmentExpression) {
+          _mutatedElements.add(DartTypeUtilities
+              .getCanonicalElementFromIdentifier(node.leftHandSide));
+        } else if (node is PrefixExpression) {
+          _mutatedElements.add(DartTypeUtilities
+              .getCanonicalElementFromIdentifier(node.operand));
+        } else if (node is PostfixExpression) {
+          _mutatedElements.add(DartTypeUtilities
+              .getCanonicalElementFromIdentifier(node.operand));
+        }
+        node.childEntities.forEach(recurse);
+      }
+    }
+
+    node.childEntities.forEach(recurse);
+  }
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     final fields = node.fields;
     if (fields.isFinal || fields.isConst) {
-      return;
-    }
-
-    CompilationUnit compilationUnit =
-        node.getAncestor((a) => a is CompilationUnit);
-    if (compilationUnit == null) {
       return;
     }
 
@@ -124,13 +126,14 @@ class _Visitor extends SimpleAstVisitor {
         return;
       }
 
-      final isMutated = _isMutated(variable, compilationUnit);
-
-      if (isMutated) {
+      if (_isMutated(variable)) {
         return;
       }
 
       rule.reportLint(variable);
     });
   }
+
+  bool _isMutated(VariableDeclaration variable) =>
+      _mutatedElements.contains(variable.element);
 }
