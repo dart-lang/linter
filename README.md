@@ -57,6 +57,10 @@ tells the analyzer to treat `avoid_as` lints as errors.  For more on configuring
 Feedback is, of course, greatly appreciated and contributions are welcome! Please read the
 [contribution guidelines](CONTRIBUTING.md); mechanics of writing lints are covered [here](doc/WritingLints.MD).
 
+To be a truly great community project, the linter welcome developers from all walks of life, with different backgrounds, and with a wide range of experience. A diverse and friendly community will have more great ideas, more unique perspectives, and produce more great code. We will work diligently to make the Dart linter community welcoming to everyone.
+
+To give clarity of what is expected of our members, the linter project has adopted the code of conduct defined by the Contributor Covenant. This document is used across many open source communities, and we think it articulates our values well. For more, see the [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## Features and bugs
 
 Please file feature requests and bugs at the [issue tracker][tracker].
