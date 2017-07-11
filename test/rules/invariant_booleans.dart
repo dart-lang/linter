@@ -456,3 +456,21 @@ void bug658() {
   String text;
   if ((text?.length ?? 0) != 0) {}
 }
+
+void bug720() {
+  var a = 0;
+  var index = 0;
+  var length = 5;
+  switch(a) {
+    case 0:
+      while(index < length) {
+        ++index;
+      }
+      break;
+    case 1:
+      while(index < length) { // OK
+        ++index;
+      }
+      break;
+  }
+}

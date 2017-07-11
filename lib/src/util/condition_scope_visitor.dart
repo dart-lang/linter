@@ -86,24 +86,35 @@ class ConditionScope {
 /// visit method and keep the scopes behavior consistent to its changes.
 ///
 /// When add a new local scope:
-/// - Visiting a non-empty function body: [BlockFunctionBody] [ExpressionFunctionBody].
+/// - Visiting a non-empty function body: [BlockFunctionBody]
+/// [ExpressionFunctionBody].
 /// - Visiting a flow-control statement: [IfStatement] ElseStatement.
-/// - Visiting loop statements: [DoStatement] [WhileStatement] [ForStatement] [ForEachStatement].
+/// - Visiting loop statements: [DoStatement] [WhileStatement] [ForStatement]
+/// [ForEachStatement].
 ///
 /// When call the abstract method visitCondition(node.condition):
-/// - After visiting a conditional statements: [IfStatement] [DoStatement] [WhileStatement] [ForStatement].
+/// - After visiting a conditional statements: [IfStatement] [DoStatement]
+/// [WhileStatement] [ForStatement].
 ///
 /// When undefine an element:
-/// - Visiting reassignments of variables: [AssignmentExpression] [PrefixExpression] [PostfixExpression].
+/// - Visiting reassignments of variables: [AssignmentExpression]
+/// [PrefixExpression] [PostfixExpression].
 ///
 /// When undefine all elements:
-/// - Visiting a non-empty function body: [BlockFunctionBody] [ExpressionFunctionBody].
-/// - Visiting clauses that generates dead_code: [ReturnStatement] [ThrowExpression] [RethrowExpression].
-/// - Visiting if/else with exit clauses inside in both cases (also generates dead code).
+/// - Visiting a non-empty function body: [BlockFunctionBody]
+/// [ExpressionFunctionBody].
+/// - Visiting clauses that generates dead_code: [ReturnStatement]
+/// [ThrowExpression] [RethrowExpression].
+/// - Visiting if/else with exit clauses inside in both cases (also generates
+/// dead code).
+/// -  Visiting a case in a switch statement where the previous node is a case
+/// with a break.
+
 ///
 /// When propagate undefined elements:
 /// - After visiting a flow-control statement: [IfStatement] ElseStatement.
-/// - After visiting loop statements: [DoStatement] [WhileStatement] [ForStatement] [ForEachStatement].
+/// - After visiting loop statements: [DoStatement] [WhileStatement]
+/// [ForStatement] [ForEachStatement].
 ///
 /// When add a Condition as true condition:
 /// - Inside an if body and after an else body with exit clause.
@@ -111,7 +122,8 @@ class ConditionScope {
 ///
 /// When add a Condition as false condition:
 /// - Inside an else body and after a then body with exit clause.
-/// - Outside pre evaluated conditional loops without breaks: [ForStatement] [WhileStatement]
+/// - Outside pre evaluated conditional loops without breaks: [ForStatement]
+/// [WhileStatement]
 ///
 /// When add a BreakStatement in the breakScope.
 /// - When visiting a BreakStatement.
@@ -251,6 +263,20 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
   @override
   visitReturnStatement(ReturnStatement node) {
     node.visitChildren(this);
+    _addElementToEnvironment(new _UndefinedAllExpression());
+  }
+
+  @override
+  visitSwitchCase(SwitchCase node) {
+    node.visitChildren(this);
+    AstNode previousCase = node.parent.childEntities
+        .where((e) => e is AstNode)
+        .lastWhere((n) => n != node, orElse: () => null);
+    if (previousCase == null ||
+        previousCase.childEntities.last is! BreakStatement) {
+      return;
+    }
+
     _addElementToEnvironment(new _UndefinedAllExpression());
   }
 
