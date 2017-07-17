@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>prefer_contains</title>
+      <title>prefer_single_quotes</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_contains</h1>
+            <h1>prefer_single_quotes</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,14 +26,28 @@
          </header>
          <section>
 
-            <p><strong>DO NOT</strong> use <code>.indexOf</code> to see if a collection contains an element.</p>
-<p>Calling <code>.indexOf</code> to see if a collection contains something is difficult to read and may have poor performance.</p>
-<p>Instead, prefer <code>.contains</code>.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>if (!lunchBox.contains('sandwich') return 'so hungry...';
-</code></pre>
+            <p><strong>DO</strong> use single quotes where they wouldn't require additional escapes.</p>
+<p>That means strings with an apostrophe may use double quotes so that the
+apostrophe isn't escaped (note: we don't lint the other way around, ie, a single
+quoted string with an escaped apostrophe is not flagged).</p>
+<p>Its also rare, but possible, to have strings within string interpolations. In
+this case, its much more readable to use a double quote somewhere. So double
+quotes are allowed either within, or containing, an interpolated string literal.
+Arguably strings within string interpolations should be its own type of lint.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>if (lunchBox.indexOf('sandwich') == -1 return 'so hungry...';
+<pre><code>useStrings(
+    "should be single quote",
+    r"should be single quote",
+    r"""should be single quotes""")
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>useStrings(
+    'should be single quote',
+    r'should be single quote",
+    r'''should be single quotes''',
+    "here's ok",
+    "nested ${a ? 'strings' : 'can'} be wrapped by a double quote",
+    'and nested ${a ? "strings" : "can be double quoted themselves"});
 </code></pre>
 
 

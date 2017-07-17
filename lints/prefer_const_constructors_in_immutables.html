@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>prefer_contains</title>
+      <title>prefer_const_constructors_in_immutables</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_contains</h1>
+            <h1>prefer_const_constructors_in_immutables</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,14 +26,19 @@
          </header>
          <section>
 
-            <p><strong>DO NOT</strong> use <code>.indexOf</code> to see if a collection contains an element.</p>
-<p>Calling <code>.indexOf</code> to see if a collection contains something is difficult to read and may have poor performance.</p>
-<p>Instead, prefer <code>.contains</code>.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>if (!lunchBox.contains('sandwich') return 'so hungry...';
+            <p><strong>GOOD:</strong></p>
+<pre><code>@immutable
+class A {
+  final a;
+  const A(this.a);
+}
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>if (lunchBox.indexOf('sandwich') == -1 return 'so hungry...';
+<pre><code>@immutable
+class A {
+  final a;
+  A(this.a);
+}
 </code></pre>
 
 

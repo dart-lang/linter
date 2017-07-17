@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>prefer_contains</title>
+      <title>always_put_required_named_parameters_first</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_contains</h1>
+            <h1>always_put_required_named_parameters_first</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,14 +26,12 @@
          </header>
          <section>
 
-            <p><strong>DO NOT</strong> use <code>.indexOf</code> to see if a collection contains an element.</p>
-<p>Calling <code>.indexOf</code> to see if a collection contains something is difficult to read and may have poor performance.</p>
-<p>Instead, prefer <code>.contains</code>.</p>
+            <p><strong>DO</strong> specify <code>@required</code> on named parameter before other named parameters.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>if (!lunchBox.contains('sandwich') return 'so hungry...';
+<pre><code>m({@required a, b, c}) ;
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>if (lunchBox.indexOf('sandwich') == -1 return 'so hungry...';
+<pre><code>m({b, c, @required a}) ;
 </code></pre>
 
 
