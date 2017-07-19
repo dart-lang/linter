@@ -37,8 +37,7 @@ Rules can be selectively enabled in the analyzer using
 or through an
 [analysis options file](https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file). 
 
-* **[An auto-generated list enabling all options is provided
-here.](options/options.html)** 
+* **An auto-generated list enabling all options is provided [here](options/options.html).** 
 
 As some lints may contradict each other, only a subset of these will be
 enabled in practice, but this list should provide a
@@ -76,12 +75,19 @@ String get enumerateStyleRules => rules
 
 List<String> get sortedRules => rules.map((r) => r.name).toList()..sort();
 
-void generateDocs(String outDir) {
+void generateDocs(String dir) {
+  String outDir = dir;
   if (outDir != null) {
     Directory d = new Directory(outDir);
     if (!d.existsSync()) {
       print("Directory '${d.path}' does not exist");
       return;
+    }
+    if (!new File('$outDir/options').existsSync()) {
+      Directory lintsChildDir = new Directory('$outDir/lints');
+      if (lintsChildDir.existsSync()) {
+        outDir = lintsChildDir.path;
+      }
     }
   }
 
@@ -337,7 +343,7 @@ linter:
             <p>
                Auto-generated options enabling all lints.
                Add these to your
-               [.analysis-options file](https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file)
+               <a href="https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file">analysis_options.yaml file</a>
                and tailor to fit!
             </p>
 

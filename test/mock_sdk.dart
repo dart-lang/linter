@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.sdk;
-
 import 'package:analyzer/file_system/file_system.dart' as resource;
 import 'package:analyzer/file_system/memory_file_system.dart' as resource;
 import 'package:analyzer/src/context/cache.dart'
@@ -88,6 +86,14 @@ class Deprecated extends Object {
   const Deprecated(this.expires);
 }
 const Object deprecated = const Deprecated("next release");
+
+class Error {
+  Error();
+  static String safeToString(Object object);
+  external static String _stringToSafeString(String string);
+  external static String _objectToString(Object object);
+  external StackTrace get stackTrace;
+}
 
 class Iterator<E> {
   bool moveNext();
@@ -175,6 +181,7 @@ abstract class StreamTransformer<S, T> {}
 library dart.collection;
 
 abstract class HashMap<K, V> implements Map<K, V> {}
+abstract class LinkedHashMap<K, V> implements HashMap<K, V> {}
 ''');
 
   static const _MockSdkLibrary LIB_CONVERT = const _MockSdkLibrary(

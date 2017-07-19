@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.rules.await_only_futures;
-
 import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
@@ -58,7 +56,8 @@ class _Visitor extends SimpleAstVisitor {
     if (!(type.isDartAsyncFuture ||
         type.isDynamic ||
         DartTypeUtilities.extendsClass(type, 'Future', 'dart.async') ||
-        DartTypeUtilities.implementsInterface(type, 'Future', 'dart.async'))) {
+        DartTypeUtilities.implementsInterface(type, 'Future', 'dart.async') ||
+        DartTypeUtilities.isClass(type, 'FutureOr', 'dart.async'))) {
       rule.reportLint(node);
     }
   }

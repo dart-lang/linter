@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.rules.empty_constructor_bodies;
-
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
@@ -59,7 +57,7 @@ class Visitor extends SimpleAstVisitor {
     if (node.body is BlockFunctionBody) {
       Block block = (node.body as BlockFunctionBody).block;
       if (block.statements.length == 0) {
-        if (block.endToken is! TokenWithComment) {
+        if (block.endToken?.precedingComments == null) {
           rule.reportLint(block);
         }
       }

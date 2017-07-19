@@ -3,14 +3,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.rules.literal_only_boolean_expressions;
-
 import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:linter/src/analyzer.dart';
 
 const _desc =
-    r'Conditions should not unconditionally evaluate to "TRUE" or to "FALSE"';
+    r'Boolean expression composed only with literals';
 
 const _details = r'''
 
@@ -82,23 +80,22 @@ void bad() {
 
 ''';
 
-bool _onlyLiterals(Expression expression) {
-  final literalsOnBothSides = expression is BinaryExpression &&
-      (_onlyLiterals(expression.leftOperand) &&
-          _onlyLiterals(expression.rightOperand));
-  final ifNullOperatorWithLiteral = expression is BinaryExpression &&
-      (_onlyLiterals(expression.leftOperand) ||
-          _onlyLiterals(expression.rightOperand)) &&
-      expression.operator.type == TokenType.QUESTION_QUESTION;
-  final literalNegation =
-      expression is PrefixExpression && _onlyLiterals(expression.operand);
-  final parenthesizedLiteral = expression is ParenthesizedExpression &&
-      _onlyLiterals(expression.expression);
-  return expression is Literal ||
-      literalsOnBothSides ||
-      ifNullOperatorWithLiteral ||
-      literalNegation ||
-      parenthesizedLiteral;
+bool _onlyLiterals(Expression rawExpression) {
+  final expression = rawExpression?.unParenthesized;
+  if (expression is Literal) {
+    return true;
+  }
+  if (expression is PrefixExpression) {
+    return _onlyLiterals(expression.operand);
+  }
+  if (expression is BinaryExpression) {
+    if (expression.operator.type == TokenType.QUESTION_QUESTION) {
+      return _onlyLiterals(expression.leftOperand);
+    }
+    return _onlyLiterals(expression.leftOperand) &&
+        _onlyLiterals(expression.rightOperand);
+  }
+  return false;
 }
 
 class LiteralOnlyBooleanExpressions extends LintRule {

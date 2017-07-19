@@ -1,3 +1,81 @@
+# 0.1.33
+
+## Features
+
+* new `prefer_const_constructors_in_immutables` lint
+* new `always_put_required_named_parameters_first` lint
+* new `prefer_asserts_in_initializer_lists` lint
+* support for running in `--benchmark` mode
+* new `prefer_single_quote_strings` lint
+
+## Fixes
+
+* docs for `avoid_setters_without_getters`
+* fix to `directives_ordering` to work with part directives located after exports
+* fixes to `cascade_invocations` false positives
+* fixes to `literal_only_boolean_expressions` false positives
+* fix to ensure `cascade_invocations` only lints method invocations if target is a simple identifier 
+* fixes to `use_string_buffers` false positives
+* fixes to `prefer_const_constructors`
+
+# 0.1.32
+
+* Lint stats (`-s`) output now sorted.
+
+# 0.1.31
+
+* New `prefer_foreach` lint.
+* New `use_string_buffers` rule.
+* New `unnecessary_overrides` rule.
+* New `join_return_with_assignment_when_possible` rule.
+* New `use_to_and_as_if_applicable` rule.
+* New `avoid_setters_without_getters` rule.
+* New `always_put_control_body_on_new_line` rule.
+* New `avoid_positional_boolean_parameters` rule.
+* New `always_require_non_null_named_parameters` rule.
+* New `prefer_conditional_assignment` rule.
+* New `avoid_types_on_closure_parameters` rule.
+* New `always_put_control_body_on_new_line` rule.
+* New `use_setters_to_change_properties` rule.
+* New `avoid_returning_this` rule.
+* New `avoid_annotating_with_dynamic_when_not_required` rule.
+* New `prefer_constructors_over_static_methods` rule.
+* New `avoid_returning_null` rule.
+* New `avoid_classes_with_only_static_members` rule.
+* New `avoid_null_checks_in_equality_operators` rule.
+* New `avoid_catches_without_on_clauses` rule.
+* New `avoid_catching_errors` rule.
+* New `use_rethrow_when_possible` rule.
+* Many lint fixes (notably `prefer_final_fields`, `unnecessary_lambdas`, `await_only_futures`, `cascade_invocations`, `avoid_types_on_closure_parameters`, and `overridden_fields`).
+* Significant performance improvements for `prefer_interpolation_to_compose_strings`.
+* New `unnecessary_this` rule.
+* New `prefer_initializing_formals` rule.
+
+# 0.1.30
+
+* New `avoid_function_literals_in_foreach_calls` lint.
+* New `avoid_slow_async_io` lint.
+* New `cascade_invocations` lint.
+* New `directives_ordering` lint.
+* New `no_adjacent_strings_in_list` lint.
+* New `no_duplicate_case_values` lint.
+* New `omit_local_variable_types` lint.
+* New `prefer_adjacent_string_concatenation` lint.
+* New `prefer_collection_literals` lint.
+* New `prefer_const_constructors` lint.
+* New `prefer_contains` lint.
+* New `prefer_expression_function_bodies` lint.
+* New `prefer_function_declarations_over_variables` lint.
+* New `prefer_initializing_formals` lint.
+* New `prefer_interpolation_to_compose_strings` lint.
+* New `prefer_is_empty` lint.
+* New `recursive_getters` lint.
+* New `unnecessary_brace_in_string_interps` lint.
+* New `unnecessary_lambdas` lint.
+* New `unnecessary_null_aware_assignments` lint.
+* New `unnecessary_null_in_if_null_operators` lint.
+* Miscellaneous bug fixes and codegen improvements.
+
 # 0.1.29
 
 * New `cascade_invocations` lint.

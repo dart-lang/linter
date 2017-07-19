@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.test.engine_test;
-
 import 'dart:io';
 
 import 'package:analyzer/dart/ast/ast.dart' show AstNode, AstVisitor;
@@ -15,7 +13,7 @@ import 'package:analyzer/src/lint/io.dart';
 import 'package:analyzer/src/lint/linter.dart';
 import 'package:analyzer/src/lint/pub.dart';
 import 'package:analyzer/src/string_source.dart' show StringSource;
-import 'package:cli_util/cli_util.dart' show getSdkDir;
+import 'package:cli_util/cli_util.dart' show getSdkPath;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -172,8 +170,8 @@ void defineLinterEngineTests() {
         // Smoke test to ensure a custom sdk path doesn't sink the ship
         FileSystemEntity firstRuleTest =
             new Directory(ruleDir).listSync().firstWhere((f) => isDartFile(f));
-        var sdk = getSdkDir();
-        dartlint.main(['--dart-sdk', sdk.path, firstRuleTest.path]);
+        var sdk = getSdkPath();
+        dartlint.main(['--dart-sdk', sdk, firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
       });
       test('custom package root', () {

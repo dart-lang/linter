@@ -2,15 +2,15 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.test.integration;
-
 import 'dart:io';
 
-import 'package:analyzer/src/lint/config.dart';
 import 'package:analyzer/src/lint/io.dart';
 import 'package:analyzer/src/lint/linter.dart';
+import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/rules.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart';
 
 import '../bin/linter.dart' as dartlint;
 import 'mocks.dart';
@@ -113,31 +113,6 @@ defineTests() {
       });
     });
 
-    group('p8', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = new CollectingSink();
-      setUp(() {
-        exitCode = 0;
-        outSink = collectingOut;
-      });
-      tearDown(() {
-        collectingOut.buffer.clear();
-        outSink = currentOut;
-        exitCode = 0;
-      });
-      group('config', () {
-        test('filtered', () {
-          dartlint
-              .main(['test/_data/p8', '-c', 'test/_data/p8/lintconfig.yaml']);
-          expect(exitCode, 0);
-          expect(
-              collectingOut.trim(),
-              stringContainsInOrder(
-                  ['2 files analyzed, 0 issues found (1 filtered), in']));
-        });
-      });
-    });
-
     group('overridden_fields', () {
       IOSink currentOut = outSink;
       CollectingSink collectingOut = new CollectingSink();
@@ -224,6 +199,170 @@ defineTests() {
       });
     });
 
+    group('directives_ordering', () {
+      IOSink currentOut = outSink;
+      CollectingSink collectingOut = new CollectingSink();
+      setUp(() {
+        exitCode = 0;
+        outSink = collectingOut;
+      });
+      tearDown(() {
+        collectingOut.buffer.clear();
+        outSink = currentOut;
+        exitCode = 0;
+      });
+
+      test('dart_directives_go_first', () {
+        var packagesFilePath = new File('.packages').absolute.path;
+        dartlint.main([
+          '--packages',
+          packagesFilePath,
+          'test/_data/directives_ordering/dart_directives_go_first',
+          '--rules=directives_ordering'
+        ]);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              "Place 'dart:' imports before other imports.",
+              "import 'dart:html';  // LINT",
+              "Place 'dart:' imports before other imports.",
+              "import 'dart:isolate';  // LINT",
+              "Place 'dart:' exports before other exports.",
+              "export 'dart:html';  // LINT",
+              "Place 'dart:' exports before other exports.",
+              "export 'dart:isolate';  // LINT",
+              '2 files analyzed, 4 issues found, in'
+            ]));
+      });
+
+      test('package_directives_before_relative', () {
+        var packagesFilePath = new File('.packages').absolute.path;
+        dartlint.main([
+          '--packages',
+          packagesFilePath,
+          'test/_data/directives_ordering/package_directives_before_relative',
+          '--rules=directives_ordering'
+        ]);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              "Place 'package:' imports before relative imports.",
+              "import 'package:async/src/async_cache.dart'; // LINT",
+              "Place 'package:' imports before relative imports.",
+              "import 'package:yaml/yaml.dart'; // LINT",
+              "Place 'package:' exports before relative exports.",
+              "export 'package:async/src/async_cache.dart'; // LINT",
+              "Place 'package:' exports before relative exports.",
+              "export 'package:yaml/yaml.dart'; // LINT",
+              '3 files analyzed, 4 issues found, in'
+            ]));
+      });
+
+      test('third_party_package_directives_before_own', () {
+        var packagesFilePath = new File('.packages').absolute.path;
+        dartlint.main([
+          '--packages',
+          packagesFilePath,
+          'test/_data/directives_ordering/third_party_package_directives_before_own',
+          '--rules=directives_ordering'
+        ]);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              "Place 'third-party' 'package:' imports before other imports.",
+              "import 'package:async/async.dart';  // LINT",
+              "Place 'third-party' 'package:' imports before other imports.",
+              "import 'package:yaml/yaml.dart';  // LINT",
+              "Place 'third-party' 'package:' exports before other exports.",
+              "export 'package:async/async.dart';  // LINT",
+              "Place 'third-party' 'package:' exports before other exports.",
+              "export 'package:yaml/yaml.dart';  // LINT",
+              '1 file analyzed, 4 issues found, in'
+            ]));
+      });
+
+      test('export_directives_after_import_directives', () {
+        var packagesFilePath = new File('.packages').absolute.path;
+        dartlint.main([
+          '--packages',
+          packagesFilePath,
+          'test/_data/directives_ordering/export_directives_after_import_directives',
+          '--rules=directives_ordering'
+        ]);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              "Specify exports in a separate section after all imports.",
+              "export 'dummy.dart';  // LINT",
+              "Specify exports in a separate section after all imports.",
+              "export 'dummy2.dart';  // LINT",
+              '5 files analyzed, 2 issues found, in'
+            ]));
+      });
+
+      test('sort_directive_sections_alphabetically', () {
+        var packagesFilePath = new File('.packages').absolute.path;
+        dartlint.main([
+          '--packages',
+          packagesFilePath,
+          'test/_data/directives_ordering/sort_directive_sections_alphabetically',
+          '--rules=directives_ordering'
+        ]);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              "Sort directive sections alphabetically.",
+              "import 'dart:convert'; // LINT",
+              "Sort directive sections alphabetically.",
+              "import 'package:charcode/ascii.dart'; // LINT",
+              "Sort directive sections alphabetically.",
+              "import 'package:ansicolor/ansicolor.dart'; // LINT",
+              "Sort directive sections alphabetically.",
+              "import 'package:linter/src/formatter.dart'; // LINT",
+              "Sort directive sections alphabetically.",
+              "import 'dummy3.dart'; // LINT",
+              "Sort directive sections alphabetically.",
+              "import 'dummy2.dart'; // LINT",
+              "Sort directive sections alphabetically.",
+              "import 'dummy1.dart'; // LINT",
+              "Sort directive sections alphabetically.",
+              "export 'dart:convert'; // LINT",
+              "Sort directive sections alphabetically.",
+              "export 'package:charcode/ascii.dart'; // LINT",
+              "Sort directive sections alphabetically.",
+              "export 'package:ansicolor/ansicolor.dart'; // LINT",
+              "Sort directive sections alphabetically.",
+              "export 'package:linter/src/formatter.dart'; // LINT",
+              "Sort directive sections alphabetically.",
+              "export 'dummy1.dart'; // LINT",
+              '5 files analyzed, 12 issues found, in'
+            ]));
+      });
+
+      test('lint_one_node_no_more_than_once', () {
+        var packagesFilePath = new File('.packages').absolute.path;
+        dartlint.main([
+          '--packages',
+          packagesFilePath,
+          'test/_data/directives_ordering/lint_one_node_no_more_than_once',
+          '--rules=directives_ordering'
+        ]);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              "Place 'package:' imports before relative imports.",
+              "import 'package:async/async.dart';  // LINT",
+              '2 files analyzed, 1 issue found, in'
+            ]));
+      });
+    });
+
     group('only_throw_errors', () {
       IOSink currentOut = outSink;
       CollectingSink collectingOut = new CollectingSink();
@@ -254,21 +393,138 @@ defineTests() {
       });
     });
 
-    group('examples', () {
-      test('lintconfig.yaml', () {
-        var src = readFile('example/lintconfig.yaml');
-        var config = new LintConfig.parse(src);
-        expect(config.fileIncludes, unorderedEquals(['foo/**']));
+    group('always_require_non_null_named_parameters', () {
+      IOSink currentOut = outSink;
+      CollectingSink collectingOut = new CollectingSink();
+      setUp(() {
+        exitCode = 0;
+        outSink = collectingOut;
+      });
+      tearDown(() {
+        collectingOut.buffer.clear();
+        outSink = currentOut;
+        exitCode = 0;
+      });
+
+      test('only throw errors', () {
+        dartlint.runLinter([
+          'test/_data/always_require_non_null_named_parameters',
+          '--rules=always_require_non_null_named_parameters'
+        ], new LinterOptions()..enableAssertInitializer = true);
+        expect(exitCode, 1);
         expect(
-            config.fileExcludes, unorderedEquals(['**/_data.dart', 'test/**']));
-        expect(config.ruleConfigs, hasLength(1));
-        var ruleConfig = config.ruleConfigs[0];
-        expect(ruleConfig.group, 'style_guide');
-        expect(ruleConfig.name, 'unnecessary_getters');
-        expect(ruleConfig.args, {'enabled': false});
+            collectingOut.trim(),
+            stringContainsInOrder(
+                ['b, // LINT', '1 file analyzed, 1 issue found, in']));
+      });
+    });
+
+    group('prefer_asserts_in_initializer_lists', () {
+      IOSink currentOut = outSink;
+      CollectingSink collectingOut = new CollectingSink();
+      setUp(() {
+        exitCode = 0;
+        outSink = collectingOut;
+      });
+      tearDown(() {
+        collectingOut.buffer.clear();
+        outSink = currentOut;
+        exitCode = 0;
+      });
+
+      test('only throw errors', () {
+        dartlint.runLinter([
+          'test/_data/prefer_asserts_in_initializer_lists',
+          '--rules=prefer_asserts_in_initializer_lists'
+        ], new LinterOptions()..enableAssertInitializer = true);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder(
+                ['lib.dart 6:5', '1 file analyzed, 1 issue found, in']));
+      });
+    });
+
+    group('prefer_const_constructors_in_immutables', () {
+      IOSink currentOut = outSink;
+      CollectingSink collectingOut = new CollectingSink();
+      setUp(() {
+        exitCode = 0;
+        outSink = collectingOut;
+      });
+      tearDown(() {
+        collectingOut.buffer.clear();
+        outSink = currentOut;
+        exitCode = 0;
+      });
+
+      test('only throw errors', () {
+        dartlint.runLinter([
+          'test/_data/prefer_const_constructors_in_immutables',
+          '--rules=prefer_const_constructors_in_immutables'
+        ], new LinterOptions()..enableAssertInitializer = true);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder(
+                ['D.c2(a)', '1 file analyzed, 1 issue found, in']));
+      });
+    });
+
+    group('examples', () {
+      test('all.yaml', () {
+        String src = readFile('example/all.yaml');
+
+        Map<String, YamlNode> options = _getOptionsFromString(src);
+        var configuredLints =
+            ((options['linter'] as YamlMap)['rules'] as YamlList);
+
+        registerLintRules();
+        expect(
+            configuredLints,
+            unorderedEquals(
+                Analyzer.facade.registeredRules.map((r) => r.name)));
       });
     });
   });
+}
+
+/// Provide the options found in [optionsSource].
+Map<String, YamlNode> _getOptionsFromString(String optionsSource) {
+  Map<String, YamlNode> options = <String, YamlNode>{};
+  if (optionsSource == null) {
+    return options;
+  }
+
+  YamlNode doc = loadYamlNode(optionsSource);
+
+  // Empty options.
+  if (doc is YamlScalar && doc.value == null) {
+    return options;
+  }
+  if ((doc != null) && (doc is! YamlMap)) {
+    throw new Exception(
+        'Bad options file format (expected map, got ${doc.runtimeType})');
+  }
+  if (doc is YamlMap) {
+    doc.nodes.forEach((k, YamlNode v) {
+      var key;
+      if (k is YamlScalar) {
+        key = k.value;
+      }
+      if (key is! String) {
+        throw new Exception(
+            'Bad options file format (expected String scope key, '
+            'got ${k.runtimeType})');
+      }
+      if (v != null && v is! YamlNode) {
+        throw new Exception('Bad options file format (expected Node value, '
+            'got ${v.runtimeType}: `${v.toString()}`)');
+      }
+      options[key] = v;
+    });
+  }
+  return options;
 }
 
 class MockProcessResult extends Mock implements ProcessResult {}

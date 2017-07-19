@@ -2,17 +2,17 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.formatter;
-
 import 'dart:io';
 import 'dart:math';
 
 import 'package:analyzer/analyzer.dart';
-
 import 'package:linter/src/analyzer.dart';
 
 final int _pipeCodeUnit = '|'.codeUnitAt(0);
 final int _slashCodeUnit = '\\'.codeUnitAt(0);
+
+// Number of times to perform linting to get stable benchmarks.
+const benchmarkRuns = 10;
 
 String getLineContents(int lineNumber, AnalysisError error) {
   String path = error.source.fullName;
@@ -158,6 +158,7 @@ class SimpleFormatter implements ReportFormatter {
     writeLints();
     writeSummary();
     if (showStatistics) {
+      out.writeln('');
       writeStatistics();
     }
     out.writeln('');
@@ -171,6 +172,8 @@ class SimpleFormatter implements ReportFormatter {
     var tableWidth = max(_summaryLength, longest + largestCountGuess);
     var pad = tableWidth - longest;
     var line = ''.padLeft(tableWidth, '-');
+    out.writeln(line);
+    out.writeln('Counts');
     out.writeln(line);
     codes.forEach((c) {
       out
@@ -241,32 +244,10 @@ class SimpleFormatter implements ReportFormatter {
 
   void writeTimings() {
     Map<String, Stopwatch> timers = lintRegistry.timers;
-    List<String> names = timers.keys.toList()..sort();
-
-    int longestName =
-        names.fold(0, (prev, element) => max(prev, element.length));
-    int longestTime = 8;
-    int tableWidth = max(_summaryLength, longestName + longestTime);
-    int pad = tableWidth - longestName;
-    String line = ''.padLeft(tableWidth, '-');
-
-    out
-      ..writeln()
-      ..writeln(line)
-      ..writeln('${'Timings'.padRight(longestName)}${'ms'.padLeft(pad)}')
-      ..writeln(line);
-    int totalTime = 0;
-    for (String name in names) {
-      Stopwatch stopwatch = timers[name];
-      totalTime += stopwatch.elapsedMilliseconds;
-      out.writeln(
-          '${name.padRight(longestName)}${stopwatch.elapsedMilliseconds.toString().padLeft(pad)}');
-    }
-    out
-      ..writeln(line)
-      ..writeln(
-          '${'Total'.padRight(longestName)}${totalTime.toString().padLeft(pad)}')
-      ..writeln(line);
+    List<_Stat> timings = timers.keys
+        .map((t) => new _Stat(t, timers[t].elapsedMilliseconds))
+        .toList();
+    _writeTimings(out, timings, _summaryLength);
   }
 
   void _recordStats(AnalysisError error) {
@@ -283,4 +264,65 @@ class SimpleFormatter implements ReportFormatter {
 
     writeLint(error, offset: offset, column: column, line: line);
   }
+}
+
+writeBenchmarks(IOSink out, List<File> filesToLint, LinterOptions lintOptions) {
+  Map<String, int> timings = <String, int>{};
+  for (int i = 0; i < benchmarkRuns; ++i) {
+    new DartLinter(lintOptions).lintFiles(filesToLint);
+    lintRegistry.timers.forEach((n, t) {
+      int timing = t.elapsedMilliseconds;
+      int previous = timings[n];
+      if (previous == null) {
+        timings[n] = timing;
+      } else {
+        timings[n] = min(previous, timing);
+      }
+    });
+  }
+
+  List<_Stat> stats =
+      timings.keys.map((t) => new _Stat(t, timings[t])).toList();
+  _writeTimings(out, stats, 0);
+}
+
+void _writeTimings(IOSink out, List<_Stat> timings, int summaryLength) {
+  List<String> names = timings.map((s) => s.name).toList();
+
+  int longestName = names.fold(0, (prev, element) => max(prev, element.length));
+  int longestTime = 8;
+  int tableWidth = max(summaryLength, longestName + longestTime);
+  int pad = tableWidth - longestName;
+  String line = ''.padLeft(tableWidth, '-');
+
+  out
+    ..writeln()
+    ..writeln(line)
+    ..writeln('${'Timings'.padRight(longestName)}${'ms'.padLeft(pad)}')
+    ..writeln(line);
+  int totalTime = 0;
+
+  timings.sort();
+  for (_Stat stat in timings) {
+    totalTime += stat.elapsed;
+    // TODO: Shame timings slower than 100ms?
+    // TODO: Present both total times and time per count?
+    out.writeln(
+        '${stat.name.padRight(longestName)}${stat.elapsed.toString().padLeft(pad)}');
+  }
+  out
+    ..writeln(line)
+    ..writeln(
+        '${'Total'.padRight(longestName)}${totalTime.toString().padLeft(pad)}')
+    ..writeln(line);
+}
+
+class _Stat implements Comparable<_Stat> {
+  final String name;
+  final int elapsed;
+
+  _Stat(this.name, this.elapsed);
+
+  @override
+  int compareTo(_Stat other) => other.elapsed - elapsed;
 }

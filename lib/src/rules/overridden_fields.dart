@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.rules.overridden_fields;
-
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -120,7 +118,7 @@ class _Visitor extends SimpleAstVisitor {
     bool isOverriddenMember(PropertyAccessorElement a) {
       if (a.isSynthetic && a.name == memberName) {
         // Ensure that private members are overriding a member of the same library.
-        if (memberName[0] == '_') {
+        if (Identifier.isPrivateName(memberName)) {
           return library == a.library;
         }
         return true;

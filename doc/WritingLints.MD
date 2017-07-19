@@ -18,6 +18,8 @@ Dart lints:
 
 Every lint has a:
 
+**Name.** A short name using Dart package naming conventions.  Naming is *hard* but strive to be concise and consistent.  Where possible, use existing rules for inspiration and observe the rules of [parallel construction](https://en.wikipedia.org/wiki/Parallelism_(grammar)).
+
 **Description.** A short description of the lint, suitable for printing in console output.  For example:
 
 ```
@@ -60,6 +62,49 @@ Corresponding tests live in [test/rules](https://github.com/dart-lang/linter/tre
 
 Rule stubs can be generated with the [rule.dart](https://github.com/dart-lang/linter/blob/master/tool/rule.dart) 
 helper script and documentation gets generated with [doc.dart](https://github.com/dart-lang/linter/blob/master/tool/doc.dart). 
-Helper scripts can be invoked via `dart` or grinder (`pub run grinder docs:doc_location` and `pub run grinder rule:my_new_rule` respectively).
+Helper scripts can be invoked via `dart` or grinder (`pub run grinder docs:doc_location` and `pub run grinder rule:my_new_rule` respectively).  Using grinder, for example
 
-Needless to say, details are under active development.  Feedback is most [welcome](https://github.com/dart-lang/linter/issues)!
+    $ pub run grinder rule:my_new_test
+    
+generates lint and test stubs in `lib/src/rules` and `test/rules`.
+
+### Analyzer APIs
+
+The linter has a close relationship with the `analyzer` package and at times reaches into non-public APIs.  For the most part, we have isolated these references in an [analyzer.dart utility library](https://github.com/dart-lang/linter/blob/master/lib/src/analyzer.dart).  *Whereever possible please use this library to access analyzer internals.*  
+
+  * If `analyzer.dart` is missing something please consider either opening an issue where we can discuss how best to add it. 
+  * If you find yourself tempted to make references to analyzer [implementation classes](http://dart-lang.github.io/linter/lints/implementation_imports.html) also consider opening an issue so that we can see how best to manage the new dependency.
+  
+Thanks!
+
+### Running Tests
+
+The test suite run during the linter's CI, can be run locally like so:
+
+    $ dart test/all.dart
+
+alternatively, tests can be run using `pub`:
+
+    $ pub run test
+    
+Running a single test can be done using the `rule_debug` helper:
+
+    $ dart test/util/rule_debug.dart always_declare_return_types
+    
+would only test `always_declare_return_types`.  (This can be very handy if you want to run tests in the VM debugger).
+
+If you simply want to verify a test, you can run it solo in `pub`:
+
+    $ pub run test -N always_declare_return_types
+
+### Utilities
+
+You'll notice when authoring a new rule that failures cause the AST of the test case to be displayed to `stdout`.  If you simply want to dump the AST of a given compilation unit, you can use the `spelunk` helper directly.  For example:
+
+    $ dart tool/spelunk.dart lib/src/rules.dart
+    
+would dump the AST of `rules.dart`.
+
+# Feedback is Welcome!
+
+Details are under active development.  Feedback is most [welcome](https://github.com/dart-lang/linter/issues)!

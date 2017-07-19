@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.rules.prefer_contains;
-
 import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/context/declared_variables.dart';
 import 'package:analyzer/dart/ast/ast.dart';
@@ -23,23 +21,18 @@ const desc = 'Use contains for Lists and Strings.';
 const details = '''
 **DO NOT** use `.indexOf` to see if a collection contains an element.
 
-The `Iterable` contract does not require that a collection know its length or be
-able to provide it in constant time. Calling `.length` just to see if the
-collection contains anything can be painfully slow.
+Calling `.indexOf` to see if a collection contains something is difficult to read and may have poor performance.
 
-Instead, there are faster and more readable getters: `.isEmpty` and
-`.isNotEmpty`. Use the one that doesn’t require you to negate the result.
+Instead, prefer `.contains`.
 
 **GOOD:**
 ```
-if (lunchBox.isEmpty) return 'so hungry...';
-if (words.isNotEmpty) return words.join(' ');
+if (!lunchBox.contains('sandwich') return 'so hungry...';
 ```
 
 **BAD:**
 ```
-if (lunchBox.length == 0) return 'so hungry...';
-if (words.length != 0) return words.join(' ');
+if (lunchBox.indexOf('sandwich') == -1 return 'so hungry...';
 ```
 ''';
 
@@ -128,14 +121,16 @@ class _Visitor extends SimpleAstVisitor {
         new ErrorReporter(
             AnalysisErrorListener.NULL_LISTENER, rule.reporter.source));
 
-    final DartObjectImpl rightValue = binaryExpression.rightOperand.accept(visitor);
+    final DartObjectImpl rightValue =
+        binaryExpression.rightOperand.accept(visitor);
     if (rightValue?.type?.name == "int") {
       // Constant is on right side of comparison operator
       _checkConstant(binaryExpression, rightValue.toIntValue(), operator.type);
       return;
     }
 
-    final DartObjectImpl leftValue = binaryExpression.leftOperand.accept(visitor);
+    final DartObjectImpl leftValue =
+        binaryExpression.leftOperand.accept(visitor);
     if (leftValue?.type?.name == "int") {
       // Constants is on left side of comparison operator
       _checkConstant(binaryExpression, leftValue.toIntValue(),

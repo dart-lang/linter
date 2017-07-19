@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.rules.unrelated_type_equality_checks;
-
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/ast/token.dart';
@@ -127,8 +125,8 @@ class DerivedClass2 extends ClassBase with Mixin {}
 ''';
 
 bool _hasNonComparableOperands(BinaryExpression node) =>
-    node.leftOperand is! NullLiteral &&
-    node.rightOperand is! NullLiteral &&
+    !DartTypeUtilities.isNullLiteral(node.leftOperand) &&
+    !DartTypeUtilities.isNullLiteral(node.rightOperand) &&
     DartTypeUtilities.unrelatedTypes(
         node.leftOperand.bestType, node.rightOperand.bestType);
 
