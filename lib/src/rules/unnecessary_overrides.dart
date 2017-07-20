@@ -124,12 +124,16 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
   bool _haveSameDeclaration() {
     if (declaration.element.returnType != inheritedMethod.returnType)
       return false;
+    if (declaration.element.parameters.length !=
+        inheritedMethod.parameters.length) return false;
     for (var i = 0; i < inheritedMethod.parameters.length; i++) {
       final superParam = inheritedMethod.parameters[i];
       final param = declaration.element.parameters[i];
       if (param.type != superParam.type) return false;
       if (param.name != superParam.name) return false;
       if (param.isCovariant != superParam.isCovariant) return false;
+      if (param.parameterKind != superParam.parameterKind) return false;
+      if (param.defaultValueCode != superParam.defaultValueCode) return false;
     }
     return true;
   }

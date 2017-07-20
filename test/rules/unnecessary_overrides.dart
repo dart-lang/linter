@@ -111,6 +111,8 @@ class C {
   num get g => null;
   set s(int v) => null;
   num m(int v) => null;
+  num m1({int v = 20}) => null;
+  num m2([int v = 20]) => null;
   num operator +(int other) => null;
 }
 class ReturnTypeChanged extends C {
@@ -118,6 +120,10 @@ class ReturnTypeChanged extends C {
   int get g => super.g; // OK
   @override
   int m(int v) => super.m(v); // OK
+  @override
+  int m1({int v = 20}) => super.m1(v: v); // OK
+  @override
+  int m2([int v = 20]) => super.m2(v); // OK
   @override
   int operator +(int other) => super + other; // OK
 }
@@ -127,15 +133,21 @@ class ParameterTypeChanged extends C {
   @override
   num m(num v) => super.m(v); // OK
   @override
+  num m1({num v = 20}) => super.m1(v: v); // OK
+  @override
+  num m2([num v = 20]) => super.m2(v); // OK
+  @override
   num operator +(num other) => super + other; // OK
 }
 class ParameterNameChanged extends C {
   @override
   set s(num v2) => super.s = v2; // OK
   @override
-  num m(num v2) => super.m(v2); // OK
+  num m(int v2) => super.m(v2); // OK
   @override
-  num operator +(num other2) => super + other2; // OK
+  num m2([int v2 = 20]) => super.m2(v2); // OK
+  @override
+  num operator +(int other2) => super + other2; // OK
 }
 class ParameterCovarianceChanged extends C {
   @override
@@ -143,7 +155,25 @@ class ParameterCovarianceChanged extends C {
   @override
   num m(covariant int v) => super.m(v); // OK
   @override
+  num m1({covariant int v = 20}) => super.m1(v: v); // OK
+  @override
+  num m2([covariant int v = 20]) => super.m2(v); // OK
+  @override
   num operator +(covariant int other) => super + other; // OK
+}
+class ParameterAdditional extends C {
+  @override
+  num m(int v, [int v2]) => super.m(v); // OK
+  @override
+  num m1({int v = 20, int v2}) => super.m1(v: v); // OK
+  @override
+  num m2([int v = 20, int v2]) => super.m2(v); // OK
+}
+class ParameterDefaultChange extends C {
+  @override
+  num m1({int v = 10}) => super.m1(v: v); // OK
+  @override
+  num m2([int v = 10]) => super.m2(v); // OK
 }
 
 // noSuchMethod is allowed to proxify
