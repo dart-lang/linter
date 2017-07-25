@@ -74,6 +74,7 @@ import 'package:linter/src/rules/prefer_interpolation_to_compose_strings.dart';
 import 'package:linter/src/rules/prefer_is_empty.dart';
 import 'package:linter/src/rules/prefer_is_not_empty.dart';
 import 'package:linter/src/rules/prefer_single_quotes.dart';
+import 'package:linter/src/rules/prefer_string_spaces_at_beginning.dart';
 import 'package:linter/src/rules/pub/package_names.dart';
 import 'package:linter/src/rules/public_member_api_docs.dart';
 import 'package:linter/src/rules/recursive_getters.dart';
@@ -174,6 +175,7 @@ void registerLintRules() {
     ..register(new PreferIsNotEmpty())
     ..register(new PublicMemberApiDocs())
     ..register(new PreferSingleQuotes())
+    ..register(new PreferStringSpacesAtBeginning())
     ..register(new PubPackageNames())
     ..register(new RecursiveGetters())
     ..registerDefault(new SlashForDocComments())
