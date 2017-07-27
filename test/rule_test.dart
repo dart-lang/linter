@@ -412,8 +412,8 @@ testRule(String ruleName, File file, {bool debug: false}) {
       return;
     }
 
-    MemoryResourceProvider memoryResourceProvider =
-        new MemoryResourceProvider();
+    MemoryResourceProvider memoryResourceProvider = new MemoryResourceProvider(
+        context: PhysicalResourceProvider.INSTANCE.pathContext);
     TestResourceProvider resourceProvider =
         new TestResourceProvider(memoryResourceProvider);
 
