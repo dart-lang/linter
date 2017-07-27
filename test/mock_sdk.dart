@@ -294,40 +294,8 @@ class HtmlElement {}
       _analysisContext = new _SdkAnalysisContext(this);
       SourceFactory factory = new SourceFactory([new DartUriResolver(this)]);
       _analysisContext.sourceFactory = factory;
-      ChangeSet changeSet = new ChangeSet();
-      for (String uri in uris) {
-        Source source = factory.forUri(uri);
-        changeSet.addedSource(source);
-      }
-      _analysisContext.applyChanges(changeSet);
     }
     return _analysisContext;
-  }
-
-  @override
-  PackageBundle getLinkedBundle() {
-    if (_bundle == null) {
-      resource.File summaryFile =
-      provider.getFile(provider.convertPath('/lib/_internal/spec.sum'));
-      List<int> bytes;
-      if (summaryFile.exists) {
-        bytes = summaryFile.readAsBytesSync();
-      } else {
-        bytes = _computeLinkedBundleBytes();
-      }
-      _bundle = new PackageBundle.fromBuffer(bytes);
-    }
-    return _bundle;
-  }
-
-  /// Compute the bytes of the linked bundle associated with this SDK.
-  List<int> _computeLinkedBundleBytes() {
-    List<Source> librarySources = sdkLibraries
-        .map((SdkLibrary library) => mapDartUri(library.shortName))
-        .toList();
-    return new SummaryBuilder(
-        librarySources, context, context.analysisOptions.strongMode)
-        .build();
   }
 
   @override
@@ -342,14 +310,10 @@ class HtmlElement {}
   List<String> get uris =>
       sdkLibraries.map((SdkLibrary library) => library.shortName).toList();
 
-
   @override
   Source fromFileUri(Uri uri) {
-
     String filePath = provider.pathContext.fromUri(uri);
-
-    String libPath = '/lib';
-    if (!filePath.startsWith(provider.convertPath('$libPath/'))) {
+    if (!filePath.startsWith(provider.convertPath('/lib/'))) {
       return null;
     }
     for (SdkLibrary library in sdkLibraries) {
@@ -381,10 +345,29 @@ class HtmlElement {}
   }
 
   @override
+  PackageBundle getLinkedBundle() {
+    if (_bundle == null) {
+      resource.File summaryFile =
+      provider.getFile(provider.convertPath('/lib/_internal/spec.sum'));
+      List<int> bytes;
+      if (summaryFile.exists) {
+        bytes = summaryFile.readAsBytesSync();
+      } else {
+        bytes = _computeLinkedBundleBytes();
+      }
+      _bundle = new PackageBundle.fromBuffer(bytes);
+    }
+    return _bundle;
+  }
+
+
+  @override
   SdkLibrary getSdkLibrary(String dartUri) {
-    // getSdkLibrary() is only used to determine whether a library is internal
-    // to the SDK.  The mock SDK doesn't have any internals, so it's safe to
-    // return null.
+    for (SdkLibrary library in LIBRARIES) {
+      if (library.shortName == dartUri) {
+        return library;
+      }
+    }
     return null;
   }
 
@@ -411,6 +394,16 @@ class HtmlElement {}
     // If we reach here then we tried to use a dartUri that's not in the
     // table above.
     return null;
+  }
+
+  /// Compute the bytes of the linked bundle associated with this SDK.
+  List<int> _computeLinkedBundleBytes() {
+    List<Source> librarySources = sdkLibraries
+        .map((SdkLibrary library) => mapDartUri(library.shortName))
+        .toList();
+    return new SummaryBuilder(
+        librarySources, context, context.analysisOptions.strongMode)
+        .build();
   }
 }
 
