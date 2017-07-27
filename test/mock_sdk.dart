@@ -277,7 +277,7 @@ class HtmlElement {}
   MockSdk(this.provider) {
     LIBRARIES.forEach((SdkLibrary library) {
       if (library is _MockSdkLibrary) {
-        provider.newFile(library.path, library.content);
+        provider.newFile(provider.convertPath(library.path), library.content);
         library.parts.forEach((file) {
           provider.newFile(file.path, file.content);
         });
