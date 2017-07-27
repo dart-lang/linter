@@ -17,7 +17,7 @@ import 'package:analyzer/src/summary/summary_file_builder.dart';
 
 /// Mock SDK for testing purposes.
 class MockSdk implements DartSdk {
-  const String librariesContent = r'''
+  static const String librariesContent = r'''
 const Map<String, LibraryInfo> libraries = const {
   "async": const LibraryInfo("async/async.dart"),
   "collection": const LibraryInfo("collection/collection.dart"),
