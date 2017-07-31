@@ -65,8 +65,7 @@ bool _sameOperands(String eLeftOperand, String bcLeftOperand,
   return sameOperandsSameOrder || sameOperandsInverted;
 }
 
-// ignore: camel_case_types
-typedef void _recurseCallback(Expression expression);
+typedef void _RecurseCallback(Expression expression);
 
 class ContradictoryComparisons {
   final Expression first;
@@ -185,7 +184,7 @@ class TestedExpressions {
     return contradictions;
   }
 
-  _recurseCallback _recurseOnChildNodes(
+  _RecurseCallback _recurseOnChildNodes(
           LinkedHashSet<ContradictoryComparisons> expressions) =>
       (Expression e) {
         BinaryExpression ex = e as BinaryExpression;

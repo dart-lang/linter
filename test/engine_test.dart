@@ -224,15 +224,14 @@ void defineLinterEngineTests() {
   });
 }
 
-// ignore: camel_case_types
-typedef nodeVisitor(node);
+typedef NodeVisitor(node);
 
 typedef dynamic /* AstVisitor, PubSpecVisitor*/ VisitorCallback();
 
 class MockLinter extends LintRule {
   VisitorCallback visitorCallback;
 
-  MockLinter([nodeVisitor v])
+  MockLinter([NodeVisitor v])
       : super(
             name: 'MockLint',
             group: Group.style,
