@@ -149,7 +149,7 @@ void defineLinterEngineTests() {
       });
       test('smoke', () async {
         FileSystemEntity firstRuleTest =
-            new Directory(ruleDir).listSync().firstWhere((f) => isDartFile(f));
+            new Directory(ruleDir).listSync().firstWhere(isDartFile);
         await dartlint.main([firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
       });
@@ -169,7 +169,7 @@ void defineLinterEngineTests() {
       test('custom sdk path', () async {
         // Smoke test to ensure a custom sdk path doesn't sink the ship
         FileSystemEntity firstRuleTest =
-            new Directory(ruleDir).listSync().firstWhere((f) => isDartFile(f));
+            new Directory(ruleDir).listSync().firstWhere(isDartFile);
         var sdk = getSdkPath();
         await dartlint.main(['--dart-sdk', sdk, firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
@@ -177,7 +177,7 @@ void defineLinterEngineTests() {
       test('custom package root', () async {
         // Smoke test to ensure a custom package root doesn't sink the ship
         FileSystemEntity firstRuleTest =
-            new Directory(ruleDir).listSync().firstWhere((f) => isDartFile(f));
+            new Directory(ruleDir).listSync().firstWhere(isDartFile);
         var packageDir = new Directory('.').path;
         await dartlint.main(['--package-root', packageDir, firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
@@ -224,6 +224,7 @@ void defineLinterEngineTests() {
   });
 }
 
+// ignore: camel_case_types
 typedef nodeVisitor(node);
 
 typedef dynamic /* AstVisitor, PubSpecVisitor*/ VisitorCallback();
