@@ -11,8 +11,8 @@ const _details = r'''
 
 **BAD:**
 ```
-class Bad {
-  Bad(int unusedParameter, [String unusedPositional]) {};
+class BadOne {
+  Bad(int unusedParameter, [String unusedPositional]);
 }
 ```
 
