@@ -57,9 +57,8 @@ class Visitor extends SimpleAstVisitor {
     for (Token token in node.tokens) {
       if (!token.isSynthetic) {
         String comment = token.lexeme;
-        int length = comment.length;
         int leftIndex = comment.indexOf('[');
-        while (leftIndex >= 0 && leftIndex + 1 < length) {
+        while (leftIndex >= 0) {
           int rightIndex = comment.indexOf(']', leftIndex);
           if (rightIndex >= 0) {
             String reference = comment.substring(leftIndex + 1, rightIndex);
