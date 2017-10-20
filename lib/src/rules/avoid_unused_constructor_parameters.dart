@@ -12,7 +12,15 @@ const _details = r'''
 **BAD:**
 ```
 class BadOne {
-  Bad(int unusedParameter, [String unusedPositional]);
+  BadOne(int unusedParameter, [String unusedPositional]);
+}
+
+class BadTwo {
+  int c;
+
+  BadTwo(int a, int b, int x) {
+    c = a + b;
+  }
 }
 ```
 
