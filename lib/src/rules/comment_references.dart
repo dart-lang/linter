@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
@@ -49,10 +50,42 @@ class Visitor extends SimpleAstVisitor {
   Visitor(this.rule);
 
   @override
+  visitComment(Comment node) {
+    // Check for keywords that are not treated as references by the parser
+    // but should be flagged by the linter.
+    // Note that no special care is taken to handle embedded code blocks.
+    for (Token token in node.tokens) {
+      if (!token.isSynthetic) {
+        String comment = token.lexeme;
+        int length = comment.length;
+        int leftIndex = comment.indexOf('[');
+        while (leftIndex >= 0 && leftIndex + 1 < length) {
+          int rightIndex = comment.indexOf(']', leftIndex);
+          if (rightIndex >= 0) {
+            String reference = comment.substring(leftIndex + 1, rightIndex);
+            if (_isParserSpecialCase(reference)) {
+              int nameOffset = token.offset + leftIndex + 1;
+              rule.reporter.reportErrorForOffset(
+                  rule.lintCode, nameOffset, reference.length);
+            }
+          }
+          leftIndex = comment.indexOf('[', rightIndex);
+        }
+      }
+    }
+  }
+
+  @override
   visitCommentReference(CommentReference node) {
     Identifier identifier = node.identifier;
     if (!identifier.isSynthetic && identifier.bestElement == null) {
       rule.reportLint(identifier);
     }
   }
+
+  bool _isParserSpecialCase(String reference) =>
+      reference == 'this' ||
+      reference == 'null' ||
+      reference == 'true' ||
+      reference == 'false';
 }
