@@ -46,7 +46,7 @@ class G {
   int c;
   int d;
 
-  G(int a, {int b, this.c}) { // OK all non-formal parameters are used
+  G(int a, {int b, this.c}) { // OK because all non-field-formal parameters are used
     d = a + b;
   }
 }
@@ -58,7 +58,7 @@ class H {
 }
 
 class I extends H {
-  I(int a, int b) : super(a, b); // OK because paramters are used in initializer
+  I(int a, int b) : super(a, b); // OK because parameters are used in initializer
 }
 
 class J extends H {
