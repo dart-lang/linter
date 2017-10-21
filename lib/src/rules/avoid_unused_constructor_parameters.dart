@@ -55,8 +55,7 @@ class _Visitor extends SimpleAstVisitor {
     node?.body?.visitChildren(_constructorVisitor);
     node?.initializers?.forEach((i) => i.visitChildren(_constructorVisitor));
 
-    final unusedParameters = _constructorVisitor.unusedParameters;
-    if (unusedParameters.isNotEmpty) rule.reportLint(unusedParameters.first);
+    _constructorVisitor.unusedParameters.forEach(rule.reportLint);
   }
 }
 
