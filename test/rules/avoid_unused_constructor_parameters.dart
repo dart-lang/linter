@@ -23,7 +23,8 @@ class C {
 }
 
 class D {
-  D(int a, [int b = 5]); // LINT
+  D(int a, // LINT
+    [int b = 5]); // LINT
 }
 
 class E {
@@ -37,7 +38,8 @@ class E {
 class F {
   int n;
 
-  F(int a, [int b = 10, int c = 42]) { // LINT
+  F(int a, [int b = 10, // LINT
+    int c = 42]) { // LINT
     n = a + 42;
   }
 }
@@ -74,4 +76,17 @@ class K {
   int b;
 
   K(this.a, {this.b, int c}); // LINT
+}
+
+class L {
+  int c;
+
+  L(int a, int b) : c = a + b;
+  L.named(int a, int b, int c) : this(a, b); // LINT
+}
+
+class M {
+  M._internal(int n); // LINT
+
+  factory M(int a, int b) => new M._internal(a); // LINT
 }
