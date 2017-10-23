@@ -437,7 +437,7 @@ defineTests() {
         await dartlint.runLinter([
           'test/_data/prefer_asserts_in_initializer_lists',
           '--rules=prefer_asserts_in_initializer_lists'
-        ], new LinterOptions();
+        ], new LinterOptions());
         expect(exitCode, 1);
         expect(
             collectingOut.trim(),
