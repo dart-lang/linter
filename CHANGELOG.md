@@ -1,10 +1,16 @@
 # 0.1.36
 
-* remove unneeded change to Dart SDK constraint.
+* `public_member_api_docs` updated to only lint source in `lib/`
+* new `avoid_unused_constructor_parameters` lint
+* new `prefer_bool_in_asserts` lint
+* new `prefer_typing_uninitialized_variables` lint
+* new `unnecessary_statements` lint
+* updated library prefix checking to allow leading `$`s
+* Dart SDK constraints restored (removed unneeded `2.0.0-dev.infinity` constraint)
 
 # 0.1.35
 
-* linter engine updated to use new analysis driver.
+* linter engine updated to use new analysis driver
 
 # 0.1.34
 
