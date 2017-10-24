@@ -50,6 +50,11 @@ class C {
   void operator []=(int index, bool value) { // OK (#803)
   }
 
+  void operator +(bool value) { // OK (#803)
+  }
+
+  void operator -(bool value) { // OK (#803)
+  }
 }
 
 class D {
