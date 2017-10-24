@@ -4,6 +4,7 @@
 
 import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
@@ -34,6 +35,9 @@ new Button(ButtonState.enabled);
 
 bool _hasInheritedMethod(MethodDeclaration node) =>
     DartTypeUtilities.lookUpInheritedMethod(node) != null;
+
+bool _indexEqOp(MethodDeclaration node) =>
+    node.isOperator && node.name.token.type == TokenType.INDEX_EQ;
 
 bool _isNamedParameter(FormalParameter node) =>
     node.kind == ParameterKind.NAMED;
@@ -84,6 +88,7 @@ class _Visitor extends SimpleAstVisitor {
   visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isSetter &&
         !node.element.isPrivate &&
+        !_indexEqOp(node) &&
         !_hasInheritedMethod(node)) {
       final parametersToLint =
           node.parameters?.parameters?.where(_isFormalParameterToLint);

@@ -46,6 +46,10 @@ class C {
   C.bad(bool a) { // LINT
     this.value = value;
   }
+
+  void operator []=(int index, bool value) { // OK (#803)
+  }
+
 }
 
 class D {
