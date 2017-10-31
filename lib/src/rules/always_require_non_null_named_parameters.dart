@@ -36,6 +36,7 @@ m1({a}) {
 ```
 
 NOTE: Only asserts at the start of the bodies will be taken into account.
+
 ''';
 
 /// The name of `meta` library, used to define analysis annotations.

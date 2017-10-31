@@ -40,6 +40,7 @@ class Dice {
 }
 
 ```
+
 ''';
 
 class ConstantIdentifierNames extends LintRule {
