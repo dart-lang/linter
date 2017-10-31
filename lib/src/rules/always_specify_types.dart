@@ -29,7 +29,7 @@ From the [flutter style guide](https://flutter.io/style-guide/):
 
 Avoid `var` when specifying that a type is unknown and short-hands that elide
 type annotations.  Use `dynamic` if you are being explicit that the type is
-unknown. Use `Object` if you are being explicit that you want an object that
+unknown.  Use `Object` if you are being explicit that you want an object that
 implements `==` and `hashCode`.
 
 **GOOD:**

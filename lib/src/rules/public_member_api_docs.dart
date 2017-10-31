@@ -59,7 +59,7 @@ class Sub extends Base {
 ```
 
 Note that consistent with `dartdoc`, an exception to the rule is made when
-documented getters have corresponding undocumented setters. In this case the
+documented getters have corresponding undocumented setters.  In this case the
 setters inherit the docs from the getters.
 
 ''';

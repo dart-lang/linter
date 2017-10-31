@@ -14,7 +14,7 @@ const _details = r'''
 
 **DON'T** create recursive getters.
 
-Recursive getters are getters which return themselves as a value. This is
+Recursive getters are getters which return themselves as a value.  This is
 usually a typo.
 
 **BAD:**

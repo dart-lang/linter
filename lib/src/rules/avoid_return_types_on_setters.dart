@@ -12,7 +12,7 @@ const _details = r'''
 
 **AVOID** return types on setters.
 
-As setters do not return a value, setting the return type of one is redundant.
+As setters do not return a value, declaring the return type of one is redundant.
 
 **GOOD:**
 ```

@@ -17,8 +17,8 @@ From the [flutter style guide]
 **AVOID** using `as`.
 
 If you know the type is correct, use an assertion or assign to a more
-narrowly-typed variable (this avoids the type check in release mode; `as`
-is not compiled out in release mode). If you don't know whether the type is
+narrowly-typed variable (this avoids the type check in release mode; `as` is not
+compiled out in release mode).  If you don't know whether the type is
 correct, check using `is` (this avoids the exception that `as` raises).
 
 **BAD:**

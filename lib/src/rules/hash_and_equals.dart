@@ -13,8 +13,10 @@ const _details = r'''
 
 **DO** override `hashCode` if overriding `==`.
 
-Every object in Dart should have a `hashCode`. This is necessary so that
-every Dart object can have its `hashCode` used as a key in a map.
+Every object in Dart has a `hashCode`.  Both the `==` operator and the
+`hashCode` property of objects must be consistent in order for a common hash
+map implementation to function properly.  Thus, when overriding `==`, the
+`hashCode` should also be overriden to maintain consistency.
 
 **BAD:**
 ```

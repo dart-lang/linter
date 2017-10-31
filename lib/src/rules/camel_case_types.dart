@@ -15,8 +15,8 @@ From the [style guide](https://www.dartlang.org/articles/style-guide/):
 
 **DO** name types using UpperCamelCase.
 
-Classes and typedefs should capitalize the first letter of each word
-(including the first word), and use no separators.
+Classes and typedefs should capitalize the first letter of each word (including
+the first word), and use no separators.
 
 **GOOD:**
 ```

@@ -10,7 +10,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = r'Prefer put asserts in initializer list.';
+const _desc = r'Prefer putting asserts in initializer list.';
 
 const _details = r'''
 

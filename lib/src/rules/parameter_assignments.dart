@@ -16,7 +16,7 @@ const _details = r'''
 **DON'T** assign new values to parameters of methods or functions.
 
 Assigning new values to parameters is generally a bad practice unless an
-operator such as `??=` is used. Otherwise, arbitrarily reassigning parameters
+operator such as `??=` is used.  Otherwise, arbitrarily reassigning parameters
 is usually a mistake.
 
 **BAD:**

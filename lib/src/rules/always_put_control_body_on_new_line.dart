@@ -12,11 +12,11 @@ const _details = r'''
 
 From the [flutter style guide](https://flutter.io/style-guide/):
 
-**DO** separate the control structre expression from its statement.
+**DO** separate the control structure expression from its statement.
 
 Don't put the statement part of an `if`, `for`, `while`, `do` on the same line
-as the expression, even if it is short. (Doing so makes it unobvious that there
-is relevant code there. This is especially important for early returns.)
+as the expression, even if it is short.  Doing so makes it unclear that there
+is relevant code there.  This is especially important for early returns.
 
 **GOOD:**
 ```

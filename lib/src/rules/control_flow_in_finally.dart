@@ -6,14 +6,14 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = r'Avoid control flow in `finally` block.';
+const _desc = r'Avoid control flow in finally blocks.';
 
 const _details = r'''
 
 **AVOID** control flow leaving finally blocks.
 
-Using control flow in finally blocks will inevitably cause unexpected
-behavior that is hard to debug.
+Using control flow in finally blocks will inevitably cause unexpected behavior
+that is hard to debug.
 
 **GOOD:**
 ```

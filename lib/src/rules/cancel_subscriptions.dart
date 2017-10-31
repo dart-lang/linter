@@ -12,10 +12,10 @@ const _desc = r'Cancel instances of dart.async.StreamSubscription.';
 
 const _details = r'''
 
-**DO** Invoke `cancel` on instances of `dart.async.StreamSubscription`.
+**DO** invoke `cancel` on instances of `dart.async.StreamSubscription`.
 
-Cancelling instances of StreamSubscription prevents memory leaks and
-unexpected behavior.
+Cancelling instances of StreamSubscription prevents memory leaks and unexpected
+behavior.
 
 **BAD:**
 ```

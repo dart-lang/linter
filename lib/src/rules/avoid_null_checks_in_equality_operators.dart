@@ -15,7 +15,7 @@ const _details = r'''
 
 **DON’T** check for null in custom == operators.
 
-As null is a special type, no class can be equivalent to it. Thus, it is
+As null is a special type, no class can be equivalent to it.  Thus, it is
 redundant to check whether the other instance is null. 
 
 **BAD:**

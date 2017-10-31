@@ -8,14 +8,14 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
-const _desc = r'Use `.forEach` to only apply a function to all the elements.';
+const _desc = r'Use `forEach` to only apply a function to all the elements.';
 
 const _details = r'''
 
-**DO** use `.forEach` if you are only going to apply a function or a method
+**DO** use `forEach` if you are only going to apply a function or a method
 to all the elements of an iterable.
 
-Using `.forEach` when you are only going to apply a function or method to all
+Using `forEach` when you are only going to apply a function or method to all
 elements of an iterable is a good practice because it makes your code more
 terse.
 

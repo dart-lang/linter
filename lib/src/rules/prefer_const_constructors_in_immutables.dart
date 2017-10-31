@@ -19,8 +19,8 @@ const _details = r'''
 
 **PREFER** declaring const constructors on `@immutable` classes.
 
-If a class is immutable, it is usually a good idea to make its constructor
-a const constructor.
+If a class is immutable, it is usually a good idea to make its constructor a
+const constructor.
 
 **GOOD:**
 ```

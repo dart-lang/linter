@@ -16,7 +16,7 @@ import 'package:analyzer/dart/element/element.dart' show Element;
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/ast.dart';
 
-const _desc = r'Use `.isNotEmpty` for Iterables and Maps.';
+const _desc = r'Use `isNotEmpty` for Iterables and Maps.';
 
 const _details = r'''
 

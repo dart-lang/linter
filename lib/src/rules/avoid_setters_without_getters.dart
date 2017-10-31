@@ -15,7 +15,7 @@ const _details = r'''
 **DON’T** define a setter without a corresponding getter.
 
 Defining a setter without defining a corresponding getter can lead to logical
-inconsistencies. Doing this could allow you to set a property to some value,
+inconsistencies.  Doing this could allow you to set a property to some value,
 but then upon observing the property's value, it could easily be different.
 
 **BAD:**

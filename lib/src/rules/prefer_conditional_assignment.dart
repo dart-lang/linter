@@ -15,8 +15,8 @@ const _details = r'''
 
 **PREFER** using `??=` over testing for null.
 
-As Dart has the `??=` operator, it is advisable to use it where applicable
-to improve the brevity of your code.
+As Dart has the `??=` operator, it is advisable to use it where applicable to
+improve the brevity of your code.
 
 **BAD:**
 ```

@@ -15,9 +15,9 @@ const _details = r'''
 **DO** declare method return types.
 
 When declaring a method or function *always* specify a return type.
-Declaring return types for functions helps improve your codebase by allowing
-the analyzer to more adequately check your code for errors that could occur
-during runtime.
+Declaring return types for functions helps improve your codebase by allowing the
+analyzer to more adequately check your code for errors that could occur during
+runtime.
 
 **BAD:**
 ```

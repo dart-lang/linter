@@ -14,9 +14,8 @@ const _details = r'''
 **DO** prefer declaring variables as final if they are not reassigned later in
 the code.
 
-Declaring variables as final when possible is a good practice because it
-helps avoid accidental reassignments and allows the compiler to do
-optimizations.
+Declaring variables as final when possible is a good practice because it helps
+avoid accidental reassignments and allows the compiler to do optimizations.
 
 **BAD:**
 ```

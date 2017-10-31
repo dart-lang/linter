@@ -21,7 +21,7 @@ Annotating the parameter and return types of public methods and functions helps
 users understand what the API expects and what it provides.
 
 Note that if a public API accepts a range of values that Dart's type system
-cannot express, then it is acceptable to leave that untyped. In that case, the
+cannot express, then it is acceptable to leave that untyped.  In that case, the
 implicit `dynamic` is the correct type for the API.
 
 For code internal to a library (either private, or things like nested functions)
@@ -34,7 +34,7 @@ install(id, destination) {
 }
 ```
 
-Here, it's unclear what `id` is. A string? And what is `destination`? A string
+Here, it's unclear what `id` is.  A string? And what is `destination`? A string
 or a `File` object? Is this method synchronous or asynchronous?
 
 **GOOD:**

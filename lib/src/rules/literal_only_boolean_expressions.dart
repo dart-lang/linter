@@ -15,7 +15,7 @@ const _details = r'''
 inferred at compile time.
 
 Conditional statements using a condition which cannot be anything but FALSE have
-the effect of making blocks of code non-functional. If the condition cannot
+the effect of making blocks of code non-functional.  If the condition cannot
 evaluate to anything but `true`, the conditional statement is completely
 redundant, and makes the code less readable.
 It is quite likely that the code does not match the programmer's intent.

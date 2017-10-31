@@ -26,11 +26,11 @@ methodOne() + methodTwo();
 foo ? bar : baz;
 ```
 
-While the getter may trigger a side-effect, it is not usually obvious. And while
+While the getter may trigger a side-effect, it is not usually obvious.  Though
 the added methods have a clear effect, the addition itself does not unless there
 is some magical overload of the + operator.
 
-Usually code like this indicates an incomplete thought, and is a bug. For
+Usually code like this indicates an incomplete thought, and is a bug.  For
 instance, the getter was likely supposed to be a function call.
 
 **GOOD:**

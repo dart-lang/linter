@@ -15,7 +15,7 @@ const _details = r'''
 
 In general, empty catch blocks should be avoided.  In cases where they are
 intended, a comment should be provided to explain why exceptions are being
-caught and suppressed. Alternatively, the exception identifier can be named with
+caught and suppressed.  Alternatively, the exception identifier can be named with
 underscores (e.g., `_`) to indicate that we intend to skip it.
 
 **BAD:**

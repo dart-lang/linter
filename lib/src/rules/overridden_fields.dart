@@ -14,8 +14,8 @@ const _details = r'''
 
 **DON'T** override fields.
 
-Overriding fields is almost always done unintentionally. Even if it is
-intentional, it is a bad practice.
+Overriding fields is almost always done unintentionally.  Regardless, it is a
+bad practice to do so.
 
 **BAD:**
 ```

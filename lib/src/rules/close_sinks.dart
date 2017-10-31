@@ -14,8 +14,7 @@ const _details = r'''
 
 **DO** invoke `close` on instances of `dart.core.Sink`.
 
-Closing instances of StreamSubscription prevents memory leaks and
-unexpected behavior.
+Closing instances of Sink prevents memory leaks and unexpected behavior.
 
 **BAD:**
 ```
