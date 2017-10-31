@@ -7,9 +7,10 @@ import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const desc = "Don't import implementation files from another package.";
+const _desc = r"Don't import implementation files from another package.";
 
-const details = '''
+const _details = r'''
+
 **DON'T** import implementation files from another package.
 
 From the the [pub package layout doc]
@@ -27,12 +28,12 @@ and tests) but you should never import from another package's `lib/src`
 directory. Those files are not part of the package’s public API, and they
 might change in ways that could break your code.
 
-**Bad:**
-
+**BAD:**
 ```
 // In 'road_runner'
 import 'package:acme/lib/src/internals.dart;
 ```
+
 ''';
 
 bool isImplementation(Uri uri) {
@@ -60,8 +61,8 @@ class ImplementationImports extends LintRule {
   ImplementationImports()
       : super(
             name: 'implementation_imports',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override

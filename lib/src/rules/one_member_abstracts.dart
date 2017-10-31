@@ -6,10 +6,11 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const desc =
-    'Avoid defining a one-member abstract class when a simple function will do.';
+const _desc =
+    r'Avoid defining a one-member abstract class when a simple function will do.';
 
-const details = '''
+const _details = r'''
+
 From the [style guide](https://www.dartlang.org/articles/style-guide/):
 
 **AVOID** defining a one-member abstract class when a simple function will do.
@@ -31,14 +32,15 @@ abstract class Predicate {
   bool test(item);
 }
 ```
+
 ''';
 
 class OneMemberAbstracts extends LintRule {
   OneMemberAbstracts()
       : super(
             name: 'one_member_abstracts',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override

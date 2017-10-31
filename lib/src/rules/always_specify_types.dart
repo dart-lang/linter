@@ -19,9 +19,10 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/utils.dart';
 
-const desc = 'Specify type annotations.';
+const _desc = r'Specify type annotations.';
 
-const details = '''
+const _details = r'''
+
 From the [flutter style guide](https://flutter.io/style-guide/):
 
 **DO** specify type annotations.
@@ -64,6 +65,7 @@ main() {
   Key s = new Key(); // OK!
 }
 ```
+
 ''';
 
 /// The name of `meta` library, used to define analysis annotations.
@@ -91,8 +93,8 @@ class AlwaysSpecifyTypes extends LintRule {
   AlwaysSpecifyTypes()
       : super(
             name: 'always_specify_types',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override

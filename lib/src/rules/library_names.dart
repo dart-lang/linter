@@ -7,10 +7,11 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/utils.dart';
 
-const desc =
-    'Name libraries and source files using `lowercase_with_underscores`.';
+const _desc =
+    r'Name libraries and source files using `lowercase_with_underscores`.';
 
-const details = r'''
+const _details = r'''
+
 **DO** name libraries and source files using `lowercase_with_underscores`.
 
 Some file systems are not case-sensitive, so many projects require filenames
@@ -30,14 +31,15 @@ supports symbolic imports.
 * `SliderMenu.dart`
 * `filesystem.dart`
 * `library peg-parser;`
+
 ''';
 
 class LibraryNames extends LintRule {
   LibraryNames()
       : super(
             name: 'library_names',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override

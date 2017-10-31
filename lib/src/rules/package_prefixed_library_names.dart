@@ -7,10 +7,11 @@ import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const desc =
+const _desc =
     r'Prefix library names with the package name and a dot-separated path.';
 
-const details = r'''
+const _details = r'''
+
 **DO** prefix library names with the package name and a dot-separated path.
 
 This guideline helps avoid the warnings you get when two libraries have the
@@ -25,7 +26,6 @@ For example, say the package name is `my_package`. Here are the library names
 for various files in the package:
 
 **GOOD:**
-
 ```
 // In lib/my_package.dart
 library my_package;
@@ -42,6 +42,7 @@ library my_package.example.foo.bar;
 // In lib/src/private.dart
 library my_package.src.private;
 ```
+
 ''';
 
 bool matchesOrIsPrefixedBy(String name, String prefix) =>
@@ -53,8 +54,8 @@ class PackagePrefixedLibraryNames extends LintRule implements ProjectVisitor {
   PackagePrefixedLibraryNames()
       : super(
             name: 'package_prefixed_library_names',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override

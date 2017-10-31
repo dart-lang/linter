@@ -12,6 +12,10 @@ const _details = r'''
 
 **AVOID** annotating types on function expressions.
 
+Annotating types in function expressions is usually unnecessary because
+function expressions are almost always used on multiple values of the same
+type, thus making the practice redundant.
+
 **BAD:**
 ```
 var names = people.map((Person person) => person.name);

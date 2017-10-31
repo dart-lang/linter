@@ -18,6 +18,10 @@ const _details = r'''
 **DO** prefer declaring private fields as final if they are not reassigned later
  in the class.
 
+Declaring fields as final when possible is a good practice because it
+helps avoid accidental reassignments and allows the compiler to do
+optimizations.
+
 **BAD:**
 ```
 class BadImmutable {
@@ -62,6 +66,7 @@ class GoodMutable {
   }
 }
 ```
+
 ''';
 
 class PreferFinalFields extends LintRule {

@@ -7,11 +7,14 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/ast.dart';
 
-const desc = r'Always override `hashCode` if overriding `==`.';
+const _desc = r'Always override `hashCode` if overriding `==`.';
 
-const details = r'''
+const _details = r'''
 
 **DO** override `hashCode` if overriding `==`.
+
+Every object in Dart should have a `hashCode`. This is necessary so that
+every Dart object can have its `hashCode` used as a key in a map.
 
 **BAD:**
 ```
@@ -44,8 +47,8 @@ class HashAndEquals extends LintRule {
   HashAndEquals()
       : super(
             name: 'hash_and_equals',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.errors);
 
   @override

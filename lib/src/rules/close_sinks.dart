@@ -12,8 +12,10 @@ const _desc = r'Close instances of `dart.core.Sink`.';
 
 const _details = r'''
 
-**DO** invoke `close` on instances of `dart.core.Sink` to avoid memory leaks and
-unexpected behaviors.
+**DO** invoke `close` on instances of `dart.core.Sink`.
+
+Closing instances of StreamSubscription prevents memory leaks and
+unexpected behavior.
 
 **BAD:**
 ```
@@ -53,6 +55,7 @@ void someFunctionOK() {
   _sinkFOK.close();
 }
 ```
+
 ''';
 
 bool _isSink(DartType type) =>

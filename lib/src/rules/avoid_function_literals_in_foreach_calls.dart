@@ -26,14 +26,8 @@ for (var person in people) {
   ...
 }
 ```
-
-**GOOD:**
-```
-for (var person in people) {
-  ...
-}
-```
 people.forEach(print);
+
 ''';
 
 class AvoidFunctionLiteralInForeachMethod extends LintRule {

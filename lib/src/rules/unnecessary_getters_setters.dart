@@ -7,9 +7,10 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/ast.dart';
 
-const desc = 'Avoid wrapping fields in getters and setters just to be "safe".';
+const _desc = r'Avoid wrapping fields in getters and setters just to be "safe".';
 
-const details = '''
+const _details = r'''
+
 From the [style guide](https://www.dartlang.org/articles/style-guide/):
 
 *AVOID** wrapping fields in getters and setters just to be "safe".
@@ -44,14 +45,15 @@ class Box {
   }
 }
 ```
+
 ''';
 
 class UnnecessaryGettersSetters extends LintRule {
   UnnecessaryGettersSetters()
       : super(
             name: 'unnecessary_getters_setters',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override

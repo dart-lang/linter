@@ -47,6 +47,7 @@ Future<Null> someFunction() async {
   if (file.lastModifiedSync().isBefore(now)) print('before'); // OK
 }
 ```
+
 ''';
 
 class AvoidSlowAsyncIo extends LintRule {

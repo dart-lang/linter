@@ -12,6 +12,8 @@ const _desc =
 
 const _details = r'''
 
+From the [design guide](https://www.dartlang.org/guides/language/effective-dart/design):
+
 **PREFER** naming a method to___() if it copies the object’s state to a new object.
 
 **PREFER** naming a method as___() if it returns a different representation backed by the original object.
