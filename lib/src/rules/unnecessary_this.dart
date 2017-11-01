@@ -11,13 +11,13 @@ import 'package:analyzer/src/generated/resolver.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
-const _desc = r'Don’t access members with `this` unless avoiding shadowing.';
+const _desc = r"Don't access members with `this` unless avoiding shadowing.";
 
 const _details = r'''
 
 From the [style guide](https://www.dartlang.org/articles/style-guide/):
 
-**DON’T** use `this` when not needed to avoid shadowing.
+**DON'T** use `this` when not needed to avoid shadowing.
 
 **BAD:**
 ```

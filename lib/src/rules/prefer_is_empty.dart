@@ -23,7 +23,7 @@ able to provide it in constant time.  Calling `length` just to see if the
 collection contains anything can be painfully slow.
 
 Instead, there are faster and more readable getters: `isEmpty` and
-`isNotEmpty`.  Use the one that doesn’t require you to negate the result.
+`isNotEmpty`.  Use the one that doesn't require you to negate the result.
 
 **GOOD:**
 ```
