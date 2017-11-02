@@ -26,7 +26,10 @@
          </header>
          <section>
 
-            <p><strong>DO NOT</strong> assign new values to parameters of methods or functions.</p>
+            <p><strong>DON'T</strong> assign new values to parameters of methods or functions.</p>
+<p>Assigning new values to parameters is generally a bad practice unless an
+operator such as <code>??=</code> is used.  Otherwise, arbitrarily reassigning parameters
+is usually a mistake.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>void badFunction(int parameter) { // LINT
   parameter = 4;

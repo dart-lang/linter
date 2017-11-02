@@ -26,7 +26,10 @@
          </header>
          <section>
 
-            <p><strong>DON’T</strong> define a setter without a corresponding getter.</p>
+            <p><strong>DON'T</strong> define a setter without a corresponding getter.</p>
+<p>Defining a setter without defining a corresponding getter can lead to logical
+inconsistencies.  Doing this could allow you to set a property to some value,
+but then upon observing the property's value, it could easily be different.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>class Bad {
   int l, r;

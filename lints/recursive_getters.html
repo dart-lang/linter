@@ -26,17 +26,19 @@
          </header>
          <section>
 
-            <p><strong>DON'T</strong> Return the property itself in a getter body, this can be due to a typo.</p>
+            <p><strong>DON'T</strong> create recursive getters.</p>
+<p>Recursive getters are getters which return themselves as a value.  This is
+usually a typo.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>  int get field =&gt; field; // LINT
+<pre><code>int get field =&gt; field; // LINT
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>  int get otherField {
-    return otherField; // LINT
-  }
+<pre><code>int get otherField {
+  return otherField; // LINT
+}
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>  int get field =&gt; _field;
+<pre><code>int get field =&gt; _field;
 </code></pre>
 
 

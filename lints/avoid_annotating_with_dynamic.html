@@ -27,6 +27,8 @@
          <section>
 
             <p><strong>AVOID</strong> annotating with dynamic when not required.</p>
+<p>As <code>dynamic</code> is the assumed return value of a function or method, it is usually
+not necessary to annotate it.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>dynamic lookUpOrDefault(String name, Map map, dynamic defaultValue) {
   var value = map[name];

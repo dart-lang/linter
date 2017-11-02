@@ -32,7 +32,7 @@
 Annotating the parameter and return types of public methods and functions helps
 users understand what the API expects and what it provides.</p>
 <p>Note that if a public API accepts a range of values that Dart's type system
-cannot express, then it is acceptable to leave that untyped. In that case, the
+cannot express, then it is acceptable to leave that untyped.  In that case, the
 implicit <code>dynamic</code> is the correct type for the API.</p>
 <p>For code internal to a library (either private, or things like nested functions)
 annotate where you feel it helps, but don't feel that you <em>must</em> provide them.</p>
@@ -41,7 +41,7 @@ annotate where you feel it helps, but don't feel that you <em>must</em> provide 
   // ...
 }
 </code></pre>
-<p>Here, it's unclear what <code>id</code> is. A string? And what is <code>destination</code>? A string
+<p>Here, it's unclear what <code>id</code> is.  A string? And what is <code>destination</code>? A string
 or a <code>File</code> object? Is this method synchronous or asynchronous?</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>Future&lt;bool&gt; install(PackageId id, String destination) {

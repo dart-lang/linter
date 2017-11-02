@@ -29,7 +29,7 @@
             <p><strong>DO</strong> document all public members.</p>
 <p>All non-overriding public members should be documented with <code>///</code> doc-style
 comments.</p>
-<p><strong>Good:</strong></p>
+<p><strong>GOOD:</strong></p>
 <pre><code>/// A good thing.
 abstract class Good {
   /// Start doing your thing.
@@ -38,7 +38,7 @@ abstract class Good {
   _start();
 }
 </code></pre>
-<p><strong>Bad:</strong></p>
+<p><strong>BAD:</strong></p>
 <pre><code>class Bad {
   void meh() { }
 }
@@ -46,7 +46,7 @@ abstract class Good {
 <p>In case a public member overrides a member it is up to the declaring member
 to provide documentation.  For example, in the following, <code>Sub</code> needn't
 document <code>init</code> (though it certainly may, if there's need).</p>
-<p><strong>Good:</strong></p>
+<p><strong>GOOD:</strong></p>
 <pre><code>/// Base of all things.
 abstract class Base {
   /// Initialize the base.
@@ -60,7 +60,7 @@ class Sub extends Base {
 }
 </code></pre>
 <p>Note that consistent with <code>dartdoc</code>, an exception to the rule is made when
-documented getters have corresponding undocumented setters. In this case the
+documented getters have corresponding undocumented setters.  In this case the
 setters inherit the docs from the getters.</p>
 
 

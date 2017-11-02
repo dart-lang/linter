@@ -26,7 +26,10 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> prefer declaring variables as final if they are not reassigned later in the code.</p>
+            <p><strong>DO</strong> prefer declaring variables as final if they are not reassigned later in
+the code.</p>
+<p>Declaring variables as final when possible is a good practice because it helps
+avoid accidental reassignments and allows the compiler to do optimizations.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>void badMethod() {
   var label = 'hola mundo! badMethod'; // LINT

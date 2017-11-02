@@ -26,8 +26,8 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> invoke <code>close</code> on instances of <code>dart.core.Sink</code> to avoid memory leaks and
-unexpected behaviors.</p>
+            <p><strong>DO</strong> invoke <code>close</code> on instances of <code>dart.core.Sink</code>.</p>
+<p>Closing instances of Sink prevents memory leaks and unexpected behavior.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>class A {
   IOSink _sinkA;

@@ -26,9 +26,9 @@
          </header>
          <section>
 
-            <p><strong>DON'T</strong> Compare references of unrelated types for equality.
-Comparing references of a type where neither is a subtype of the other most
-likely will return false and might not reflect programmer's intent.</p>
+            <p><strong>DON'T</strong> Compare references of unrelated types for equality.</p>
+<p>Comparing references of a type where neither is a subtype of the other most
+likely will return <code>false</code> and might not reflect programmer's intent.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>void someFunction() {
   var x = '1';

@@ -26,8 +26,9 @@
          </header>
          <section>
 
-            <p><strong>AVOID</strong> control flow leaving finally blocks. This will cause unexpected
-behavior that is hard to debug.</p>
+            <p><strong>AVOID</strong> control flow leaving finally blocks.</p>
+<p>Using control flow in finally blocks will inevitably cause unexpected behavior
+that is hard to debug.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>class Ok {
   double compliantMethod() {

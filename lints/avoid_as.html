@@ -30,8 +30,8 @@
 (https://github.com/flutter/engine/blob/master/sky/specs/style-guide.md):</p>
 <p><strong>AVOID</strong> using <code>as</code>.</p>
 <p>If you know the type is correct, use an assertion or assign to a more
-narrowly-typed variable (this avoids the type check in release mode; <code>as</code>
-is not compiled out in release mode). If you don't know whether the type is
+narrowly-typed variable (this avoids the type check in release mode; <code>as</code> is not
+compiled out in release mode).  If you don't know whether the type is
 correct, check using <code>is</code> (this avoids the exception that <code>as</code> raises).</p>
 <p><strong>BAD:</strong></p>
 <pre><code>(pm as Person).firstName = 'Seth';

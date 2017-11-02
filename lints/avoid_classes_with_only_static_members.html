@@ -27,6 +27,9 @@
          <section>
 
             <p><strong>AVOID</strong> defining a class that contains only static members.</p>
+<p>Creating classes with the sole purpose of providing utility or otherwise static
+methods is discouraged.  Dart allows functions to exist outside of classes for
+this very reason.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>class DateUtils {
   static DateTime mostRecent(List&lt;DateTime&gt; dates) {

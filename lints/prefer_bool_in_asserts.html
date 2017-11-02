@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>prefer_function_declarations_over_variables</title>
+      <title>prefer_bool_in_asserts</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_function_declarations_over_variables</h1>
+            <h1>prefer_bool_in_asserts</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,22 +26,20 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> use a function declaration to bind a function to a name.</p>
-<p>As Dart allows local function declarations, it is a good practice to use them in
-the place of function literals.</p>
+            <p><strong>DO</strong> use a boolean for assert conditions.</p>
+<p>Not using booleans in assert conditions can lead to code where it isn't clear
+what the intention of the assert statement is.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void main() {
-  var localFunction = () {
-    ...
-  };
-}
+<pre><code>assert(() {
+  f();
+  return true;
+});
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void main() {
-  localFunction() {
-    ...
-  }
-}
+<pre><code>assert(() {
+  f();
+  return true;
+}());
 </code></pre>
 
 

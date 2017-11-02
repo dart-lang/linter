@@ -26,20 +26,20 @@
          </header>
          <section>
 
-            <p><strong>DON'T</strong> import implementation files from another package.</p>
-<p>From the the [pub package layout doc]
+            <p>From the the [pub package layout doc]
 (https://www.dartlang.org/tools/pub/package-layout.html#implementation-files):</p>
+<p><strong>DON'T</strong> import implementation files from another package.</p>
 <p>The libraries inside <code>lib</code> are publicly visible: other packages are free to
-import them. But much of a package's code is internal implementation libraries
-that should only be imported and used by the package itself. Those go inside a
-subdirectory of <code>lib</code> called <code>src</code>. You can create subdirectories in there if
+import them.  But much of a package's code is internal implementation libraries
+that should only be imported and used by the package itself.  Those go inside a
+subdirectory of <code>lib</code> called <code>src</code>.  You can create subdirectories in there if
 it helps you organize things.</p>
 <p>You are free to import libraries that live in <code>lib/src</code> from within other Dart
 code in the same package (like other libraries in <code>lib</code>, scripts in <code>bin</code>,
 and tests) but you should never import from another package's <code>lib/src</code>
-directory. Those files are not part of the package’s public API, and they
+directory.  Those files are not part of the package's public API, and they
 might change in ways that could break your code.</p>
-<p><strong>Bad:</strong></p>
+<p><strong>BAD:</strong></p>
 <pre><code>// In 'road_runner'
 import 'package:acme/lib/src/internals.dart;
 </code></pre>

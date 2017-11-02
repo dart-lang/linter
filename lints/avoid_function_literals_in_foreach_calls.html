@@ -26,16 +26,11 @@
          </header>
          <section>
 
-            <p><strong>AVOID</strong> using Iterable.forEach() with a function literal.</p>
+            <p><strong>AVOID</strong> using <code>forEach</code> with a function literal.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>people.forEach((person) {
   ...
 });
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code>for (var person in people) {
-  ...
-}
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code>for (var person in people) {

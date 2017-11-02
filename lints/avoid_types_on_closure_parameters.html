@@ -26,7 +26,10 @@
          </header>
          <section>
 
-            <p><strong>AVOID</strong> annotating types on function expressions.</p>
+            <p><strong>AVOID</strong> annotating types for function expression paremeters.</p>
+<p>Annotating types for function expression parameters is usually unnecessary
+because the parameter types can almost always be inferred from the context,
+thus making the practice redundant.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>var names = people.map((Person person) =&gt; person.name);
 </code></pre>

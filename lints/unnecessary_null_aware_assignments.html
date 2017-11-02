@@ -26,7 +26,9 @@
          </header>
          <section>
 
-            <p>Avoid null in null-aware assignment. <code>a ??= null</code> can be removed.</p>
+            <p><strong>AVOID</strong> <code>null</code> in null-aware assignment.</p>
+<p>Using <code>null</code> on the right-hand side of a null-aware assignment effectively makes
+the assignment redundant.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>var x;
 x ??= 1;

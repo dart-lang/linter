@@ -26,11 +26,9 @@
          </header>
          <section>
 
-            <p><strong>DON'T</strong> Invoke <code>contains</code> on <code>Iterable</code> with an instance of different type than
-the parameter type since it will invoke <code>==</code> on its elements and most likely will
-return <code>false</code>. Strictly speaking it could evaluate to true since in Dart it
-is possible for an Iterable to contain elements of type unrelated to its
-parameter type, but this practice also should be avoided.</p>
+            <p><strong>DON'T</strong> invoke <code>contains</code> on <code>Iterable</code> with an instance of different type
+than the parameter type.</p>
+<p>Doing this will invoke <code>==</code> on its elements and most likely will return <code>false</code>.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>void someFunction() {
   var list = &lt;int&gt;[];

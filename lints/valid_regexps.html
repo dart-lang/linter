@@ -31,10 +31,10 @@ instances.</p>
 <p>Regular expressions created with invalid syntax will throw a <code>FormatException</code>
 at runtime so should be avoided.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>print(new RegExp('(').hasMatch('foo()')); //u-oh
+<pre><code>print(new RegExp('(').hasMatch('foo()'));
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>print(new RegExp('[(]').hasMatch('foo()')); //ok
+<pre><code>print(new RegExp('[(]').hasMatch('foo()'));
 </code></pre>
 
 

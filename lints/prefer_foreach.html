@@ -26,7 +26,11 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> use forEach call if you are only going to apply a function or a method to all the elements of an iterable.</p>
+            <p><strong>DO</strong> use <code>forEach</code> if you are only going to apply a function or a method
+to all the elements of an iterable.</p>
+<p>Using <code>forEach</code> when you are only going to apply a function or method to all
+elements of an iterable is a good practice because it makes your code more
+terse.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>for (final key in map.keys.toList()) {
   map.remove(key);

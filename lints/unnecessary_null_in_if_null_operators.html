@@ -26,8 +26,9 @@
          </header>
          <section>
 
-            <p>Avoid null as operand in if null operator. <code>a ?? null</code> and <code>null ?? a</code> can both
-be replaced by <code>a</code>.</p>
+            <p><strong>AVOID</strong> using <code>null</code> as an operand in <code>if null</code> operators.</p>
+<p>Using <code>null</code> in an <code>if null</code> operator is redundant, regardless of which side
+<code>null</code> is used on.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>var x = a ?? 1;
 </code></pre>

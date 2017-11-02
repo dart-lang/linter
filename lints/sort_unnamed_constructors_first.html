@@ -27,20 +27,19 @@
          <section>
 
             <p><strong>DO</strong> sort unnamed constructor declarations first, before named ones.</p>
-<p><strong>Good:</strong></p>
+<p><strong>GOOD:</strong></p>
 <pre><code>abstract class CancelableFuture&lt;T&gt; implements Future&lt;T&gt;  {
   factory CancelableFuture(computation()) =&gt; ...
   factory CancelableFuture.delayed(Duration duration, [computation()]) =&gt; ...
   ...
 }
 </code></pre>
-<p><strong>Bad:</strong></p>
+<p><strong>BAD:</strong></p>
 <pre><code>class _PriorityItem {
   factory _PriorityItem.forName(bool isStatic, String name, _MemberKind kind) =&gt; ...
   _PriorityItem(this.isStatic, this.kind, this.isPrivate);
   ...
 }
-
 </code></pre>
 
 

@@ -27,6 +27,8 @@
          <section>
 
             <p><strong>AVOID</strong> returning this from methods just to enable a fluent interface.</p>
+<p>Returning <code>this</code> from a method is redundant; Dart has a cascade operator which
+allows method chaining universally.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>var buffer = new StringBuffer()
   .write('one')

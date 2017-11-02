@@ -27,6 +27,8 @@
          <section>
 
             <p><strong>AVOID</strong> catches without on clauses.</p>
+<p>Using catch clauses without on clauses make your code prone to encountering
+unexpected errors that won't be thrown (and thus will go unnoticed).</p>
 <p><strong>BAD:</strong></p>
 <pre><code>try {
  somethingRisky()

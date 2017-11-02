@@ -26,8 +26,9 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> prefer <code>const</code> for instantiating constant constructors.</p>
-<p><strong>GOOD</strong></p>
+            <p><strong>PREFER</strong> using <code>const</code> for instantiating constant constructors.</p>
+<p>If a const constructor is available, it is preferable to use it.</p>
+<p><strong>GOOD:</strong></p>
 <pre><code>class A {
   const A();
 }
@@ -36,7 +37,7 @@ void accessA() {
   A a = const A();
 }
 </code></pre>
-<p><strong>GOOD</strong></p>
+<p><strong>GOOD:</strong></p>
 <pre><code>class A {
   final int x;
 
@@ -45,7 +46,7 @@ void accessA() {
 
 A foo(int x) =&gt; new A(x);
 </code></pre>
-<p><strong>BAD</strong></p>
+<p><strong>BAD:</strong></p>
 <pre><code>class A {
   const A();
 }

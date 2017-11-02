@@ -26,8 +26,9 @@
          </header>
          <section>
 
-            <p><strong>AVOID</strong> throwing exceptions in finally blocks. This will cause unexpected
-behavior that is hard to debug.</p>
+            <p><strong>AVOID</strong> throwing exceptions in finally blocks.</p>
+<p>Throwing exceptions in finally blocks will inevitably cause unexpected behavior
+that is hard to debug.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>class Ok {
   double compliantMethod() {

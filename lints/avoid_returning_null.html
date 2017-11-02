@@ -26,7 +26,11 @@
          </header>
          <section>
 
-            <p><strong>AVOID</strong> returning null from members whose return type is bool, double, int, or num.</p>
+            <p><strong>AVOID</strong> returning null from members whose return type is bool, double, int,
+or num.</p>
+<p>Functions that return primitive types such as bool, double, int, and num are
+generally expected to return non-nullable values.  Thus, returning null where a
+primitive type was expected can lead to runtime exceptions.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>bool getBool() =&gt; null;
 num getNum() =&gt; null;

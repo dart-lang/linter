@@ -27,6 +27,9 @@
          <section>
 
             <p><strong>AVOID</strong> positional boolean parameters.</p>
+<p>Positional boolean parameters are a bad practice because they are very
+ambiguous.  Using named boolean parameters is much more readable because it
+inherently describes what the boolean value represents.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>new Task(true);
 new Task(false);

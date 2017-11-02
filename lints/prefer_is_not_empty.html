@@ -26,9 +26,9 @@
          </header>
          <section>
 
-            <p><strong>PREFER</strong> <code>x.isNotEmpty</code> to <code>!x.isEmpty</code> for Iterables and Maps.</p>
+            <p><strong>PREFER</strong> <code>x.isNotEmpty</code> to <code>!x.isEmpty</code> for <code>Iterable</code> and <code>Map</code> instances.</p>
 <p>When testing whether an iterable or map is empty, prefer <code>isNotEmpty</code> over
-<code>!isEmpty</code>.</p>
+<code>!isEmpty</code> to improve code readability.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>if (todo.isNotEmpty) {
   sendResults(request, todo.isEmpty);

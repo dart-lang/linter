@@ -27,6 +27,10 @@
          <section>
 
             <p><strong>DO</strong> override <code>hashCode</code> if overriding <code>==</code>.</p>
+<p>Every object in Dart has a <code>hashCode</code>.  Both the <code>==</code> operator and the
+<code>hashCode</code> property of objects must be consistent in order for a common hash
+map implementation to function properly.  Thus, when overriding <code>==</code>, the
+<code>hashCode</code> should also be overriden to maintain consistency.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>class Bad {
   final int value;

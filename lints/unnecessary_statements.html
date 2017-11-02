@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>prefer_function_declarations_over_variables</title>
+      <title>unnecessary_statements</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,8 +15,8 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_function_declarations_over_variables</h1>
-            <p>Group: style</p>
+            <h1>unnecessary_statements</h1>
+            <p>Group: errors</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -26,22 +26,29 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> use a function declaration to bind a function to a name.</p>
-<p>As Dart allows local function declarations, it is a good practice to use them in
-the place of function literals.</p>
+            <p><strong>AVOID</strong> using unnecessary statements.</p>
+<p>Statements which have no clear effect are usually unnecessary, or should be
+broken up.</p>
+<p>For example,</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void main() {
-  var localFunction = () {
-    ...
-  };
-}
+<pre><code>myvar;
+1 + 2;
+some.getter;
+methodOne() + methodTwo();
+foo ? bar : baz;
 </code></pre>
+<p>While the getter may trigger a side-effect, it is not usually obvious.  Though
+the added methods have a clear effect, the addition itself does not unless there
+is some magical overload of the + operator.</p>
+<p>Usually code like this indicates an incomplete thought, and is a bug.  For
+instance, the getter was likely supposed to be a function call.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>void main() {
-  localFunction() {
-    ...
-  }
-}
+<pre><code>some.method();
+new SomeClass();
+methodOne();
+methodTwo();
+foo ? bar() : baz();
+return myvar;
 </code></pre>
 
 

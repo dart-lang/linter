@@ -26,12 +26,12 @@
          </header>
          <section>
 
-            <p><strong>DO NOT</strong> use <code>.length</code> to see if a collection is empty.</p>
+            <p><strong>DON'T</strong> use <code>length</code> to see if a collection is empty.</p>
 <p>The <code>Iterable</code> contract does not require that a collection know its length or be
-able to provide it in constant time. Calling <code>.length</code> just to see if the
+able to provide it in constant time.  Calling <code>length</code> just to see if the
 collection contains anything can be painfully slow.</p>
-<p>Instead, there are faster and more readable getters: <code>.isEmpty</code> and
-<code>.isNotEmpty</code>. Use the one that doesn’t require you to negate the result.</p>
+<p>Instead, there are faster and more readable getters: <code>isEmpty</code> and
+<code>isNotEmpty</code>.  Use the one that doesn't require you to negate the result.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>if (lunchBox.isEmpty) return 'so hungry...';
 if (words.isNotEmpty) return words.join(' ');

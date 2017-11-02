@@ -28,7 +28,7 @@
 
             <p><strong>DON'T</strong> override a method to do a super method invocation with same parameters.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A extends B{
+<pre><code>class A extends B {
   @override
   void foo() {
     super.foo();
@@ -36,13 +36,16 @@
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A extends B{
+<pre><code>class A extends B {
   @override
   void foo() {
     doSomethingElse();
   }
 }
 </code></pre>
+<p>It's valid to override method for the following cases:</p><ul><li>if a type (return type or a parameter type) is not the exactly the same as the
+super method,</li><li>if <code>covariant</code> keyword is added to one of the parameter,</li><li>if documentation comments are present on the method.</li></ul>
+<p><code>noSuchMethod</code> is a special method and is not checked by this rule.</p>
 
 
          </section>

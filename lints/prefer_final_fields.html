@@ -27,7 +27,9 @@
          <section>
 
             <p><strong>DO</strong> prefer declaring private fields as final if they are not reassigned later
- in the class.</p>
+in the class.</p>
+<p>Declaring fields as final when possible is a good practice because it helps
+avoid accidental reassignments and allows the compiler to do optimizations.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>class BadImmutable {
   var _label = 'hola mundo! BadImmutable'; // LINT

@@ -26,7 +26,9 @@
          </header>
          <section>
 
-            <p><strong>CONSIDER</strong> omitting the types for local variables.</p>
+            <p><strong>CONSIDER</strong> omitting type annotations for local variables.</p>
+<p>Usually, the types of local variables can be easily inferred, so it isn't
+necessary to annotate them.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>Map&lt;int, List&lt;Person&gt;&gt; groupByZip(Iterable&lt;Person&gt; people) {
   Map&lt;int, List&lt;Person&gt;&gt; peopleByZip = &lt;int, List&lt;Person&gt;&gt;{};

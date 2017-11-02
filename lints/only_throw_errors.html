@@ -28,6 +28,9 @@
 
             <p><strong>DO</strong> throw only instances of classes that extend <code>dart.core.Error</code> or
 <code>dart.core.Exception</code>.</p>
+<p>Throwing instances that do not extend <code>Error</code> or <code>Exception</code> is a bad practice;
+doing this is usually a hack for something that should be implemented more
+thoroughly.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>void throwString() {
   throw 'hello world!'; // LINT
