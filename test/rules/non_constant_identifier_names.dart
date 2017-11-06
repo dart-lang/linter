@@ -61,7 +61,7 @@ Main() => null; //LINT
 
 listen(void onData(Object event)) {}
 
-// New function syntax should be OK (#805).
+// Generic function syntax should be OK (#805).
 T scope<T>(T Function() run) {
   /* ... */
 }
