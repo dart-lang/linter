@@ -4,11 +4,13 @@
 
 // test w/ `pub run test -N library_prefixes`
 
+import 'dart:convert' as _1; //LINT
+import 'dart:core' as _i1; //OK
 import 'dart:async' as _async; //OK
 import 'dart:collection' as $collection; //OK
 import 'dart:math' as dartMath; //LINT [23:8]
 
 main() {
-  print(dartMath.PI);
-  print(_async.Timer);
+  _i1.print(dartMath.PI);
+  _i1.print(_async.Timer);
 }
