@@ -224,6 +224,16 @@ class DartTypeUtilities {
     }
     return false;
   }
+
+  static bool overridesMethod(MethodDeclaration node) => (node.parent
+          as ClassDeclaration)
+      .element
+      .allSupertypes
+      .expand((superType) => []
+        ..addAll(superType.methods.map((m) => m.name))
+        ..addAll(
+            superType.accessors.where((a) => a.isGetter).map((a) => a.name)))
+      .any((name) => name == node.element.name);
 }
 
 class InterfaceTypeDefinition {
