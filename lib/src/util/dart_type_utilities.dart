@@ -225,15 +225,15 @@ class DartTypeUtilities {
     return false;
   }
 
-  static bool overridesMethod(MethodDeclaration node) => (node.parent
-          as ClassDeclaration)
-      .element
-      .allSupertypes
-      .expand((superType) => []
-        ..addAll(superType.methods.map((m) => m.name))
-        ..addAll(
-            superType.accessors.where((a) => a.isGetter).map((a) => a.name)))
-      .any((name) => name == node.element.name);
+  static bool overridesMethod(MethodDeclaration node) {
+    final name = node.element.name;
+    final ClassDeclaration clazz = node.parent;
+    final classElement = clazz.element;
+    final library = classElement.library;
+    return classElement.allSupertypes.any((t) =>
+        t.lookUpMethod(name, library) != null ||
+        t.lookUpGetter(name, library) != null);
+  }
 }
 
 class InterfaceTypeDefinition {
