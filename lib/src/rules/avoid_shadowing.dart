@@ -78,6 +78,7 @@ class _Visitor extends SimpleAstVisitor {
   @override
   visitVariableDeclarationStatement(VariableDeclarationStatement node) {
     final variables = node.variables.variables;
+    final library = variables.first.element.library;
 
     bool skipInstanceMembers = false;
     AstNode current = node;
@@ -109,11 +110,8 @@ class _Visitor extends SimpleAstVisitor {
       }
 
       current = current.parent;
-      if (current == null) {
-        final library = node.variables.variables.first.element.library;
-        _checkLibrary(library, variables);
-      }
     }
+    _checkLibrary(library, variables);
   }
 
   void _checkClass(

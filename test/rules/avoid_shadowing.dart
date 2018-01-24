@@ -73,3 +73,11 @@ class D {
     var c; // LINT
   }
 }
+
+// 2 shadowing
+class E {
+  int x;
+  m(int x) {
+    int x; // LINT
+  }
+}
