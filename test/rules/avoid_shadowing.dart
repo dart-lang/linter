@@ -81,3 +81,16 @@ class E {
     int x; // LINT
   }
 }
+
+// exclude pattern
+class F {
+  int x;
+  m() {
+    var x = this.x; // OK
+  }
+}
+class F2 extends F {
+  m() {
+    var x = super.x; // OK
+  }
+}

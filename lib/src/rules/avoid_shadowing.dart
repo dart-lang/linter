@@ -77,8 +77,17 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitVariableDeclarationStatement(VariableDeclarationStatement node) {
-    final variables = node.variables.variables;
+    final variables = node.variables.variables.toList();
     final library = variables.first.element.library;
+
+    // exclude pattern : var name = this.name;
+    variables.removeWhere((variable) {
+      final initializer = variable.initializer;
+      return initializer is PropertyAccess &&
+          initializer.propertyName.name == variable.name.name &&
+          (initializer.target is ThisExpression ||
+              initializer.target is SuperExpression);
+    });
 
     bool skipInstanceMembers = false;
     AstNode current = node;
