@@ -82,15 +82,27 @@ class E {
   }
 }
 
-// exclude pattern
+// exclude pattern : var x = this.x;
 class F {
   int x;
   m() {
     var x = this.x; // OK
   }
 }
+
+// exclude pattern : var x = super.x;
 class F2 extends F {
   m() {
     var x = super.x; // OK
+  }
+}
+
+// exclude pattern : same name as current getter name
+class G {
+  var i;
+  get g {
+    var i = ''; // LINT
+    var g = ''; // OK
+    return g;
   }
 }

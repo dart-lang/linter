@@ -89,6 +89,13 @@ class _Visitor extends SimpleAstVisitor {
               initializer.target is SuperExpression);
     });
 
+    // exclude pattern : same name as current getter name
+    var currentGetter = _getCurrentGetter(node);
+    if (currentGetter != null) {
+      variables.removeWhere(
+          (variable) => currentGetter.name.name == variable.name.name);
+    }
+
     bool skipInstanceMembers = false;
     AstNode current = node;
     while (current != null) {
@@ -180,5 +187,19 @@ class _Visitor extends SimpleAstVisitor {
         rule.reportLint(variable);
       }
     }
+  }
+
+  MethodDeclaration _getCurrentGetter(VariableDeclarationStatement node) {
+    AstNode current = node.parent;
+    while (current != null) {
+      if (current is Block || current is FunctionBody) {
+        current = current.parent;
+      } else if (current is MethodDeclaration && current.isGetter) {
+        return current;
+      } else {
+        break;
+      }
+    }
+    return null;
   }
 }
