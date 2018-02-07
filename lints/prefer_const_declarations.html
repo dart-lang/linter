@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>one_member_abstracts</title>
+      <title>prefer_const_declarations</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>one_member_abstracts</h1>
+            <h1>prefer_const_declarations</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,19 +26,21 @@
          </header>
          <section>
 
-            <p>From the <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>:</p>
-<p><strong>AVOID</strong> defining a one-member abstract class when a simple function will do.</p>
-<p>Unlike Java, Dart has first-class functions, closures, and a nice light syntax
-for using them.  If all you need is something like a callback, just use a
-function.  If you're defining a class and it only has a single abstract member
-with a meaningless name like <code>call</code> or <code>invoke</code>, there is a good chance
-you just want a function.</p>
+            <p><strong>PREFER</strong> using <code>const</code> for const declarations.</p>
+<p>Const declarations are more hot-reload friendly and allow to use const
+constructors if an instantiation references this declaration.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>typedef bool Predicate(item);
+<pre><code>const o = const [];
+
+class A {
+  static const o = const [];
+}
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>abstract class Predicate {
-  bool test(item);
+<pre><code>final o = const [];
+
+class A {
+  static final o = const [];
 }
 </code></pre>
 
