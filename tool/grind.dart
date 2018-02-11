@@ -12,7 +12,7 @@ import 'rule.dart';
 main(args) => grind(args);
 
 @Task('Generate lint rule docs.')
-docs(TaskArgs args) {
+docs(GrinderContext context) {
   TaskArgs args = context.invocation.arguments;
   String dir = args.getOption('dir');
   generateDocs(dir);
