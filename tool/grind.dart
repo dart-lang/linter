@@ -12,14 +12,14 @@ import 'rule.dart';
 main(args) => grind(args);
 
 @Task('Generate lint rule docs.')
-docs(GrinderContext context) {
+docs() {
   TaskArgs args = context.invocation.arguments;
   String dir = args.getOption('dir');
   generateDocs(dir);
 }
 
 @Task('Generate a lint rule stub.')
-rule(GrinderContext context) {
+rule() {
   TaskArgs args = context.invocation.arguments;
   String name = args.getOption('name');
   generateRule(name, outDir: Directory.current.path);
