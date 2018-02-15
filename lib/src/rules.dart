@@ -101,6 +101,7 @@ import 'package:linter/src/rules/unnecessary_parenthesis.dart';
 import 'package:linter/src/rules/unnecessary_statements.dart';
 import 'package:linter/src/rules/unnecessary_this.dart';
 import 'package:linter/src/rules/unrelated_type_equality_checks.dart';
+import 'package:linter/src/rules/use_null_aware_access.dart';
 import 'package:linter/src/rules/use_rethrow_when_possible.dart';
 import 'package:linter/src/rules/use_setters_to_change_properties.dart';
 import 'package:linter/src/rules/use_string_buffers.dart';
@@ -209,6 +210,7 @@ void registerLintRules() {
     ..register(new UnnecessaryStatements())
     ..register(new UnnecessaryThis())
     ..register(new UnrelatedTypeEqualityChecks())
+    ..registerDefault(new UseNullAwareAccess())
     ..register(new UseRethrowWhenPossible())
     ..register(new UseSettersToChangeAProperty())
     ..register(new UseStringBuffers())
