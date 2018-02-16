@@ -10,6 +10,7 @@ import 'integration_test.dart' as integration_test;
 import 'mocks.dart';
 import 'rule_test.dart' as rule_test;
 import 'utils_test.dart' as utils_test;
+import 'validate_headers_test.dart' as validate_headers;
 
 main() {
   // Redirect output.
@@ -20,4 +21,5 @@ main() {
   integration_test.main();
   rule_test.main();
   utils_test.main();
+  validate_headers.main();
 }
