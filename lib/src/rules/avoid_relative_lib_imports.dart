@@ -69,7 +69,7 @@ class Visitor extends SimpleAstVisitor {
       }
     // ignore: avoid_catches_without_on_clauses
     } catch (e) {
-      print(e);
+      // Ignore.
     }
     return false;
   }
