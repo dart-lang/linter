@@ -40,8 +40,9 @@ import '../lib/baz.dart';
 ''';
 
 class AvoidRelativeLibImports extends LintRule {
-  AvoidRelativeLibImports() : super(
-          name: 'avoid_relative_lib_imports',
+  AvoidRelativeLibImports()
+      : super(
+            name: 'avoid_relative_lib_imports',
             description: _desc,
             details: _details,
             group: Group.errors);
@@ -67,7 +68,7 @@ class Visitor extends SimpleAstVisitor {
       if (uri.scheme.isEmpty) {
         return uri.path.contains('/lib/');
       }
-    // ignore: avoid_catches_without_on_clauses
+      // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       // Ignore.
     }
