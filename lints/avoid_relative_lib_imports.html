@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>avoid_relative_lib_imports</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>avoid_relative_lib_imports</h1>
+            <p>Group: errors</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><em>DO</em> avoid relative imports for files in <code>lib/</code>.</p>
+<p>When mixing relative and absolute imports it's possible to create confusion
+where the same member gets imported in two different ways.  An easy way to avoid
+that is to ensure you have no relative imports that include <code>lib/</code> in their
+paths.</p>
+<p><strong>GOOD:</strong></p>
+<pre><code>import 'package:foo/bar.dart';
+
+import 'baz.dart';
+
+...
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>import 'package:foo/bar.dart';
+
+import '../lib/baz.dart';
+
+...
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
