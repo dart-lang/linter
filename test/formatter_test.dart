@@ -139,7 +139,7 @@ mock_code                               1
             ..write();
 
           expect(out.buffer.toString().trim(),
-              '''MockErrorCode|MockErrorType|MockError|/foo/bar/baz.dart|3|3|13|MSG
+              '''MockErrorSeverity|MockErrorType|MockError|/foo/bar/baz.dart|3|3|13|MSG
 
 1 file analyzed, 1 issue found, in 13 ms.''');
         });
