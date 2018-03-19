@@ -94,7 +94,7 @@ mock_code                               1
 
       when(lineInfo.getLocation(any)).thenReturn(location);
       var code = new MockErrorCode();
-      when(code.errorSeverity).thenReturn(new MockErrorCode());
+      when(code.errorSeverity).thenReturn(new MockErrorSeverity());
       when(code.name).thenReturn('MockError');
       when(error.errorCode).thenReturn(code);
       var type = new MockErrorType();
