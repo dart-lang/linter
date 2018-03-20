@@ -60,7 +60,14 @@ class Visitor extends SimpleAstVisitor {
 
   _countAndReport(String name, AstNode node) {
     final visitor = new _CountVisitor(name);
-    getCompilationUnit(node).root.visitChildren(visitor);
+    final units = getCompilationUnit(node)
+        .element
+        .library
+        .units
+        .map((cu) => cu.computeNode());
+    for (final unit in units) {
+      unit.visitChildren(visitor);
+    }
     if (visitor.count <= 1) {
       rule.reportLint(node);
     }
@@ -69,7 +76,7 @@ class Visitor extends SimpleAstVisitor {
 
 class _CountVisitor extends RecursiveAstVisitor {
   _CountVisitor(this.type);
-  String type;
+  final String type;
   int count = 0;
 
   @override
