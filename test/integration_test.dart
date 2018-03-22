@@ -616,6 +616,42 @@ defineTests() {
       });
     });
 
+    // TODO(a14n) move to unit test once previewDart2 disappears
+    group('avoid_keyword_to_create_instances', () {
+      IOSink currentOut = outSink;
+      CollectingSink collectingOut = new CollectingSink();
+
+      setUp(() {
+        exitCode = 0;
+        outSink = collectingOut;
+      });
+
+      tearDown(() {
+        collectingOut.buffer.clear();
+        outSink = currentOut;
+        exitCode = 0;
+      });
+
+      test('avoid keyword to create instances', () async {
+        await dartlint.runLinter([
+          'test/_data/avoid_keyword_to_create_instances',
+          '--rules=avoid_keyword_to_create_instances'
+        ], new LinterOptions()..previewDart2 = true);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              'a.dart 14:3 [lint] Avoid keyword to create instances.',
+              'a.dart 17:3 [lint] Avoid keyword to create instances.',
+              'a.dart 21:3 [lint] Avoid keyword to create instances.',
+              'a.dart 30:14 [lint] Avoid keyword to create instances.',
+              'a.dart 31:14 [lint] Avoid keyword to create instances.',
+              'a.dart 34:14 [lint] Avoid keyword to create instances.',
+              '1 file analyzed, 6 issues found',
+            ]));
+      });
+    });
+
     group('examples', () {
       test('all.yaml', () {
         String src = readFile('example/all.yaml');
