@@ -58,6 +58,7 @@ main() {
   });
 
   group('library prefixes', () {
+    //TODO(pq): add more positive cases.
     var good = [
       'foo_bar',
       'foo',
@@ -74,6 +75,7 @@ main() {
     ];
     testEach(good, isValidLibraryPrefix, isTrue);
 
+    //TODO(pq): add more negative cases.
     var bad = [
       'JSON',
       'JS',
@@ -88,6 +90,9 @@ main() {
       r'$$foo',
       r'$_$foo',
       r'_$foo',
+      '__',
+      '_',
+      '_1',
     ];
     testEach(bad, isValidLibraryPrefix, isFalse);
   });
