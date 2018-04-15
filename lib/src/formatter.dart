@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -172,9 +173,7 @@ class SimpleFormatter implements ReportFormatter {
     var tableWidth = max(_summaryLength, longest + largestCountGuess);
     var pad = tableWidth - longest;
     var line = ''.padLeft(tableWidth, '-');
-    out.writeln(line);
-    out.writeln('Counts');
-    out.writeln(line);
+    out..writeln(line)..writeln('Counts')..writeln(line);
     codes.forEach((c) {
       out
         ..write('${c.padRight(longest)}')
@@ -266,10 +265,11 @@ class SimpleFormatter implements ReportFormatter {
   }
 }
 
-writeBenchmarks(IOSink out, List<File> filesToLint, LinterOptions lintOptions) {
+Future writeBenchmarks(
+    IOSink out, List<File> filesToLint, LinterOptions lintOptions) async {
   Map<String, int> timings = <String, int>{};
   for (int i = 0; i < benchmarkRuns; ++i) {
-    new DartLinter(lintOptions).lintFiles(filesToLint);
+    await new DartLinter(lintOptions).lintFiles(filesToLint);
     lintRegistry.timers.forEach((n, t) {
       int timing = t.elapsedMilliseconds;
       int previous = timings[n];

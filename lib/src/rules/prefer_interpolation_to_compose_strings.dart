@@ -14,6 +14,9 @@ const _details = r'''
 
 **PREFER** using interpolation to compose strings and values.
 
+Using interpolation when composing strings and values is usually easier to write
+and read than concatenation.
+
 **BAD:**
 ```
 'Hello, ' + name + '! You are ' + (year - birth) + ' years old.';
@@ -45,26 +48,17 @@ class _Visitor extends SimpleAstVisitor {
   _Visitor(this.rule);
 
   @override
-  visitAssignmentExpression(AssignmentExpression node) {
-    if (skippedNodes.contains(node)) {
-      return;
-    }
-    if (node.operator.type == TokenType.PLUS_EQ &&
-        (DartTypeUtilities.isClass(
-                node.leftHandSide.bestType, 'String', 'dart.core') ||
-            DartTypeUtilities.isClass(
-                node.rightHandSide.bestType, 'String', 'dart.core'))) {
-      DartTypeUtilities.traverseNodesInDFS(node).forEach(skippedNodes.add);
-      rule.reportLint(node);
-    }
-  }
-
-  @override
   visitBinaryExpression(BinaryExpression node) {
     if (skippedNodes.contains(node)) {
       return;
     }
     if (node.operator.type == TokenType.PLUS) {
+      //OK(#735): str1 + str2
+      if (node.leftOperand is! StringLiteral &&
+          node.rightOperand is! StringLiteral) {
+        return;
+      }
+      //OK: 'foo' + 'bar'
       if (node.leftOperand is StringLiteral &&
           node.rightOperand is StringLiteral) {
         return;

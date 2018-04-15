@@ -12,7 +12,9 @@ const _desc =
 
 const _details = r'''
 
-**PREFER** naming a method to___() if it copies the object’s state to a new object.
+From the [design guide](https://www.dartlang.org/guides/language/effective-dart/design):
+
+**PREFER** naming a method to___() if it copies the object's state to a new object.
 
 **PREFER** naming a method as___() if it returns a different representation backed by the original object.
 
@@ -46,7 +48,7 @@ class Bar {
 ''';
 
 bool _beginsWithAsOrTo(String name) {
-  final regExp = new RegExp(r"(to|as|_to|_as)[A-Z]", caseSensitive: true);
+  final regExp = new RegExp(r'(to|as|_to|_as)[A-Z]', caseSensitive: true);
   return regExp.matchAsPrefix(name) != null;
 }
 
@@ -75,7 +77,7 @@ class _Visitor extends SimpleAstVisitor {
   @override
   visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isGetter &&
-        node.parameters.parameters.length == 0 &&
+        node.parameters.parameters.isEmpty &&
         !_isVoid(node.returnType) &&
         !_beginsWithAsOrTo(node.name.name) &&
         !DartTypeUtilities.hasInheritedMethod(node) &&

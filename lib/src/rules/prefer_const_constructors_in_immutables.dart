@@ -10,12 +10,18 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/src/generated/resolver.dart'; // ignore: implementation_imports
 import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/ast.dart';
 
-const desc = 'Prefer declare const constructors on @immutable classes.';
+const _desc = r'Prefer declare const constructors on `@immutable` classes.';
 
-const details = '''
+const _details = r'''
+
+**PREFER** declaring const constructors on `@immutable` classes.
+
+If a class is immutable, it is usually a good idea to make its constructor a
+const constructor.
+
 **GOOD:**
 ```
 @immutable
@@ -33,13 +39,14 @@ class A {
   A(this.a);
 }
 ```
+
 ''';
 
 /// The name of `meta` library, used to define analysis annotations.
-String _META_LIB_NAME = "meta";
+String _META_LIB_NAME = 'meta';
 
 /// The name of the top-level variable used to mark a immutable class.
-String _IMMUTABLE_VAR_NAME = "immutable";
+String _IMMUTABLE_VAR_NAME = 'immutable';
 
 bool _isImmutable(Element element) =>
     element is PropertyAccessorElement &&
@@ -50,8 +57,8 @@ class PreferConstConstructorsInImmutables extends LintRule {
   PreferConstConstructorsInImmutables()
       : super(
             name: 'prefer_const_constructors_in_immutables',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override
@@ -65,12 +72,16 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitConstructorDeclaration(ConstructorDeclaration node) {
+    final isRedirected =
+        node.element.isFactory && node.element.redirectedConstructor != null;
     if (node.body is EmptyFunctionBody &&
         !node.element.isConst &&
         !_hasMixin(node.element.enclosingElement) &&
         _hasImmutableAnnotation(node.element.enclosingElement) &&
-        _hasConstConstructorInvocation(node) &&
-        _hasOnlyConstExpressionsInIntializerList(node)) {
+        (isRedirected && node.element.redirectedConstructor.isConst ||
+            (!isRedirected &&
+                _hasConstConstructorInvocation(node) &&
+                _hasOnlyConstExpressionsInIntializerList(node)))) {
       rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);
     }
   }
@@ -106,23 +117,18 @@ class Visitor extends SimpleAstVisitor {
   }
 
   bool _hasOnlyConstExpressionsInIntializerList(ConstructorDeclaration node) {
-    final typeProvider = node.element.context.typeProvider;
-    final declaredVariables = node.element.context.declaredVariables;
+    bool hasConstError;
 
-    final listener = new MyAnalysisErrorListener();
-
-    // put a fake const keyword to use ConstantVerifier
+    // put a fake const keyword and check if there's const error
     node.constKeyword = new KeywordToken(Keyword.CONST, node.offset);
     try {
-      final errorReporter = new ErrorReporter(listener, rule.reporter.source);
-      node.accept(new ConstantVerifier(errorReporter, node.element.library,
-          typeProvider, declaredVariables));
+      hasConstError = hasErrorWithConstantVerifier(node);
     } finally {
       // restore const keyword
       node.constKeyword = null;
     }
 
-    return !listener.hasConstError;
+    return !hasConstError;
   }
 
   Iterable<InterfaceType> _getSelfAndInheritedTypes(InterfaceType type) sync* {
@@ -130,26 +136,6 @@ class Visitor extends SimpleAstVisitor {
     while (current != null) {
       yield current;
       current = current.superclass;
-    }
-  }
-}
-
-class MyAnalysisErrorListener extends AnalysisErrorListener {
-  bool hasConstError = false;
-  @override
-  void onError(AnalysisError error) {
-    switch (error.errorCode) {
-      case CompileTimeErrorCode.CONST_EVAL_TYPE_BOOL:
-      case CompileTimeErrorCode.CONST_EVAL_TYPE_BOOL_NUM_STRING:
-      case CompileTimeErrorCode.CONST_EVAL_TYPE_INT:
-      case CompileTimeErrorCode.CONST_EVAL_TYPE_NUM:
-      case CompileTimeErrorCode.CONST_EVAL_THROWS_EXCEPTION:
-      case CompileTimeErrorCode.CONST_EVAL_THROWS_IDBZE:
-      case CompileTimeErrorCode.NON_CONSTANT_VALUE_IN_INITIALIZER:
-      case CompileTimeErrorCode
-          .CONST_CONSTRUCTOR_WITH_FIELD_INITIALIZED_BY_NON_CONST:
-      case CompileTimeErrorCode.INVALID_CONSTANT:
-        hasConstError = true;
     }
   }
 }

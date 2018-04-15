@@ -1,3 +1,7 @@
+// Copyright (c) 2018, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
@@ -51,7 +55,8 @@ class ConditionScope {
     environment.addAll(expressions);
   }
 
-  Iterable<Expression> getExpressions(Iterable<Element> elements, bool value) {
+  Iterable<Expression> getExpressions(Iterable<Element> elements,
+      {bool value}) {
     final expressions = <Expression>[];
     _recursiveGetExpressions(expressions, elements, value);
     return expressions;
@@ -195,7 +200,7 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
     _propagateUndefinedExpressions(_removeLastScope());
     // If a for statement do not have breaks inside, that means the condition
     // after the loop is false.
-    if (!breakScope.hasBreak(node)) {
+    if (_isRelevantOutsideOfForStatement(node)) {
       _addFalseCondition(node.condition);
     }
     breakScope.deleteBreaksWithTarget(node);
@@ -302,9 +307,8 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
   }
 
   Iterable<Expression> _getExpressions(Iterable<Element> elements,
-      {bool value: true}) {
-    return outerScope.getExpressions(elements, value);
-  }
+          {bool value: true}) =>
+      outerScope.getExpressions(elements, value: value);
 
   bool _isLastStatementAnExitStatement(Statement statement) {
     if (statement is Block) {
@@ -321,6 +325,21 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
       return ExitDetector.exits(statement);
     }
   }
+
+  /// If any of the variables is declared inside the for statement then it does
+  /// not mean anything afterwards.
+  bool _isRelevantOutsideOfForStatement(ForStatement node) =>
+      !breakScope.hasBreak(node) &&
+      node.condition != null &&
+      DartTypeUtilities
+          .traverseNodesInDFS(node.condition)
+          .where((n) => n is SimpleIdentifier)
+          .map((n) => (n as SimpleIdentifier).bestElement?.computeNode())
+          .every((n) =>
+              n != null &&
+              n.getAncestor(
+                      (a) => a.offset == node.offset && a is ForStatement) ==
+                  null);
 
   void _propagateUndefinedExpressions(ConditionScope scope) {
     outerScope?.addAll(scope.getUndefinedExpressions());

@@ -83,18 +83,18 @@ ${parser.usage}
 }
 
 String toClassName(String ruleName) =>
-    ruleName.split('_').map((bit) => capitalize(bit)).join();
+    ruleName.split('_').map(capitalize).join();
 
 void updateRuleRegistry(String ruleName) {
   print("Don't forget to update lib/rules.dart with a line like:");
-  print("  ..register(new ${toClassName(ruleName)}())");
-  print("and add your rule to `example/all.yaml`.");
-  print("Then run your test like so:");
-  print("  pub run test -N $ruleName");
+  print('  ..register(new ${toClassName(ruleName)}())');
+  print('and add your rule to `example/all.yaml`.');
+  print('Then run your test like so:');
+  print('  pub run test -N $ruleName');
 }
 
 String _generateClass(String ruleName, String className) => """
-// Copyright (c) 2017, the Dart project authors.  Please see the AUTHORS file
+// Copyright (c) $_thisYear, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -141,12 +141,14 @@ class Visitor extends SimpleAstVisitor {
 """;
 
 String _generateTest(String libName, String className) => '''
-// Copyright (c) 2017, the Dart project authors.  Please see the AUTHORS file
+// Copyright (c) $_thisYear, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 // test w/ `pub run test -N $libName`
 
 ''';
+
+String get _thisYear => new DateTime.now().year.toString();
 
 typedef String _Generator(String libName, String className);

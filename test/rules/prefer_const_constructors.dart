@@ -5,7 +5,15 @@
 // test w/ `pub run test -N prefer_const_constructors`
 
 class A {
-  const A();
+  const A({A parent});
+  const A.a();
+}
+
+void accessA_0() {
+  A a = A(); //OK
+  A a1 = A(
+    parent: A.a(), //OK
+  );
 }
 
 void accessA_1() {
@@ -50,4 +58,29 @@ class E {
   static E m1(int i) => new E('$i'); // OK
   static E m2() => new E('adjacent' 'string'); // LINT
   static E m3(int i) => new E('adjacent' '$i'); // OK
+  static E m4(String s) => new E(s); // OK
+  static void m5() {
+    final String s = '';
+    E e = new E(s); // OK
+  }
+}
+
+class F {
+  final List<F> l;
+
+  const F(this.l);
+
+  static F m1() => new F(null); // LINT
+  static F m2(List<F> l) => new F(l); // OK
+  static F m3(F f) => new F([f]); // OK
+}
+
+class G {
+  final Map<G, G> m;
+
+  const G(this.m);
+
+  static G m1() => new G(null); // LINT
+  static G m2(Map<G, G> m) => new G(m); // OK
+  static G m3(G g) => new G({g: g}); // OK
 }

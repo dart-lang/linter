@@ -17,17 +17,19 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/utils.dart';
 
-const desc = 'Specify type annotations.';
+const _desc = r'Specify type annotations.';
 
-const details = '''
+const _details = r'''
+
 From the [flutter style guide](https://flutter.io/style-guide/):
 
 **DO** specify type annotations.
 
 Avoid `var` when specifying that a type is unknown and short-hands that elide
 type annotations.  Use `dynamic` if you are being explicit that the type is
-unknown. Use `Object` if you are being explicit that you want an object that
+unknown.  Use `Object` if you are being explicit that you want an object that
 implements `==` and `hashCode`.
 
 **GOOD:**
@@ -63,14 +65,15 @@ main() {
   Key s = new Key(); // OK!
 }
 ```
+
 ''';
 
 /// The name of `meta` library, used to define analysis annotations.
-String _META_LIB_NAME = "meta";
+String _META_LIB_NAME = 'meta';
 
 /// The name of the top-level variable used to mark a Class as having optional
 /// type args.
-String _OPTIONAL_TYPE_ARGS_VAR_NAME = "optionalTypeArgs";
+String _OPTIONAL_TYPE_ARGS_VAR_NAME = 'optionalTypeArgs';
 
 bool _isOptionallyParameterized(ParameterizedType type) {
   List<ElementAnnotation> metadata = type.element?.metadata;
@@ -90,8 +93,8 @@ class AlwaysSpecifyTypes extends LintRule {
   AlwaysSpecifyTypes()
       : super(
             name: 'always_specify_types',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override
@@ -126,6 +129,7 @@ class Visitor extends SimpleAstVisitor {
     checkLiteral(literal);
   }
 
+  // Future kernel API.
   visitNamedType(NamedType namedType) {
     DartType type = namedType.type;
     if (type is ParameterizedType) {
@@ -140,8 +144,7 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitSimpleFormalParameter(SimpleFormalParameter param) {
-    if (param.type == null &&
-        !Analyzer.facade.isJustUnderscores(param.identifier.name)) {
+    if (param.type == null && !isJustUnderscores(param.identifier.name)) {
       if (param.keyword != null) {
         rule.reportLintForToken(param.keyword);
       } else {
@@ -152,15 +155,7 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   visitTypeName(NamedType typeName) {
-    DartType type = typeName.type;
-    if (type is ParameterizedType) {
-      if (type.typeParameters.isNotEmpty &&
-          typeName.typeArguments == null &&
-          typeName.parent is! IsExpression &&
-          !_isOptionallyParameterized(type)) {
-        rule.reportLint(typeName);
-      }
-    }
+    visitNamedType(typeName);
   }
 
   @override

@@ -3,12 +3,19 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Common AST helpers.
+
+import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/standard_resolution_map.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
+import 'package:analyzer/file_system/file_system.dart';
+import 'package:analyzer/file_system/physical_file_system.dart';
+import 'package:analyzer/src/generated/resolver.dart'; // ignore: implementation_imports
 import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/utils.dart';
+import 'package:path/path.dart' as path;
 
 /// Returns direct children of [parent].
 List<Element> getChildren(Element parent, [String name]) {
@@ -138,9 +145,40 @@ bool isSimpleSetter(MethodDeclaration setter) {
   return false;
 }
 
+/// Return the compilation unit of a node
+CompilationUnit getCompilationUnit(AstNode node) =>
+    node.getAncestor((a) => a is CompilationUnit);
+
+/// Return true if the given node is declared in a compilation unit that is in
+/// a `lib/` folder.
+bool isDefinedInLib(CompilationUnit compilationUnit) {
+  String fullName = compilationUnit?.element?.source?.fullName;
+  if (fullName == null) {
+    return false;
+  }
+
+  // TODO(devoncarew): Change to using the resource provider on the context
+  // when that is available.
+  ResourceProvider resourceProvider = PhysicalResourceProvider.INSTANCE;
+  File file = resourceProvider.getFile(fullName);
+  Folder folder = file.parent;
+
+  // Look for a pubspec.yaml file.
+  while (folder != null) {
+    if (folder.getChildAssumingFile('pubspec.yaml').exists) {
+      // Determine if this file is a child of the lib/ folder.
+      String relPath = file.path.substring(folder.path.length + 1);
+      return path.split(relPath).first == 'lib';
+    }
+
+    folder = folder.parent;
+  }
+
+  return false;
+}
+
 /// Returns `true` if the given [id] is a valid Dart identifier.
-bool isValidDartIdentifier(String id) =>
-    !isKeyWord(id) && Analyzer.facade.isIdentifier(id);
+bool isValidDartIdentifier(String id) => !isKeyWord(id) && isIdentifier(id);
 
 /// Returns `true` if the keyword associated with this token is `var`.
 bool isVar(Token token) => isKeyword(token, Keyword.VAR);
@@ -256,4 +294,54 @@ class _ElementVisitorAdapter extends GeneralizingElementVisitor {
       element.visitChildren(this);
     }
   }
+}
+
+bool hasErrorWithConstantVerifier(AstNode node) {
+  final cu = getCompilationUnit(node);
+  final listener = new HasConstErrorListener();
+  node.accept(new ConstantVerifier(
+      new ErrorReporter(listener, cu.element.source),
+      cu.element.library,
+      cu.element.context.typeProvider,
+      cu.element.context.declaredVariables));
+  return listener.hasConstError;
+}
+
+bool hasErrorWithConstantVisitor(AstNode node) {
+  final cu = getCompilationUnit(node);
+  final listener = new HasConstErrorListener();
+  node.accept(new ConstantVisitor(
+      new ConstantEvaluationEngine(cu.element.context.typeProvider,
+          cu.element.context.declaredVariables),
+      new ErrorReporter(listener, cu.element.source)));
+  return listener.hasConstError;
+}
+
+class HasConstErrorListener extends AnalysisErrorListener {
+  HasConstErrorListener();
+
+  bool hasConstError = false;
+
+  @override
+  void onError(AnalysisError error) {
+    hasConstError = errorCodes.contains(error.errorCode);
+  }
+
+  static const List<CompileTimeErrorCode> errorCodes = const [
+    CompileTimeErrorCode.CONST_CONSTRUCTOR_WITH_FIELD_INITIALIZED_BY_NON_CONST,
+    CompileTimeErrorCode.CONST_EVAL_TYPE_BOOL,
+    CompileTimeErrorCode.CONST_EVAL_TYPE_BOOL_NUM_STRING,
+    CompileTimeErrorCode.CONST_EVAL_TYPE_INT,
+    CompileTimeErrorCode.CONST_EVAL_TYPE_NUM,
+    CompileTimeErrorCode.CONST_EVAL_THROWS_EXCEPTION,
+    CompileTimeErrorCode.CONST_EVAL_THROWS_IDBZE,
+    CompileTimeErrorCode.CONST_WITH_NON_CONSTANT_ARGUMENT,
+    CompileTimeErrorCode.INVALID_CONSTANT,
+    CompileTimeErrorCode.MISSING_CONST_IN_LIST_LITERAL,
+    CompileTimeErrorCode.MISSING_CONST_IN_MAP_LITERAL,
+    CompileTimeErrorCode.NON_CONSTANT_LIST_ELEMENT,
+    CompileTimeErrorCode.NON_CONSTANT_MAP_KEY,
+    CompileTimeErrorCode.NON_CONSTANT_MAP_VALUE,
+    CompileTimeErrorCode.NON_CONSTANT_VALUE_IN_INITIALIZER,
+  ];
 }

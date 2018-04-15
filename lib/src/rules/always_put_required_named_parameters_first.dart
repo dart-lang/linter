@@ -8,9 +8,10 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 
-const desc = 'Put @required named parameters first.';
+const _desc = r'Put @required named parameters first.';
 
-const details = '''
+const _details = r'''
+
 **DO** specify `@required` on named parameter before other named parameters.
 
 **GOOD:**
@@ -22,13 +23,14 @@ m({@required a, b, c}) ;
 ```
 m({b, c, @required a}) ;
 ```
+
 ''';
 
 /// The name of `meta` library, used to define analysis annotations.
-String _META_LIB_NAME = "meta";
+String _META_LIB_NAME = 'meta';
 
 /// The name of the top-level variable used to mark a required named parameter.
-String _REQUIRED_VAR_NAME = "required";
+String _REQUIRED_VAR_NAME = 'required';
 
 bool _isRequired(Element element) =>
     element is PropertyAccessorElement &&
@@ -39,8 +41,8 @@ class AlwaysPutRequiredNamedParametersFirst extends LintRule {
   AlwaysPutRequiredNamedParametersFirst()
       : super(
             name: 'always_put_required_named_parameters_first',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override
@@ -56,7 +58,7 @@ class Visitor extends SimpleAstVisitor {
   visitFormalParameterList(FormalParameterList node) {
     bool nonRequiredSeen = false;
     for (DefaultFormalParameter param
-        in node.parameters.where((p) => p.kind == ParameterKind.NAMED)) {
+        in node.parameters.where((p) => p.isNamed)) {
       if (param.metadata.any((a) => _isRequired(a.element))) {
         if (nonRequiredSeen) {
           rule.reportLintForToken(param.identifier.token);

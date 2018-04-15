@@ -3,12 +3,14 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const desc = r'Only reference in scope identifiers in doc comments.';
+const _desc = r'Only reference in scope identifiers in doc comments.';
 
-const details = r'''
+const _details = r'''
+
 **DO** reference only in scope identifiers in doc comments.
 
 If you surround things like variable, method, or type names in square brackets,
@@ -30,14 +32,25 @@ On the other hand, assuming `outOfScopeId` is out of scope:
 ```
 void f(int outOfScopeId) { ... }
 ```
+
+Note that the square bracket comment format is designed to allow 
+comments to refer to declarations using a fairly natural format 
+but does not allow *arbitrary expressions*.  In particular, code 
+references within square brackets can consist of either
+
+- a single identifier where the identifier is any identifier in scope for the comment (see the spec for what is in scope in doc comments),
+- two identifiers separated by a period where the first identifier is the name of a class that is in scope and the second is the name of a member declared in the class,
+- a single identifier followed by a pair of parentheses where the identifier is the name of a class that is in scope (used to refer to the unnamed constructor for the class), or
+- two identifiers separated by a period and followed by a pair of parentheses where the first identifier is the name of a class that is in scope and the second is the name of a named constructor (not strictly necessary, but allowed for consistency).
+
 ''';
 
 class CommentReferences extends LintRule {
   CommentReferences()
       : super(
             name: 'comment_references',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.errors);
 
   @override
@@ -49,10 +62,41 @@ class Visitor extends SimpleAstVisitor {
   Visitor(this.rule);
 
   @override
+  visitComment(Comment node) {
+    // Check for keywords that are not treated as references by the parser
+    // but should be flagged by the linter.
+    // Note that no special care is taken to handle embedded code blocks.
+    for (Token token in node.tokens) {
+      if (!token.isSynthetic) {
+        String comment = token.lexeme;
+        int leftIndex = comment.indexOf('[');
+        while (leftIndex >= 0) {
+          int rightIndex = comment.indexOf(']', leftIndex);
+          if (rightIndex >= 0) {
+            String reference = comment.substring(leftIndex + 1, rightIndex);
+            if (_isParserSpecialCase(reference)) {
+              int nameOffset = token.offset + leftIndex + 1;
+              rule.reporter.reportErrorForOffset(
+                  rule.lintCode, nameOffset, reference.length);
+            }
+          }
+          leftIndex = rightIndex < 0 ? -1 : comment.indexOf('[', rightIndex);
+        }
+      }
+    }
+  }
+
+  @override
   visitCommentReference(CommentReference node) {
     Identifier identifier = node.identifier;
     if (!identifier.isSynthetic && identifier.bestElement == null) {
       rule.reportLint(identifier);
     }
   }
+
+  bool _isParserSpecialCase(String reference) =>
+      reference == 'this' ||
+      reference == 'null' ||
+      reference == 'true' ||
+      reference == 'false';
 }

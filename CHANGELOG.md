@@ -1,3 +1,109 @@
+# 0.1.47
+
+* new `avoid_double_and_int_checks` lint
+* fix to handle uninitialized vars in `prefer_const_declarations`
+* fix for generic function type handling in `avoid_types_as_parameter_names`
+* new `prefer_iterable_whereType` lint
+* new `prefer_generic_function_type_aliases` lint
+* Dart 2 compatibility fixes
+
+# 0.1.46
+
+* performance fixes for library prefix testing (`library_prefixes`)
+* new `avoid_bool_literals_in_conditional_expressions` lint
+* new `prefer_equal_for_default_values` lint
+* new `avoid_private_typedef_functions` lint
+* new `avoid_single_cascade_in_expression_statements` lint
+
+# 0.1.45
+
+* fix for `invariant_booleans` when analyzing for loops with no condition
+* new `avoid_types_as_parameter_names` lint
+* new `avoid_renaming_method_parameters` lint
+
+# 0.1.44
+
+* new `avoid_relative_lib_imports` lint
+* new `unnecessary_parenthesis` lint
+* fix to `prefer_const_literals_to_create_immutables` to handle undefined classes gracefully
+* updates to `prefer_const_declarations` to support optional `new` and `const`
+* `prefer_const_declarations` updated to check locals
+* fixes to `invariant_booleans`
+* bumped SDK lower bound to `2.0.0-dev`
+* build and workflow improvements: rule template fixes; formatting and header validation
+* miscellaneous documentation fixes
+
+# 0.1.43
+
+* new `prefer_const_declarations.dart` lint
+* new `prefer_const_literals_to_create_immutables` lint
+* miscellaneous documentation improvements
+
+# 0.1.42
+
+* added support for external constructors in `avoid_unused_constructor_parameters`
+* added code reference resolution docs for `comment_references`
+
+# 0.1.41
+
+* broadened `args` package dependency to support versions `1.*`
+
+# 0.1.40
+
+* `avoid_unused_constructor_parameters` updated to better handle redirecting factory constructors
+* `avoid_returning_this` improvements
+* `prefer_bool_in_asserts` improvements
+* miscellaneous documentation fixes
+
+# 0.1.39
+
+* `prefer_interpolation_to_compose_strings` updated to allow concatenation of two non-literal strings
+* `prefer_interpolation_to_compose_strings` updated to allow `+=`
+* lots of rule documentation fixes and enhancements
+* fix for `prefer_const_constructors_in_immutables` false positive with redirecting factory constructors
+
+# 0.1.38
+
+* `public_member_api_docs` fix for package URIs
+
+# 0.1.37
+
+* `avoid_positional_boolean_parameters` updated to allow booleans in operator declarations
+* `comment_references` fixed to handle incomplete references
+* `non_constant_identifier_names` updated to allow underscores around numbers
+
+# 0.1.36
+
+* new `avoid_unused_constructor_parameters` lint
+* new `prefer_bool_in_asserts` lint
+* new `prefer_typing_uninitialized_variables` lint
+* new `unnecessary_statements` lint
+* `public_member_api_docs` updated to only lint source in `lib/`
+* 'avoid_empty_else' fixed to ignore synthetic `EmptyStatement`s
+* updated library prefix checking to allow leading `$`s
+* miscellaneous documentation fixes
+* Dart SDK constraints restored (removed unneeded `2.0.0-dev.infinity` constraint)
+
+# 0.1.35
+
+* linter engine updated to use new analysis driver
+
+# 0.1.34
+
+## Features
+
+* `non_constant_identifier_names` extended to include named constructors
+* SDK constraint broadened to `2.0.0-dev.infinity`
+* improved `prefer_final_fields` performance
+
+## Fixes
+
+* fixes to `unnecessary_overrides` (`noSuchMethod` handling, return type narrowing, special casing of documented `super` calls)
+* fix to `non_constant_identifier_names` to handle identifiers with no name
+* fixes to `prefer_const_constructors` to support list literals
+* fixes to `recursive_getters`
+* fixes to `cascade_invocations`
+
 # 0.1.33
 
 ## Features

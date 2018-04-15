@@ -14,7 +14,7 @@ const _desc = r'Cascade consecutive method invocations on the same reference.';
 const _details = r'''
 
 **DO** Use the cascading style when succesively invoking methods on the same
- reference.
+reference.
 
 **BAD:**
 ```
@@ -178,9 +178,9 @@ class _CascadableExpression {
           isCritical: true);
     }
     // setters
-    final VariableElement variable =
-        _getPrefixElementFromExpression(node.leftHandSide);
+    final variable = _getPrefixElementFromExpression(node.leftHandSide);
     final canReceive = node.operator.type != TokenType.QUESTION_QUESTION_EQ &&
+        variable is VariableElement &&
         !variable.isStatic;
     return new _CascadableExpression._internal(variable, [node.rightHandSide],
         canJoin: true, canReceive: canReceive, canBeCascaded: true);
@@ -207,17 +207,15 @@ class _CascadableExpression {
   }
 
   factory _CascadableExpression._fromPrefixedIdentifier(
-      PrefixedIdentifier node) {
-    return new _CascadableExpression._internal(
-        DartTypeUtilities.getCanonicalElementFromIdentifier(node.prefix), [],
-        canJoin: true, canReceive: true, canBeCascaded: true);
-  }
+          PrefixedIdentifier node) =>
+      new _CascadableExpression._internal(
+          DartTypeUtilities.getCanonicalElementFromIdentifier(node.prefix), [],
+          canJoin: true, canReceive: true, canBeCascaded: true);
 
-  factory _CascadableExpression._fromPropertyAccess(PropertyAccess node) {
-    return new _CascadableExpression._internal(
-        DartTypeUtilities.getCanonicalElementFromIdentifier(node.target), [],
-        canJoin: true, canReceive: true, canBeCascaded: true);
-  }
+  factory _CascadableExpression._fromPropertyAccess(PropertyAccess node) =>
+      new _CascadableExpression._internal(
+          DartTypeUtilities.getCanonicalElementFromIdentifier(node.target), [],
+          canJoin: true, canReceive: true, canBeCascaded: true);
 
   _CascadableExpression._internal(this.element, this.criticalNodes,
       {this.canJoin,

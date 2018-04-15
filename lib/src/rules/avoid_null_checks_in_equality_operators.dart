@@ -9,11 +9,14 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
-const _desc = r'Don’t check for null in custom == operators.';
+const _desc = r"Don't check for null in custom == operators.";
 
 const _details = r'''
 
-**DON’T** check for null in custom == operators.
+**DON'T** check for null in custom == operators.
+
+As null is a special type, no class can be equivalent to it.  Thus, it is
+redundant to check whether the other instance is null. 
 
 **BAD:**
 ```
@@ -48,21 +51,19 @@ bool _isComparingParameterWithNull(BinaryExpression node, Element parameter) =>
         (DartTypeUtilities.isNullLiteral(node.rightOperand) &&
             _isParameter(node.leftOperand, parameter)));
 
-bool _isParameter(Expression expression, Element parameter) {
-  return DartTypeUtilities.getCanonicalElementFromIdentifier(expression) ==
-      parameter;
-}
+bool _isParameter(Expression expression, Element parameter) =>
+    DartTypeUtilities.getCanonicalElementFromIdentifier(expression) ==
+    parameter;
 
-bool _isParameterWithQuestion(AstNode node, Element parameter) {
-  return (node is PropertyAccess &&
-          node.operator?.type == TokenType.QUESTION_PERIOD &&
-          DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) ==
-              parameter) ||
-      (node is MethodInvocation &&
-          node.operator?.type == TokenType.QUESTION_PERIOD &&
-          DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) ==
-              parameter);
-}
+bool _isParameterWithQuestion(AstNode node, Element parameter) =>
+    (node is PropertyAccess &&
+        node.operator?.type == TokenType.QUESTION_PERIOD &&
+        DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) ==
+            parameter) ||
+    (node is MethodInvocation &&
+        node.operator?.type == TokenType.QUESTION_PERIOD &&
+        DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) ==
+            parameter);
 
 bool _isParameterWithQuestionQuestion(
         BinaryExpression node, Element parameter) =>
@@ -94,12 +95,11 @@ class _Visitor extends SimpleAstVisitor {
     if (node.name.token?.type == TokenType.EQ_EQ && parameters?.length == 1) {
       final parameter = DartTypeUtilities
           .getCanonicalElementFromIdentifier(parameters.first.identifier);
-      bool checkIfParameterIsNull(AstNode node) {
-        return _isParameterWithQuestion(node, parameter) ||
-            (node is BinaryExpression &&
-                (_isParameterWithQuestionQuestion(node, parameter) ||
-                    _isComparingParameterWithNull(node, parameter)));
-      }
+      bool checkIfParameterIsNull(AstNode node) =>
+          _isParameterWithQuestion(node, parameter) ||
+          (node is BinaryExpression &&
+              (_isParameterWithQuestionQuestion(node, parameter) ||
+                  _isComparingParameterWithNull(node, parameter)));
 
       DartTypeUtilities
           .traverseNodesInDFS(node.body)

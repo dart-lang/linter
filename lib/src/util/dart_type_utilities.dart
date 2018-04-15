@@ -141,7 +141,7 @@ class DartTypeUtilities {
     final positionalParameters = <Element>[];
     final positionalArguments = <Element>[];
     for (final parameter in parameters) {
-      if (parameter.kind == ParameterKind.NAMED) {
+      if (parameter.isNamed) {
         namedParameters[parameter.identifier.name] =
             parameter.identifier.bestElement;
       } else {
@@ -224,6 +224,20 @@ class DartTypeUtilities {
     }
     return false;
   }
+
+  static bool overridesMethod(MethodDeclaration node) {
+    final name = node.element.name;
+    final ClassDeclaration clazz = node.parent;
+    final classElement = clazz.element;
+    final library = classElement.library;
+    return classElement.allSupertypes
+        .map(node.isGetter
+            ? (InterfaceType t) => t.lookUpGetter
+            : node.isSetter
+                ? (InterfaceType t) => t.lookUpSetter
+                : (InterfaceType t) => t.lookUpMethod)
+        .any((lookUp) => lookUp(name, library) != null);
+  }
 }
 
 class InterfaceTypeDefinition {
@@ -233,9 +247,7 @@ class InterfaceTypeDefinition {
   InterfaceTypeDefinition(this.name, this.library);
 
   @override
-  int get hashCode {
-    return name.hashCode ^ library.hashCode;
-  }
+  int get hashCode => name.hashCode ^ library.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -243,7 +255,7 @@ class InterfaceTypeDefinition {
       return true;
     }
     return other is InterfaceTypeDefinition &&
-        this.name == other.name &&
-        this.library == other.library;
+        name == other.name &&
+        library == other.library;
   }
 }

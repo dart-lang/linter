@@ -10,9 +10,10 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
-const desc = 'Use @required.';
+const _desc = r'Use @required.';
 
-const details = '''
+const _details = r'''
+
 **DO** specify `@required` on named parameter without default value on which an
 assert(param != null) is done.
 
@@ -35,13 +36,14 @@ m1({a}) {
 ```
 
 NOTE: Only asserts at the start of the bodies will be taken into account.
+
 ''';
 
 /// The name of `meta` library, used to define analysis annotations.
-String _META_LIB_NAME = "meta";
+String _META_LIB_NAME = 'meta';
 
 /// The name of the top-level variable used to mark a required named parameter.
-String _REQUIRED_VAR_NAME = "required";
+String _REQUIRED_VAR_NAME = 'required';
 
 bool _isRequired(Element element) =>
     element is PropertyAccessorElement &&
@@ -52,8 +54,8 @@ class AlwaysRequireNonNullNamedParameters extends LintRule {
   AlwaysRequireNonNullNamedParameters()
       : super(
             name: 'always_require_non_null_named_parameters',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override
@@ -75,7 +77,7 @@ class Visitor extends SimpleAstVisitor {
   visitFormalParameterList(FormalParameterList node) {
     final params = node.parameters
         // only named parameters
-        .where((p) => p.kind == ParameterKind.NAMED)
+        .where((p) => p.isNamed)
         .map((p) => p as DefaultFormalParameter)
         // without default value
         .where((p) => p.defaultValue == null)

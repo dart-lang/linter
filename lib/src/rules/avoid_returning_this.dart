@@ -14,6 +14,15 @@ const _details = r'''
 
 **AVOID** returning this from methods just to enable a fluent interface.
 
+Returning `this` from a method is redundant; Dart has a cascade operator which
+allows method chaining universally.
+
+Returning `this` is allowed for:
+
+- operators
+- methods with a return type different of the current class
+- methods defined in parent classes / mixins or interfaces
+
 **BAD:**
 ```
 var buffer = new StringBuffer()
@@ -32,16 +41,12 @@ var buffer = new StringBuffer()
 
 ''';
 
-bool _hasInheritedMethod(MethodDeclaration node) =>
-    DartTypeUtilities.lookUpInheritedMethod(node) != null;
-
 bool _isFunctionExpression(AstNode node) => node is FunctionExpression;
 
 bool _isReturnStatement(AstNode node) => node is ReturnStatement;
 
-bool _returnsThis(AstNode node) {
-  return (node as ReturnStatement).expression is ThisExpression;
-}
+bool _returnsThis(AstNode node) =>
+    (node as ReturnStatement).expression is ThisExpression;
 
 class AvoidReturningThis extends LintRule {
   _Visitor _visitor;
@@ -64,18 +69,23 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitMethodDeclaration(MethodDeclaration node) {
-    if (node.returnType?.type !=
+    if (node.isOperator) return;
+    if (node.element.returnType !=
             (node.parent as ClassDeclaration).element?.type ||
-        _hasInheritedMethod(node)) {
+        DartTypeUtilities.overridesMethod(node)) {
       return;
     }
     final body = node.body;
-    if (body is BlockFunctionBody && body.block.statements.length > 1) {
+    if (body is BlockFunctionBody) {
       final returnStatements = DartTypeUtilities
           .traverseNodesInDFS(body.block,
               excludeCriteria: _isFunctionExpression)
           .where(_isReturnStatement);
       if (returnStatements.isNotEmpty && returnStatements.every(_returnsThis)) {
+        rule.reportLint(node.name);
+      }
+    } else if (body is ExpressionFunctionBody) {
+      if (body.expression is ThisExpression) {
         rule.reportLint(node.name);
       }
     }

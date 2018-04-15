@@ -6,7 +6,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = "Prefer single quotes where they won't require escape sequences";
+const _desc =
+    r"Prefer single quotes where they won't require escape sequences.";
 
 const _details = '''
 
@@ -16,8 +17,8 @@ That means strings with an apostrophe may use double quotes so that the
 apostrophe isn't escaped (note: we don't lint the other way around, ie, a single
 quoted string with an escaped apostrophe is not flagged).
 
-Its also rare, but possible, to have strings within string interpolations. In
-this case, its much more readable to use a double quote somewhere. So double
+It's also rare, but possible, to have strings within string interpolations.  In
+this case, its much more readable to use a double quote somewhere.  So double
 quotes are allowed either within, or containing, an interpolated string literal.
 Arguably strings within string interpolations should be its own type of lint.
 
@@ -92,10 +93,9 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   /// Strings can be within interpolations (ie, nested). Check like this.
-  bool isNestedString(AstNode node) {
-    // careful: node.getAncestor will check the node itself.
-    return node.parent?.getAncestor((p) => p is StringInterpolation) != null;
-  }
+  bool isNestedString(AstNode node) =>
+      // careful: node.getAncestor will check the node itself.
+      node.parent?.getAncestor((p) => p is StringInterpolation) != null;
 
   /// Strings interpolations can contain other string nodes. Check like this.
   bool containsString(StringInterpolation string) {
@@ -119,14 +119,10 @@ class _IsOrContainsStringVisitor extends UnifyingAstVisitor<bool> {
   bool isOrContainsString(AstNode node) => node.accept(this);
 
   @override
-  bool visitSimpleStringLiteral(SimpleStringLiteral string) {
-    return true;
-  }
+  bool visitSimpleStringLiteral(SimpleStringLiteral string) => true;
 
   @override
-  bool visitStringInterpolation(StringInterpolation string) {
-    return true;
-  }
+  bool visitStringInterpolation(StringInterpolation string) => true;
 }
 
 /// The only way to get immediate children in a unified, typesafe way, is to

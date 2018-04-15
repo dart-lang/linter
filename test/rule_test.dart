@@ -2,19 +2,23 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:analyzer/error/error.dart';
+import 'package:analyzer/file_system/file_system.dart' as file_system;
+import 'package:analyzer/file_system/memory_file_system.dart';
+import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:analyzer/src/generated/engine.dart';
 import 'package:analyzer/src/generated/source.dart';
 import 'package:analyzer/src/lint/io.dart';
 import 'package:analyzer/src/lint/linter.dart';
 import 'package:analyzer/src/lint/registry.dart';
+import 'package:analyzer/src/util/absolute_path.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/ast.dart';
 import 'package:linter/src/formatter.dart';
 import 'package:linter/src/rules.dart';
-import 'package:linter/src/rules/camel_case_types.dart';
 import 'package:linter/src/rules/implementation_imports.dart';
 import 'package:linter/src/rules/package_prefixed_library_names.dart';
 import 'package:path/path.dart' as p;
@@ -32,7 +36,7 @@ final String ruleDir = p.join('test', 'rules');
 
 /// Rule tests
 defineRuleTests() {
-  //TODO: if ruleDir cannot be found print message to set CWD to project root
+  // TODO: if ruleDir cannot be found print message to set CWD to project root
   group('rule', () {
     group('dart', () {
       for (var entry in new Directory(ruleDir).listSync()) {
@@ -52,6 +56,16 @@ defineRuleTests() {
         }
       }
     });
+    group('format', () {
+      registerLintRules();
+      for (LintRule rule in Registry.ruleRegistry.rules) {
+        test('`${rule.name}` description', () {
+          expect(rule.description.endsWith('.'), isTrue,
+              reason:
+                  "Rule description for ${rule.name} should end with a '.'");
+        });
+      }
+    });
   });
 }
 
@@ -61,8 +75,7 @@ defineRuleUnitTests() {
       [
         Uri.parse('package:foo/src/bar.dart'),
         Uri.parse('package:foo/src/baz/bar.dart')
-      ]
-        ..forEach((uri) {
+      ]..forEach((uri) {
           test(uri.toString(), () {
             expect(isPackage(uri), isTrue);
           });
@@ -71,8 +84,7 @@ defineRuleUnitTests() {
         Uri.parse('foo/bar.dart'),
         Uri.parse('src/bar.dart'),
         Uri.parse('dart:async')
-      ]
-        ..forEach((uri) {
+      ]..forEach((uri) {
           test(uri.toString(), () {
             expect(isPackage(uri), isFalse);
           });
@@ -98,8 +110,7 @@ defineRuleUnitTests() {
       [
         Uri.parse('package:foo/src/bar.dart'),
         Uri.parse('package:foo/src/baz/bar.dart')
-      ]
-        ..forEach((uri) {
+      ]..forEach((uri) {
           test(uri.toString(), () {
             expect(isImplementation(uri), isTrue);
           });
@@ -135,102 +146,6 @@ defineRuleUnitTests() {
       testEach(good, isValidDartIdentifier, isTrue);
       var bad = ['if', '42', '3', '2f'];
       testEach(bad, isValidDartIdentifier, isFalse);
-    });
-    group('pubspec', () {
-      testEach(['pubspec.yaml', '_pubspec.yaml'],
-          Analyzer.facade.isPubspecFileName, isTrue);
-      testEach(['__pubspec.yaml', 'foo.yaml'],
-          Analyzer.facade.isPubspecFileName, isFalse);
-    });
-
-    group('camel case', () {
-      group('upper', () {
-        var good = [
-          '_FooBar',
-          'FooBar',
-          '_Foo',
-          'Foo',
-          'F',
-          'FB',
-          'F1',
-          'FooBar1',
-          '\$Foo',
-          'Bar\$',
-          'Foo\$Generated',
-          'Foo\$Generated\$Bar'
-        ];
-        testEach(good, isUpperCamelCase, isTrue);
-        var bad = ['fooBar', 'foo', 'f', '_f', 'F_B'];
-        testEach(bad, isUpperCamelCase, isFalse);
-      });
-    });
-    group('lower_case_underscores', () {
-      var good = ['foo_bar', 'foo', 'foo_bar_baz', 'p', 'p1', 'p21', 'p1ll0'];
-      testEach(good, Analyzer.facade.isLowerCaseUnderScore, isTrue);
-
-      var bad = [
-        'Foo',
-        'fooBar',
-        'foo_Bar',
-        'foo_',
-        '_f',
-        'F_B',
-        'JS',
-        'JSON',
-        '1',
-        '1b',
-      ];
-      testEach(bad, Analyzer.facade.isLowerCaseUnderScore, isFalse);
-    });
-    group('qualified lower_case_underscores', () {
-      var good = [
-        'bwu_server.shared.datastore.some_file',
-        'foo_bar.baz',
-        'foo_bar',
-        'foo.bar',
-        'foo_bar_baz',
-        'foo',
-        'foo_',
-        'foo.bar_baz.bang',
-        //See: https://github.com/flutter/flutter/pull/1996
-        'pointycastle.impl.ec_domain_parameters.gostr3410_2001_cryptopro_a',
-        'a.b',
-        'a.b.c',
-        'p2.src.acme'
-      ];
-      testEach(good, Analyzer.facade.isLowerCaseUnderScoreWithDots, isTrue);
-
-      var bad = ['Foo', 'fooBar.', '.foo_Bar', '_f', 'F_B', 'JS', 'JSON'];
-      testEach(bad, Analyzer.facade.isLowerCaseUnderScoreWithDots, isFalse);
-    });
-    group('lowerCamelCase', () {
-      var good = [
-        'fooBar',
-        'foo',
-        'f',
-        'f1',
-        '_f',
-        '_foo',
-        '_',
-        'F',
-        '__x',
-        '___x',
-        '\$foo',
-        'bar\$',
-        'foo\$Generated',
-        'foo\$Generated\$Bar'
-      ];
-      testEach(good, Analyzer.facade.isLowerCamelCase, isTrue);
-
-      var bad = ['Foo', 'foo_', 'foo_bar', '_X'];
-      testEach(bad, Analyzer.facade.isLowerCamelCase, isFalse);
-    });
-    group('isUpperCase', () {
-      var caps = new List<int>.generate(26, (i) => 'A'.codeUnitAt(0) + i);
-      testEachInt(caps, Analyzer.facade.isUpperCase, isTrue);
-
-      var bad = ['a', '1', 'z'].map((c) => c.codeUnitAt(0));
-      testEachInt(bad, Analyzer.facade.isUpperCase, isFalse);
     });
     group('libary_name_prefixes', () {
       testEach(
@@ -387,7 +302,7 @@ testEachInt(Iterable<Object> values, bool f(int s), Matcher m) {
 testRule(String ruleName, File file, {bool debug: false}) {
   registerLintRules();
 
-  test('$ruleName', () {
+  test('$ruleName', () async {
     if (!file.existsSync()) {
       throw new Exception('No rule found defined at: ${file.path}');
     }
@@ -410,13 +325,19 @@ testRule(String ruleName, File file, {bool debug: false}) {
       return;
     }
 
+    MemoryResourceProvider memoryResourceProvider = new MemoryResourceProvider(
+        context: PhysicalResourceProvider.INSTANCE.pathContext);
+    TestResourceProvider resourceProvider =
+        new TestResourceProvider(memoryResourceProvider);
+
     LinterOptions options = new LinterOptions([rule])
-      ..mockSdk = new MockSdk()
+      ..mockSdk = new MockSdk(memoryResourceProvider)
+      ..resourceProvider = resourceProvider
       ..packageRootPath = '.';
 
     DartLinter driver = new DartLinter(options);
 
-    Iterable<AnalysisErrorInfo> lints = driver.lintFiles([file]);
+    Iterable<AnalysisErrorInfo> lints = await driver.lintFiles([file]);
 
     List<Annotation> actual = [];
     lints.forEach((AnalysisErrorInfo info) {
@@ -428,7 +349,8 @@ testRule(String ruleName, File file, {bool debug: false}) {
     });
     try {
       expect(actual, unorderedMatches(expected));
-    } catch (e) {
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
       if (debug) {
         // Dump results for debugging purposes.
 
@@ -440,9 +362,60 @@ testRule(String ruleName, File file, {bool debug: false}) {
       }
 
       // Rethrow and fail.
-      throw e;
+      rethrow;
     }
   });
+}
+
+class TestResourceProvider implements file_system.ResourceProvider {
+  MemoryResourceProvider memoryResourceProvider;
+
+  TestResourceProvider(this.memoryResourceProvider);
+
+  PhysicalResourceProvider get physicalResourceProvider =>
+      PhysicalResourceProvider.INSTANCE;
+
+  @override
+  AbsolutePathContext get absolutePathContext =>
+      physicalResourceProvider.absolutePathContext;
+
+  @override
+  file_system.File getFile(String path) {
+    file_system.File file = memoryResourceProvider.getFile(path);
+    return file.exists ? file : physicalResourceProvider.getFile(path);
+  }
+
+  @override
+  file_system.Folder getFolder(String path) {
+    file_system.Folder folder = memoryResourceProvider.getFolder(path);
+    return folder.exists ? folder : physicalResourceProvider.getFolder(path);
+  }
+
+  @override
+  Future<List<int>> getModificationTimes(List<Source> sources) {
+    //If this gets tripped, we know to implement it! :)
+    throw new StateError('Unexpected call to getModificationTimes');
+  }
+
+  @override
+  file_system.Resource getResource(String path) {
+    file_system.Resource resource = memoryResourceProvider.getResource(path);
+    return resource.exists
+        ? resource
+        : physicalResourceProvider.getResource(path);
+  }
+
+  @override
+  file_system.Folder getStateLocation(String pluginId) {
+    file_system.Folder folder =
+        memoryResourceProvider.getStateLocation(pluginId);
+    return folder.exists
+        ? folder
+        : physicalResourceProvider.getStateLocation(pluginId);
+  }
+
+  @override
+  p.Context get pathContext => physicalResourceProvider.pathContext;
 }
 
 class Annotation {

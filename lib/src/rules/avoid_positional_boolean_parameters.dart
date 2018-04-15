@@ -14,6 +14,10 @@ const _details = r'''
 
 **AVOID** positional boolean parameters.
 
+Positional boolean parameters are a bad practice because they are very
+ambiguous.  Using named boolean parameters is much more readable because it
+inherently describes what the boolean value represents.
+
 **BAD:**
 ```
 new Task(true);
@@ -32,12 +36,8 @@ new Button(ButtonState.enabled);
 
 ''';
 
-bool _hasInheritedMethod(MethodDeclaration node) {
-  return DartTypeUtilities.lookUpInheritedMethod(node) != null;
-}
-
-bool _isNamedParameter(FormalParameter node) =>
-    node.kind == ParameterKind.NAMED;
+bool _hasInheritedMethod(MethodDeclaration node) =>
+    DartTypeUtilities.lookUpInheritedMethod(node) != null;
 
 class AvoidPositionalBooleanParameters extends LintRule {
   _Visitor _visitor;
@@ -85,6 +85,7 @@ class _Visitor extends SimpleAstVisitor {
   visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isSetter &&
         !node.element.isPrivate &&
+        !node.isOperator &&
         !_hasInheritedMethod(node)) {
       final parametersToLint =
           node.parameters?.parameters?.where(_isFormalParameterToLint);
@@ -97,5 +98,5 @@ class _Visitor extends SimpleAstVisitor {
   bool _isFormalParameterToLint(FormalParameter node) =>
       DartTypeUtilities.implementsInterface(
           node.identifier.bestType, 'bool', 'dart.core') &&
-      !_isNamedParameter(node);
+      !node.isNamed;
 }

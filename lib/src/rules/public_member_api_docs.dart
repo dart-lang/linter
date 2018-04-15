@@ -9,15 +9,16 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/ast.dart';
 
-const desc = r'Document all public members';
+const _desc = r'Document all public members.';
 
-const details = r'''
+const _details = r'''
+
 **DO** document all public members.
 
 All non-overriding public members should be documented with `///` doc-style
 comments.
 
-**Good:**
+**GOOD:**
 ```
 /// A good thing.
 abstract class Good {
@@ -28,7 +29,7 @@ abstract class Good {
 }
 ```
 
-**Bad:**
+**BAD:**
 ```
 class Bad {
   void meh() { }
@@ -39,7 +40,7 @@ In case a public member overrides a member it is up to the declaring member
 to provide documentation.  For example, in the following, `Sub` needn't
 document `init` (though it certainly may, if there's need).
 
-**Good:**
+**GOOD:**
 ```
 /// Base of all things.
 abstract class Base {
@@ -55,27 +56,36 @@ class Sub extends Base {
 ```
 
 Note that consistent with `dartdoc`, an exception to the rule is made when
-documented getters have corresponding undocumented setters. In this case the
+documented getters have corresponding undocumented setters.  In this case the
 setters inherit the docs from the getters.
+
 ''';
+
+// TODO(devoncarew): This lint is very slow - we should profile and optimize it.
+
+// TODO(devoncarew): Longer term, this lint could benefit from being more aware
+// of the actual API surface area of a package - including that defined by
+// exports - and linting against that.
 
 class PublicMemberApiDocs extends LintRule {
   PublicMemberApiDocs()
       : super(
             name: 'public_member_api_docs',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override
-  AstVisitor getVisitor() => new Visitor(this);
+  AstVisitor getVisitor() => new _Visitor(this);
 }
 
-class Visitor extends GeneralizingAstVisitor {
+class _Visitor extends GeneralizingAstVisitor {
   InheritanceManager manager;
+  bool isInLibFolder;
 
   final LintRule rule;
-  Visitor(this.rule);
+
+  _Visitor(this.rule);
 
   bool check(Declaration node) {
     if (node.documentationComment == null && !isOverridingMember(node)) {
@@ -103,9 +113,9 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitClassDeclaration(ClassDeclaration node) {
-    if (isPrivate(node.name)) {
-      return;
-    }
+    if (!isInLibFolder) return;
+
+    if (isPrivate(node.name)) return;
 
     check(node);
 
@@ -142,7 +152,7 @@ class Visitor extends GeneralizingAstVisitor {
     for (MethodDeclaration setter in setters.values) {
       MethodDeclaration getter = getters[setter.name.name];
       if (getter == null) {
-        //Look for an inherited getter.
+        // Look for an inherited getter.
         ExecutableElement getter =
             manager.lookupMember(node.element, setter.name.name);
         if (getter is PropertyAccessorElement) {
@@ -162,6 +172,8 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitClassTypeAlias(ClassTypeAlias node) {
+    if (!isInLibFolder) return;
+
     if (!isPrivate(node.name)) {
       check(node);
     }
@@ -169,6 +181,10 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitCompilationUnit(CompilationUnit node) {
+    // Ignore this compilation unit if its not in the lib/ folder.
+    isInLibFolder = isDefinedInLib(node);
+    if (!isInLibFolder) return;
+
     LibraryElement library = node == null
         ? null
         : resolutionMap.elementDeclaredByCompilationUnit(node)?.library;
@@ -222,6 +238,8 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitConstructorDeclaration(ConstructorDeclaration node) {
+    if (!isInLibFolder) return;
+
     if (!inPrivateMember(node) && !isPrivate(node.name)) {
       check(node);
     }
@@ -229,6 +247,8 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitEnumConstantDeclaration(EnumConstantDeclaration node) {
+    if (!isInLibFolder) return;
+
     if (!inPrivateMember(node) && !isPrivate(node.name)) {
       check(node);
     }
@@ -236,6 +256,8 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitEnumDeclaration(EnumDeclaration node) {
+    if (!isInLibFolder) return;
+
     if (!isPrivate(node.name)) {
       check(node);
     }
@@ -243,6 +265,8 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitFieldDeclaration(FieldDeclaration node) {
+    if (!isInLibFolder) return;
+
     if (!inPrivateMember(node)) {
       for (VariableDeclaration field in node.fields.variables) {
         if (!isPrivate(field.name)) {
@@ -254,6 +278,8 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitFunctionTypeAlias(FunctionTypeAlias node) {
+    if (!isInLibFolder) return;
+
     if (!isPrivate(node.name)) {
       check(node);
     }
@@ -261,6 +287,8 @@ class Visitor extends GeneralizingAstVisitor {
 
   @override
   visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
+    if (!isInLibFolder) return;
+
     for (VariableDeclaration decl in node.variables.variables) {
       if (!isPrivate(decl.name)) {
         check(decl);

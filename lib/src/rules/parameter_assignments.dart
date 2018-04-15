@@ -13,7 +13,11 @@ const _desc =
 
 const _details = r'''
 
-**DO NOT** assign new values to parameters of methods or functions.
+**DON'T** assign new values to parameters of methods or functions.
+
+Assigning new values to parameters is generally a bad practice unless an
+operator such as `??=` is used.  Otherwise, arbitrarily reassigning parameters
+is usually a mistake.
 
 **BAD:**
 ```
@@ -74,6 +78,7 @@ class A {
   }
 }
 ```
+
 ''';
 
 bool _isDefaultFormalParameterWithDefaultValue(FormalParameter parameter) =>
@@ -91,14 +96,13 @@ bool _isFormalParameterReassigned(
     (assignment.leftHandSide as SimpleIdentifier).staticElement ==
         parameter.element;
 
-bool _preOrPostFixExpressionMutation(FormalParameter parameter, AstNode n) {
-  return n is PrefixExpression &&
-          n.operand is SimpleIdentifier &&
-          (n.operand as SimpleIdentifier).staticElement == parameter.element ||
-      n is PostfixExpression &&
-          n.operand is SimpleIdentifier &&
-          (n.operand as SimpleIdentifier).staticElement == parameter.element;
-}
+bool _preOrPostFixExpressionMutation(FormalParameter parameter, AstNode n) =>
+    n is PrefixExpression &&
+        n.operand is SimpleIdentifier &&
+        (n.operand as SimpleIdentifier).staticElement == parameter.element ||
+    n is PostfixExpression &&
+        n.operand is SimpleIdentifier &&
+        (n.operand as SimpleIdentifier).staticElement == parameter.element;
 
 class ParameterAssignments extends LintRule {
   _Visitor _visitor;
@@ -159,9 +163,7 @@ class _Visitor extends SimpleAstVisitor {
           (n is AssignmentExpression &&
               _isFormalParameterReassigned(parameter, n)) ||
           _preOrPostFixExpressionMutation(parameter, n));
-      mutatedNodes.forEach((n) {
-        rule.reportLint(n);
-      });
+      mutatedNodes.forEach(rule.reportLint);
       return;
     }
 

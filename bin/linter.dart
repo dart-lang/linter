@@ -2,10 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:analyzer/error/error.dart';
+import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:analyzer/src/generated/engine.dart';
 import 'package:analyzer/src/lint/config.dart';
 import 'package:analyzer/src/lint/io.dart';
@@ -16,8 +18,8 @@ import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/formatter.dart';
 import 'package:linter/src/rules.dart';
 
-void main(List<String> args) {
-  runLinter(args, new LinterOptions());
+Future main(List<String> args) async {
+  await runLinter(args, new LinterOptions());
 }
 
 const processFileFailedExitCode = 65;
@@ -27,11 +29,11 @@ const unableToProcessExitCode = 64;
 String getRoot(List<String> paths) =>
     paths.length == 1 && new Directory(paths[0]).existsSync() ? paths[0] : null;
 
-isLinterErrorCode(int code) =>
+bool isLinterErrorCode(int code) =>
     code == unableToProcessExitCode || code == processFileFailedExitCode;
 
 void printUsage(ArgParser parser, IOSink out, [String error]) {
-  var message = "Lints Dart source files and pubspecs.";
+  var message = 'Lints Dart source files and pubspecs.';
   if (error != null) {
     message = error;
   }
@@ -44,18 +46,18 @@ For more information, see https://github.com/dart-lang/linter
 ''');
 }
 
-void runLinter(List<String> args, LinterOptions initialLintOptions) {
+Future runLinter(List<String> args, LinterOptions initialLintOptions) async {
   // Force the rule registry to be populated.
   registerLintRules();
 
   var parser = new ArgParser(allowTrailingOptions: true);
 
   parser
-    ..addFlag("help",
-        abbr: "h", negatable: false, help: "Show usage information.")
-    ..addFlag("stats",
-        abbr: "s", negatable: false, help: "Show lint statistics.")
-    ..addFlag("benchmark", negatable: false, help: "Show lint benchmarks.")
+    ..addFlag('help',
+        abbr: 'h', negatable: false, help: 'Show usage information.')
+    ..addFlag('stats',
+        abbr: 's', negatable: false, help: 'Show lint statistics.')
+    ..addFlag('benchmark', negatable: false, help: 'Show lint benchmarks.')
     ..addFlag('visit-transitive-closure',
         help: 'Visit the transitive closure of imported/exported libraries.')
     ..addFlag('quiet', abbr: 'q', help: "Don't show individual lint errors.")
@@ -66,10 +68,9 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
     ..addFlag('strong', help: 'Use strong-mode analyzer.')
     ..addOption('config', abbr: 'c', help: 'Use configuration from this file.')
     ..addOption('dart-sdk', help: 'Custom path to a Dart SDK.')
-    ..addOption('rules',
+    ..addMultiOption('rules',
         help: 'A list of lint rules to run. For example: '
-            'avoid_as,annotate_overrides',
-        allowMultiple: true)
+            'avoid_as,annotate_overrides')
     ..addOption('packages',
         help: 'Path to the package resolution configuration file, which\n'
             'supplies a mapping of package names to paths.  This option\n'
@@ -86,21 +87,21 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
     return;
   }
 
-  if (options["help"]) {
+  if (options['help']) {
     printUsage(parser, outSink);
     return;
   }
 
   if (options.rest.isEmpty) {
     printUsage(parser, errorSink,
-        "Please provide at least one file or directory to lint.");
+        'Please provide at least one file or directory to lint.');
     exitCode = unableToProcessExitCode;
     return;
   }
 
   var lintOptions = initialLintOptions;
 
-  var configFile = options["config"];
+  var configFile = options['config'];
   if (configFile != null) {
     var config = new LintConfig.parse(readFile(configFile));
     lintOptions.configure(config);
@@ -137,7 +138,7 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
   var packageConfigFile = options['packages'];
 
   if (customPackageRoot != null && packageConfigFile != null) {
-    errorSink.write("Cannot specify both '--package-root' and '--packages.");
+    errorSink.write("Cannot specify both '--package-root' and '--packages'.");
     exitCode = unableToProcessExitCode;
     return;
   }
@@ -150,7 +151,7 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
 
   lintOptions
     ..packageConfigPath = packageConfigFile
-    ..visitTransitiveClosure = options['visit-transitive-closure'];
+    ..resourceProvider = PhysicalResourceProvider.INSTANCE;
 
   List<File> filesToLint = [];
   for (var path in options.rest) {
@@ -158,7 +159,7 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
   }
 
   if (benchmark) {
-    writeBenchmarks(outSink, filesToLint, lintOptions);
+    await writeBenchmarks(outSink, filesToLint, lintOptions);
     return;
   }
 
@@ -166,10 +167,10 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
 
   try {
     final timer = new Stopwatch()..start();
-    List<AnalysisErrorInfo> errors = linter.lintFiles(filesToLint);
+    List<AnalysisErrorInfo> errors = await linter.lintFiles(filesToLint);
     timer.stop();
 
-    if (errors.length > 0) {
+    if (errors.isNotEmpty) {
       exitCode = _maxSeverity(errors, lintOptions.filter);
     }
 
@@ -183,6 +184,7 @@ void runLinter(List<String> args, LinterOptions initialLintOptions) {
         machineOutput: options['machine'],
         quiet: options['quiet'])
       ..write();
+    // ignore: avoid_catches_without_on_clauses
   } catch (err, stack) {
     errorSink.writeln('''An error occurred while linting
   Please report it at: github.com/dart-lang/linter/issues

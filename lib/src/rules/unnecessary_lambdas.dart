@@ -13,7 +13,7 @@ const _desc = r"Don't create a lambda when a tear-off will do.";
 
 const _details = r'''
 
-**DON’T** create a lambda when a tear-off will do.
+**DON'T** create a lambda when a tear-off will do.
 
 **BAD:**
 ```
@@ -117,7 +117,8 @@ class _Visitor extends SimpleAstVisitor {
     } else if (node is MethodInvocation) {
       var nodesInTarget = <AstNode>[];
       if (node.target != null) {
-        nodesInTarget = DartTypeUtilities.traverseNodesInDFS(node.target);
+        nodesInTarget =
+            DartTypeUtilities.traverseNodesInDFS(node.target).toList();
         restOfElements = node.target is SimpleIdentifier
             ? [(node.target as SimpleIdentifier).bestElement]
             : _extractElementsOfSimpleIdentifiers(node.target);

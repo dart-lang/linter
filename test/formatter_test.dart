@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/error/error.dart';
+import 'package:analyzer/src/generated/engine.dart';
 import 'package:analyzer/src/lint/linter.dart';
 import 'package:linter/src/formatter.dart';
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'mocks.dart';
@@ -27,41 +27,31 @@ defineTests() {
     });
 
     group('reporter', () {
-      var info = new MockAnalysisErrorInfo();
-      var error = new MockAnalysisError();
-      var lineInfo = new MockLineInfo();
-      var location = new MockLineInfo_Location();
-      when(location.columnNumber).thenReturn(3);
-      when(location.lineNumber).thenReturn(3);
+      var lineInfo =
+          new MockLineInfo(defaultLocation: new MockLineInfo_Location(3, 3));
 
-      when(lineInfo.getLocation(any)).thenReturn(location);
-      var code = new MockErrorCode();
-      when(code.name).thenReturn('mock_code');
-      when(error.errorCode).thenReturn(code);
-      var type = new MockErrorType();
-      when(type.displayName).thenReturn('test');
-      when(code.type).thenReturn(type);
-      when(error.message).thenReturn('MSG');
-      var source = new MockSource();
-      when(source.fullName).thenReturn('/foo/bar/baz.dart');
-      when(error.source).thenReturn(source);
+      var type = new MockErrorType()..displayName = 'test';
 
-      when(info.lineInfo).thenReturn(lineInfo);
+      var code = new TestErrorCode('mock_code', 'MSG')..type = type;
 
-      when(info.errors).thenReturn([error]);
+      var source = new MockSource()..fullName = '/foo/bar/baz.dart';
+
+      var error = new AnalysisError(source, -1, -1, code);
+
+      var info = new AnalysisErrorInfoImpl([error], lineInfo);
+
       var out = new CollectingSink();
 
-      var reporter = new SimpleFormatter([info], null, out,
-          fileCount: 1, elapsedMs: 13)..write();
+      var reporter =
+          new SimpleFormatter([info], null, out, fileCount: 1, elapsedMs: 13)
+            ..write();
 
       test('count', () {
         expect(reporter.errorCount, 1);
       });
 
       test('write', () {
-        expect(
-            out.buffer.toString().trim(),
-            '''/foo/bar/baz.dart 3:3 [test] MSG
+        expect(out.buffer.toString().trim(), '''/foo/bar/baz.dart 3:3 [test] MSG
 
 1 file analyzed, 1 issue found, in 13 ms.''');
       });
@@ -69,7 +59,8 @@ defineTests() {
       test('stats', () {
         out.buffer.clear();
         new SimpleFormatter([info], null, out,
-            fileCount: 1, showStatistics: true, elapsedMs: 13)..write();
+            fileCount: 1, showStatistics: true, elapsedMs: 13)
+          ..write();
         expect(out.buffer.toString(),
             startsWith('''/foo/bar/baz.dart 3:3 [test] MSG
 
@@ -85,36 +76,27 @@ mock_code                               1
     });
 
     group('reporter', () {
-      var info = new MockAnalysisErrorInfo();
-      var error = new MockAnalysisError();
-      var lineInfo = new MockLineInfo();
-      var location = new MockLineInfo_Location();
-      when(location.columnNumber).thenReturn(3);
-      when(location.lineNumber).thenReturn(3);
+      var lineInfo =
+          new MockLineInfo(defaultLocation: new MockLineInfo_Location(3, 3));
 
-      when(lineInfo.getLocation(any)).thenReturn(location);
-      var code = new MockErrorCode();
-      when(code.errorSeverity).thenReturn(new MockErrorCode());
-      when(code.name).thenReturn('MockError');
-      when(error.errorCode).thenReturn(code);
-      var type = new MockErrorType();
-      when(type.displayName).thenReturn('test');
-      when(code.type).thenReturn(type);
-      when(error.message).thenReturn('MSG');
-      var source = new MockSource();
-      when(source.fullName).thenReturn('/foo/bar/baz.dart');
-      when(error.source).thenReturn(source);
-      when(error.length).thenReturn(13);
-      when(error.source).thenReturn(source);
+      var type = new MockErrorType()..displayName = 'test';
 
-      when(info.lineInfo).thenReturn(lineInfo);
+      var code = new TestErrorCode('MockError', 'MSG')
+        ..errorSeverity = new ErrorSeverity('MockErrorSeverity', 0, '', '')
+        ..type = type;
 
-      when(info.errors).thenReturn([error]);
+      var source = new MockSource()..fullName = '/foo/bar/baz.dart';
+
+      var error = new AnalysisError(source, 0, 13, code);
+
+      var info = new AnalysisErrorInfoImpl([error], lineInfo);
+
       var out = new CollectingSink();
 
       group('filtered', () {
         var reporter = new SimpleFormatter([info], new _RejectingFilter(), out,
-            fileCount: 1, elapsedMs: 13)..write();
+            fileCount: 1, elapsedMs: 13)
+          ..write();
 
         test('error count', () {
           expect(reporter.errorCount, 0);
@@ -134,11 +116,11 @@ mock_code                               1
         test('write', () {
           out.buffer.clear();
           new SimpleFormatter([info], null, out,
-              fileCount: 1, machineOutput: true, elapsedMs: 13)..write();
+              fileCount: 1, machineOutput: true, elapsedMs: 13)
+            ..write();
 
-          expect(
-              out.buffer.toString().trim(),
-              '''MockErrorCode|MockErrorType|MockError|/foo/bar/baz.dart|3|3|13|MSG
+          expect(out.buffer.toString().trim(),
+              '''MockErrorSeverity|MockErrorType|MockError|/foo/bar/baz.dart|3|3|13|MSG
 
 1 file analyzed, 1 issue found, in 13 ms.''');
         });

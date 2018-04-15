@@ -12,6 +12,9 @@ const _details = r'''
 
 **DO** use a function declaration to bind a function to a name.
 
+As Dart allows local function declarations, it is a good practice to use them in
+the place of function literals.
+
 **BAD:**
 ```
 void main() {
@@ -53,8 +56,12 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitVariableDeclaration(VariableDeclaration node) {
-    if (node.initializer != null && node.initializer is FunctionExpression) {
-      rule.reportLint(node);
+    if (node.initializer is FunctionExpression) {
+      FunctionBody function = node.getAncestor((a) => a is FunctionBody);
+      if (function == null ||
+          !function.isPotentiallyMutatedInScope(node.element)) {
+        rule.reportLint(node);
+      }
     }
   }
 }

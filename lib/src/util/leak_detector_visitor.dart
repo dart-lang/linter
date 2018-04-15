@@ -8,6 +8,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/ast.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 import 'package:meta/meta.dart';
 
@@ -71,8 +72,9 @@ _VisitVariableDeclaration _buildVariableReporter(
 
 Iterable<AstNode> _findMethodCallbackNodes(Iterable<AstNode> containerNodes,
     VariableDeclaration variable, Map<DartTypePredicate, String> predicates) {
-  Iterable<PrefixedIdentifier> prefixedIdentifiers =
-      containerNodes.where((n) => n is PrefixedIdentifier);
+  Iterable<PrefixedIdentifier> prefixedIdentifiers = containerNodes
+      .where((n) => n is PrefixedIdentifier)
+      .cast<PrefixedIdentifier>();
   return prefixedIdentifiers.where((n) =>
       n.prefix.bestElement == variable.name.bestElement &&
       _hasMatch(
@@ -83,8 +85,9 @@ Iterable<AstNode> _findMethodCallbackNodes(Iterable<AstNode> containerNodes,
 
 Iterable<AstNode> _findMethodInvocationsWithVariableAsArgument(
     Iterable<AstNode> containerNodes, VariableDeclaration variable) {
-  Iterable<MethodInvocation> prefixedIdentifiers =
-      containerNodes.where((n) => n is MethodInvocation);
+  Iterable<MethodInvocation> prefixedIdentifiers = containerNodes
+      .where((n) => n is MethodInvocation)
+      .cast<MethodInvocation>();
   return prefixedIdentifiers.where((n) => n.argumentList.arguments
       .where((e) => e is SimpleIdentifier)
       .map((e) => (e as SimpleIdentifier).bestElement)
@@ -184,7 +187,7 @@ abstract class LeakDetectorVisitor extends SimpleAstVisitor {
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    CompilationUnit unit = node.getAncestor((a) => a is CompilationUnit);
+    CompilationUnit unit = getCompilationUnit(node);
     node.fields.variables.forEach(_buildVariableReporter(
         unit, _fieldPredicateBuilders, rule, predicates));
   }

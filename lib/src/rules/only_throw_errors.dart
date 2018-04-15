@@ -12,12 +12,16 @@ import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
 const _desc =
-    r'Only throw instances of classes extending either Exception or Error';
+    r'Only throw instances of classes extending either Exception or Error.';
 
 const _details = r'''
 
 **DO** throw only instances of classes that extend `dart.core.Error` or
 `dart.core.Exception`.
+
+Throwing instances that do not extend `Error` or `Exception` is a bad practice;
+doing this is usually a hack for something that should be implemented more
+thoroughly.
 
 **BAD:**
 ```
@@ -33,6 +37,7 @@ void throwArgumentError() {
   throw error; // OK
 }
 ```
+
 ''';
 
 const _errorClassName = 'Error';
@@ -45,10 +50,9 @@ final LinkedHashSet<InterfaceTypeDefinition> _interfaceDefinitions =
   new InterfaceTypeDefinition(_exceptionClassName, _library),
   new InterfaceTypeDefinition(_errorClassName, _library)
 ]);
-bool _isThrowable(DartType type) {
-  return type.isDynamic ||
-      DartTypeUtilities.implementsAnyInterface(type, _interfaceDefinitions);
-}
+bool _isThrowable(DartType type) =>
+    type.isDynamic ||
+    DartTypeUtilities.implementsAnyInterface(type, _interfaceDefinitions);
 
 class OnlyThrowErrors extends LintRule {
   _Visitor _visitor;

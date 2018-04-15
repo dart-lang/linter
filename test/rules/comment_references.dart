@@ -4,6 +4,12 @@
 
 // test w/ `pub run test -N comment_references`
 
+/// Keywords special cased by the parser should nonetheless lint:
+/// [this] #LINT
+/// [null] #LINT
+/// [true] #LINT
+/// [false] #LINT
+
 /// Writes [y]. #LINT
 void write(int x) {}
 
@@ -17,4 +23,10 @@ class A {
 
   /// Writes [y]. #LINT
   void write(int x) {}
+}
+
+/// [
+/// ^--- Should not crash (#819).
+class B {
+
 }

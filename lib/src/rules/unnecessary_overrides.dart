@@ -9,7 +9,8 @@ import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
 const _desc =
-    r"Don't override a method to do a super method invocation with the same parameters.";
+    r"Don't override a method to do a super method invocation with the same"
+    r' parameters.';
 
 const _details = r'''
 
@@ -17,7 +18,7 @@ const _details = r'''
 
 **BAD:**
 ```
-class A extends B{
+class A extends B {
   @override
   void foo() {
     super.foo();
@@ -27,13 +28,22 @@ class A extends B{
 
 **GOOD:**
 ```
-class A extends B{
+class A extends B {
   @override
   void foo() {
     doSomethingElse();
   }
 }
 ```
+
+It's valid to override method for the following cases:
+
+* if a type (return type or a parameter type) is not the exactly the same as the
+super method,
+* if `covariant` keyword is added to one of the parameter,
+* if documentation comments are present on the method.
+
+`noSuchMethod` is a special method and is not checked by this rule.
 
 ''';
 
@@ -54,12 +64,12 @@ class UnnecessaryOverrides extends LintRule {
 
 abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
   LintRule rule;
-  Element inheritedMethod;
+  ExecutableElement inheritedMethod;
   MethodDeclaration declaration;
 
   _AbstractUnnecessaryOverrideVisitor(this.rule);
 
-  Element getInheritedElement(node);
+  ExecutableElement getInheritedElement(node);
 
   @override
   visitBlock(Block node) {
@@ -85,9 +95,15 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
 
   @override
   visitMethodDeclaration(MethodDeclaration node) {
+    // noSuchMethod is mandatory to proxify
+    if (node.name.name == 'noSuchMethod') return;
+
+    // it's ok to override to have better documentation
+    if (node.documentationComment != null) return;
+
     inheritedMethod = getInheritedElement(node);
     declaration = node;
-    if (inheritedMethod != null) {
+    if (inheritedMethod != null && _haveSameDeclaration()) {
       node.body.accept(this);
     }
   }
@@ -106,6 +122,34 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
   visitSuperExpression(SuperExpression node) {
     rule.reportLint(declaration.name);
   }
+
+  bool _haveSameDeclaration() {
+    if (declaration.element.returnType != inheritedMethod.returnType)
+      return false;
+    if (declaration.element.parameters.length !=
+        inheritedMethod.parameters.length) return false;
+    for (var i = 0; i < inheritedMethod.parameters.length; i++) {
+      final superParam = inheritedMethod.parameters[i];
+      final param = declaration.element.parameters[i];
+      if (param.type != superParam.type) return false;
+      if (param.name != superParam.name) return false;
+      if (param.isCovariant != superParam.isCovariant) return false;
+      if (!_sameKind(param, superParam)) return false;
+      if (param.defaultValueCode != superParam.defaultValueCode) return false;
+    }
+    return true;
+  }
+
+  bool _sameKind(ParameterElement first, ParameterElement second) {
+    if (first.isNotOptional) {
+      return second.isNotOptional;
+    } else if (first.isOptionalPositional) {
+      return second.isOptionalPositional;
+    } else if (first.isNamed) {
+      return second.isNamed;
+    }
+    throw new ArgumentError('Unhandled kind of parameter.');
+  }
 }
 
 class _UnnecessaryGetterOverrideVisitor
@@ -113,7 +157,7 @@ class _UnnecessaryGetterOverrideVisitor
   _UnnecessaryGetterOverrideVisitor(LintRule rule) : super(rule);
 
   @override
-  Element getInheritedElement(node) =>
+  ExecutableElement getInheritedElement(node) =>
       DartTypeUtilities.lookUpInheritedConcreteGetter(node);
 
   @override
@@ -129,7 +173,7 @@ class _UnnecessaryMethodOverrideVisitor
   _UnnecessaryMethodOverrideVisitor(LintRule rule) : super(rule);
 
   @override
-  Element getInheritedElement(node) =>
+  ExecutableElement getInheritedElement(node) =>
       DartTypeUtilities.lookUpInheritedMethod(node);
 
   @override
@@ -147,7 +191,7 @@ class _UnnecessaryOperatorOverrideVisitor
   _UnnecessaryOperatorOverrideVisitor(LintRule rule) : super(rule);
 
   @override
-  Element getInheritedElement(node) =>
+  ExecutableElement getInheritedElement(node) =>
       DartTypeUtilities.lookUpInheritedConcreteMethod(node);
 
   @override
@@ -169,7 +213,7 @@ class _UnnecessaryOperatorOverrideVisitor
   visitPrefixExpression(PrefixExpression node) {
     final parameters = declaration.parameters.parameters;
     if (node.operator.type == declaration.name.token.type &&
-        parameters.length == 0) {
+        parameters.isEmpty) {
       final operand = node.operand.unParenthesized;
       if (operand is SuperExpression) {
         visitSuperExpression(operand);
@@ -183,7 +227,7 @@ class _UnnecessarySetterOverrideVisitor
   _UnnecessarySetterOverrideVisitor(LintRule rule) : super(rule);
 
   @override
-  Element getInheritedElement(node) =>
+  ExecutableElement getInheritedElement(node) =>
       DartTypeUtilities.lookUpInheritedConcreteSetter(node);
 
   @override

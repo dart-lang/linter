@@ -2,14 +2,17 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/src/generated/engine.dart';
 import 'package:analyzer/src/generated/source.dart';
 import 'package:analyzer/src/lint/linter.dart';
+import 'package:analyzer/src/lint/project.dart';
 import 'package:analyzer/src/lint/pub.dart';
-import 'package:mockito/mockito.dart';
+import 'package:front_end/src/scanner/token.dart';
 
 class CollectingSink extends MockIOSink {
   final StringBuffer buffer = new StringBuffer();
@@ -18,41 +21,287 @@ class CollectingSink extends MockIOSink {
   String toString() => buffer.toString();
 
   String trim() => toString().trim();
+
   @override
   write(obj) {
     buffer.write(obj);
   }
 
   @override
-  writeln([Object obj = ""]) {
+  writeln([Object obj = '']) {
     buffer.writeln(obj);
   }
 }
 
-class MockAnalysisError extends Mock implements AnalysisError {}
+class MockErrorType implements ErrorType {
+  @override
+  String displayName;
 
-class MockAnalysisErrorInfo extends Mock implements AnalysisErrorInfo {}
+  @override
+  String name;
 
-class MockErrorCode extends Mock implements ErrorCode {}
+  @override
+  int ordinal;
 
-class MockErrorType extends Mock implements ErrorType {}
+  @override
+  ErrorSeverity severity;
 
-class MockFile extends Mock implements File {}
+  @override
+  int compareTo(ErrorType other) => 0;
 
-class MockIOSink extends Mock implements IOSink {}
+  @override
+  String toString() => 'MockErrorType';
+}
 
-class MockLineInfo extends Mock implements LineInfo {}
+class MockIOSink implements IOSink {
+  @override
+  Encoding encoding;
 
-class MockLineInfo_Location extends Mock implements LineInfo_Location {}
+  @override
+  Future get done => null;
 
-class MockLinter extends Mock implements DartLinter {}
+  @override
+  void add(List<int> data) {}
 
-class MockLinterOptions extends Mock implements LinterOptions {}
+  @override
+  void addError(Object error, [StackTrace stackTrace]) {}
 
-class MockPubVisitor extends Mock implements PubspecVisitor {}
+  @override
+  Future addStream(Stream<List<int>> stream) => null;
 
-class MockReporter extends Mock implements Reporter {}
+  @override
+  Future close() => null;
 
-class MockRule extends Mock implements LintRule {}
+  @override
+  Future flush() => null;
 
-class MockSource extends Mock implements Source {}
+  @override
+  void write(Object obj) {}
+
+  @override
+  void writeAll(Iterable objects, [String separator = '']) {}
+
+  @override
+  void writeCharCode(int charCode) {}
+
+  @override
+  void writeln([Object obj = '']) {}
+}
+
+class MockLineInfo implements LineInfo {
+  MockLineInfo_Location defaultLocation;
+
+  MockLineInfo({this.defaultLocation});
+
+  @override
+  int get lineCount {
+    throw new StateError('Unexpected invocation of lineCount');
+  }
+
+  @override
+  List<int> get lineStarts {
+    throw new StateError('Unexpected invocation of lineStarts');
+  }
+
+  @override
+  LineInfo_Location getLocation(int offset) {
+    if (defaultLocation != null) {
+      return defaultLocation;
+    }
+    throw new StateError('Unexpected invocation of getLocation');
+  }
+
+  @override
+  int getOffsetOfLine(int lineNumber) {
+    throw new StateError('Unexpected invocation of getOffsetOfLine');
+  }
+
+  @override
+  int getOffsetOfLineAfter(int offset) {
+    throw new StateError('Unexpected invocation of getOffsetOfLineAfter');
+  }
+}
+
+// ignore: camel_case_types
+class MockLineInfo_Location implements LineInfo_Location {
+  @override
+  int lineNumber;
+
+  @override
+  int columnNumber;
+
+  MockLineInfo_Location(this.lineNumber, this.columnNumber);
+}
+
+class MockPubVisitor implements PubspecVisitor {
+  @override
+  visitPackageAuthor(PSEntry author) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageAuthors(PSNodeList authors) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageDependencies(PSDependencyList dependencies) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageDependency(PSDependency dependency) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageDescription(PSEntry description) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageDevDependencies(PSDependencyList dependencies) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageDevDependency(PSDependency dependency) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageDocumentation(PSEntry documentation) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageHomepage(PSEntry homepage) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageName(PSEntry name) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageVersion(PSEntry version) {
+    throw new Exception();
+  }
+}
+
+class MockReporter implements Reporter {
+  List<LinterException> exceptions = <LinterException>[];
+
+  List<String> warnings = <String>[];
+
+  MockReporter();
+
+  @override
+  void exception(LinterException exception) {
+    exceptions.add(exception);
+  }
+
+  @override
+  void warn(String message) {
+    warnings.add(message);
+  }
+}
+
+class MockRule implements LintRule {
+  @override
+  ErrorReporter reporter;
+
+  @override
+  String description;
+
+  @override
+  String details;
+
+  ProjectVisitor projectVisitor;
+
+  PubspecVisitor pubspecVisitor;
+  AstVisitor visitor;
+
+  @override
+  Group group;
+
+  @override
+  LintCode lintCode;
+
+  @override
+  Maturity maturity;
+
+  @override
+  String name;
+
+  @override
+  int compareTo(LintRule other) => 0;
+
+  @override
+  ProjectVisitor getProjectVisitor() => projectVisitor;
+
+  @override
+  PubspecVisitor getPubspecVisitor() => pubspecVisitor;
+
+  @override
+  AstVisitor getVisitor() => visitor;
+
+  @override
+  noSuchMethod(Invocation invocation) => null;
+
+  @override
+  void reportLint(AstNode node, {bool ignoreSyntheticNodes: true}) {}
+
+  @override
+  void reportLintForToken(Token token, {bool ignoreSyntheticTokens: true}) {}
+
+  @override
+  void reportPubLint(PSNode node) {}
+}
+
+class MockSource implements Source {
+  @override
+  TimestampedData<String> contents;
+
+  @override
+  String encoding;
+
+  @override
+  String fullName;
+
+  @override
+  bool isInSystemLibrary;
+
+  @override
+  Source librarySource;
+
+  @override
+  int modificationStamp;
+
+  @override
+  String shortName;
+
+  @override
+  Source source;
+
+  @override
+  Uri uri;
+
+  @override
+  UriKind uriKind;
+
+  @override
+  // ignore: avoid_returning_null
+  bool exists() => null;
+}
+
+class TestErrorCode extends ErrorCode {
+  @override
+  ErrorSeverity errorSeverity;
+
+  @override
+  ErrorType type;
+
+  TestErrorCode(String name, String message) : super(name, message);
+}

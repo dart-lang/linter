@@ -15,6 +15,9 @@ const _details = r'''
 
 **PREFER** defining constructors instead of static methods to create instances.
 
+In most cases, it makes more sense to use a named constructor rather than a
+static method because it makes instantiation clearer.
+
 **BAD:**
 ```
 class Point {
@@ -41,9 +44,8 @@ class Point {
 ''';
 
 bool _hasNewInvocation(DartType returnType, FunctionBody body) {
-  bool _isInstanceCreationExpression(AstNode node) {
-    return node is InstanceCreationExpression && node.bestType == returnType;
-  }
+  bool _isInstanceCreationExpression(AstNode node) =>
+      node is InstanceCreationExpression && node.bestType == returnType;
 
   return DartTypeUtilities
       .traverseNodesInDFS(body)

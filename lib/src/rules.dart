@@ -11,20 +11,29 @@ import 'package:linter/src/rules/always_specify_types.dart';
 import 'package:linter/src/rules/annotate_overrides.dart';
 import 'package:linter/src/rules/avoid_annotating_with_dynamic.dart';
 import 'package:linter/src/rules/avoid_as.dart';
+import 'package:linter/src/rules/avoid_bool_literals_in_conditional_expressions.dart';
 import 'package:linter/src/rules/avoid_catches_without_on_clauses.dart';
 import 'package:linter/src/rules/avoid_catching_errors.dart';
 import 'package:linter/src/rules/avoid_classes_with_only_static_members.dart';
+import 'package:linter/src/rules/avoid_double_and_int_checks.dart';
 import 'package:linter/src/rules/avoid_empty_else.dart';
 import 'package:linter/src/rules/avoid_function_literals_in_foreach_calls.dart';
 import 'package:linter/src/rules/avoid_init_to_null.dart';
+import 'package:linter/src/rules/avoid_js_rounded_ints.dart';
 import 'package:linter/src/rules/avoid_null_checks_in_equality_operators.dart';
 import 'package:linter/src/rules/avoid_positional_boolean_parameters.dart';
+import 'package:linter/src/rules/avoid_private_typedef_functions.dart';
+import 'package:linter/src/rules/avoid_relative_lib_imports.dart';
+import 'package:linter/src/rules/avoid_renaming_method_parameters.dart';
 import 'package:linter/src/rules/avoid_return_types_on_setters.dart';
 import 'package:linter/src/rules/avoid_returning_null.dart';
 import 'package:linter/src/rules/avoid_returning_this.dart';
 import 'package:linter/src/rules/avoid_setters_without_getters.dart';
+import 'package:linter/src/rules/avoid_single_cascade_in_expression_statements.dart';
 import 'package:linter/src/rules/avoid_slow_async_io.dart';
+import 'package:linter/src/rules/avoid_types_as_parameter_names.dart';
 import 'package:linter/src/rules/avoid_types_on_closure_parameters.dart';
+import 'package:linter/src/rules/avoid_unused_constructor_parameters.dart';
 import 'package:linter/src/rules/await_only_futures.dart';
 import 'package:linter/src/rules/camel_case_types.dart';
 import 'package:linter/src/rules/cancel_subscriptions.dart';
@@ -59,22 +68,29 @@ import 'package:linter/src/rules/package_prefixed_library_names.dart';
 import 'package:linter/src/rules/parameter_assignments.dart';
 import 'package:linter/src/rules/prefer_adjacent_string_concatenation.dart';
 import 'package:linter/src/rules/prefer_asserts_in_initializer_lists.dart';
+import 'package:linter/src/rules/prefer_bool_in_asserts.dart';
 import 'package:linter/src/rules/prefer_collection_literals.dart';
 import 'package:linter/src/rules/prefer_conditional_assignment.dart';
 import 'package:linter/src/rules/prefer_const_constructors.dart';
 import 'package:linter/src/rules/prefer_const_constructors_in_immutables.dart';
+import 'package:linter/src/rules/prefer_const_declarations.dart';
+import 'package:linter/src/rules/prefer_const_literals_to_create_immutables.dart';
 import 'package:linter/src/rules/prefer_constructors_over_static_methods.dart';
 import 'package:linter/src/rules/prefer_contains.dart';
+import 'package:linter/src/rules/prefer_equal_for_default_values.dart';
 import 'package:linter/src/rules/prefer_expression_function_bodies.dart';
 import 'package:linter/src/rules/prefer_final_fields.dart';
 import 'package:linter/src/rules/prefer_final_locals.dart';
 import 'package:linter/src/rules/prefer_foreach.dart';
 import 'package:linter/src/rules/prefer_function_declarations_over_variables.dart';
+import 'package:linter/src/rules/prefer_generic_function_type_aliases.dart';
 import 'package:linter/src/rules/prefer_initializing_formals.dart';
 import 'package:linter/src/rules/prefer_interpolation_to_compose_strings.dart';
 import 'package:linter/src/rules/prefer_is_empty.dart';
 import 'package:linter/src/rules/prefer_is_not_empty.dart';
+import 'package:linter/src/rules/prefer_iterable_whereType.dart';
 import 'package:linter/src/rules/prefer_single_quotes.dart';
+import 'package:linter/src/rules/prefer_typing_uninitialized_variables.dart';
 import 'package:linter/src/rules/pub/package_names.dart';
 import 'package:linter/src/rules/public_member_api_docs.dart';
 import 'package:linter/src/rules/recursive_getters.dart';
@@ -93,6 +109,8 @@ import 'package:linter/src/rules/unnecessary_lambdas.dart';
 import 'package:linter/src/rules/unnecessary_null_aware_assignments.dart';
 import 'package:linter/src/rules/unnecessary_null_in_if_null_operators.dart';
 import 'package:linter/src/rules/unnecessary_overrides.dart';
+import 'package:linter/src/rules/unnecessary_parenthesis.dart';
+import 'package:linter/src/rules/unnecessary_statements.dart';
 import 'package:linter/src/rules/unnecessary_this.dart';
 import 'package:linter/src/rules/unrelated_type_equality_checks.dart';
 import 'package:linter/src/rules/use_rethrow_when_possible.dart';
@@ -110,22 +128,30 @@ void registerLintRules() {
     ..register(new AlwaysSpecifyTypes())
     ..register(new AnnotateOverrides())
     ..register(new AvoidAnnotatingWithDynamic())
+    ..register(new AvoidBoolLiteralsInConditionalExpressions())
     ..register(new AvoidTypesOnClosureParameters())
     ..register(new AvoidAs())
     ..register(new AvoidCatchingErrors())
     ..register(new AvoidCatchesWithoutOnClauses())
     ..register(new AvoidClassesWithOnlyStaticMembers())
+    ..register(new AvoidDoubleAndIntChecks())
     ..register(new AvoidEmptyElse())
     ..register(new AvoidFunctionLiteralInForeachMethod())
     ..register(new AvoidInitToNull())
+    ..register(new AvoidJsRoundedInts())
     ..register(new AvoidNullChecksInEqualityOperators())
     ..register(new AvoidPositionalBooleanParameters())
+    ..register(new AvoidPrivateTypedefFunctions())
+    ..register(new AvoidRelativeLibImports())
+    ..register(new AvoidRenamingMethodParameters())
     ..register(new AvoidReturningNull())
     ..register(new AvoidReturnTypesOnSetters())
     ..register(new AvoidReturningThis())
     ..register(new AvoidSettersWithoutGetters())
+    ..register(new AvoidSingleCascadeInExpressionStatements())
     ..register(new AvoidSlowAsyncIo())
-    ..register(new NullClosures())
+    ..register(new AvoidTypesAsParameterNames())
+    ..register(new AvoidUnusedConstructorParameters())
     ..register(new AwaitOnlyFutures())
     ..registerDefault(new CamelCaseTypes())
     ..register(new CancelSubscriptions())
@@ -150,6 +176,7 @@ void registerLintRules() {
     ..register(new NoAdjacentStringsInList())
     ..register(new NoDuplicateCaseValues())
     ..registerDefault(new NonConstantIdentifierNames())
+    ..register(new NullClosures())
     ..registerDefault(new OneMemberAbstracts())
     ..register(new OmitLocalVariableTypes())
     ..register(new OnlyThrowErrors())
@@ -158,24 +185,31 @@ void registerLintRules() {
     ..register(new PackagePrefixedLibraryNames())
     ..register(new ParameterAssignments())
     ..register(new PreferAdjacentStringConcatenation())
+    ..register(new PreferBoolInAsserts())
     ..register(new PreferCollectionLiterals())
     ..register(new PreferConditionalAssignment())
     ..register(new PreferConstConstructors())
     ..register(new PreferConstConstructorsInImmutables())
+    ..register(new PreferConstDeclarations())
+    ..register(new PreferConstLiteralsToCreateImmutables())
     ..register(new PreferAssertsInInitializerLists())
     ..register(new PreferConstructorsInsteadOfStaticMethods())
     ..register(new PreferContainsOverIndexOf())
+    ..register(new PreferEqualForDefaultValues())
     ..register(new PreferExpressionFunctionBodies())
     ..register(new PreferFinalFields())
     ..register(new PreferFinalLocals())
     ..register(new PreferForeach())
     ..register(new PreferFunctionDeclarationsOverVariables())
+    ..register(new PreferGenericFunctionTypeAliases())
     ..register(new PreferInitializingFormals())
     ..register(new PreferInterpolationToComposeStrings())
+    ..register(new PreferIterableWhereType())
     ..register(new PreferIsEmpty())
     ..register(new PreferIsNotEmpty())
     ..register(new PublicMemberApiDocs())
     ..register(new PreferSingleQuotes())
+    ..register(new PreferTypingUninitializedVariables())
     ..register(new PubPackageNames())
     ..register(new RecursiveGetters())
     ..registerDefault(new SlashForDocComments())
@@ -195,6 +229,8 @@ void registerLintRules() {
     ..register(new UnnecessaryGettersSetters())
     ..register(new UnnecessaryLambdas())
     ..register(new UnnecessaryOverrides())
+    ..register(new UnnecessaryParenthesis())
+    ..register(new UnnecessaryStatements())
     ..register(new UnnecessaryThis())
     ..register(new UnrelatedTypeEqualityChecks())
     ..register(new UseRethrowWhenPossible())

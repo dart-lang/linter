@@ -10,11 +10,11 @@ import 'package:analyzer/error/error.dart';
 import 'package:analyzer/src/error/codes.dart';
 import 'package:analyzer/src/lint/analysis.dart';
 import 'package:analyzer/src/lint/io.dart';
-import 'package:analyzer/src/lint/linter.dart';
+import 'package:analyzer/src/lint/linter.dart' hide CamelCaseString;
 import 'package:analyzer/src/lint/pub.dart';
 import 'package:analyzer/src/string_source.dart' show StringSource;
 import 'package:cli_util/cli_util.dart' show getSdkPath;
-import 'package:mockito/mockito.dart';
+import 'package:linter/src/utils.dart';
 import 'package:test/test.dart';
 
 import '../bin/linter.dart' as dartlint;
@@ -47,12 +47,11 @@ void defineLinterEngineTests() {
 
     group('exceptions', () {
       test('message', () {
-        expect(const LinterException('foo').message, equals('foo'));
+        expect(const LinterException('foo').message, 'foo');
       });
       test('toString', () {
-        expect(const LinterException().toString(), equals('LinterException'));
-        expect(const LinterException('foo').toString(),
-            equals('LinterException: foo'));
+        expect(const LinterException().toString(), 'LinterException');
+        expect(const LinterException('foo').toString(), 'LinterException: foo');
       });
     });
 
@@ -74,25 +73,25 @@ void defineLinterEngineTests() {
       });
       test('logError', () {
         logger.logError('logError');
-        expect(errCollector.trim(), equals('logError'));
+        expect(errCollector.trim(), 'logError');
       });
       test('logInformation', () {
         logger.logInformation('logInformation');
-        expect(outCollector.trim(), equals('logInformation'));
+        expect(outCollector.trim(), 'logInformation');
       });
     });
 
     group('camel case', () {
       test('humanize', () {
-        expect(new CamelCaseString('FooBar').humanized, equals('Foo Bar'));
-        expect(new CamelCaseString('Foo').humanized, equals('Foo'));
+        expect(new CamelCaseString('FooBar').humanized, 'Foo Bar');
+        expect(new CamelCaseString('Foo').humanized, 'Foo');
       });
       test('validation', () {
         expect(() => new CamelCaseString('foo'),
             throwsA(new isInstanceOf<ArgumentError>()));
       });
       test('toString', () {
-        expect(new CamelCaseString('FooBar').toString(), equals('FooBar'));
+        expect(new CamelCaseString('FooBar').toString(), 'FooBar');
       });
     });
 
@@ -125,16 +124,13 @@ void defineLinterEngineTests() {
         expect(linter.errors.contains(error), isTrue);
       });
       test('pubspec visitor error handling', () {
-        var rule = new MockRule();
         var visitor = new MockPubVisitor();
-        when(visitor.visitPackageAuthor(any))
-            .thenAnswer((_) => throw new Exception());
-        when(rule.getPubspecVisitor()).thenReturn(visitor);
+        var rule = new MockRule()..pubspecVisitor = visitor;
 
         var reporter = new MockReporter();
         new SourceLinter(new LinterOptions([rule]), reporter: reporter)
           ..lintPubspecSource(contents: 'author: foo');
-        verify(reporter.exception(any)).called(1);
+        expect(reporter.exceptions, hasLength(1));
       });
     });
 
@@ -147,39 +143,39 @@ void defineLinterEngineTests() {
         exitCode = 0;
         errorSink = stderr;
       });
-      test('smoke', () {
+      test('smoke', () async {
         FileSystemEntity firstRuleTest =
-            new Directory(ruleDir).listSync().firstWhere((f) => isDartFile(f));
-        dartlint.main([firstRuleTest.path]);
+            new Directory(ruleDir).listSync().firstWhere(isDartFile);
+        await dartlint.main([firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
       });
-      test('no args', () {
-        dartlint.main([]);
-        expect(exitCode, equals(dartlint.unableToProcessExitCode));
+      test('no args', () async {
+        await dartlint.main([]);
+        expect(exitCode, dartlint.unableToProcessExitCode);
       });
-      test('help', () {
-        dartlint.main(['-h']);
+      test('help', () async {
+        await dartlint.main(['-h']);
         // Help shouldn't generate an error code
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
       });
-      test('unknown arg', () {
-        dartlint.main(['-XXXXX']);
-        expect(exitCode, equals(dartlint.unableToProcessExitCode));
+      test('unknown arg', () async {
+        await dartlint.main(['-XXXXX']);
+        expect(exitCode, dartlint.unableToProcessExitCode);
       });
-      test('custom sdk path', () {
+      test('custom sdk path', () async {
         // Smoke test to ensure a custom sdk path doesn't sink the ship
         FileSystemEntity firstRuleTest =
-            new Directory(ruleDir).listSync().firstWhere((f) => isDartFile(f));
+            new Directory(ruleDir).listSync().firstWhere(isDartFile);
         var sdk = getSdkPath();
-        dartlint.main(['--dart-sdk', sdk, firstRuleTest.path]);
+        await dartlint.main(['--dart-sdk', sdk, firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
       });
-      test('custom package root', () {
+      test('custom package root', () async {
         // Smoke test to ensure a custom package root doesn't sink the ship
         FileSystemEntity firstRuleTest =
-            new Directory(ruleDir).listSync().firstWhere((f) => isDartFile(f));
+            new Directory(ruleDir).listSync().firstWhere(isDartFile);
         var packageDir = new Directory('.').path;
-        dartlint.main(['--package-root', packageDir, firstRuleTest.path]);
+        await dartlint.main(['--package-root', packageDir, firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
       });
     });
@@ -188,15 +184,13 @@ void defineLinterEngineTests() {
       group('hyperlink', () {
         test('html', () {
           Hyperlink link = new Hyperlink('dart', 'http://dartlang.org');
-          expect(link.html, equals('<a href="http://dartlang.org">dart</a>'));
+          expect(link.html, '<a href="http://dartlang.org">dart</a>');
         });
         test('html - strong', () {
           Hyperlink link =
               new Hyperlink('dart', 'http://dartlang.org', bold: true);
-          expect(
-              link.html,
-              equals(
-                  '<a href="http://dartlang.org"><strong>dart</strong></a>'));
+          expect(link.html,
+              '<a href="http://dartlang.org"><strong>dart</strong></a>');
         });
       });
 
@@ -204,10 +198,10 @@ void defineLinterEngineTests() {
         test('comparing', () {
           LintRule r1 = new MockLintRule('Bar', new Group('acme'));
           LintRule r2 = new MockLintRule('Foo', new Group('acme'));
-          expect(r1.compareTo(r2), equals(-1));
+          expect(r1.compareTo(r2), -1);
           LintRule r3 = new MockLintRule('Bar', new Group('acme'));
           LintRule r4 = new MockLintRule('Bar', new Group('woody'));
-          expect(r3.compareTo(r4), equals(-1));
+          expect(r3.compareTo(r4), -1);
         });
       });
       group('maturity', () {
@@ -215,23 +209,23 @@ void defineLinterEngineTests() {
           // Custom
           Maturity m1 = new Maturity('foo', ordinal: 0);
           Maturity m2 = new Maturity('bar', ordinal: 1);
-          expect(m1.compareTo(m2), equals(-1));
+          expect(m1.compareTo(m2), -1);
           // Builtin
-          expect(Maturity.stable.compareTo(Maturity.experimental), equals(-1));
+          expect(Maturity.stable.compareTo(Maturity.experimental), -1);
         });
       });
     });
   });
 }
 
-typedef nodeVisitor(node);
+typedef NodeVisitor(node);
 
 typedef dynamic /* AstVisitor, PubSpecVisitor*/ VisitorCallback();
 
 class MockLinter extends LintRule {
   VisitorCallback visitorCallback;
 
-  MockLinter([nodeVisitor v])
+  MockLinter([NodeVisitor v])
       : super(
             name: 'MockLint',
             group: Group.style,

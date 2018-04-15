@@ -8,7 +8,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:linter/src/util/boolean_expression_utilities.dart';
 
-void _addNodeComparisons(Expression node, HashSet<Expression> comparisons) {
+void _addNodeComparisons(Expression node, Set<Expression> comparisons) {
   if (_isComparison(node)) {
     comparisons.add(node);
   } else if (_isBooleanOperation(node)) {
@@ -16,8 +16,8 @@ void _addNodeComparisons(Expression node, HashSet<Expression> comparisons) {
   }
 }
 
-HashSet<Expression> _extractComparisons(BinaryExpression node) {
-  final HashSet<Expression> comparisons = new HashSet<Expression>.identity();
+Set<Expression> _extractComparisons(BinaryExpression node) {
+  final Set<Expression> comparisons = new HashSet<Expression>.identity();
   if (_isComparison(node)) {
     comparisons.add(node);
   }
@@ -65,7 +65,7 @@ bool _sameOperands(String eLeftOperand, String bcLeftOperand,
   return sameOperandsSameOrder || sameOperandsInverted;
 }
 
-typedef void _recurseCallback(Expression expression);
+typedef void _RecurseCallback(Expression expression);
 
 class ContradictoryComparisons {
   final Expression first;
@@ -100,9 +100,11 @@ class TestedExpressions {
             : TokenType.AMPERSAND_AMPERSAND);
 
     if (_contradictions.isEmpty) {
-      HashSet<Expression> set = (binaryExpression != null
+      Set<Expression> set = (binaryExpression != null
           ? _extractComparisons(testingExpression)
-          : [testingExpression].toSet())..addAll(truths)..addAll(negations);
+          : [testingExpression].toSet())
+        ..addAll(truths)
+        ..addAll(negations);
       // Here and in several places we proceed only for
       // TokenType.AMPERSAND_AMPERSAND because we then know that all comparisons
       // must be true.
@@ -118,7 +120,7 @@ class TestedExpressions {
   /// assuming properties are pure computations. i.e. dealing with De Morgan's
   /// laws https://en.wikipedia.org/wiki/De_Morgan%27s_laws
   LinkedHashSet<ContradictoryComparisons> _findContradictoryComparisons(
-      HashSet<Expression> comparisons, TokenType tokenType) {
+      Set<Expression> comparisons, TokenType tokenType) {
     final Iterable<Expression> binaryExpressions =
         comparisons.where((e) => e is BinaryExpression).toSet();
     LinkedHashSet<ContradictoryComparisons> contradictions =
@@ -182,7 +184,7 @@ class TestedExpressions {
     return contradictions;
   }
 
-  _recurseCallback _recurseOnChildNodes(
+  _RecurseCallback _recurseOnChildNodes(
           LinkedHashSet<ContradictoryComparisons> expressions) =>
       (Expression e) {
         BinaryExpression ex = e as BinaryExpression;

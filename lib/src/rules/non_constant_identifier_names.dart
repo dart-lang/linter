@@ -5,10 +5,12 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/utils.dart';
 
-const desc = r'Name non-constant identifiers using lowerCamelCase.';
+const _desc = r'Name non-constant identifiers using lowerCamelCase.';
 
-const details = r'''
+const _details = r'''
+
 **DO** name non-constant identifiers using lowerCamelCase.
 
 Class members, top-level definitions, variables, parameters, named parameters
@@ -16,7 +18,6 @@ and named constructors should capitalize the first letter of each word
 except the first word, and use no separators.
 
 **GOOD:**
-
 ```
 var item;
 
@@ -26,14 +27,15 @@ align(clearItems) {
   // ...
 }
 ```
+
 ''';
 
 class NonConstantIdentifierNames extends LintRule {
   NonConstantIdentifierNames()
       : super(
             name: 'non_constant_identifier_names',
-            description: desc,
-            details: details,
+            description: _desc,
+            details: _details,
             group: Group.style);
 
   @override
@@ -45,19 +47,26 @@ class Visitor extends SimpleAstVisitor {
   Visitor(this.rule);
 
   checkIdentifier(SimpleIdentifier id, {bool underscoresOk: false}) {
-    if (underscoresOk && Analyzer.facade.isJustUnderscores(id.name)) {
+    if (underscoresOk && isJustUnderscores(id.name)) {
       // For example, `___` is OK in a callback.
       return;
     }
-    if (!Analyzer.facade.isLowerCamelCase(id.name)) {
+    if (!isLowerCamelCase(id.name)) {
       rule.reportLint(id);
+    }
+  }
+
+  @override
+  visitConstructorDeclaration(ConstructorDeclaration node) {
+    if (node.name != null) {
+      checkIdentifier(node.name);
     }
   }
 
   @override
   visitFormalParameterList(FormalParameterList node) {
     node.parameters.forEach((FormalParameter p) {
-      if (p is! FieldFormalParameter) {
+      if (p is! FieldFormalParameter && p.identifier != null) {
         checkIdentifier(p.identifier, underscoresOk: true);
       }
     });
@@ -82,12 +91,5 @@ class Visitor extends SimpleAstVisitor {
         checkIdentifier(v.name);
       }
     });
-  }
-
-  @override
-  visitConstructorDeclaration(ConstructorDeclaration node) {
-    if (node.name != null) {
-      checkIdentifier(node.name);
-    }
   }
 }
