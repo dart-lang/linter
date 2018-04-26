@@ -24,6 +24,13 @@ if [ "$LINTER_BOT" = "benchmark" ]; then
   dart bin/linter.dart --benchmark -q -c example/all.yaml .
 
   echo ""
+
+  # Check for errors encountered during analysis / benchmarking and fail as appropriate.
+  RESULT=$?
+  if [ $RESULT -eq 63 ];  then
+    echo "Error occurred while benchmarking"
+  fi
+
 else
   echo "Running main linter bot"
 
