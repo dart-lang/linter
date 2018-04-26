@@ -66,19 +66,20 @@ class Analyzer {
 }
 
 Future<Iterable<AnalysisErrorInfo>> lintFiles(
-    DartLinter linter, List<File> filesToLint) {
+    DartLinter linter, List<File> filesToLint) async {
   // Setup an error watcher to track whether an error was logged to stderr so
   // we can set the exit code accordingly.
   ErrorWatchingSink errorWatcher = new ErrorWatchingSink(errorSink);
   errorSink = errorWatcher;
-  return linter.lintFiles(filesToLint).then((errors) {
-    if (errorWatcher.encounteredError) {
-      exitCode = loggedAnalyzerErrorExitCode;
-    } else if (errors != null && errors.isNotEmpty) {
-      exitCode = _maxSeverity(errors, linter.options.filter);
-    }
-    return errors;
-  });
+
+  final errors = await linter.lintFiles(filesToLint);
+  if (errorWatcher.encounteredError) {
+    exitCode = loggedAnalyzerErrorExitCode;
+  } else if (errors.isNotEmpty) {
+    exitCode = _maxSeverity(errors, linter.options.filter);
+  }
+
+  return errors;
 }
 
 Iterable<AnalysisError> _filtered(
