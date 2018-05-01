@@ -79,7 +79,7 @@ class _Visitor extends SimpleAstVisitor<void> {
               DartTypeUtilities.isInterface(type, 'Iterable', 'dart.core'));
       if (iterableInterfaces.length == 1 &&
           iterableInterfaces.first.typeArguments.first == staticType.type) {
-        rule.reportLint(node.loopVariable.type ?? node);
+        rule.reportLint(staticType);
       }
     }
   }
