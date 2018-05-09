@@ -34,4 +34,8 @@ main() {
   const v6 = const A([]); // LINT
   const v7 = A([]); // OK
   final v8 = A(const []); // OK
+  final v9 = const A(const []); // LINT
+  final v10 = const A([]); // OK
+  final v11 = const A(const {}); // LINT
+  final v12 = const A({}); // OK
 }

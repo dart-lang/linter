@@ -47,6 +47,8 @@ class AvoidKeywordToCreateInstances extends LintRule implements NodeLintRule {
   void registerNodeProcessors(NodeLintRegistry registry) {
     final visitor = new _Visitor(this);
     registry.addInstanceCreationExpression(this, visitor);
+    registry.addListLiteral(this, visitor);
+    registry.addMapLiteral(this, visitor);
   }
 }
 
@@ -66,6 +68,26 @@ class _Visitor extends SimpleAstVisitor {
 
     if (isConstWithoutKeyword && node.keyword.type == Keyword.CONST ||
         !isConstWithoutKeyword && node.keyword.type == Keyword.NEW) {
+      rule.reportLint(node);
+    }
+  }
+
+  @override
+  visitListLiteral(ListLiteral node) => _visitTypedLiteral(node);
+
+  @override
+  visitMapLiteral(MapLiteral node) => _visitTypedLiteral(node);
+
+  _visitTypedLiteral(TypedLiteral node) {
+    if (node.constKeyword == null) return;
+
+    // remove keyword and check if there's const error
+    final oldKeyword = node.constKeyword;
+    node.constKeyword = null;
+    final isConstWithoutKeyword = node.isConst;
+    node.constKeyword = oldKeyword;
+
+    if (isConstWithoutKeyword && node.constKeyword.type == Keyword.CONST) {
       rule.reportLint(node);
     }
   }

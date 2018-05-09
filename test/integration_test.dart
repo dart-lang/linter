@@ -647,7 +647,9 @@ defineTests() {
               'a.dart 30:14 [lint] Avoid keyword to create instances.',
               'a.dart 31:14 [lint] Avoid keyword to create instances.',
               'a.dart 34:14 [lint] Avoid keyword to create instances.',
-              '1 file analyzed, 6 issues found',
+              'a.dart 37:22 [lint] Avoid keyword to create instances.',
+              'a.dart 39:23 [lint] Avoid keyword to create instances.',
+              '1 file analyzed, 8 issues found',
             ]));
       });
     });
