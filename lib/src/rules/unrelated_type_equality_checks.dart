@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
@@ -131,17 +132,23 @@ class DerivedClass2 extends ClassBase with Mixin {}
 
 const String _dartCoreLibraryName = 'dart.core';
 
-bool _hasNonComparableOperands(BinaryExpression node) =>
-    !DartTypeUtilities.isNullLiteral(node.leftOperand) &&
-    !DartTypeUtilities.isNullLiteral(node.rightOperand) &&
-    DartTypeUtilities.unrelatedTypes(
-        node.leftOperand.bestType, node.rightOperand.bestType) &&
-    (node.rightOperand.bestType.name != 'int' ||
-        node.rightOperand.bestType.element?.library?.name !=
-            _dartCoreLibraryName ||
-        !((node.leftOperand.bestType.name == 'Int32' ||
-                node.leftOperand.bestType.name == 'Int64') &&
-            node.leftOperand.bestType.element?.library?.name == 'fixnum'));
+bool _isCoreInt(DartType type) =>
+    type.name == 'int' && type.element?.library?.name == _dartCoreLibraryName;
+
+bool _isFixNumIntX(DartType type) =>
+    (type.name == 'Int32' || type.name == 'Int64') &&
+    type.element?.library?.name == 'fixnum';
+
+bool _hasNonComparableOperands(BinaryExpression node) {
+  var left = node.leftOperand;
+  var leftType = left.bestType;
+  var right = node.rightOperand;
+  var rightType = right.bestType;
+  return !DartTypeUtilities.isNullLiteral(left) &&
+      !DartTypeUtilities.isNullLiteral(right) &&
+      DartTypeUtilities.unrelatedTypes(leftType, rightType) &&
+      (!_isCoreInt(rightType) || !_isFixNumIntX(leftType));
+}
 
 class UnrelatedTypeEqualityChecks extends LintRule implements NodeLintRule {
   UnrelatedTypeEqualityChecks()
