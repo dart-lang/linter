@@ -19,6 +19,9 @@ const _details = r'''
 Comparing references of a type where neither is a subtype of the other most
 likely will return `false` and might not reflect programmer's intent.
 
+`Int64` and `Int32` from `package:fixnum` allow comparing to `int` provided
+the `int` is on the right hand side. The lint allows this as a special case. 
+
 **BAD:**
 ```
 void someFunction() {
@@ -126,11 +129,19 @@ class DerivedClass2 extends ClassBase with Mixin {}
 
 ''';
 
+const String _dartCoreLibraryName = 'dart.core';
+
 bool _hasNonComparableOperands(BinaryExpression node) =>
     !DartTypeUtilities.isNullLiteral(node.leftOperand) &&
     !DartTypeUtilities.isNullLiteral(node.rightOperand) &&
     DartTypeUtilities.unrelatedTypes(
-        node.leftOperand.bestType, node.rightOperand.bestType);
+        node.leftOperand.bestType, node.rightOperand.bestType) &&
+    (node.rightOperand.bestType.name != 'int' ||
+        node.rightOperand.bestType.element?.library?.name !=
+            _dartCoreLibraryName ||
+        !((node.leftOperand.bestType.name == 'Int32' ||
+                node.leftOperand.bestType.name == 'Int64') &&
+            node.leftOperand.bestType.element?.library?.name == 'fixnum'));
 
 class UnrelatedTypeEqualityChecks extends LintRule implements NodeLintRule {
   UnrelatedTypeEqualityChecks()
@@ -148,7 +159,6 @@ class UnrelatedTypeEqualityChecks extends LintRule implements NodeLintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  static const String _dartCoreLibraryName = 'dart.core';
   static const String _boolClassName = 'bool';
 
   final LintRule rule;
