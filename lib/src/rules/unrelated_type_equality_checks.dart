@@ -147,7 +147,7 @@ bool _hasNonComparableOperands(BinaryExpression node) {
   return !DartTypeUtilities.isNullLiteral(left) &&
       !DartTypeUtilities.isNullLiteral(right) &&
       DartTypeUtilities.unrelatedTypes(leftType, rightType) &&
-      (!_isCoreInt(rightType) || !_isFixNumIntX(leftType));
+      !(_isFixNumIntX(leftType) && _isCoreInt(rightType));
 }
 
 class UnrelatedTypeEqualityChecks extends LintRule implements NodeLintRule {
