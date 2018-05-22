@@ -14,7 +14,8 @@ class MyWidget extends StatefulWidget {
 }
 
 class MyWidgetState extends State<MyWidget> {
-  final b = new TextStyle(fontSize: 20.0); // LINT
+  static final b = new TextStyle(fontSize: 20.0); // LINT
+  final c = new TextStyle(fontSize: 20.0); // LINT
 
   @override
   Widget build(BuildContext context) => null;
