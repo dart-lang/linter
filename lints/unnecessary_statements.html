@@ -32,16 +32,14 @@ broken up.</p>
 <p>For example,</p>
 <p><strong>BAD:</strong></p>
 <pre><code>myvar;
+list.clear;
 1 + 2;
-some.getter;
 methodOne() + methodTwo();
 foo ? bar : baz;
 </code></pre>
-<p>While the getter may trigger a side-effect, it is not usually obvious.  Though
-the added methods have a clear effect, the addition itself does not unless there
-is some magical overload of the + operator.</p>
-<p>Usually code like this indicates an incomplete thought, and is a bug.  For
-instance, the getter was likely supposed to be a function call.</p>
+<p>Though the added methods have a clear effect, the addition itself does not
+unless there is some magical overload of the + operator.</p>
+<p>Usually code like this indicates an incomplete thought, and is a bug.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>some.method();
 new SomeClass();
