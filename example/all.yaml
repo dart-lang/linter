@@ -48,6 +48,7 @@ linter:
     - empty_statements
     - hash_and_equals
     - implementation_imports
+    - import_prefix_names
     - invariant_booleans
     - iterable_contains_unrelated_type
     - join_return_with_assignment

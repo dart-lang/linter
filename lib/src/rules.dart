@@ -49,6 +49,7 @@ import 'package:linter/src/rules/empty_constructor_bodies.dart';
 import 'package:linter/src/rules/empty_statements.dart';
 import 'package:linter/src/rules/hash_and_equals.dart';
 import 'package:linter/src/rules/implementation_imports.dart';
+import 'package:linter/src/rules/import_prefix_names.dart';
 import 'package:linter/src/rules/invariant_booleans.dart';
 import 'package:linter/src/rules/iterable_contains_unrelated_type.dart';
 import 'package:linter/src/rules/join_return_with_assignment.dart';
@@ -168,6 +169,7 @@ void registerLintRules() {
     ..register(new EmptyStatements())
     ..register(new HashAndEquals())
     ..register(new ImplementationImports())
+    ..registerDefault(new ImportPrefixNames())
     ..register(new InvariantBooleans())
     ..register(new IterableContainsUnrelatedType())
     ..register(new JoinReturnWithAssignment())
