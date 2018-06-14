@@ -46,6 +46,7 @@ class LibraryNames extends LintRule implements NodeLintRule {
   void registerNodeProcessors(NodeLintRegistry registry) {
     final visitor = new _Visitor(this);
     registry.addLibraryDirective(this, visitor);
+    registry.addCompilationUnit(this, visitor);
   }
 }
 
@@ -58,6 +59,13 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitLibraryDirective(LibraryDirective node) {
     if (!isLowerCaseUnderScoreWithDots(node.name.toString())) {
       rule.reportLint(node.name);
+    }
+  }
+
+  @override
+  void visitCompilationUnit(CompilationUnit node) {
+    if (!isLowerCaseUnderScoreWithDots(node.element.source.shortName)) {
+      rule.reportLint(node);
     }
   }
 }
