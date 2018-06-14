@@ -1,4 +1,4 @@
-// Copyright (c) 2015, the Dart project authors.  Please see the AUTHORS file
+// Copyright (c) 2018, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -7,32 +7,34 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/utils.dart';
 
-const _desc = r'Name libraries using `lowercase_with_underscores`.';
+const _desc = r'Name source files using `lowercase_with_underscores`.';
 
 const _details = r'''
 
-**DO** name libraries using `lowercase_with_underscores`.
+**DO** name source files using `lowercase_with_underscores`.
 
 Some file systems are not case-sensitive, so many projects require filenames
-to be all lowercase.  Using a separate character allows names to still be
-readable in that form.  Using underscores as the separator ensures that the name
+to be all lowercase. Using a separate character allows names to still be
+readable in that form. Using underscores as the separator ensures that the name
 is still a valid Dart identifier, which may be helpful if the language later
 supports symbolic imports.
 
 **GOOD:**
 
-* `library peg_parser;`
+* `slider_menu.dart`
+* `file_system.dart`
 
 **BAD:**
 
-* `library peg-parser;`
+* `SliderMenu.dart`
+* `filesystem.dart`
 
 ''';
 
-class LibraryNames extends LintRule implements NodeLintRule {
-  LibraryNames()
+class FileNames extends LintRule implements NodeLintRule {
+  FileNames()
       : super(
-            name: 'library_names',
+            name: 'file_names',
             description: _desc,
             details: _details,
             group: Group.style);
@@ -40,7 +42,7 @@ class LibraryNames extends LintRule implements NodeLintRule {
   @override
   void registerNodeProcessors(NodeLintRegistry registry) {
     final visitor = new _Visitor(this);
-    registry.addLibraryDirective(this, visitor);
+    registry.addCompilationUnit(this, visitor);
   }
 }
 
@@ -50,9 +52,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   @override
-  void visitLibraryDirective(LibraryDirective node) {
-    if (!isLowerCaseUnderScoreWithDots(node.name.toString())) {
-      rule.reportLint(node.name);
+  void visitCompilationUnit(CompilationUnit node) {
+    if (!isLowerCaseUnderScoreWithDots(node.element.source.shortName)) {
+      rule.reportLint(node);
     }
   }
 }

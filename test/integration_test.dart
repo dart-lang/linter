@@ -363,7 +363,7 @@ defineTests() {
       });
     });
 
-    group('library_names', () {
+    group('file_names', () {
       IOSink currentOut = outSink;
       CollectingSink collectingOut = new CollectingSink();
       setUp(() {
@@ -377,13 +377,12 @@ defineTests() {
       });
 
       test('on bad file names', () async {
-        await dartlint
-            .main(['test/_data/library_names', '--rules=library_names']);
+        await dartlint.main(['test/_data/file_names', '--rules=file_names']);
         expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
-              'a-b.dart 1:1 [lint] Name libraries and source files using `lowercase_with_underscores`.'
+              'a-b.dart 1:1 [lint] Name source files using `lowercase_with_underscores`.'
             ]));
       });
     });
