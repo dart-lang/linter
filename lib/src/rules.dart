@@ -21,7 +21,6 @@ import 'package:linter/src/rules/avoid_field_initializers_in_const_classes.dart'
 import 'package:linter/src/rules/avoid_function_literals_in_foreach_calls.dart';
 import 'package:linter/src/rules/avoid_init_to_null.dart';
 import 'package:linter/src/rules/avoid_js_rounded_ints.dart';
-import 'package:linter/src/rules/avoid_keyword_to_create_instances.dart';
 import 'package:linter/src/rules/avoid_null_checks_in_equality_operators.dart';
 import 'package:linter/src/rules/avoid_positional_boolean_parameters.dart';
 import 'package:linter/src/rules/avoid_private_typedef_functions.dart';
@@ -105,8 +104,10 @@ import 'package:linter/src/rules/type_annotate_public_apis.dart';
 import 'package:linter/src/rules/type_init_formals.dart';
 import 'package:linter/src/rules/unawaited_futures.dart';
 import 'package:linter/src/rules/unnecessary_brace_in_string_interps.dart';
+import 'package:linter/src/rules/unnecessary_const.dart';
 import 'package:linter/src/rules/unnecessary_getters_setters.dart';
 import 'package:linter/src/rules/unnecessary_lambdas.dart';
+import 'package:linter/src/rules/unnecessary_new.dart';
 import 'package:linter/src/rules/unnecessary_null_aware_assignments.dart';
 import 'package:linter/src/rules/unnecessary_null_in_if_null_operators.dart';
 import 'package:linter/src/rules/unnecessary_overrides.dart';
@@ -142,7 +143,6 @@ void registerLintRules() {
     ..register(new AvoidFunctionLiteralInForeachMethod())
     ..register(new AvoidInitToNull())
     ..register(new AvoidJsRoundedInts())
-    ..register(new AvoidKeywordToCreateInstances())
     ..register(new AvoidNullChecksInEqualityOperators())
     ..register(new AvoidPositionalBooleanParameters())
     ..register(new AvoidPrivateTypedefFunctions())
@@ -225,6 +225,8 @@ void registerLintRules() {
     ..registerDefault(new TypeInitFormals())
     ..register(new UnawaitedFutures())
     ..registerDefault(new UnnecessaryBraceInStringInterps())
+    ..register(new UnnecessaryConst())
+    ..register(new UnnecessaryNew())
     ..registerDefault(new UnnecessaryNullAwareAssignments())
     ..registerDefault(new UnnecessaryNullInIfNullOperators())
     // Disabled pending fix: https://github.com/dart-lang/linter/issues/35

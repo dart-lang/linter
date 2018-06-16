@@ -617,7 +617,7 @@ defineTests() {
     });
 
     // TODO(a14n) move to unit test once previewDart2 disappears
-    group('avoid_keyword_to_create_instances', () {
+    group('unnecessary_const', () {
       IOSink currentOut = outSink;
       CollectingSink collectingOut = new CollectingSink();
 
@@ -633,23 +633,51 @@ defineTests() {
       });
 
       test('avoid keyword to create instances', () async {
-        await dartlint.runLinter([
-          'test/_data/avoid_keyword_to_create_instances',
-          '--rules=avoid_keyword_to_create_instances'
-        ], new LinterOptions()..previewDart2 = true);
+        await dartlint.runLinter(
+            ['test/_data/unnecessary_const', '--rules=unnecessary_const'],
+            new LinterOptions()..previewDart2 = true);
         expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
-              'a.dart 14:3 [lint] Avoid keyword to create instances.',
-              'a.dart 17:3 [lint] Avoid keyword to create instances.',
-              'a.dart 21:3 [lint] Avoid keyword to create instances.',
-              'a.dart 30:14 [lint] Avoid keyword to create instances.',
-              'a.dart 31:14 [lint] Avoid keyword to create instances.',
-              'a.dart 34:14 [lint] Avoid keyword to create instances.',
-              'a.dart 37:22 [lint] Avoid keyword to create instances.',
-              'a.dart 39:23 [lint] Avoid keyword to create instances.',
-              '1 file analyzed, 8 issues found',
+              'a.dart 24:14 [lint] Avoid const keyword.',
+              'a.dart 27:14 [lint] Avoid const keyword.',
+              'a.dart 30:22 [lint] Avoid const keyword.',
+              'a.dart 32:23 [lint] Avoid const keyword.',
+              '1 file analyzed, 4 issues found',
+            ]));
+      });
+    });
+
+    // TODO(a14n) move to unit test once previewDart2 disappears
+    group('unnecessary_new', () {
+      IOSink currentOut = outSink;
+      CollectingSink collectingOut = new CollectingSink();
+
+      setUp(() {
+        exitCode = 0;
+        outSink = collectingOut;
+      });
+
+      tearDown(() {
+        collectingOut.buffer.clear();
+        outSink = currentOut;
+        exitCode = 0;
+      });
+
+      test('avoid keyword to create instances', () async {
+        await dartlint.runLinter(
+            ['test/_data/unnecessary_new', '--rules=unnecessary_new'],
+            new LinterOptions()..previewDart2 = true);
+        expect(exitCode, 1);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              'a.dart 14:3 [lint] Unnecessary new keyword.',
+              'a.dart 17:3 [lint] Unnecessary new keyword.',
+              'a.dart 20:3 [lint] Unnecessary new keyword.',
+              'a.dart 24:14 [lint] Unnecessary new keyword.',
+              '1 file analyzed, 4 issues found',
             ]));
       });
     });

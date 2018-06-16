@@ -8,19 +8,18 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = r'Avoid keyword to create instances.';
+const _desc = r'Avoid const keyword.';
 
 const _details = r'''
 
-**AVOID** keyword to create instances. Use `new` only to force new instance when
-a const could have been used.
+**AVOID** repeating const keyword in a const context.
 
 **BAD:**
 ```
 class A() { const A(); }
 m(){
   const a = const A();
-  final b = new A();
+  final b = const [const A()];
 }
 ```
 
@@ -28,17 +27,17 @@ m(){
 ```
 class A() { const A(); }
 m(){
-  const a = A(); // same as: const A();
-  final b = A(); // same as: new A();
+  const a = A();
+  final b = const [A()];
 }
 ```
 
 ''';
 
-class AvoidKeywordToCreateInstances extends LintRule implements NodeLintRule {
-  AvoidKeywordToCreateInstances()
+class UnnecessaryConst extends LintRule implements NodeLintRule {
+  UnnecessaryConst()
       : super(
-            name: 'avoid_keyword_to_create_instances',
+            name: 'unnecessary_const',
             description: _desc,
             details: _details,
             group: Group.style);
@@ -66,8 +65,7 @@ class _Visitor extends SimpleAstVisitor {
     final isConstWithoutKeyword = node.isConst;
     node.keyword = oldKeyword;
 
-    if (isConstWithoutKeyword && node.keyword.type == Keyword.CONST ||
-        !isConstWithoutKeyword && node.keyword.type == Keyword.NEW) {
+    if (isConstWithoutKeyword && node.keyword.type == Keyword.CONST) {
       rule.reportLint(node);
     }
   }

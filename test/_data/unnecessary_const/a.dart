@@ -2,23 +2,17 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// test w/ `pub run test -N avoid_keyword_to_create_instances`
+// test w/ `pub run test -N unnecessary_const`
 
 class A {
   const A([o]);
-  A.c1();
 }
 
 main() {
   const A(); // OK
-  new A(); // LINT
   A(); // OK
 
-  new A.c1(); // LINT
-  A.c1(); // OK
-
   const A([]); // OK
-  new A([]); // LINT
   A([]); // OK
   A(const []); // OK
 
@@ -27,7 +21,6 @@ main() {
   A(A()); // OK
 
   final v1 = A(); // OK
-  final v2 = new A(); // LINT
   const v3 = const A(); // LINT
   const v4 = A(); // OK
   final v5 = const A([]); // OK
