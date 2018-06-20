@@ -7,34 +7,32 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/utils.dart';
 
-const _desc =
-    r'Name libraries and source files using `lowercase_with_underscores`.';
+const _desc = r'Name libraries using `lowercase_with_underscores`.';
 
 const _details = r'''
 
-**DO** name libraries and source files using `lowercase_with_underscores`.
+**DO** name libraries using `lowercase_with_underscores`.
 
-Some file systems are not case-sensitive, so many projects require filenames
-to be all lowercase.  Using a separate character allows names to still be
-readable in that form.  Using underscores as the separator ensures that the name
-is still a valid Dart identifier, which may be helpful if the language later
-supports symbolic imports.
+Some file systems are not case-sensitive, so many projects require filenames to
+be all lowercase. Using a separating character allows names to still be readable
+in that form. Using underscores as the separator ensures that the name is still
+a valid Dart identifier, which may be helpful if the language later supports
+symbolic imports.
 
 **GOOD:**
 
-* `slider_menu.dart`
-* `file_system.dart`
 * `library peg_parser;`
 
 **BAD:**
 
-* `SliderMenu.dart`
-* `filesystem.dart`
 * `library peg-parser;`
+
+The lint `file_names` can be used to enforce the same kind of naming on the
+file.
 
 ''';
 
-class LibraryNames extends LintRule {
+class LibraryNames extends LintRule implements NodeLintRule {
   LibraryNames()
       : super(
             name: 'library_names',
@@ -43,15 +41,19 @@ class LibraryNames extends LintRule {
             group: Group.style);
 
   @override
-  AstVisitor getVisitor() => new Visitor(this);
+  void registerNodeProcessors(NodeLintRegistry registry) {
+    final visitor = new _Visitor(this);
+    registry.addLibraryDirective(this, visitor);
+  }
 }
 
-class Visitor extends SimpleAstVisitor {
-  LintRule rule;
-  Visitor(this.rule);
+class _Visitor extends SimpleAstVisitor<void> {
+  final LintRule rule;
+
+  _Visitor(this.rule);
 
   @override
-  visitLibraryDirective(LibraryDirective node) {
+  void visitLibraryDirective(LibraryDirective node) {
     if (!isLowerCaseUnderScoreWithDots(node.name.toString())) {
       rule.reportLint(node.name);
     }

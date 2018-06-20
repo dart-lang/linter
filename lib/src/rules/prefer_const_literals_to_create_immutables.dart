@@ -2,10 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.rules.prefer_const_literals_to_create_immutables;
-
-import 'package:analyzer/analyzer.dart';
-import 'package:analyzer/dart/ast/ast.dart' show AstVisitor;
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -52,7 +49,8 @@ bool _isImmutable(Element element) =>
     element.name == _IMMUTABLE_VAR_NAME &&
     element.library?.name == _META_LIB_NAME;
 
-class PreferConstLiteralsToCreateImmutables extends LintRule {
+class PreferConstLiteralsToCreateImmutables extends LintRule
+    implements NodeLintRule {
   PreferConstLiteralsToCreateImmutables()
       : super(
             name: 'prefer_const_literals_to_create_immutables',
@@ -61,13 +59,17 @@ class PreferConstLiteralsToCreateImmutables extends LintRule {
             group: Group.style);
 
   @override
-  AstVisitor getVisitor() => new Visitor(this);
+  void registerNodeProcessors(NodeLintRegistry registry) {
+    final visitor = new _Visitor(this);
+    registry.addListLiteral(this, visitor);
+    registry.addMapLiteral(this, visitor);
+  }
 }
 
-class Visitor extends SimpleAstVisitor {
+class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
-  Visitor(this.rule);
+  _Visitor(this.rule);
 
   @override
   void visitListLiteral(ListLiteral node) => _visitTypedLiteral(node);
@@ -77,7 +79,9 @@ class Visitor extends SimpleAstVisitor {
 
   Iterable<InterfaceType> _getSelfAndInheritedTypes(InterfaceType type) sync* {
     InterfaceType current = type;
-    while (current != null) {
+    // TODO(a14n) the is check looks unnecessary but prevents https://github.com/dart-lang/sdk/issues/33210
+    // for now it's not clear how this can happen
+    while (current != null && current is InterfaceType) {
       yield current;
       current = current.superclass;
     }

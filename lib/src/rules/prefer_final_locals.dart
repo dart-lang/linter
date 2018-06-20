@@ -45,23 +45,24 @@ void mutableCase() {
 
 ''';
 
-class PreferFinalLocals extends LintRule {
-  _Visitor _visitor;
+class PreferFinalLocals extends LintRule implements NodeLintRule {
   PreferFinalLocals()
       : super(
             name: 'prefer_final_locals',
             description: _desc,
             details: _details,
-            group: Group.style) {
-    _visitor = new _Visitor(this);
-  }
+            group: Group.style);
 
   @override
-  AstVisitor getVisitor() => _visitor;
+  void registerNodeProcessors(NodeLintRegistry registry) {
+    final visitor = new _Visitor(this);
+    registry.addVariableDeclaration(this, visitor);
+  }
 }
 
-class _Visitor extends SimpleAstVisitor {
+class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+
   _Visitor(this.rule);
 
   @override
@@ -76,7 +77,7 @@ class _Visitor extends SimpleAstVisitor {
     FunctionBody function = node.getAncestor((a) => a is FunctionBody);
     if (function != null &&
         !function.isPotentiallyMutatedInScope(node.element)) {
-      rule.reportLint(node);
+      rule.reportLint(node.name);
     }
   }
 }

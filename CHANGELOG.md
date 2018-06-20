@@ -1,3 +1,42 @@
+# 0.1.54
+
+* new `unnecessary_const` lint
+* new `unnecessary_new` lint
+* fixed errors in `use_to_and_as_if_applicable`
+* new `file_names` lint
+
+# 0.1.53
+
+* updated `unnecessary_statements` to ignore getters (as they may be side-effecting).
+
+# 0.1.52
+
+* fixed `void_checks` to handle arguments not resolved to a parameter
+* fixed exceptions produced by `prefer_const_literals_to_create_immutables`
+
+# 0.1.51
+
+* `unrelated_type_equality_checks` now allows comparison between `Int64` or `Int32` and `int`
+* `unnecessary_parenthesis` improved to handle cascades _in_ cascades
+
+# 0.1.50
+
+* migration of rules to use analyzer package `NodeLintRule` and `UnitLintRule` yielding significant performance gains all around
+* specific performance improvements for `prefer_final_fields` (~6x)
+* addressed no such method calls in `void_checks`
+* improved lint reporting for various lints
+
+# 0.1.49
+
+* new `void_checks` lint
+
+# 0.1.48
+
+* new `avoid_field_initializers_in_const_classes` lint
+* miscellaneous documentation fixes
+* improved handling of cascades in `unnecessary_statements`
+* new `avoid_js_rounded_ints` lint
+
 # 0.1.47
 
 * new `avoid_double_and_int_checks` lint

@@ -43,6 +43,8 @@ void main([List<String> args]) {
   generateRule(ruleName, outDir: outDir);
 }
 
+String get _thisYear => new DateTime.now().year.toString();
+
 String capitalize(String s) => s.substring(0, 1).toUpperCase() + s.substring(1);
 
 void generateRule(String ruleName, {String outDir}) {
@@ -93,6 +95,7 @@ void updateRuleRegistry(String ruleName) {
   print('  pub run test -N $ruleName');
 }
 
+/// TODO(scheglov) Update to implement NodeLintRule, _Visitor, etc.
 String _generateClass(String ruleName, String className) => """
 // Copyright (c) $_thisYear, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
@@ -121,7 +124,7 @@ const _details = r'''
 
 ''';
 
-class $className extends LintRule {
+class $className extends LintRule implements NodeLintRule {
   $className() : super(
           name: '$ruleName',
             description: _desc,
@@ -129,14 +132,21 @@ class $className extends LintRule {
             group: Group.style);
 
   @override
-  AstVisitor getVisitor() => new Visitor(this);
+  void registerNodeProcessors(NodeLintRegistry registry) {
+    final visitor = new _Visitor(this);
+    registry.addSimpleIdentifier(this, visitor);
+  }
 }
 
-class Visitor extends SimpleAstVisitor {
+class _Visitor extends SimpleAstVisitor {
   final LintRule rule;
-  Visitor(this.rule);
 
+  _Visitor(this.rule);
 
+  @override
+  void visitSimpleIdentifier(SimpleIdentifier node) {
+    // TODO: implement
+  }
 }
 """;
 
@@ -148,7 +158,5 @@ String _generateTest(String libName, String className) => '''
 // test w/ `pub run test -N $libName`
 
 ''';
-
-String get _thisYear => new DateTime.now().year.toString();
 
 typedef String _Generator(String libName, String className);

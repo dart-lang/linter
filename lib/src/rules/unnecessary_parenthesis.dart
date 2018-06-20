@@ -24,7 +24,7 @@ a = (b);
 
 ''';
 
-class UnnecessaryParenthesis extends LintRule {
+class UnnecessaryParenthesis extends LintRule implements NodeLintRule {
   UnnecessaryParenthesis()
       : super(
             name: 'unnecessary_parenthesis',
@@ -33,15 +33,19 @@ class UnnecessaryParenthesis extends LintRule {
             group: Group.style);
 
   @override
-  AstVisitor getVisitor() => new Visitor(this);
+  void registerNodeProcessors(NodeLintRegistry registry) {
+    final visitor = new _Visitor(this);
+    registry.addParenthesizedExpression(this, visitor);
+  }
 }
 
-class Visitor extends SimpleAstVisitor {
-  LintRule rule;
-  Visitor(this.rule);
+class _Visitor extends SimpleAstVisitor<void> {
+  final LintRule rule;
+
+  _Visitor(this.rule);
 
   @override
-  visitParenthesizedExpression(ParenthesizedExpression node) {
+  void visitParenthesizedExpression(ParenthesizedExpression node) {
     if (node.expression is SimpleIdentifier) {
       rule.reportLint(node);
       return;
@@ -51,6 +55,13 @@ class Visitor extends SimpleAstVisitor {
 
     if (parent is ParenthesizedExpression) {
       rule.reportLint(node);
+      return;
+    }
+
+    // a..b=(c..d) is OK
+    if (node.expression is CascadeExpression &&
+        node.getAncestor((n) => n is Statement || n is CascadeExpression)
+            is CascadeExpression) {
       return;
     }
 

@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:analyzer/error/error.dart';
@@ -14,7 +13,6 @@ import 'package:analyzer/src/generated/source.dart';
 import 'package:analyzer/src/lint/io.dart';
 import 'package:analyzer/src/lint/linter.dart';
 import 'package:analyzer/src/lint/registry.dart';
-import 'package:analyzer/src/util/absolute_path.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/ast.dart';
 import 'package:linter/src/formatter.dart';
@@ -216,15 +214,15 @@ defineSanityTests() {
       expect(
           () => expect(new Annotation('Message', ErrorType.LINT, 1),
               matchesAnnotation('Message', ErrorType.HINT, 1)),
-          throwsA(new isInstanceOf<TestFailure>()));
+          throwsA(new TypeMatcher<TestFailure>()));
       expect(
           () => expect(new Annotation('Message', ErrorType.LINT, 1),
               matchesAnnotation('Message2', ErrorType.LINT, 1)),
-          throwsA(new isInstanceOf<TestFailure>()));
+          throwsA(new TypeMatcher<TestFailure>()));
       expect(
           () => expect(new Annotation('Message', ErrorType.LINT, 1),
               matchesAnnotation('Message', ErrorType.LINT, 2)),
-          throwsA(new isInstanceOf<TestFailure>()));
+          throwsA(new TypeMatcher<TestFailure>()));
     });
   });
 
@@ -330,10 +328,15 @@ testRule(String ruleName, File file, {bool debug: false}) {
     TestResourceProvider resourceProvider =
         new TestResourceProvider(memoryResourceProvider);
 
+    String packageConfigPath = p.join(p.dirname(file.path), '.mock_packages');
+    if (!resourceProvider.getFile(packageConfigPath).exists) {
+      packageConfigPath = null;
+    }
+
     LinterOptions options = new LinterOptions([rule])
       ..mockSdk = new MockSdk(memoryResourceProvider)
       ..resourceProvider = resourceProvider
-      ..packageRootPath = '.';
+      ..packageConfigPath = packageConfigPath;
 
     DartLinter driver = new DartLinter(options);
 
@@ -347,6 +350,7 @@ testRule(String ruleName, File file, {bool debug: false}) {
         }
       });
     });
+    actual.sort();
     try {
       expect(actual, unorderedMatches(expected));
       // ignore: avoid_catches_without_on_clauses
@@ -367,58 +371,31 @@ testRule(String ruleName, File file, {bool debug: false}) {
   });
 }
 
-class TestResourceProvider implements file_system.ResourceProvider {
+class TestResourceProvider extends PhysicalResourceProvider {
   MemoryResourceProvider memoryResourceProvider;
 
-  TestResourceProvider(this.memoryResourceProvider);
-
-  PhysicalResourceProvider get physicalResourceProvider =>
-      PhysicalResourceProvider.INSTANCE;
-
-  @override
-  AbsolutePathContext get absolutePathContext =>
-      physicalResourceProvider.absolutePathContext;
+  TestResourceProvider(this.memoryResourceProvider) : super(null);
 
   @override
   file_system.File getFile(String path) {
     file_system.File file = memoryResourceProvider.getFile(path);
-    return file.exists ? file : physicalResourceProvider.getFile(path);
+    return file.exists ? file : super.getFile(path);
   }
 
   @override
   file_system.Folder getFolder(String path) {
     file_system.Folder folder = memoryResourceProvider.getFolder(path);
-    return folder.exists ? folder : physicalResourceProvider.getFolder(path);
-  }
-
-  @override
-  Future<List<int>> getModificationTimes(List<Source> sources) {
-    //If this gets tripped, we know to implement it! :)
-    throw new StateError('Unexpected call to getModificationTimes');
+    return folder.exists ? folder : super.getFolder(path);
   }
 
   @override
   file_system.Resource getResource(String path) {
     file_system.Resource resource = memoryResourceProvider.getResource(path);
-    return resource.exists
-        ? resource
-        : physicalResourceProvider.getResource(path);
+    return resource.exists ? resource : super.getResource(path);
   }
-
-  @override
-  file_system.Folder getStateLocation(String pluginId) {
-    file_system.Folder folder =
-        memoryResourceProvider.getStateLocation(pluginId);
-    return folder.exists
-        ? folder
-        : physicalResourceProvider.getStateLocation(pluginId);
-  }
-
-  @override
-  p.Context get pathContext => physicalResourceProvider.pathContext;
 }
 
-class Annotation {
+class Annotation implements Comparable<Annotation> {
   final int column;
   final int length;
   final String message;
@@ -436,6 +413,16 @@ class Annotation {
 
   Annotation.forLint([String message, int column, int length])
       : this(message, ErrorType.LINT, null, column: column, length: length);
+
+  @override
+  int compareTo(Annotation other) {
+    if (lineNumber != other.lineNumber) {
+      return lineNumber - other.lineNumber;
+    } else if (column != other.column) {
+      return column - other.column;
+    }
+    return message.compareTo(other.message);
+  }
 
   @override
   String toString() =>

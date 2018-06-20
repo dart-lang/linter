@@ -17,6 +17,7 @@ import 'package:linter/src/rules/avoid_catching_errors.dart';
 import 'package:linter/src/rules/avoid_classes_with_only_static_members.dart';
 import 'package:linter/src/rules/avoid_double_and_int_checks.dart';
 import 'package:linter/src/rules/avoid_empty_else.dart';
+import 'package:linter/src/rules/avoid_field_initializers_in_const_classes.dart';
 import 'package:linter/src/rules/avoid_function_literals_in_foreach_calls.dart';
 import 'package:linter/src/rules/avoid_init_to_null.dart';
 import 'package:linter/src/rules/avoid_js_rounded_ints.dart';
@@ -46,6 +47,7 @@ import 'package:linter/src/rules/directives_ordering.dart';
 import 'package:linter/src/rules/empty_catches.dart';
 import 'package:linter/src/rules/empty_constructor_bodies.dart';
 import 'package:linter/src/rules/empty_statements.dart';
+import 'package:linter/src/rules/file_names.dart';
 import 'package:linter/src/rules/hash_and_equals.dart';
 import 'package:linter/src/rules/implementation_imports.dart';
 import 'package:linter/src/rules/invariant_booleans.dart';
@@ -104,8 +106,10 @@ import 'package:linter/src/rules/type_annotate_public_apis.dart';
 import 'package:linter/src/rules/type_init_formals.dart';
 import 'package:linter/src/rules/unawaited_futures.dart';
 import 'package:linter/src/rules/unnecessary_brace_in_string_interps.dart';
+import 'package:linter/src/rules/unnecessary_const.dart';
 import 'package:linter/src/rules/unnecessary_getters_setters.dart';
 import 'package:linter/src/rules/unnecessary_lambdas.dart';
+import 'package:linter/src/rules/unnecessary_new.dart';
 import 'package:linter/src/rules/unnecessary_null_aware_assignments.dart';
 import 'package:linter/src/rules/unnecessary_null_in_if_null_operators.dart';
 import 'package:linter/src/rules/unnecessary_overrides.dart';
@@ -118,6 +122,7 @@ import 'package:linter/src/rules/use_setters_to_change_properties.dart';
 import 'package:linter/src/rules/use_string_buffers.dart';
 import 'package:linter/src/rules/use_to_and_as_if_applicable.dart';
 import 'package:linter/src/rules/valid_regexps.dart';
+import 'package:linter/src/rules/void_checks.dart';
 
 void registerLintRules() {
   Analyzer.facade
@@ -136,6 +141,7 @@ void registerLintRules() {
     ..register(new AvoidClassesWithOnlyStaticMembers())
     ..register(new AvoidDoubleAndIntChecks())
     ..register(new AvoidEmptyElse())
+    ..register(new AvoidFieldInitializersInConstClasses())
     ..register(new AvoidFunctionLiteralInForeachMethod())
     ..register(new AvoidInitToNull())
     ..register(new AvoidJsRoundedInts())
@@ -164,6 +170,7 @@ void registerLintRules() {
     ..register(new EmptyCatches())
     ..registerDefault(new EmptyConstructorBodies())
     ..register(new EmptyStatements())
+    ..register(new FileNames())
     ..register(new HashAndEquals())
     ..register(new ImplementationImports())
     ..register(new InvariantBooleans())
@@ -222,6 +229,8 @@ void registerLintRules() {
     ..registerDefault(new TypeInitFormals())
     ..register(new UnawaitedFutures())
     ..registerDefault(new UnnecessaryBraceInStringInterps())
+    ..register(new UnnecessaryConst())
+    ..register(new UnnecessaryNew())
     ..registerDefault(new UnnecessaryNullAwareAssignments())
     ..registerDefault(new UnnecessaryNullInIfNullOperators())
     // Disabled pending fix: https://github.com/dart-lang/linter/issues/35
@@ -237,5 +246,6 @@ void registerLintRules() {
     ..register(new UseSettersToChangeAProperty())
     ..register(new UseStringBuffers())
     ..register(new UseToAndAsIfApplicable())
-    ..register(new ValidRegExps());
+    ..register(new ValidRegExps())
+    ..register(new VoidChecks());
 }
