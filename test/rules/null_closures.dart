@@ -7,15 +7,13 @@
 import 'dart:core';
 
 void list_firstWhere() {
-  // firstWhere has a named closure argument.
-  <
-      int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: null); // LINT
-  <
-      int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: () => null); // OK
+  // firstWhere has a _named_ closure argument.
+  <int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: null); // LINT
+  <int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: () => null); // OK
 }
 
 void map_putIfAbsent() {
-  // putIfAbsent has a required closure argument.
+  // putIfAbsent has a _required_ closure argument.
   var map = <int, int>{};
   map.putIfAbsent(7, null); // LINT
   map.putIfAbsent(7, () => null); // OK
