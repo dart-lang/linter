@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>library_names</title>
+      <title>file_names</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>library_names</h1>
+            <h1>file_names</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,16 +26,16 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> name libraries using <code>lowercase_with_underscores</code>.</p>
+            <p><strong>DO</strong> name source files using <code>lowercase_with_underscores</code>.</p>
 <p>Some file systems are not case-sensitive, so many projects require filenames to
 be all lowercase. Using a separating character allows names to still be readable
 in that form. Using underscores as the separator ensures that the name is still
 a valid Dart identifier, which may be helpful if the language later supports
 symbolic imports.</p>
-<p><strong>GOOD:</strong></p><ul><li><code>library peg_parser;</code></li></ul>
-<p><strong>BAD:</strong></p><ul><li><code>library peg-parser;</code></li></ul>
-<p>The lint <code>file_names</code> can be used to enforce the same kind of naming on the
-file.</p>
+<p><strong>GOOD:</strong></p><ul><li><code>slider_menu.dart</code></li><li><code>file_system.dart</code></li></ul>
+<p><strong>BAD:</strong></p><ul><li><code>SliderMenu.dart</code></li><li><code>filesystem.dart</code></li></ul>
+<p>The lint <code>library_names</code> can be used to enforce the same kind of naming on the
+library.</p>
 
 
          </section>
