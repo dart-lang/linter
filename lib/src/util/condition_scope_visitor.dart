@@ -9,7 +9,6 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/src/generated/resolver.dart'; // ignore: implementation_imports
 import 'package:linter/src/util/dart_type_utilities.dart';
 
-
 Element _getLeftElement(AssignmentExpression assignment) =>
     DartTypeUtilities.getCanonicalElementFromIdentifier(
         assignment.leftHandSide);

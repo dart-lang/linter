@@ -10,7 +10,6 @@ import 'package:analyzer/src/generated/resolver.dart'; // ignore: implementation
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
-
 const _desc = r"Don't access members with `this` unless avoiding shadowing.";
 
 const _details = r'''
