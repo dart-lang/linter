@@ -23,7 +23,7 @@ void map_putIfAbsent() {
 void future_wait() {
   // Future.wait is a _static_ function with a _named_ argument.
   Future.wait([], cleanUp: null); // LINT
-  Future.wait([], cleanUp: () => print('clean')); // OK
+  Future.wait([], cleanUp: (_) => print('clean')); // OK
 }
 
 void list_generate() {

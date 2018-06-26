@@ -7,7 +7,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/src/dart/ast/ast.dart' show ArgumentListImpl;
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
@@ -35,84 +34,83 @@ This rule only catches null literals being passed where closures are expected.
 
 ''';
 
-class NonNullableArguments {
+/// Function with closure parameters that cannot accept null arguments.
+class NonNullableFunction {
   final String library;
   final String type;
-  final String function;
+  final String name;
   final List<int> positional;
   final List<String> named;
 
-  const NonNullableArguments(this.library, this.type, this.function,
+  const NonNullableFunction(this.library, this.type, this.name,
       {this.positional: const <int>[], this.named: const <String>[]});
 }
 
-List<NonNullableArguments> _nonNullableConstructorArguments =
-     <NonNullableArguments>[
-  new NonNullableArguments('dart.async', 'Future', null, positional: [0]),
-  new NonNullableArguments('dart.async', 'Future', 'microtask',
-      positional: [0]),
-  new NonNullableArguments('dart.async', 'Future', 'sync', positional: [0]),
-  new NonNullableArguments('dart.async', 'Timer', null, positional: [1]),
-  new NonNullableArguments('dart.async', 'Timer', 'periodic',
-      positional: [1]),
-  new NonNullableArguments('dart.core', 'List', 'generate', positional: [1]),
+List<NonNullableFunction> _constructorsWithNonNullableArguments =
+    <NonNullableFunction>[
+  new NonNullableFunction('dart.async', 'Future', null, positional: [0]),
+  new NonNullableFunction('dart.async', 'Future', 'microtask', positional: [0]),
+  new NonNullableFunction('dart.async', 'Future', 'sync', positional: [0]),
+  new NonNullableFunction('dart.async', 'Timer', null, positional: [1]),
+  new NonNullableFunction('dart.async', 'Timer', 'periodic', positional: [1]),
+  new NonNullableFunction('dart.core', 'List', 'generate', positional: [1]),
 ];
 
-List<NonNullableArguments> _nonNullableStaticFunctionArguments =
-    <NonNullableArguments>[
-  new NonNullableArguments('dart.async', null, 'scheduleMicrotask',
+List<NonNullableFunction> _staticFunctionsWithNonNullableArguments =
+    <NonNullableFunction>[
+  new NonNullableFunction('dart.async', null, 'scheduleMicrotask',
       positional: [0]),
-  new NonNullableArguments('dart.async', 'Future', 'doWhile', positional: [0]),
-  new NonNullableArguments('dart.async', 'Future', 'forEach', positional: [1]),
-  new NonNullableArguments('dart.async', 'Future', 'wait', named: ['cleanUp']),
-  new NonNullableArguments('dart.async', 'Timer', 'run', positional: [0]),
+  new NonNullableFunction('dart.async', 'Future', 'doWhile', positional: [0]),
+  new NonNullableFunction('dart.async', 'Future', 'forEach', positional: [1]),
+  new NonNullableFunction('dart.async', 'Future', 'wait', named: ['cleanUp']),
+  new NonNullableFunction('dart.async', 'Timer', 'run', positional: [0]),
 ];
 
-List<NonNullableArguments> _nonNullableInstanceFunctionArguments =
-    <NonNullableArguments>[
-  new NonNullableArguments('dart.async', 'Future', 'then',
+List<NonNullableFunction> _instanceMethodsWithNonNullableArguments =
+    <NonNullableFunction>[
+  new NonNullableFunction('dart.async', 'Future', 'then',
       positional: const [0], named: const ['onError']),
-  new NonNullableArguments('dart.async', 'Future', 'complete', positional: [0]),
-  new NonNullableArguments('dart.collection', 'Queue', 'removeWhere',
+  new NonNullableFunction('dart.async', 'Future', 'complete', positional: [0]),
+  new NonNullableFunction('dart.collection', 'Queue', 'removeWhere',
       positional: [0]),
-  new NonNullableArguments('dart.collection', 'Queue', 'retainWhere',
+  new NonNullableFunction('dart.collection', 'Queue', 'retainWhere',
       positional: [0]),
-  new NonNullableArguments('dart.collection', 'ListQueue', 'forEach',
+  new NonNullableFunction('dart.collection', 'ListQueue', 'forEach',
       positional: [0]),
-  new NonNullableArguments('dart.collection', 'ListQueue', 'removeWhere',
+  new NonNullableFunction('dart.collection', 'ListQueue', 'removeWhere',
       positional: [0]),
-  new NonNullableArguments('dart.collection', 'ListQueue', 'retainWhere',
+  new NonNullableFunction('dart.collection', 'ListQueue', 'retainWhere',
       positional: [0]),
-  new NonNullableArguments('dart.collection', 'MapView', 'forEach',
+  new NonNullableFunction('dart.collection', 'MapView', 'forEach',
       positional: [0]),
-  new NonNullableArguments('dart.collection', 'MapView', 'putIfAbsent',
+  new NonNullableFunction('dart.collection', 'MapView', 'putIfAbsent',
       positional: [1]),
-  new NonNullableArguments('dart.core', 'List', 'any', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'every', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'expand', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'firstWhere',
+  new NonNullableFunction('dart.core', 'List', 'any', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'every', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'expand', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'firstWhere',
       positional: const [0], named: const ['orElse']),
-  new NonNullableArguments('dart.core', 'List', 'fold', positional: [1]),
-  new NonNullableArguments('dart.core', 'List', 'forEach', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'lastWhere',
+  new NonNullableFunction('dart.core', 'List', 'fold', positional: [1]),
+  new NonNullableFunction('dart.core', 'List', 'forEach', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'lastWhere',
       positional: [0], named: ['orElse']),
-  new NonNullableArguments('dart.core', 'List', 'map', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'reduce', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'removeWhere', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'retainWhere', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'singleWhere', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'skipWhile', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'takeWhile', positional: [0]),
-  new NonNullableArguments('dart.core', 'List', 'where', positional: [0]),
-  new NonNullableArguments('dart.core', 'Map', 'forEach', positional: [0]),
-  new NonNullableArguments('dart.core', 'Map', 'putIfAbsent', positional: [1]),
-  new NonNullableArguments('dart.core', 'Set', 'removeWhere', positional: [0]),
-  new NonNullableArguments('dart.core', 'Set', 'retainWhere', positional: [0]),
-  new NonNullableArguments('dart.core', 'String', 'replaceAllMapped',
+  new NonNullableFunction('dart.core', 'List', 'map', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'reduce', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'removeWhere', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'retainWhere', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'singleWhere', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'skipWhile', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'takeWhile', positional: [0]),
+  new NonNullableFunction('dart.core', 'List', 'where', positional: [0]),
+  new NonNullableFunction('dart.core', 'Map', 'forEach', positional: [0]),
+  new NonNullableFunction('dart.core', 'Map', 'putIfAbsent', positional: [1]),
+  new NonNullableFunction('dart.core', 'Set', 'removeWhere', positional: [0]),
+  new NonNullableFunction('dart.core', 'Set', 'retainWhere', positional: [0]),
+  new NonNullableFunction('dart.core', 'String', 'replaceAllMapped',
       positional: [1]),
-  new NonNullableArguments('dart.core', 'String', 'replaceFirstMapped',
+  new NonNullableFunction('dart.core', 'String', 'replaceFirstMapped',
       positional: [1]),
-  new NonNullableArguments('dart.core', 'String', 'splitMapJoin',
+  new NonNullableFunction('dart.core', 'String', 'splitMapJoin',
       named: ['onMatch', 'onNonMatch']),
 ];
 
@@ -138,14 +136,15 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   @override
-
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     var constructorName = node.constructorName;
     var type = node.bestType;
-    for (var arg in _nonNullableConstructorArguments) {
-      if (DartTypeUtilities.extendsClass(type, arg.type, arg.library)) {
-        if (constructorName?.name?.name == arg.function) {
-          _checkNullArgForClosure(node.argumentList, arg.positional, arg.named);
+    for (var constructor in _constructorsWithNonNullableArguments) {
+      if (DartTypeUtilities.extendsClass(
+          type, constructor.type, constructor.library)) {
+        if (constructorName?.name?.name == constructor.name) {
+          _checkNullArgForClosure(
+              node.argumentList, constructor.positional, constructor.named);
         }
       }
     }
@@ -155,36 +154,26 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodInvocation(MethodInvocation node) {
     Expression target = node.target;
     String methodName = node.methodName?.name;
-    if (target == null || target is Identifier) {
-      Element element = target?.bestElement;
-      DartType type = target?.bestType;
-      if (element is ClassElement) {
-        // Static function called, "target" is the class.
-        for (var arg in _nonNullableStaticFunctionArguments) {
-          if (element.name == arg.type) {
-            if (methodName == arg.function) {
-              _checkNullArgForClosure(node.argumentList, arg.positional, arg.named);
-            }
-          }
-        }
-      } else {
-        // Instance method called, "target" is the instance.
-        for (var arg in _nonNullableInstanceFunctionArguments) {
-          if (DartTypeUtilities.extendsClass(type, arg.type, arg.library)) {
-            if (methodName == arg.function) {
-              _checkNullArgForClosure(
-                  node.argumentList, arg.positional, arg.named);
-            }
+    Element element = target is Identifier ? target?.bestElement : null;
+    if (element is ClassElement) {
+      // Static function called, "target" is the class.
+      for (var function in _staticFunctionsWithNonNullableArguments) {
+        if (element.name == function.type) {
+          if (methodName == function.name) {
+            _checkNullArgForClosure(
+                node.argumentList, function.positional, function.named);
           }
         }
       }
     } else {
-      DartType type = node.target?.bestType;
-      for (var arg in _nonNullableInstanceFunctionArguments) {
-        if (DartTypeUtilities.extendsClass(type, arg.type, arg.library)) {
-          if (methodName == arg.function) {
+      // Instance method called, "target" is the instance.
+      DartType targetType = target?.bestType;
+      for (var method in _instanceMethodsWithNonNullableArguments) {
+        if (DartTypeUtilities.extendsClass(
+            targetType, method.type, method.library)) {
+          if (methodName == method.name) {
             _checkNullArgForClosure(
-                node.argumentList, arg.positional, arg.named);
+                node.argumentList, method.positional, method.named);
           }
         }
       }
@@ -192,15 +181,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   void _checkNullArgForClosure(
-      ArgumentListImpl node, List<int> positions, List<String> names) {
+      ArgumentList node, List<int> positions, List<String> names) {
     NodeList<Expression> args = node.arguments;
-    List<ParameterElement> params = node.correspondingStaticParameters;
-    if (params == null) {
-      params = node.correspondingPropagatedParameters;
-      if (params == null) {
-        return;
-      }
-    }
     for (int i = 0; i < args.length; i++) {
       Expression arg = args[i];
 
