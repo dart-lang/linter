@@ -4,6 +4,7 @@
 
 // test w/ `pub run test -N null_closures`
 
+import 'dart:async';
 import 'dart:core';
 
 void list_firstWhere() {
@@ -19,11 +20,14 @@ void map_putIfAbsent() {
   map.putIfAbsent(7, () => null); // OK
 }
 
-typedef void Callback(String);
+void future_wait() {
+  // Future.wait is a _static_ function with a _named_ argument.
+  Future.wait([], cleanUp: null); // LINT
+  Future.wait([], cleanUp: () => print('clean')); // OK
+}
 
-void typedef_parameter() {
-  var fn = (Callback c) {
-    c('Hello');
-  };
-  fn(null); // LINT
+void list_generate() {
+  // List.generate is a _constructor_ with a _positional_ argument.
+  new List.generate(3, null); // LINT
+  new List.generate(3, (_) => null); // OK
 }

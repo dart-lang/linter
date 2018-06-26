@@ -2,13 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.rules.null_closures;
-
 import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/src/dart/ast/ast.dart' show ArgumentListImpl;
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
@@ -43,36 +42,37 @@ class NonNullableArguments {
   final List<int> positional;
   final List<String> named;
 
-  NonNullableArguments(this.library, this.type, this.function,
+  const NonNullableArguments(this.library, this.type, this.function,
       {this.positional: const <int>[], this.named: const <String>[]});
 }
 
-final nonNullableConstructorArguments = [
+List<NonNullableArguments> _nonNullableConstructorArguments =
+     <NonNullableArguments>[
   new NonNullableArguments('dart.async', 'Future', null, positional: [0]),
   new NonNullableArguments('dart.async', 'Future', 'microtask',
       positional: [0]),
   new NonNullableArguments('dart.async', 'Future', 'sync', positional: [0]),
   new NonNullableArguments('dart.async', 'Timer', null, positional: [1]),
-  new NonNullableArguments('dart.async', 'Timer', 'periodic', positional: [1]),
-  new NonNullableArguments('dart.core', 'List', 'generate', positional: [0]),
+  new NonNullableArguments('dart.async', 'Timer', 'periodic',
+      positional: [1]),
+  new NonNullableArguments('dart.core', 'List', 'generate', positional: [1]),
 ];
 
-final nonNullableStaticFunctionArguments = [
-  new NonNullableArguments('dart.async', null, 'scheduleMicrotask', [0]),
+List<NonNullableArguments> _nonNullableStaticFunctionArguments =
+    <NonNullableArguments>[
+  new NonNullableArguments('dart.async', null, 'scheduleMicrotask',
+      positional: [0]),
   new NonNullableArguments('dart.async', 'Future', 'doWhile', positional: [0]),
   new NonNullableArguments('dart.async', 'Future', 'forEach', positional: [1]),
   new NonNullableArguments('dart.async', 'Future', 'wait', named: ['cleanUp']),
   new NonNullableArguments('dart.async', 'Timer', 'run', positional: [0]),
-  new NonNullableArguments('dart.collection', 'Maps', 'forEach',
-      positional: [1]),
-  new NonNullableArguments('dart.collection', 'Maps', 'putIfAbsent',
-      positional: [2]),
 ];
 
-final nonNullableInstanceFunctionArguments = [
+List<NonNullableArguments> _nonNullableInstanceFunctionArguments =
+    <NonNullableArguments>[
   new NonNullableArguments('dart.async', 'Future', 'then',
-      positional: [0], named: ['onError']),
-  new NonNullableArguments('dart.async', 'Futuromplete', positional: [0]),
+      positional: const [0], named: const ['onError']),
+  new NonNullableArguments('dart.async', 'Future', 'complete', positional: [0]),
   new NonNullableArguments('dart.collection', 'Queue', 'removeWhere',
       positional: [0]),
   new NonNullableArguments('dart.collection', 'Queue', 'retainWhere',
@@ -91,7 +91,7 @@ final nonNullableInstanceFunctionArguments = [
   new NonNullableArguments('dart.core', 'List', 'every', positional: [0]),
   new NonNullableArguments('dart.core', 'List', 'expand', positional: [0]),
   new NonNullableArguments('dart.core', 'List', 'firstWhere',
-      positional: [0], named: ['orElse']),
+      positional: const [0], named: const ['orElse']),
   new NonNullableArguments('dart.core', 'List', 'fold', positional: [1]),
   new NonNullableArguments('dart.core', 'List', 'forEach', positional: [0]),
   new NonNullableArguments('dart.core', 'List', 'lastWhere',
@@ -116,7 +116,7 @@ final nonNullableInstanceFunctionArguments = [
       named: ['onMatch', 'onNonMatch']),
 ];
 
-class NullClosures extends LintRule {
+class NullClosures extends LintRule implements NodeLintRule {
   NullClosures()
       : super(
             name: 'null_closures',
@@ -125,23 +125,27 @@ class NullClosures extends LintRule {
             group: Group.style);
 
   @override
-  AstVisitor getVisitor() => new Visitor(this);
+  void registerNodeProcessors(NodeLintRegistry registry) {
+    final visitor = new _Visitor(this);
+    registry.addInstanceCreationExpression(this, visitor);
+    registry.addMethodInvocation(this, visitor);
+  }
 }
 
-class Visitor extends SimpleAstVisitor {
+class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
-  Visitor(this.rule);
+
+  _Visitor(this.rule);
 
   @override
+
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     var constructorName = node.constructorName;
     var type = node.bestType;
-    for (var arg in nonNullableConstructorArguments) {
+    for (var arg in _nonNullableConstructorArguments) {
       if (DartTypeUtilities.extendsClass(type, arg.type, arg.library)) {
-        print('NAME ${constructorName?.name?.name}');
         if (constructorName?.name?.name == arg.function) {
-          print('GEN ${node.bestType}');
-          //_checkNullArgForClosure(node.argumentList, arg.position);
+          _checkNullArgForClosure(node.argumentList, arg.positional, arg.named);
         }
       }
     }
@@ -150,26 +154,37 @@ class Visitor extends SimpleAstVisitor {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     Expression target = node.target;
-    print('start: $target');
+    String methodName = node.methodName?.name;
     if (target == null || target is Identifier) {
-      print('Static?');
-      print('ID $target');
-      Element elem = target?.bestElement;
-      for (var arg in nonNullableStaticFunctionArguments) {
-        if (elem is ClassElement && elem.name == arg.type) {
-          if (node.methodName?.name == arg.function) {
-            print('Y STTIC');
-            //_checkNullArgForClosure(node.argumentList, arg.position);
+      Element element = target?.bestElement;
+      DartType type = target?.bestType;
+      if (element is ClassElement) {
+        // Static function called, "target" is the class.
+        for (var arg in _nonNullableStaticFunctionArguments) {
+          if (element.name == arg.type) {
+            if (methodName == arg.function) {
+              _checkNullArgForClosure(node.argumentList, arg.positional, arg.named);
+            }
+          }
+        }
+      } else {
+        // Instance method called, "target" is the instance.
+        for (var arg in _nonNullableInstanceFunctionArguments) {
+          if (DartTypeUtilities.extendsClass(type, arg.type, arg.library)) {
+            if (methodName == arg.function) {
+              _checkNullArgForClosure(
+                  node.argumentList, arg.positional, arg.named);
+            }
           }
         }
       }
     } else {
       DartType type = node.target?.bestType;
-      for (var arg in nonNullableInstanceFunctionArguments) {
+      for (var arg in _nonNullableInstanceFunctionArguments) {
         if (DartTypeUtilities.extendsClass(type, arg.type, arg.library)) {
-          if (node.methodName?.name == arg.function) {
-            print('yay! $type ${arg.function}');
-            //_checkNullArgForClosure(node.argumentList, arg.position);
+          if (methodName == arg.function) {
+            _checkNullArgForClosure(
+                node.argumentList, arg.positional, arg.named);
           }
         }
       }
@@ -177,19 +192,27 @@ class Visitor extends SimpleAstVisitor {
   }
 
   void _checkNullArgForClosure(
-      ArgumentList node, List<int> positions, List<String> names) {
+      ArgumentListImpl node, List<int> positions, List<String> names) {
     NodeList<Expression> args = node.arguments;
     List<ParameterElement> params = node.correspondingStaticParameters;
     if (params == null) {
-      return;
+      params = node.correspondingPropagatedParameters;
+      if (params == null) {
+        return;
+      }
     }
     for (int i = 0; i < args.length; i++) {
-      var arg = args[i];
+      Expression arg = args[i];
+
       if (arg is NamedExpression) {
-        arg = arg.expression;
-      }
-      if (arg is NullLiteral && params[i].type is FunctionType) {
-        rule.reportLint(arg);
+        if (arg.expression is NullLiteral &&
+            names.contains(arg.name.label.name)) {
+          rule.reportLint(arg);
+        }
+      } else {
+        if (arg is NullLiteral && positions.contains(i)) {
+          rule.reportLint(arg);
+        }
       }
     }
   }
