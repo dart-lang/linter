@@ -84,8 +84,8 @@ class _UnnecessaryThisVisitor extends ScopedVisitor {
     if (parent is PropertyAccess) {
       lookUpElement = DartTypeUtilities.getCanonicalElement(
           nameScope.lookup(parent.propertyName, definingLibrary));
-      localElement = DartTypeUtilities
-          .getCanonicalElement(parent.propertyName.bestElement);
+      localElement = DartTypeUtilities.getCanonicalElement(
+          parent.propertyName.bestElement);
     } else if (parent is MethodInvocation) {
       lookUpElement = DartTypeUtilities.getCanonicalElement(
           nameScope.lookup(parent.methodName, definingLibrary));
