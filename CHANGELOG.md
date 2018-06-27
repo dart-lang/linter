@@ -1,3 +1,7 @@
+# 0.1.55
+
+* fixed an issue in `const` error handling 
+
 # 0.1.54
 
 * new `unnecessary_const` lint
