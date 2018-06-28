@@ -42,8 +42,14 @@ class NonNullableFunction {
   final List<int> positional;
   final List<String> named;
 
-  const NonNullableFunction(this.library, this.type, this.name,
+  // Lazily instantiated, only when this function is found to be called.
+  InterfaceTypeDefinition _typeDefinition;
+
+  NonNullableFunction(this.library, this.type, this.name,
       {this.positional: const <int>[], this.named: const <String>[]});
+
+  InterfaceTypeDefinition get typeDefinition =>
+      _typeDefinition ??= new InterfaceTypeDefinition(type, library);
 }
 
 List<NonNullableFunction> _constructorsWithNonNullableArguments =
@@ -69,39 +75,32 @@ List<NonNullableFunction> _staticFunctionsWithNonNullableArguments =
 List<NonNullableFunction> _instanceMethodsWithNonNullableArguments =
     <NonNullableFunction>[
   new NonNullableFunction('dart.async', 'Future', 'then',
-      positional: const [0], named: const ['onError']),
+      positional: [0], named: ['onError']),
   new NonNullableFunction('dart.async', 'Future', 'complete', positional: [0]),
   new NonNullableFunction('dart.collection', 'Queue', 'removeWhere',
       positional: [0]),
   new NonNullableFunction('dart.collection', 'Queue', 'retainWhere',
       positional: [0]),
-  new NonNullableFunction('dart.collection', 'ListQueue', 'forEach',
-      positional: [0]),
-  new NonNullableFunction('dart.collection', 'ListQueue', 'removeWhere',
-      positional: [0]),
-  new NonNullableFunction('dart.collection', 'ListQueue', 'retainWhere',
-      positional: [0]),
-  new NonNullableFunction('dart.collection', 'MapView', 'forEach',
-      positional: [0]),
-  new NonNullableFunction('dart.collection', 'MapView', 'putIfAbsent',
-      positional: [1]),
-  new NonNullableFunction('dart.core', 'List', 'any', positional: [0]),
-  new NonNullableFunction('dart.core', 'List', 'every', positional: [0]),
-  new NonNullableFunction('dart.core', 'List', 'expand', positional: [0]),
-  new NonNullableFunction('dart.core', 'List', 'firstWhere',
-      positional: const [0], named: const ['orElse']),
-  new NonNullableFunction('dart.core', 'List', 'fold', positional: [1]),
-  new NonNullableFunction('dart.core', 'List', 'forEach', positional: [0]),
-  new NonNullableFunction('dart.core', 'List', 'lastWhere',
+  new NonNullableFunction('dart.core', 'Iterable', 'any', positional: [0]),
+  new NonNullableFunction('dart.core', 'Iterable', 'every', positional: [0]),
+  new NonNullableFunction('dart.core', 'Iterable', 'expand', positional: [0]),
+  new NonNullableFunction('dart.core', 'Iterable', 'firstWhere',
       positional: [0], named: ['orElse']),
-  new NonNullableFunction('dart.core', 'List', 'map', positional: [0]),
-  new NonNullableFunction('dart.core', 'List', 'reduce', positional: [0]),
+  new NonNullableFunction('dart.core', 'Iterable', 'forEach', positional: [0]),
+  new NonNullableFunction('dart.core', 'Iterable', 'fold', positional: [1]),
+  new NonNullableFunction('dart.core', 'Iterable', 'lastWhere',
+      positional: [0], named: ['orElse']),
+  new NonNullableFunction('dart.core', 'Iterable', 'map', positional: [0]),
+  new NonNullableFunction('dart.core', 'Iterable', 'reduce', positional: [0]),
+  new NonNullableFunction('dart.core', 'Iterable', 'singleWhere',
+      positional: [0]),
+  new NonNullableFunction('dart.core', 'Iterable', 'skipWhile',
+      positional: [0]),
+  new NonNullableFunction('dart.core', 'Iterable', 'takeWhile',
+      positional: [0]),
+  new NonNullableFunction('dart.core', 'Iterable', 'where', positional: [0]),
   new NonNullableFunction('dart.core', 'List', 'removeWhere', positional: [0]),
   new NonNullableFunction('dart.core', 'List', 'retainWhere', positional: [0]),
-  new NonNullableFunction('dart.core', 'List', 'singleWhere', positional: [0]),
-  new NonNullableFunction('dart.core', 'List', 'skipWhile', positional: [0]),
-  new NonNullableFunction('dart.core', 'List', 'takeWhile', positional: [0]),
-  new NonNullableFunction('dart.core', 'List', 'where', positional: [0]),
   new NonNullableFunction('dart.core', 'Map', 'forEach', positional: [0]),
   new NonNullableFunction('dart.core', 'Map', 'putIfAbsent', positional: [1]),
   new NonNullableFunction('dart.core', 'Set', 'removeWhere', positional: [0]),
@@ -169,8 +168,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       // Instance method called, "target" is the instance.
       DartType targetType = target?.bestType;
       for (var method in _instanceMethodsWithNonNullableArguments) {
-        if (DartTypeUtilities.extendsClass(
-            targetType, method.type, method.library)) {
+        if (DartTypeUtilities
+            .implementsAnyInterface(targetType, [method.typeDefinition])) {
           if (methodName == method.name) {
             _checkNullArgForClosure(
                 node.argumentList, method.positional, method.named);

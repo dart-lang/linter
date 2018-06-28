@@ -11,6 +11,8 @@ void list_firstWhere() {
   // firstWhere has a _named_ closure argument.
   <int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: null); // LINT
   <int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: () => null); // OK
+  <int>[2, 4, 6].where((e) => e.isEven); // OK
+  <int>[2, 4, 6].where(null); // LINT
 }
 
 void map_putIfAbsent() {
