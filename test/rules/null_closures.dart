@@ -11,8 +11,8 @@ void list_firstWhere() {
   // firstWhere has a _named_ closure argument.
   <int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: null); // LINT
   <int>[2, 4, 6].firstWhere((e) => e.isEven, orElse: () => null); // OK
-  <int>[2, 4, 6].where((e) => e.isEven); // OK
   <int>[2, 4, 6].where(null); // LINT
+  <int>[2, 4, 6].where((e) => e.isEven); // OK
 }
 
 void map_putIfAbsent() {
@@ -32,4 +32,10 @@ void list_generate() {
   // List.generate is a _constructor_ with a _positional_ argument.
   new List.generate(3, null); // LINT
   new List.generate(3, (_) => null); // OK
+}
+
+void map_otherMethods() {
+  // These methods have nothing we are concerned with.
+  new Map().keys; // OK
+  new Map().addAll({}); // OK
 }
