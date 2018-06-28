@@ -168,8 +168,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       // Instance method called, "target" is the instance.
       DartType targetType = target?.bestType;
       for (var method in _instanceMethodsWithNonNullableArguments) {
-        if (DartTypeUtilities
-            .implementsAnyInterface(targetType, [method.typeDefinition])) {
+        if (DartTypeUtilities.implementsAnyInterface(
+            targetType, [method.typeDefinition])) {
           if (methodName == method.name) {
             _checkNullArgForClosure(
                 node.argumentList, method.positional, method.named);
