@@ -66,9 +66,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    LibraryElement library = node == null
-        ? null
-        : resolutionMap.elementDeclaredByCompilationUnit(node)?.library;
+    LibraryElement library =
+        resolutionMap.elementDeclaredByCompilationUnit(node)?.library;
     manager = library == null ? null : new InheritanceManager(library);
   }
 
