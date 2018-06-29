@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>lines_longer_than_80_chars</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>lines_longer_than_80_chars</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><strong>AVOID</strong> lines longer than 80 characters</p>
+<p>Readability studies show that long lines of text are harder to read because your
+eye has to travel farther when moving to the beginning of the next line. This is
+why newspapers and magazines use multiple columns of text.</p>
+<p>If you really find yourself wanting lines longer than 80 characters, our
+experience is that your code is likely too verbose and could be a little more
+compact. The main offender is usually <code>VeryLongCamelCaseClassNames</code>. Ask
+yourself, “Does each word in that type name tell me something critical or
+prevent a name collision?” If not, consider omitting it.</p>
+<p>Note that dartfmt does 99% of this for you, but the last 1% is you. It does not
+split long string literals to fit in 80 columns, so you have to do that
+manually.</p>
+<p>We make an exception for URIs and file paths. When those occur in comments or
+strings (usually in imports and exports), they may remain on a single line even
+if they go over the line limit. This makes it easier to search source files for
+a given path.</p>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
