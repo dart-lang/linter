@@ -35,9 +35,9 @@ to indicate that they are under review.
 Rules can be selectively enabled in the analyzer using
 [analysis options](https://pub.dartlang.org/packages/analyzer)
 or through an
-[analysis options file](https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file). 
+[analysis options file](https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file).
 
-* **An auto-generated list enabling all options is provided [here](options/options.html).** 
+* **An auto-generated list enabling all options is provided [here](options/options.html).**
 
 As some lints may contradict each other, only a subset of these will be
 enabled in practice, but this list should provide a
@@ -132,7 +132,7 @@ class Generator {
   String get maturity => rule.maturity.name;
   String get name => rule.name;
 
-  generate([String filePath]) {
+  void generate([String filePath]) {
     var generated = _generate();
     if (filePath != null) {
       var outPath = '$filePath/$name.html';
@@ -190,7 +190,7 @@ class Indexer {
   Iterable<LintRule> rules;
   Indexer(this.rules);
 
-  generate(String filePath) {
+  void generate(String filePath) {
     var generated = _generate();
     if (filePath != null) {
       var outPath = '$filePath/index.html';
@@ -284,7 +284,7 @@ class OptionsSample {
   Iterable<LintRule> rules;
   OptionsSample(this.rules);
 
-  generate(String filePath) {
+  void generate(String filePath) {
     var generated = _generate();
     if (filePath != null) {
       var outPath = '$filePath/options/options.html';

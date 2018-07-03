@@ -79,7 +79,7 @@ class PublicMemberApiDocs extends LintRule {
   AstVisitor getVisitor() => _Visitor(this);
 }
 
-class _Visitor extends GeneralizingAstVisitor {
+class _Visitor extends GeneralizingAstVisitor<void> {
   InheritanceManager manager;
   bool isInLibFolder;
 
@@ -112,7 +112,7 @@ class _Visitor extends GeneralizingAstVisitor {
       getOverriddenMember(node.element) != null;
 
   @override
-  visitClassDeclaration(ClassDeclaration node) {
+  void visitClassDeclaration(ClassDeclaration node) {
     if (!isInLibFolder) return;
 
     if (isPrivate(node.name)) return;
@@ -171,7 +171,7 @@ class _Visitor extends GeneralizingAstVisitor {
   }
 
   @override
-  visitClassTypeAlias(ClassTypeAlias node) {
+  void visitClassTypeAlias(ClassTypeAlias node) {
     if (!isInLibFolder) return;
 
     if (!isPrivate(node.name)) {
@@ -180,7 +180,7 @@ class _Visitor extends GeneralizingAstVisitor {
   }
 
   @override
-  visitCompilationUnit(CompilationUnit node) {
+  void visitCompilationUnit(CompilationUnit node) {
     // Ignore this compilation unit if its not in the lib/ folder.
     isInLibFolder = isDefinedInLib(node);
     if (!isInLibFolder) return;
@@ -237,7 +237,7 @@ class _Visitor extends GeneralizingAstVisitor {
   }
 
   @override
-  visitConstructorDeclaration(ConstructorDeclaration node) {
+  void visitConstructorDeclaration(ConstructorDeclaration node) {
     if (!isInLibFolder) return;
 
     if (!inPrivateMember(node) && !isPrivate(node.name)) {
@@ -246,7 +246,7 @@ class _Visitor extends GeneralizingAstVisitor {
   }
 
   @override
-  visitEnumConstantDeclaration(EnumConstantDeclaration node) {
+  void visitEnumConstantDeclaration(EnumConstantDeclaration node) {
     if (!isInLibFolder) return;
 
     if (!inPrivateMember(node) && !isPrivate(node.name)) {
@@ -255,7 +255,7 @@ class _Visitor extends GeneralizingAstVisitor {
   }
 
   @override
-  visitEnumDeclaration(EnumDeclaration node) {
+  void visitEnumDeclaration(EnumDeclaration node) {
     if (!isInLibFolder) return;
 
     if (!isPrivate(node.name)) {
@@ -264,7 +264,7 @@ class _Visitor extends GeneralizingAstVisitor {
   }
 
   @override
-  visitFieldDeclaration(FieldDeclaration node) {
+  void visitFieldDeclaration(FieldDeclaration node) {
     if (!isInLibFolder) return;
 
     if (!inPrivateMember(node)) {
@@ -277,7 +277,7 @@ class _Visitor extends GeneralizingAstVisitor {
   }
 
   @override
-  visitFunctionTypeAlias(FunctionTypeAlias node) {
+  void visitFunctionTypeAlias(FunctionTypeAlias node) {
     if (!isInLibFolder) return;
 
     if (!isPrivate(node.name)) {
@@ -286,7 +286,7 @@ class _Visitor extends GeneralizingAstVisitor {
   }
 
   @override
-  visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
+  void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
     if (!isInLibFolder) return;
 
     for (VariableDeclaration decl in node.variables.variables) {

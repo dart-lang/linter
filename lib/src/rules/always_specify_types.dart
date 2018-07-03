@@ -128,7 +128,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   // Future kernel API.
-  visitNamedType(NamedType namedType) {
+  void visitNamedType(NamedType namedType) {
     DartType type = namedType.type;
     if (type is ParameterizedType) {
       if (type.typeParameters.isNotEmpty &&

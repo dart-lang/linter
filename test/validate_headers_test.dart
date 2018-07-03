@@ -7,7 +7,7 @@ import 'dart:io';
 
 import 'package:test/test.dart';
 
-main() {
+void main() {
   group('check for copyright headers', () {
     test('... in lib', () async {
       await validate('lib');

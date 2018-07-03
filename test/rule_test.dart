@@ -24,7 +24,7 @@ import 'package:test/test.dart';
 
 import 'mock_sdk.dart';
 
-main() {
+void main() {
   defineSanityTests();
   defineRuleTests();
   defineRuleUnitTests();
@@ -33,7 +33,7 @@ main() {
 final String ruleDir = p.join('test', 'rules');
 
 /// Rule tests
-defineRuleTests() {
+void defineRuleTests() {
   // TODO: if ruleDir cannot be found print message to set CWD to project root
   group('rule', () {
     group('dart', () {
@@ -67,7 +67,7 @@ defineRuleTests() {
   });
 }
 
-defineRuleUnitTests() {
+void defineRuleUnitTests() {
   group('uris', () {
     group('isPackage', () {
       [
@@ -146,7 +146,7 @@ defineRuleUnitTests() {
       testEach(bad, isValidDartIdentifier, isFalse);
     });
     group('libary_name_prefixes', () {
-      testEach(
+      void testEach(
           Iterable<List<String>> values, dynamic f(List<String> s), Matcher m) {
         values.forEach((s) => test('${s[3]}', () => expect(f(s), m)));
       }
@@ -177,7 +177,7 @@ defineRuleUnitTests() {
 }
 
 /// Test framework sanity
-defineSanityTests() {
+void defineSanityTests() {
   group('test framework', () {
     group('annotation', () {
       test('extraction', () {
@@ -236,7 +236,7 @@ defineSanityTests() {
 }
 
 /// Handy for debugging.
-defineSoloRuleTest(String ruleToTest) {
+void defineSoloRuleTest(String ruleToTest) {
   for (var entry in Directory(ruleDir).listSync()) {
     if (entry is! File || !isDartFile(entry)) continue;
     var ruleName = p.basenameWithoutExtension(entry.path);
@@ -288,15 +288,15 @@ AnnotationMatcher matchesAnnotation(
         String message, ErrorType type, int lineNumber) =>
     AnnotationMatcher(Annotation(message, type, lineNumber));
 
-testEach(Iterable<Object> values, bool f(String s), Matcher m) {
+void testEach(Iterable<Object> values, bool f(String s), Matcher m) {
   values.forEach((s) => test('"$s"', () => expect(f(s), m)));
 }
 
-testEachInt(Iterable<Object> values, bool f(int s), Matcher m) {
+void testEachInt(Iterable<Object> values, bool f(int s), Matcher m) {
   values.forEach((s) => test('"$s"', () => expect(f(s), m)));
 }
 
-testRule(String ruleName, File file, {bool debug = false}) {
+void testRule(String ruleName, File file, {bool debug = false}) {
   registerLintRules();
 
   test('$ruleName', () async {

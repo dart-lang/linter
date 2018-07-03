@@ -52,7 +52,7 @@ class PreferAssertsInInitializerLists extends LintRule implements NodeLintRule {
   }
 }
 
-class _AssertVisitor extends RecursiveAstVisitor {
+class _AssertVisitor extends RecursiveAstVisitor<void> {
   final ConstructorElement constructorElement;
 
   bool needInstance = false;
@@ -62,7 +62,7 @@ class _AssertVisitor extends RecursiveAstVisitor {
   ClassElement get classElement => constructorElement.enclosingElement;
 
   @override
-  visitSimpleIdentifier(SimpleIdentifier node) {
+  void visitSimpleIdentifier(SimpleIdentifier node) {
     final element = node.staticElement;
 
     // use method
@@ -81,7 +81,7 @@ class _AssertVisitor extends RecursiveAstVisitor {
   }
 
   @override
-  visitThisExpression(ThisExpression node) {
+  void visitThisExpression(ThisExpression node) {
     needInstance = true;
   }
 

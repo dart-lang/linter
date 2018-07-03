@@ -52,7 +52,7 @@ class AvoidFieldInitializersInConstClasses extends LintRule
   }
 }
 
-class HasParameterReferenceVisitor extends RecursiveAstVisitor {
+class HasParameterReferenceVisitor extends RecursiveAstVisitor<void> {
   Iterable<ParameterElement> parameters;
 
   bool useParameter = false;
@@ -60,7 +60,7 @@ class HasParameterReferenceVisitor extends RecursiveAstVisitor {
   HasParameterReferenceVisitor(this.parameters);
 
   @override
-  visitSimpleIdentifier(SimpleIdentifier node) {
+  void visitSimpleIdentifier(SimpleIdentifier node) {
     if (parameters.contains(node.bestElement)) {
       useParameter = true;
     } else {

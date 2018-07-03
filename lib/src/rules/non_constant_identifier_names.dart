@@ -54,7 +54,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  checkIdentifier(SimpleIdentifier id, {bool underscoresOk = false}) {
+  void checkIdentifier(SimpleIdentifier id, {bool underscoresOk = false}) {
     if (underscoresOk && isJustUnderscores(id.name)) {
       // For example, `___` is OK in a callback.
       return;

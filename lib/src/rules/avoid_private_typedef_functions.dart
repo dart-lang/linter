@@ -43,13 +43,13 @@ class AvoidPrivateTypedefFunctions extends LintRule implements NodeLintRule {
   }
 }
 
-class _CountVisitor extends RecursiveAstVisitor {
+class _CountVisitor extends RecursiveAstVisitor<void> {
   final String type;
   int count = 0;
   _CountVisitor(this.type);
 
   @override
-  visitTypeName(TypeName node) {
+  void visitTypeName(TypeName node) {
     if (node.name.name == type) count++;
   }
 }
@@ -73,7 +73,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  _countAndReport(String name, AstNode node) {
+  void _countAndReport(String name, AstNode node) {
     final visitor = _CountVisitor(name);
     final units = getCompilationUnit(node)
         .element

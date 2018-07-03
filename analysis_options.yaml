@@ -8,8 +8,8 @@ analyzer:
     - test/rules/**
 linter:
   rules:
-#    - always_declare_return_types
-#    - always_put_control_body_on_new_line
+    - always_declare_return_types
+#    - always_put_control_body_on_new_line # conflicts with curly_braces_in_flow_control_structures
     - always_put_required_named_parameters_first
     - always_require_non_null_named_parameters
 #    - always_specify_types
@@ -103,7 +103,7 @@ linter:
     - unnecessary_this
     - unrelated_type_equality_checks
     - use_rethrow_when_possible
-    - use_setters_to_change_properties
+    # - use_setters_to_change_properties # https://github.com/dart-lang/linter/issues/1063
     - use_string_buffers
     - use_to_and_as_if_applicable
     - valid_regexps

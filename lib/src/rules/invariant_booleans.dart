@@ -137,7 +137,7 @@ class _InvariantBooleansVisitor extends ConditionScopeVisitor {
   _InvariantBooleansVisitor(this.rule);
 
   @override
-  visitCondition(Expression node) {
+  void visitCondition(Expression node) {
     // Right part discards reporting a subexpression already reported.
     if (node == null ||
         resolutionMap.bestTypeForExpression(node).name != 'bool') {

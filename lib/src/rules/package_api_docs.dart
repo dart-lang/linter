@@ -58,7 +58,8 @@ Advice for writing good doc comments can be found in the
 
 ''';
 
-class PackageApiDocs extends LintRule implements ProjectVisitor, NodeLintRule {
+class PackageApiDocs extends LintRule
+    implements ProjectVisitor<void>, NodeLintRule {
   DartProject project;
 
   PackageApiDocs()
@@ -72,7 +73,7 @@ class PackageApiDocs extends LintRule implements ProjectVisitor, NodeLintRule {
   ProjectVisitor getProjectVisitor() => this;
 
   @override
-  visit(DartProject project) {
+  void visit(DartProject project) {
     this.project = project;
   }
 
@@ -91,7 +92,7 @@ class PackageApiDocs extends LintRule implements ProjectVisitor, NodeLintRule {
   }
 }
 
-class _Visitor extends GeneralizingAstVisitor {
+class _Visitor extends GeneralizingAstVisitor<void> {
   PackageApiDocs rule;
 
   _Visitor(this.rule);
@@ -116,7 +117,7 @@ class _Visitor extends GeneralizingAstVisitor {
   ///  | [FieldDeclaration]
   ///  | [MethodDeclaration]
   @override
-  visitClassMember(ClassMember node) {
+  void visitClassMember(ClassMember node) {
     check(node);
   }
 
@@ -128,12 +129,12 @@ class _Visitor extends GeneralizingAstVisitor {
   ///  | [ClassTypeAlias]
   ///  | [FunctionTypeAlias]
   @override
-  visitCompilationUnitMember(CompilationUnitMember node) {
+  void visitCompilationUnitMember(CompilationUnitMember node) {
     check(node);
   }
 
   @override
-  visitNode(AstNode node) {
+  void visitNode(AstNode node) {
     // Don't visit children
   }
 }
