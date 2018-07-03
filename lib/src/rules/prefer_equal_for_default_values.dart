@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = r'Prefer equal for default values.';
+const _desc = r'Use equal instead of colon when specifying default values.';
 
 const _details = r'''
 
