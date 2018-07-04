@@ -56,7 +56,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitListLiteral(ListLiteral node) {
-    node.elements.forEach((Expression e) {
+    node.elements.forEach((e) {
       if (e is AdjacentStrings) {
         rule.reportLint(e);
       }

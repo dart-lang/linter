@@ -59,7 +59,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool isRelativeLibImport(ImportDirective node) {
     try {
-      Uri uri = Uri.parse(node.uriContent);
+      final uri = Uri.parse(node.uriContent);
       if (uri.scheme.isEmpty) {
         return uri.path.contains('/lib/');
       }

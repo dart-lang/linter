@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
@@ -33,9 +32,9 @@ On the other hand, assuming `outOfScopeId` is out of scope:
 void f(int outOfScopeId) { ... }
 ```
 
-Note that the square bracket comment format is designed to allow 
-comments to refer to declarations using a fairly natural format 
-but does not allow *arbitrary expressions*.  In particular, code 
+Note that the square bracket comment format is designed to allow
+comments to refer to declarations using a fairly natural format
+but does not allow *arbitrary expressions*.  In particular, code
 references within square brackets can consist of either
 
 - a single identifier where the identifier is any identifier in scope for the comment (see the spec for what is in scope in doc comments),
@@ -71,16 +70,16 @@ class _Visitor extends SimpleAstVisitor<void> {
     // Check for keywords that are not treated as references by the parser
     // but should be flagged by the linter.
     // Note that no special care is taken to handle embedded code blocks.
-    for (Token token in node.tokens) {
+    for (final token in node.tokens) {
       if (!token.isSynthetic) {
-        String comment = token.lexeme;
-        int leftIndex = comment.indexOf('[');
+        final comment = token.lexeme;
+        var leftIndex = comment.indexOf('[');
         while (leftIndex >= 0) {
-          int rightIndex = comment.indexOf(']', leftIndex);
+          final rightIndex = comment.indexOf(']', leftIndex);
           if (rightIndex >= 0) {
-            String reference = comment.substring(leftIndex + 1, rightIndex);
+            final reference = comment.substring(leftIndex + 1, rightIndex);
             if (_isParserSpecialCase(reference)) {
-              int nameOffset = token.offset + leftIndex + 1;
+              final nameOffset = token.offset + leftIndex + 1;
               rule.reporter.reportErrorForOffset(
                   rule.lintCode, nameOffset, reference.length);
             }
@@ -93,7 +92,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCommentReference(CommentReference node) {
-    Identifier identifier = node.identifier;
+    final identifier = node.identifier;
     if (!identifier.isSynthetic && identifier.bestElement == null) {
       rule.reportLint(identifier);
     }

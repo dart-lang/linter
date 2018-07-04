@@ -74,7 +74,7 @@ class DartTypeUtilities {
     }
     bool predicate(InterfaceType i) =>
         definitions.any((d) => isInterface(i, d.name, d.library));
-    ClassElement element = type.element;
+    final ClassElement element = type.element;
     return predicate(type) ||
         !element.isSynthetic && element.allSupertypes.any(predicate);
   }
@@ -85,7 +85,7 @@ class DartTypeUtilities {
       return false;
     }
     bool predicate(InterfaceType i) => isInterface(i, interface, library);
-    ClassElement element = type.element;
+    final ClassElement element = type.element;
     return predicate(type) ||
         !element.isSynthetic && element.allSupertypes.any(predicate);
   }
@@ -189,7 +189,7 @@ class DartTypeUtilities {
   /// predicate returns true, if not provided, all is included.
   static Iterable<AstNode> traverseNodesInDFS(AstNode node,
       {AstNodePredicate excludeCriteria}) {
-    LinkedHashSet<AstNode> nodes = LinkedHashSet();
+    final nodes = LinkedHashSet<AstNode>();
     void recursiveCall(node) {
       if (node is AstNode &&
           (excludeCriteria == null || !excludeCriteria(node))) {
@@ -216,8 +216,8 @@ class DartTypeUtilities {
         rightType.isMoreSpecificThan(leftType)) {
       return false;
     }
-    Element leftElement = leftType.element;
-    Element rightElement = rightType.element;
+    final leftElement = leftType.element;
+    final rightElement = rightType.element;
     if (leftElement is ClassElement && rightElement is ClassElement) {
       return leftElement.supertype.isObject ||
           leftElement.supertype != rightElement.supertype;
@@ -232,10 +232,8 @@ class DartTypeUtilities {
     final library = classElement.library;
     return classElement.allSupertypes
         .map(node.isGetter
-            ? (InterfaceType t) => t.lookUpGetter
-            : node.isSetter
-                ? (InterfaceType t) => t.lookUpSetter
-                : (InterfaceType t) => t.lookUpMethod)
+            ? (t) => t.lookUpGetter
+            : node.isSetter ? (t) => t.lookUpSetter : (t) => t.lookUpMethod)
         .any((lookUp) => lookUp(name, library) != null);
   }
 }

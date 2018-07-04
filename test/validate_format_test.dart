@@ -9,9 +9,9 @@ import 'package:test/test.dart';
 main() {
   test('validate source formatting', () async {
     try {
-      ProcessResult result = await Process.run(
+      final result = await Process.run(
           'dartfmt', ['--dry-run', '--set-exit-if-changed', '.']);
-      List<String> violations = result.stdout.toString().split('\n')
+      final violations = result.stdout.toString().split('\n')
         ..removeWhere(formattingIgnored);
       expect(violations, isEmpty, reason: '''Some files need formatting. 
   

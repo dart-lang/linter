@@ -276,7 +276,7 @@ class HtmlElement {}
   AnalysisContextImpl _analysisContext;
 
   MockSdk(this.provider) {
-    LIBRARIES.forEach((SdkLibrary library) {
+    LIBRARIES.forEach((library) {
       if (library is _MockSdkLibrary) {
         provider.newFile(provider.convertPath(library.path), library.content);
         library.parts.forEach((file) {
@@ -294,7 +294,7 @@ class HtmlElement {}
   AnalysisContextImpl get context {
     if (_analysisContext == null) {
       _analysisContext = _SdkAnalysisContext(this);
-      SourceFactory factory = SourceFactory([DartUriResolver(this)]);
+      final factory = SourceFactory([DartUriResolver(this)]);
       _analysisContext.sourceFactory = factory;
     }
     return _analysisContext;
@@ -310,33 +310,33 @@ class HtmlElement {}
 
   @override
   List<String> get uris =>
-      sdkLibraries.map((SdkLibrary library) => library.shortName).toList();
+      sdkLibraries.map((library) => library.shortName).toList();
 
   @override
   Source fromFileUri(Uri uri) {
-    String filePath = provider.pathContext.fromUri(uri);
+    final filePath = provider.pathContext.fromUri(uri);
     if (!filePath.startsWith(provider.convertPath('/lib/'))) {
       return null;
     }
-    for (SdkLibrary library in sdkLibraries) {
-      String libraryPath = provider.convertPath(library.path);
+    for (final library in sdkLibraries) {
+      final libraryPath = provider.convertPath(library.path);
       if (filePath == libraryPath) {
         try {
-          resource.File file = provider.getResource(filePath);
-          Uri dartUri = Uri.parse(library.shortName);
+          final resource.File file = provider.getResource(filePath);
+          final dartUri = Uri.parse(library.shortName);
           return file.createSource(dartUri);
         } on FormatException {
           return null;
         }
       }
-      String libraryRootPath = provider.pathContext.dirname(libraryPath) +
+      final libraryRootPath = provider.pathContext.dirname(libraryPath) +
           provider.pathContext.separator;
       if (filePath.startsWith(libraryRootPath)) {
-        String pathInLibrary = filePath.substring(libraryRootPath.length);
-        String uriStr = '${library.shortName}/$pathInLibrary';
+        final pathInLibrary = filePath.substring(libraryRootPath.length);
+        final uriStr = '${library.shortName}/$pathInLibrary';
         try {
-          resource.File file = provider.getResource(filePath);
-          Uri dartUri = Uri.parse(uriStr);
+          final resource.File file = provider.getResource(filePath);
+          final dartUri = Uri.parse(uriStr);
           return file.createSource(dartUri);
         } on FormatException {
           return null;
@@ -349,7 +349,7 @@ class HtmlElement {}
   @override
   PackageBundle getLinkedBundle() {
     if (_bundle == null) {
-      resource.File summaryFile =
+      final summaryFile =
           provider.getFile(provider.convertPath('/lib/_internal/spec.sum'));
       List<int> bytes;
       if (summaryFile.exists) {
@@ -364,7 +364,7 @@ class HtmlElement {}
 
   @override
   SdkLibrary getSdkLibrary(String dartUri) {
-    for (SdkLibrary library in LIBRARIES) {
+    for (final library in LIBRARIES) {
       if (library.shortName == dartUri) {
         return library;
       }
@@ -374,7 +374,7 @@ class HtmlElement {}
 
   @override
   Source mapDartUri(String dartUri) {
-    const Map<String, String> uriToPath = {
+    const uriToPath = <String, String>{
       'dart:core': '/lib/core/core.dart',
       'dart:html': '/lib/html/dartium/html_dartium.dart',
       'dart:async': '/lib/async/async.dart',
@@ -385,10 +385,11 @@ class HtmlElement {}
       'dart:math': '/lib/math/math.dart'
     };
 
-    String path = uriToPath[dartUri];
+    final path = uriToPath[dartUri];
     if (path != null) {
-      resource.File file = provider.getResource(provider.convertPath(path));
-      Uri uri = Uri(scheme: 'dart', path: dartUri.substring(5));
+      final resource.File file =
+          provider.getResource(provider.convertPath(path));
+      final uri = Uri(scheme: 'dart', path: dartUri.substring(5));
       return file.createSource(uri);
     }
 
@@ -399,9 +400,8 @@ class HtmlElement {}
 
   /// Compute the bytes of the linked bundle associated with this SDK.
   List<int> _computeLinkedBundleBytes() {
-    List<Source> librarySources = sdkLibraries
-        .map((SdkLibrary library) => mapDartUri(library.shortName))
-        .toList();
+    final librarySources =
+        sdkLibraries.map((library) => mapDartUri(library.shortName)).toList();
     return SummaryBuilder(
             librarySources, context, context.analysisOptions.strongMode)
         .build();

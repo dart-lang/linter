@@ -127,7 +127,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    FormalParameterList parameters = node.functionExpression.parameters;
+    final parameters = node.functionExpression.parameters;
     if (parameters != null) {
       // Getter do not have formal parameters.
       parameters.parameters.forEach((e) {
@@ -141,7 +141,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    FormalParameterList parameterList = node?.parameters;
+    final parameterList = node?.parameters;
     if (parameterList != null) {
       // Getters don't have parameters.
       parameterList.parameters.forEach((e) {
@@ -180,7 +180,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     if (assignmentsNodes.length > 1 ||
         nonNullCoalescingAssignments.isNotEmpty) {
-      AstNode node = assignmentsNodes.length > 1
+      final node = assignmentsNodes.length > 1
           ? assignmentsNodes.last
           : nonNullCoalescingAssignments.isNotEmpty
               ? nonNullCoalescingAssignments.first

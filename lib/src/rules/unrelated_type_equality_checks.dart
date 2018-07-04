@@ -21,7 +21,7 @@ Comparing references of a type where neither is a subtype of the other most
 likely will return `false` and might not reflect programmer's intent.
 
 `Int64` and `Int32` from `package:fixnum` allow comparing to `int` provided
-the `int` is on the right hand side. The lint allows this as a special case. 
+the `int` is on the right hand side. The lint allows this as a special case.
 
 **BAD:**
 ```
@@ -140,10 +140,10 @@ bool _isFixNumIntX(DartType type) =>
     type.element?.library?.name == 'fixnum';
 
 bool _hasNonComparableOperands(BinaryExpression node) {
-  var left = node.leftOperand;
-  var leftType = left.bestType;
-  var right = node.rightOperand;
-  var rightType = right.bestType;
+  final left = node.leftOperand;
+  final leftType = left.bestType;
+  final right = node.rightOperand;
+  final rightType = right.bestType;
   return !DartTypeUtilities.isNullLiteral(left) &&
       !DartTypeUtilities.isNullLiteral(right) &&
       DartTypeUtilities.unrelatedTypes(leftType, rightType) &&
@@ -174,7 +174,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
-    bool isDartCoreBoolean =
+    final isDartCoreBoolean =
         resolutionMap.bestTypeForExpression(node).name == _boolClassName &&
             resolutionMap.bestTypeForExpression(node).element?.library?.name ==
                 _dartCoreLibraryName;

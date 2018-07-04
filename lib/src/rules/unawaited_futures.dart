@@ -58,10 +58,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitExpressionStatement(ExpressionStatement node) {
-    var expr = node?.expression;
+    final expr = node?.expression;
     if (expr is AssignmentExpression) return;
 
-    var type =
+    final type =
         expr == null ? null : resolutionMap.staticTypeForExpression(expr);
     if (type?.isDartAsyncFuture == true) {
       // Ignore a couple of special known cases.
@@ -71,7 +71,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
 
       // Not in an async function body: assume fire-and-forget.
-      var enclosingFunctionBody =
+      final enclosingFunctionBody =
           node.getAncestor((node) => node is FunctionBody) as FunctionBody;
       if (enclosingFunctionBody?.isAsynchronous != true) return;
 

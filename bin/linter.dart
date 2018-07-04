@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:analyzer/file_system/physical_file_system.dart';
-import 'package:analyzer/src/generated/engine.dart';
 import 'package:analyzer/src/lint/config.dart';
 import 'package:analyzer/src/lint/io.dart';
 import 'package:analyzer/src/lint/linter.dart';
@@ -47,7 +46,7 @@ Future runLinter(List<String> args, LinterOptions initialLintOptions) async {
   // Force the rule registry to be populated.
   registerLintRules();
 
-  var parser = ArgParser(allowTrailingOptions: true);
+  final parser = ArgParser(allowTrailingOptions: true);
 
   parser
     ..addFlag('help',
@@ -96,19 +95,19 @@ Future runLinter(List<String> args, LinterOptions initialLintOptions) async {
     return;
   }
 
-  var lintOptions = initialLintOptions;
+  final lintOptions = initialLintOptions;
 
-  var configFile = options['config'];
+  final configFile = options['config'];
   if (configFile != null) {
-    var config = LintConfig.parse(readFile(configFile));
+    final config = LintConfig.parse(readFile(configFile));
     lintOptions.configure(config);
   }
 
-  var lints = options['rules'];
+  final lints = options['rules'];
   if (lints != null && !lints.isEmpty) {
-    var rules = <LintRule>[];
-    for (var lint in lints) {
-      var rule = Registry.ruleRegistry[lint];
+    final rules = <LintRule>[];
+    for (final lint in lints) {
+      final rule = Registry.ruleRegistry[lint];
       if (rule == null) {
         errorSink.write('Unrecognized lint rule: $lint');
         exit(unableToProcessExitCode);
@@ -119,20 +118,20 @@ Future runLinter(List<String> args, LinterOptions initialLintOptions) async {
     lintOptions.enabledLints = rules;
   }
 
-  var customSdk = options['dart-sdk'];
+  final customSdk = options['dart-sdk'];
   if (customSdk != null) {
     lintOptions.dartSdkPath = customSdk;
   }
 
-  var strongMode = options['strong'];
+  final strongMode = options['strong'];
   if (strongMode != null) lintOptions.strongMode = strongMode;
 
-  var customPackageRoot = options['package-root'];
+  final customPackageRoot = options['package-root'];
   if (customPackageRoot != null) {
     lintOptions.packageRootPath = customPackageRoot;
   }
 
-  var packageConfigFile = options['packages'];
+  final packageConfigFile = options['packages'];
 
   if (customPackageRoot != null && packageConfigFile != null) {
     errorSink.write("Cannot specify both '--package-root' and '--packages'.");
@@ -140,8 +139,8 @@ Future runLinter(List<String> args, LinterOptions initialLintOptions) async {
     return;
   }
 
-  var stats = options['stats'];
-  var benchmark = options['benchmark'];
+  final stats = options['stats'];
+  final benchmark = options['benchmark'];
   if (stats || benchmark) {
     lintOptions.enableTiming = true;
   }
@@ -150,7 +149,7 @@ Future runLinter(List<String> args, LinterOptions initialLintOptions) async {
     ..packageConfigPath = packageConfigFile
     ..resourceProvider = PhysicalResourceProvider.INSTANCE;
 
-  List<File> filesToLint = [];
+  final filesToLint = <File>[];
   for (var path in options.rest) {
     filesToLint.addAll(collectFiles(path));
   }
@@ -164,10 +163,10 @@ Future runLinter(List<String> args, LinterOptions initialLintOptions) async {
 
   try {
     final timer = Stopwatch()..start();
-    List<AnalysisErrorInfo> errors = await lintFiles(linter, filesToLint);
+    final errors = await lintFiles(linter, filesToLint);
     timer.stop();
 
-    var commonRoot = getRoot(options.rest);
+    final commonRoot = getRoot(options.rest);
     ReportFormatter(errors, lintOptions.filter, outSink,
         elapsedMs: timer.elapsedMilliseconds,
         fileCount: linter.numSourcesAnalyzed,

@@ -4,7 +4,6 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
@@ -178,9 +177,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    var constructorName = node.constructorName;
-    var type = node.bestType;
-    for (var constructor in _constructorsWithNonNullableArguments) {
+    final constructorName = node.constructorName;
+    final type = node.bestType;
+    for (final constructor in _constructorsWithNonNullableArguments) {
       if (DartTypeUtilities.extendsClass(
           type, constructor.type, constructor.library)) {
         if (constructorName?.name?.name == constructor.name) {
@@ -193,9 +192,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    Expression target = node.target;
-    String methodName = node.methodName?.name;
-    Element element = target is Identifier ? target?.bestElement : null;
+    final target = node.target;
+    final methodName = node.methodName?.name;
+    final element = target is Identifier ? target?.bestElement : null;
     if (element is ClassElement) {
       // Static function called, "target" is the class.
       for (var function in _staticFunctionsWithNonNullableArguments) {
@@ -208,7 +207,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     } else {
       // Instance method called, "target" is the instance.
-      DartType targetType = target?.bestType;
+      final targetType = target?.bestType;
       for (var method in _instanceMethodsWithNonNullableArguments) {
         if (DartTypeUtilities.implementsAnyInterface(
             targetType, [method.typeDefinition])) {
@@ -223,9 +222,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void _checkNullArgForClosure(
       ArgumentList node, List<int> positions, List<String> names) {
-    NodeList<Expression> args = node.arguments;
-    for (int i = 0; i < args.length; i++) {
-      Expression arg = args[i];
+    final args = node.arguments;
+    for (var i = 0; i < args.length; i++) {
+      final arg = args[i];
 
       if (arg is NamedExpression) {
         if (arg.expression is NullLiteral &&

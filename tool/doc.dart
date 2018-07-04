@@ -12,7 +12,7 @@ import 'package:markdown/markdown.dart';
 
 /// Generates lint rule docs for publishing to http://dart-lang.github.io/
 void main([List<String> args]) {
-  var parser = ArgParser(allowTrailingOptions: true)
+  final parser = ArgParser(allowTrailingOptions: true)
     ..addOption('out', abbr: 'o', help: 'Specifies output directory.');
 
   var options;
@@ -23,7 +23,7 @@ void main([List<String> args]) {
     return;
   }
 
-  var outDir = options['out'];
+  final outDir = options['out'];
   generateDocs(outDir);
 }
 
@@ -35,9 +35,9 @@ to indicate that they are under review.
 Rules can be selectively enabled in the analyzer using
 [analysis options](https://pub.dartlang.org/packages/analyzer)
 or through an
-[analysis options file](https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file). 
+[analysis options file](https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file).
 
-* **An auto-generated list enabling all options is provided [here](options/options.html).** 
+* **An auto-generated list enabling all options is provided [here](options/options.html).**
 
 As some lints may contradict each other, only a subset of these will be
 enabled in practice, but this list should provide a
@@ -59,8 +59,8 @@ String get enumerateErrorRules => rules
     .join('\n\n');
 
 String get enumerateGroups => Group.builtin
-    .map((Group g) =>
-        '<li><strong>${g.name}</strong> - ${markdownToHtml(g.description)}</li>')
+    .map((g) => '<li><strong>${g
+        .name}</strong> - ${markdownToHtml(g.description)}</li>')
     .join('\n');
 
 String get enumeratePubRules => rules
@@ -76,15 +76,15 @@ String get enumerateStyleRules => rules
 List<String> get sortedRules => rules.map((r) => r.name).toList()..sort();
 
 void generateDocs(String dir) {
-  String outDir = dir;
+  var outDir = dir;
   if (outDir != null) {
-    Directory d = Directory(outDir);
+    final d = Directory(outDir);
     if (!d.existsSync()) {
       print("Directory '${d.path}' does not exist");
       return;
     }
     if (!File('$outDir/options').existsSync()) {
-      Directory lintsChildDir = Directory('$outDir/lints');
+      final lintsChildDir = Directory('$outDir/lints');
       if (lintsChildDir.existsSync()) {
         outDir = lintsChildDir.path;
       }
@@ -120,7 +120,8 @@ String qualify(LintRule r) =>
     (r.maturity == Maturity.stable ? '' : ' (${r.maturity.name})');
 
 String toDescription(LintRule r) =>
-    '<strong><a href = "${r.name}.html">${qualify(r)}</a></strong><br/>${markdownToHtml(r.description)}';
+    '<strong><a href = "${r.name}.html">${qualify(
+        r)}</a></strong><br/>${markdownToHtml(r.description)}';
 
 class Generator {
   LintRule rule;
@@ -132,10 +133,10 @@ class Generator {
   String get maturity => rule.maturity.name;
   String get name => rule.name;
 
-  generate([String filePath]) {
-    var generated = _generate();
+  void generate([String filePath]) {
+    final generated = _generate();
     if (filePath != null) {
-      var outPath = '$filePath/$name.html';
+      final outPath = '$filePath/$name.html';
       print('Writing to $outPath');
       File(outPath).writeAsStringSync(generated);
     } else {
@@ -190,10 +191,10 @@ class Indexer {
   Iterable<LintRule> rules;
   Indexer(this.rules);
 
-  generate(String filePath) {
-    var generated = _generate();
+  void generate(String filePath) {
+    final generated = _generate();
     if (filePath != null) {
-      var outPath = '$filePath/index.html';
+      final outPath = '$filePath/index.html';
       print('Writing to $outPath');
       File(outPath).writeAsStringSync(generated);
     } else {
@@ -284,10 +285,10 @@ class OptionsSample {
   Iterable<LintRule> rules;
   OptionsSample(this.rules);
 
-  generate(String filePath) {
-    var generated = _generate();
+  void generate(String filePath) {
+    final generated = _generate();
     if (filePath != null) {
-      var outPath = '$filePath/options/options.html';
+      final outPath = '$filePath/options/options.html';
       print('Writing to $outPath');
       File(outPath).writeAsStringSync(generated);
     } else {
@@ -296,12 +297,12 @@ class OptionsSample {
   }
 
   String generateOptions() {
-    StringBuffer sb = StringBuffer('''
+    final sb = StringBuffer('''
 ```
 linter:
   rules:
 ''');
-    for (String rule in sortedRules) {
+    for (final rule in sortedRules) {
       sb.write('    - $rule\n');
     }
     sb.write('```');

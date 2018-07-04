@@ -21,8 +21,8 @@ main() {
 defineTests() {
   group('integration', () {
     group('p2', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -58,8 +58,8 @@ defineTests() {
       });
     });
     group('p3', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() => outSink = collectingOut);
       tearDown(() {
         collectingOut.buffer.clear();
@@ -72,15 +72,15 @@ defineTests() {
       });
     });
     group('p4', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() => outSink = collectingOut);
       tearDown(() {
         collectingOut.buffer.clear();
         outSink = currentOut;
       });
       test('no warnings due to bad canonicalization', () async {
-        var packagesFilePath = File('test/_data/p4/_packages').absolute.path;
+        final packagesFilePath = File('test/_data/p4/_packages').absolute.path;
         await dartlint.runLinter(
             ['--packages', packagesFilePath, 'test/_data/p4'],
             LinterOptions([])..previewDart2 = true);
@@ -90,8 +90,8 @@ defineTests() {
     });
 
     group('p5', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -113,8 +113,8 @@ defineTests() {
     });
 
     group('overridden_fields', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -138,8 +138,8 @@ defineTests() {
     });
 
     group('close_sinks', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -151,7 +151,7 @@ defineTests() {
       });
 
       test('close sinks', () async {
-        var packagesFilePath = File('.packages').absolute.path;
+        final packagesFilePath = File('.packages').absolute.path;
         await dartlint.main([
           '--packages',
           packagesFilePath,
@@ -170,8 +170,8 @@ defineTests() {
     });
 
     group('cancel_subscriptions', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -199,8 +199,8 @@ defineTests() {
     });
 
     group('directives_ordering', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -212,7 +212,7 @@ defineTests() {
       });
 
       test('dart_directives_go_first', () async {
-        var packagesFilePath = File('.packages').absolute.path;
+        final packagesFilePath = File('.packages').absolute.path;
         await dartlint.main([
           '--packages',
           packagesFilePath,
@@ -236,7 +236,7 @@ defineTests() {
       });
 
       test('package_directives_before_relative', () async {
-        var packagesFilePath = File('.packages').absolute.path;
+        final packagesFilePath = File('.packages').absolute.path;
         await dartlint.main([
           '--packages',
           packagesFilePath,
@@ -260,7 +260,7 @@ defineTests() {
       });
 
       test('third_party_package_directives_before_own', () async {
-        var packagesFilePath = File('.packages').absolute.path;
+        final packagesFilePath = File('.packages').absolute.path;
         await dartlint.main([
           '--packages',
           packagesFilePath,
@@ -284,7 +284,7 @@ defineTests() {
       });
 
       test('export_directives_after_import_directives', () async {
-        var packagesFilePath = File('.packages').absolute.path;
+        final packagesFilePath = File('.packages').absolute.path;
         await dartlint.main([
           '--packages',
           packagesFilePath,
@@ -304,7 +304,7 @@ defineTests() {
       });
 
       test('sort_directive_sections_alphabetically', () async {
-        var packagesFilePath = File('.packages').absolute.path;
+        final packagesFilePath = File('.packages').absolute.path;
         await dartlint.main([
           '--packages',
           packagesFilePath,
@@ -344,7 +344,7 @@ defineTests() {
       });
 
       test('lint_one_node_no_more_than_once', () async {
-        var packagesFilePath = File('.packages').absolute.path;
+        final packagesFilePath = File('.packages').absolute.path;
         await dartlint.main([
           '--packages',
           packagesFilePath,
@@ -363,8 +363,8 @@ defineTests() {
     });
 
     group('file_names', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -387,8 +387,8 @@ defineTests() {
     });
 
     group('lines_longer_than_80_chars', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -418,8 +418,8 @@ defineTests() {
     });
 
     group('only_throw_errors', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -448,8 +448,8 @@ defineTests() {
     });
 
     group('always_require_non_null_named_parameters', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -474,8 +474,8 @@ defineTests() {
     });
 
     group('prefer_asserts_in_initializer_lists', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -500,8 +500,8 @@ defineTests() {
     });
 
     group('prefer_const_constructors_in_immutables', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -526,8 +526,8 @@ defineTests() {
     });
 
     group('avoid_relative_lib_imports', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
       setUp(() {
         exitCode = 0;
         outSink = collectingOut;
@@ -554,8 +554,8 @@ defineTests() {
     });
 
     group('public_member_api_docs', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
 
       setUp(() {
         exitCode = 0;
@@ -569,7 +569,7 @@ defineTests() {
       });
 
       test('lint lib/ sources and non-lib/ sources', () async {
-        var packagesFilePath = File('.packages').absolute.path;
+        final packagesFilePath = File('.packages').absolute.path;
         await dartlint.main([
           '--packages',
           packagesFilePath,
@@ -602,8 +602,8 @@ defineTests() {
     });
 
     group('avoid_renaming_method_parameters', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
 
       setUp(() {
         exitCode = 0;
@@ -639,8 +639,8 @@ defineTests() {
     });
 
     group('avoid_private_typedef_functions', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
 
       setUp(() {
         exitCode = 0;
@@ -672,8 +672,8 @@ defineTests() {
 
     // TODO(a14n) move to unit test once previewDart2 disappears
     group('unnecessary_const', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
 
       setUp(() {
         exitCode = 0;
@@ -705,8 +705,8 @@ defineTests() {
 
     // TODO(a14n) move to unit test once previewDart2 disappears
     group('unnecessary_new', () {
-      IOSink currentOut = outSink;
-      CollectingSink collectingOut = CollectingSink();
+      final currentOut = outSink;
+      final collectingOut = CollectingSink();
 
       setUp(() {
         exitCode = 0;
@@ -738,10 +738,10 @@ defineTests() {
 
     group('examples', () {
       test('all.yaml', () {
-        String src = readFile('example/all.yaml');
+        final src = readFile('example/all.yaml');
 
-        Map<String, YamlNode> options = _getOptionsFromString(src);
-        var configuredLints =
+        final options = _getOptionsFromString(src);
+        final configuredLints =
             ((options['linter'] as YamlMap)['rules'] as YamlList);
 
         // rules are sorted
@@ -760,12 +760,12 @@ defineTests() {
 
 /// Provide the options found in [optionsSource].
 Map<String, YamlNode> _getOptionsFromString(String optionsSource) {
-  Map<String, YamlNode> options = <String, YamlNode>{};
+  final options = <String, YamlNode>{};
   if (optionsSource == null) {
     return options;
   }
 
-  YamlNode doc = loadYamlNode(optionsSource);
+  final doc = loadYamlNode(optionsSource);
 
   // Empty options.
   if (doc is YamlScalar && doc.value == null) {
@@ -776,7 +776,7 @@ Map<String, YamlNode> _getOptionsFromString(String optionsSource) {
         'Bad options file format (expected map, got ${doc.runtimeType})');
   }
   if (doc is YamlMap) {
-    doc.nodes.forEach((k, YamlNode v) {
+    doc.nodes.forEach((k, v) {
       var key;
       if (k is YamlScalar) {
         key = k.value;

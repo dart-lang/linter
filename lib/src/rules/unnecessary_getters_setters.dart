@@ -71,11 +71,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    Map<String, MethodDeclaration> getters = {};
-    Map<String, MethodDeclaration> setters = {};
+    final getters = <String, MethodDeclaration>{};
+    final setters = <String, MethodDeclaration>{};
 
     // Build getter/setter maps
-    var methods = node.members.where(isMethod);
+    final methods = node.members.where(isMethod);
     for (MethodDeclaration method in methods) {
       if (method.isGetter) {
         getters[method.name.toString()] = method;

@@ -36,7 +36,7 @@ import 'package:acme/lib/src/internals.dart;
 ''';
 
 bool isImplementation(Uri uri) {
-  List<String> segments = uri?.pathSegments ?? const [];
+  final segments = uri?.pathSegments ?? const [];
   if (segments.length > 2) {
     if (segments[1] == 'src') {
       return true;
@@ -48,8 +48,8 @@ bool isImplementation(Uri uri) {
 bool isPackage(Uri uri) => uri?.scheme == 'package';
 
 bool samePackage(Uri uri1, Uri uri2) {
-  var segments1 = uri1.pathSegments;
-  var segments2 = uri2.pathSegments;
+  final segments1 = uri1.pathSegments;
+  final segments2 = uri2.pathSegments;
   if (segments1.isEmpty || segments2.isEmpty) {
     return false;
   }
@@ -78,8 +78,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitImportDirective(ImportDirective node) {
-    Uri importUri = node?.uriSource?.uri;
-    Uri sourceUri = node == null
+    final importUri = node?.uriSource?.uri;
+    final sourceUri = node == null
         ? null
         : resolutionMap.elementDeclaredByDirective(node)?.source?.uri;
 

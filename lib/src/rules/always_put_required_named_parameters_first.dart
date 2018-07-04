@@ -59,7 +59,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFormalParameterList(FormalParameterList node) {
-    bool nonRequiredSeen = false;
+    var nonRequiredSeen = false;
     for (DefaultFormalParameter param
         in node.parameters.where((p) => p.isNamed)) {
       if (param.metadata.any((a) => _isRequired(a.element))) {

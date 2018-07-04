@@ -5,7 +5,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
@@ -95,7 +94,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   void _checkFileMethods(MethodInvocation node) {
-    DartType type = node.target?.bestType;
+    final type = node.target?.bestType;
     if (DartTypeUtilities.extendsClass(type, 'File', 'dart.io')) {
       if (_fileMethodNames.contains(node.methodName?.name)) {
         rule.reportLint(node);
@@ -104,9 +103,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   void _checkFileSystemEntityMethods(MethodInvocation node) {
-    Expression target = node.target;
+    final target = node.target;
     if (target is Identifier) {
-      Element elem = target?.bestElement;
+      final elem = target?.bestElement;
       if (elem is ClassElement && elem.name == 'FileSystemEntity') {
         if (_fileSystemEntityMethodNames.contains(node.methodName?.name)) {
           rule.reportLint(node);

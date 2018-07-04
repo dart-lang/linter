@@ -73,7 +73,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFormalParameterList(FormalParameterList node) {
-    node.parameters.forEach((FormalParameter p) {
+    node.parameters.forEach((p) {
       if (p is! FieldFormalParameter && p.identifier != null) {
         checkIdentifier(p.identifier, underscoresOk: true);
       }

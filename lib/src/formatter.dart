@@ -16,14 +16,14 @@ final int _slashCodeUnit = '\\'.codeUnitAt(0);
 const benchmarkRuns = 10;
 
 String getLineContents(int lineNumber, AnalysisError error) {
-  String path = error.source.fullName;
-  File file = File(path);
+  final path = error.source.fullName;
+  final file = File(path);
   String failureDetails;
   if (!file.existsSync()) {
     failureDetails = 'file at $path does not exist';
   } else {
-    var lines = file.readAsLinesSync();
-    var lineIndex = lineNumber - 1;
+    final lines = file.readAsLinesSync();
+    final lineIndex = lineNumber - 1;
     if (lines.length > lineIndex) {
       return lines[lineIndex];
     }
@@ -43,7 +43,7 @@ String shorten(String fileRoot, String fullName) {
 }
 
 String _escapePipe(String input) {
-  var result = StringBuffer();
+  final result = StringBuffer();
   for (var c in input.codeUnits) {
     if (c == _slashCodeUnit || c == _pipeCodeUnit) {
       result.write('\\');
@@ -75,13 +75,13 @@ class DetailedReporter extends SimpleFormatter {
     super.writeLint(error, offset: offset, column: column, line: line);
 
     if (!machineOutput) {
-      var contents = getLineContents(line, error);
+      final contents = getLineContents(line, error);
       out.writeln(contents);
 
-      var spaces = column - 1;
-      var arrows = max(1, min(error.length, contents.length - spaces));
+      final spaces = column - 1;
+      final arrows = max(1, min(error.length, contents.length - spaces));
 
-      var result = '${" " * spaces}${"^" * arrows}';
+      final result = '${" " * spaces}${"^" * arrows}';
       out.writeln(result);
     }
   }
@@ -139,7 +139,7 @@ class SimpleFormatter implements ReportFormatter {
   /// Override to influence error sorting
   int compare(AnalysisError error1, AnalysisError error2) {
     // Severity
-    int compare = error2.errorCode.errorSeverity
+    var compare = error2.errorCode.errorSeverity
         .compareTo(error1.errorCode.errorSeverity);
     if (compare != 0) {
       return compare;
@@ -166,13 +166,13 @@ class SimpleFormatter implements ReportFormatter {
   }
 
   void writeCounts() {
-    var codes = stats.keys.toList()..sort();
-    var largestCountGuess = 8;
-    var longest =
-        codes.fold(0, (int prev, element) => max(prev, element.length));
-    var tableWidth = max(_summaryLength, longest + largestCountGuess);
-    var pad = tableWidth - longest;
-    var line = ''.padLeft(tableWidth, '-');
+    final codes = stats.keys.toList()..sort();
+    const largestCountGuess = 8;
+    final longest =
+        codes.fold<int>(0, (prev, element) => max(prev, element.length));
+    final tableWidth = max(_summaryLength, longest + largestCountGuess);
+    final pad = tableWidth - longest;
+    final line = ''.padLeft(tableWidth, '-');
     out..writeln(line)..writeln('Counts')..writeln(line);
     codes.forEach((c) {
       out
@@ -233,33 +233,35 @@ class SimpleFormatter implements ReportFormatter {
   }
 
   void writeSummary() {
-    var summary = '${pluralize("file", fileCount)} analyzed, '
+    final summary = '${pluralize("file", fileCount)} analyzed, '
         '${pluralize("issue", errorCount)} found'
-        "${filteredLintCount == 0 ? '' : ' ($filteredLintCount filtered)'}, in $elapsedMs ms.";
+        "${filteredLintCount == 0
+            ? ''
+            : ' ($filteredLintCount filtered)'}, in $elapsedMs ms.";
     out.writeln(summary);
     // Cache for output table sizing
     _summaryLength = summary.length;
   }
 
   void writeTimings() {
-    Map<String, Stopwatch> timers = lintRegistry.timers;
-    List<_Stat> timings = timers.keys
+    final timers = lintRegistry.timers;
+    final timings = timers.keys
         .map((t) => _Stat(t, timers[t].elapsedMilliseconds))
         .toList();
     _writeTimings(out, timings, _summaryLength);
   }
 
   void _recordStats(AnalysisError error) {
-    var codeName = error.errorCode.name;
+    final codeName = error.errorCode.name;
     stats.putIfAbsent(codeName, () => 0);
     stats[codeName]++;
   }
 
   void _writeLint(AnalysisError error, LineInfo lineInfo) {
-    var offset = error.offset;
-    var location = lineInfo.getLocation(offset);
-    var line = location.lineNumber;
-    var column = location.columnNumber;
+    final offset = error.offset;
+    final location = lineInfo.getLocation(offset);
+    final line = location.lineNumber;
+    final column = location.columnNumber;
 
     writeLint(error, offset: offset, column: column, line: line);
   }
@@ -267,12 +269,12 @@ class SimpleFormatter implements ReportFormatter {
 
 Future writeBenchmarks(
     IOSink out, List<File> filesToLint, LinterOptions lintOptions) async {
-  Map<String, int> timings = <String, int>{};
-  for (int i = 0; i < benchmarkRuns; ++i) {
+  final timings = <String, int>{};
+  for (var i = 0; i < benchmarkRuns; ++i) {
     await lintFiles(DartLinter(lintOptions), filesToLint);
     lintRegistry.timers.forEach((n, t) {
-      int timing = t.elapsedMilliseconds;
-      int previous = timings[n];
+      final timing = t.elapsedMilliseconds;
+      final previous = timings[n];
       if (previous == null) {
         timings[n] = timing;
       } else {
@@ -281,33 +283,35 @@ Future writeBenchmarks(
     });
   }
 
-  List<_Stat> stats = timings.keys.map((t) => _Stat(t, timings[t])).toList();
+  final stats = timings.keys.map((t) => _Stat(t, timings[t])).toList();
   _writeTimings(out, stats, 0);
 }
 
 void _writeTimings(IOSink out, List<_Stat> timings, int summaryLength) {
-  List<String> names = timings.map((s) => s.name).toList();
+  final names = timings.map((s) => s.name).toList();
 
-  int longestName = names.fold(0, (prev, element) => max(prev, element.length));
-  int longestTime = 8;
-  int tableWidth = max(summaryLength, longestName + longestTime);
-  int pad = tableWidth - longestName;
-  String line = ''.padLeft(tableWidth, '-');
+  final longestName =
+      names.fold<int>(0, (prev, element) => max(prev, element.length));
+  const longestTime = 8;
+  final tableWidth = max(summaryLength, longestName + longestTime);
+  final pad = tableWidth - longestName;
+  final line = ''.padLeft(tableWidth, '-');
 
   out
     ..writeln()
     ..writeln(line)
     ..writeln('${'Timings'.padRight(longestName)}${'ms'.padLeft(pad)}')
     ..writeln(line);
-  int totalTime = 0;
+  var totalTime = 0;
 
   timings.sort();
-  for (_Stat stat in timings) {
+  for (final stat in timings) {
     totalTime += stat.elapsed;
     // TODO: Shame timings slower than 100ms?
     // TODO: Present both total times and time per count?
-    out.writeln(
-        '${stat.name.padRight(longestName)}${stat.elapsed.toString().padLeft(pad)}');
+    out.writeln('${stat.name.padRight(longestName)}${stat.elapsed
+        .toString()
+        .padLeft(pad)}');
   }
   out
     ..writeln(line)

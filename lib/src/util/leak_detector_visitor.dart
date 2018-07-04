@@ -12,18 +12,16 @@ import 'package:linter/src/ast.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 import 'package:meta/meta.dart';
 
-_PredicateBuilder _hasConstructorFieldInitializers = (VariableDeclaration v) =>
-    (AstNode n) =>
-        n is ConstructorFieldInitializer &&
-        n.fieldName.bestElement == v.name.bestElement;
+_PredicateBuilder _hasConstructorFieldInitializers = (v) => (n) =>
+    n is ConstructorFieldInitializer &&
+    n.fieldName.bestElement == v.name.bestElement;
 
-_PredicateBuilder _hasFieldFormalParameter = (VariableDeclaration v) =>
-    (AstNode n) =>
-        n is FieldFormalParameter &&
-        (n.identifier.bestElement as FieldFormalParameterElement).field ==
-            v.name.bestElement;
+_PredicateBuilder _hasFieldFormalParameter = (v) => (n) =>
+    n is FieldFormalParameter &&
+    (n.identifier.bestElement as FieldFormalParameterElement).field ==
+        v.name.bestElement;
 
-_PredicateBuilder _hasReturn = (VariableDeclaration v) => (AstNode n) =>
+_PredicateBuilder _hasReturn = (v) => (n) =>
     n is ReturnStatement &&
     n.expression is SimpleIdentifier &&
     (n.expression as SimpleIdentifier).bestElement == v.name.bestElement;
@@ -37,16 +35,15 @@ _VisitVariableDeclaration _buildVariableReporter(
         Iterable<_PredicateBuilder> predicateBuilders,
         LintRule rule,
         Map<DartTypePredicate, String> predicates) =>
-    (VariableDeclaration variable) {
-      if (!predicates.keys.any((DartTypePredicate p) => p(
+    (variable) {
+      if (!predicates.keys.any((p) => p(
           resolutionMap.elementDeclaredByVariableDeclaration(variable).type))) {
         return;
       }
 
-      Iterable<AstNode> containerNodes =
-          DartTypeUtilities.traverseNodesInDFS(container);
+      final containerNodes = DartTypeUtilities.traverseNodesInDFS(container);
 
-      List<Iterable<AstNode>> validators = <Iterable<AstNode>>[];
+      final validators = <Iterable<AstNode>>[];
       predicateBuilders.forEach((f) {
         validators.add(containerNodes.where(f(variable)));
       });
@@ -72,7 +69,7 @@ _VisitVariableDeclaration _buildVariableReporter(
 
 Iterable<AstNode> _findMethodCallbackNodes(Iterable<AstNode> containerNodes,
     VariableDeclaration variable, Map<DartTypePredicate, String> predicates) {
-  Iterable<PrefixedIdentifier> prefixedIdentifiers = containerNodes
+  final prefixedIdentifiers = containerNodes
       .where((n) => n is PrefixedIdentifier)
       .cast<PrefixedIdentifier>();
   return prefixedIdentifiers.where((n) =>
@@ -85,7 +82,7 @@ Iterable<AstNode> _findMethodCallbackNodes(Iterable<AstNode> containerNodes,
 
 Iterable<AstNode> _findMethodInvocationsWithVariableAsArgument(
     Iterable<AstNode> containerNodes, VariableDeclaration variable) {
-  Iterable<MethodInvocation> prefixedIdentifiers = containerNodes
+  final prefixedIdentifiers = containerNodes
       .where((n) => n is MethodInvocation)
       .cast<MethodInvocation>();
   return prefixedIdentifiers.where((n) => n.argumentList.arguments
@@ -98,7 +95,7 @@ Iterable<AstNode> _findNodesInvokingMethodOnVariable(
         Iterable<AstNode> classNodes,
         VariableDeclaration variable,
         Map<DartTypePredicate, String> predicates) =>
-    classNodes.where((AstNode n) =>
+    classNodes.where((n) =>
         n is MethodInvocation &&
         ((_hasMatch(
                     predicates,
@@ -133,10 +130,8 @@ Iterable<AstNode> _findVariableAssignments(
 
 bool _hasMatch(Map<DartTypePredicate, String> predicates, DartType type,
         String methodName) =>
-    predicates.keys.fold(
-        false,
-        (bool previous, DartTypePredicate p) =>
-            previous || p(type) && predicates[p] == methodName);
+    predicates.keys.fold(false,
+        (previous, p) => previous || p(type) && predicates[p] == methodName);
 
 bool _isInvocationThroughCascadeExpression(
     MethodInvocation invocation, VariableDeclaration variable) {
@@ -187,14 +182,14 @@ abstract class LeakDetectorProcessors extends SimpleAstVisitor<void> {
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    CompilationUnit unit = getCompilationUnit(node);
+    final unit = getCompilationUnit(node);
     node.fields.variables.forEach(_buildVariableReporter(
         unit, _fieldPredicateBuilders, rule, predicates));
   }
 
   @override
   void visitVariableDeclarationStatement(VariableDeclarationStatement node) {
-    FunctionBody function = node.getAncestor((a) => a is FunctionBody);
+    final function = node.getAncestor((a) => a is FunctionBody);
     node.variables.variables.forEach(_buildVariableReporter(
         function, _variablePredicateBuilders, rule, predicates));
   }

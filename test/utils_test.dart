@@ -24,7 +24,7 @@ main() {
 
   group('camel case', () {
     group('upper', () {
-      var good = [
+      final good = [
         '_FooBar',
         'FooBar',
         '_Foo',
@@ -39,14 +39,14 @@ main() {
         'Foo\$Generated\$Bar'
       ];
       testEach(good, isCamelCase, isTrue);
-      var bad = ['fooBar', 'foo', 'f', '_f', 'F_B'];
+      final bad = ['fooBar', 'foo', 'f', '_f', 'F_B'];
       testEach(bad, isCamelCase, isFalse);
     });
 
     group('CamelCaseString', () {
       test('invalid creation', () {
         expect(() => CamelCaseString('invalid'),
-            throwsA(TypeMatcher<ArgumentError>()));
+            throwsA(const TypeMatcher<ArgumentError>()));
       });
       test('toString', () {
         expect(CamelCaseString('CamelCase').toString(), 'CamelCase');
@@ -59,7 +59,7 @@ main() {
 
   group('library prefixes', () {
     //TODO(pq): add more positive cases.
-    var good = [
+    final good = [
       'foo_bar',
       'foo',
       'foo_bar_baz',
@@ -80,7 +80,7 @@ main() {
     testEach(good, isValidLibraryPrefix, isTrue);
 
     //TODO(pq): add more negative cases.
-    var bad = [
+    final bad = [
       'JSON',
       'JS',
       'Math',
@@ -102,10 +102,10 @@ main() {
   });
 
   group('lower_case_underscores', () {
-    var good = ['foo_bar', 'foo', 'foo_bar_baz', 'p', 'p1', 'p21', 'p1ll0'];
+    final good = ['foo_bar', 'foo', 'foo_bar_baz', 'p', 'p1', 'p21', 'p1ll0'];
     testEach(good, isLowerCaseUnderScore, isTrue);
 
-    var bad = [
+    final bad = [
       'Foo',
       'fooBar',
       'foo_Bar',
@@ -121,7 +121,7 @@ main() {
   });
 
   group('qualified lower_case_underscores', () {
-    var good = [
+    final good = [
       'bwu_server.shared.datastore.some_file',
       'foo_bar.baz',
       'foo_bar',
@@ -138,12 +138,12 @@ main() {
     ];
     testEach(good, isLowerCaseUnderScoreWithDots, isTrue);
 
-    var bad = ['Foo', 'fooBar.', '.foo_Bar', '_f', 'F_B', 'JS', 'JSON'];
+    final bad = ['Foo', 'fooBar.', '.foo_Bar', '_f', 'F_B', 'JS', 'JSON'];
     testEach(bad, isLowerCaseUnderScoreWithDots, isFalse);
   });
 
   group('lowerCamelCase', () {
-    var good = [
+    final good = [
       'fooBar',
       'foo',
       'f',
@@ -161,15 +161,15 @@ main() {
     ];
     testEach(good, isLowerCamelCase, isTrue);
 
-    var bad = ['Foo', 'foo_', 'foo_bar', '_X'];
+    final bad = ['Foo', 'foo_', 'foo_bar', '_X'];
     testEach(bad, isLowerCamelCase, isFalse);
   });
 
   group('isUpperCase', () {
-    var caps = List<int>.generate(26, (i) => 'A'.codeUnitAt(0) + i);
+    final caps = List<int>.generate(26, (i) => 'A'.codeUnitAt(0) + i);
     testEach(caps, isUpperCase, isTrue);
 
-    var bad = ['a', '1', 'z'].map((c) => c.codeUnitAt(0));
+    final bad = ['a', '1', 'z'].map((c) => c.codeUnitAt(0));
     testEach(bad, isUpperCase, isFalse);
   });
 }

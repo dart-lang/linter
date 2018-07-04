@@ -12,7 +12,7 @@ linter:
 #    - always_put_control_body_on_new_line
     - always_put_required_named_parameters_first
     - always_require_non_null_named_parameters
-#    - always_specify_types
+#    - always_specify_types # conflicts with omit_local_variable_types
     - annotate_overrides
     - avoid_annotating_with_dynamic
 #    - avoid_as
@@ -29,7 +29,7 @@ linter:
     - avoid_returning_this
     - avoid_setters_without_getters
     - avoid_slow_async_io
-#    - avoid_types_on_closure_parameters
+    - avoid_types_on_closure_parameters
     - await_only_futures
     - camel_case_types
     - cancel_subscriptions
@@ -54,7 +54,7 @@ linter:
     - no_adjacent_strings_in_list
     - no_duplicate_case_values
 #    - non_constant_identifier_names
-#    - omit_local_variable_types
+    - omit_local_variable_types
 #    - one_member_abstracts
     - only_throw_errors
     - overridden_fields
@@ -66,14 +66,15 @@ linter:
     - prefer_asserts_in_initializer_lists
     - prefer_collection_literals
     - prefer_conditional_assignment
-#    - prefer_const_constructors
+    - prefer_const_constructors
     - prefer_const_constructors_in_immutables
+    - prefer_const_declarations
     - prefer_constructors_over_static_methods
     - prefer_contains
     - prefer_equal_for_default_values
     - prefer_expression_function_bodies
     - prefer_final_fields
-#    - prefer_final_locals
+    - prefer_final_locals
     - prefer_foreach
 #    - prefer_function_declarations_over_variables
     - prefer_initializing_formals

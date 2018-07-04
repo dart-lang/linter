@@ -91,16 +91,16 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitAsExpression(AsExpression node) {
-    MethodDeclaration declaration =
-        node.getAncestor((n) => n is MethodDeclaration);
+    final declaration =
+        node.getAncestor<MethodDeclaration>((n) => n is MethodDeclaration);
     if (!_isEqualsOverride(declaration) ||
         node.expression is! SimpleIdentifier) {
       return;
     }
 
-    SimpleIdentifier identifier = node.expression;
-    var parameters = declaration.parameters;
-    String parameterName = parameters == null
+    final SimpleIdentifier identifier = node.expression;
+    final parameters = declaration.parameters;
+    final parameterName = parameters == null
         ? null
         : resolutionMap
             .parameterElementsForFormalParameterList(parameters)
