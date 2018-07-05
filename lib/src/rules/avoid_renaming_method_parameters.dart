@@ -66,7 +66,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.isStatic) return;
     if (node.documentationComment != null) return;
 
-    ClassDeclaration clazz = node.parent;
+    final ClassDeclaration clazz = node.parent;
 
     if (clazz.element.isPrivate) return;
     if (!isDefinedInLib(getCompilationUnit(node))) return;
@@ -80,7 +80,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         node.parameters.parameters.where((p) => !p.isNamed).toList();
     final parentParameters =
         parentMethod.parameters.where((p) => !p.isNamed).toList();
-    int count = math.min(parameters.length, parentParameters.length);
+    final count = math.min(parameters.length, parentParameters.length);
     for (var i = 0; i < count; i++) {
       if (parentParameters.length <= i) break;
       if (parameters[i].identifier.name != parentParameters[i].name) {

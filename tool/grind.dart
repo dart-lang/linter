@@ -25,9 +25,9 @@ List<FileSystemEntity> get sources => existingSourceDirs.expand((dir) {
     });
 
 @Task('Generate lint rule docs.')
-docs() {
-  TaskArgs args = context.invocation.arguments;
-  String dir = args.getOption('dir');
+void docs() {
+  final args = context.invocation.arguments;
+  final dir = args.getOption('dir');
   generateDocs(dir);
 }
 
@@ -38,9 +38,9 @@ format() {
 }
 
 @Task('Generate a lint rule stub.')
-rule() {
-  TaskArgs args = context.invocation.arguments;
-  String name = args.getOption('name');
+void rule() {
+  final args = context.invocation.arguments;
+  final name = args.getOption('name');
   generateRule(name, outDir: Directory.current.path);
 }
 

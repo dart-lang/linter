@@ -10,7 +10,6 @@ import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
-import 'package:analyzer/file_system/file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:analyzer/src/generated/resolver.dart'; // ignore: implementation_imports
 import 'package:linter/src/analyzer.dart';
@@ -19,8 +18,8 @@ import 'package:path/path.dart' as path;
 
 /// Returns direct children of [parent].
 List<Element> getChildren(Element parent, [String name]) {
-  List<Element> children = <Element>[];
-  visitChildren(parent, (Element element) {
+  final children = <Element>[];
+  visitChildren(parent, (element) {
     if (name == null || element.displayName == name) {
       children.add(element);
     }
@@ -30,18 +29,18 @@ List<Element> getChildren(Element parent, [String name]) {
 
 /// Returns the most specific AST node appropriate for associating errors.
 AstNode getNodeToAnnotate(Declaration node) {
-  AstNode mostSpecific = _getNodeToAnnotate(node);
+  final mostSpecific = _getNodeToAnnotate(node);
   return mostSpecific ?? node;
 }
 
 /// Returns `true` if this [node] has an `@override` annotation.
 bool hasOverrideAnnotation(Declaration node) =>
-    node.metadata.map((Annotation a) => a.name.name).contains('override');
+    node.metadata.map((a) => a.name.name).contains('override');
 
 /// Returns `true` if this [node] is the child of a private compilation unit
 /// member.
 bool inPrivateMember(AstNode node) {
-  AstNode parent = node.parent;
+  final parent = node.parent;
   if (parent is NamedCompilationUnitMember) {
     return isPrivate(parent.name);
   }
@@ -78,7 +77,7 @@ bool isPrivate(SimpleIdentifier identifier) =>
 
 /// Returns `true` if the given [declaration] is annotated `@protected`.
 bool isProtected(Declaration declaration) =>
-    declaration.metadata.any((Annotation a) => a.name.name == 'protected');
+    declaration.metadata.any((a) => a.name.name == 'protected');
 
 /// Returns `true` if the given [ClassMember] is a public method.
 bool isPublicMethod(ClassMember m) =>
@@ -98,14 +97,14 @@ bool isSimpleGetter(MethodDeclaration declaration) {
     return false;
   }
   if (declaration.body is ExpressionFunctionBody) {
-    ExpressionFunctionBody body = declaration.body;
+    final ExpressionFunctionBody body = declaration.body;
     return _checkForSimpleGetter(declaration, body.expression);
   } else if (declaration.body is BlockFunctionBody) {
-    BlockFunctionBody body = declaration.body;
-    Block block = body.block;
+    final BlockFunctionBody body = declaration.body;
+    final block = body.block;
     if (block.statements.length == 1) {
       if (block.statements[0] is ReturnStatement) {
-        ReturnStatement returnStatement = block.statements[0];
+        final ReturnStatement returnStatement = block.statements[0];
         return _checkForSimpleGetter(declaration, returnStatement.expression);
       }
     }
@@ -129,14 +128,14 @@ bool isSimpleGetter(MethodDeclaration declaration) {
 /// where the static type of the left and right hand sides must be the same.
 bool isSimpleSetter(MethodDeclaration setter) {
   if (setter.body is ExpressionFunctionBody) {
-    ExpressionFunctionBody body = setter.body;
+    final ExpressionFunctionBody body = setter.body;
     return _checkForSimpleSetter(setter, body.expression);
   } else if (setter.body is BlockFunctionBody) {
-    BlockFunctionBody body = setter.body;
-    Block block = body.block;
+    final BlockFunctionBody body = setter.body;
+    final block = body.block;
     if (block.statements.length == 1) {
       if (block.statements[0] is ExpressionStatement) {
-        ExpressionStatement statement = block.statements[0];
+        final ExpressionStatement statement = block.statements[0];
         return _checkForSimpleSetter(setter, statement.expression);
       }
     }
@@ -152,22 +151,22 @@ CompilationUnit getCompilationUnit(AstNode node) =>
 /// Return true if the given node is declared in a compilation unit that is in
 /// a `lib/` folder.
 bool isDefinedInLib(CompilationUnit compilationUnit) {
-  String fullName = compilationUnit?.element?.source?.fullName;
+  final fullName = compilationUnit?.element?.source?.fullName;
   if (fullName == null) {
     return false;
   }
 
   // TODO(devoncarew): Change to using the resource provider on the context
   // when that is available.
-  ResourceProvider resourceProvider = PhysicalResourceProvider.INSTANCE;
-  File file = resourceProvider.getFile(fullName);
-  Folder folder = file.parent;
+  final resourceProvider = PhysicalResourceProvider.INSTANCE;
+  final file = resourceProvider.getFile(fullName);
+  var folder = file.parent;
 
   // Look for a pubspec.yaml file.
   while (folder != null) {
     if (folder.getChildAssumingFile('pubspec.yaml').exists) {
       // Determine if this file is a child of the lib/ folder.
-      String relPath = file.path.substring(folder.path.length + 1);
+      final relPath = file.path.substring(folder.path.length + 1);
       return path.split(relPath).first == 'lib';
     }
 
@@ -191,9 +190,9 @@ void visitChildren(Element element, ElementProcessor processor) {
 
 bool _checkForSimpleGetter(MethodDeclaration getter, Expression expression) {
   if (expression is SimpleIdentifier) {
-    var staticElement = expression.staticElement;
+    final staticElement = expression.staticElement;
     if (staticElement is PropertyAccessorElement) {
-      Element getterElement = getter.element;
+      final getterElement = getter.element;
       // Skipping library level getters, test that the enclosing element is
       // the same
       if (staticElement.enclosingElement != null &&
@@ -209,12 +208,12 @@ bool _checkForSimpleSetter(MethodDeclaration setter, Expression expression) {
   if (expression is! AssignmentExpression) {
     return false;
   }
-  AssignmentExpression assignment = expression;
+  final AssignmentExpression assignment = expression;
 
-  var leftHandSide = assignment.leftHandSide;
-  var rightHandSide = assignment.rightHandSide;
+  final leftHandSide = assignment.leftHandSide;
+  final rightHandSide = assignment.rightHandSide;
   if (leftHandSide is SimpleIdentifier && rightHandSide is SimpleIdentifier) {
-    var leftElement = resolutionMap.staticElementForIdentifier(leftHandSide);
+    final leftElement = resolutionMap.staticElementForIdentifier(leftHandSide);
     if (leftElement is! PropertyAccessorElement || !leftElement.isSynthetic) {
       return false;
     }
@@ -224,12 +223,12 @@ bool _checkForSimpleSetter(MethodDeclaration setter, Expression expression) {
       return false;
     }
 
-    var rightElement = rightHandSide.staticElement;
+    final rightElement = rightHandSide.staticElement;
     if (rightElement is! ParameterElement) {
       return false;
     }
 
-    var parameters = setter.parameters.parameters;
+    final parameters = setter.parameters.parameters;
     if (parameters.length == 1) {
       return rightElement == parameters[0].element;
     }
@@ -289,7 +288,7 @@ class _ElementVisitorAdapter extends GeneralizingElementVisitor {
 
   @override
   void visitElement(Element element) {
-    bool visitChildren = processor(element);
+    final visitChildren = processor(element);
     if (visitChildren == true) {
       element.visitChildren(this);
     }

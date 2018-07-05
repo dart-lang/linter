@@ -58,7 +58,7 @@ class _Visitor extends SimpleAstVisitor {
     final lineInfo = node.lineInfo;
     final lineCount = lineInfo.lineCount;
     final longLines = <_LineInfo>[];
-    for (int i = 0; i < lineCount; i++) {
+    for (var i = 0; i < lineCount; i++) {
       final start = lineInfo.getOffsetOfLine(i);
       final end = i == lineCount - 1
           ? node.end

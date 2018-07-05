@@ -60,7 +60,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.isAbstract &&
         node.extendsClause == null &&
         node.members.length == 1) {
-      var member = node.members[0];
+      final member = node.members[0];
       if (member is MethodDeclaration &&
           member.isAbstract &&
           !member.isGetter &&

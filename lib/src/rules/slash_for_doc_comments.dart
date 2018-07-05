@@ -34,7 +34,7 @@ Within a doc comment, you can use markdown for formatting.
 ''';
 
 bool isJavaStyle(Comment comment) {
-  var tokens = comment.tokens;
+  final tokens = comment.tokens;
   if (tokens == null || tokens.isEmpty) {
     return false;
   }

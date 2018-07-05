@@ -5,7 +5,6 @@
 import 'dart:collection';
 
 import 'package:analyzer/analyzer.dart';
-import 'package:analyzer/dart/analysis/declared_variables.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/error/listener.dart';
@@ -81,7 +80,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitSwitchStatement(SwitchStatement node) {
-    AnalysisContext context = node?.expression == null
+    final context = node?.expression == null
         ? null
         : resolutionMap
             .bestTypeForExpression(node.expression)
@@ -90,34 +89,32 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (context == null) {
       return;
     }
-    TypeProvider typeProvider = context.typeProvider;
-    TypeSystem typeSystem = context.typeSystem;
-    DeclaredVariables declaredVariables = context.declaredVariables;
+    final typeProvider = context.typeProvider;
+    final typeSystem = context.typeSystem;
+    final declaredVariables = context.declaredVariables;
 
-    Map<DartObjectImpl, Expression> values =
-        HashMap<DartObjectImpl, Expression>(
-            equals: (DartObjectImpl key1, DartObjectImpl key2) {
-      DartObjectImpl equals = key1.isIdentical(typeProvider, key2);
+    final values = HashMap<DartObjectImpl, Expression>(equals: (key1, key2) {
+      final equals = key1.isIdentical(typeProvider, key2);
       return equals.isBool && equals.toBoolValue();
     });
 
-    final ConstantVisitor constantVisitor = ConstantVisitor(
+    final constantVisitor = ConstantVisitor(
         ConstantEvaluationEngine(typeProvider, declaredVariables,
             typeSystem: typeSystem),
         ErrorReporter(
             AnalysisErrorListener.NULL_LISTENER, rule.reporter.source));
 
-    for (SwitchMember member in node.members) {
+    for (final member in node.members) {
       if (member is SwitchCase) {
-        Expression expression = member.expression;
+        final expression = member.expression;
 
-        DartObjectImpl result = expression.accept(constantVisitor);
+        final result = expression.accept(constantVisitor);
 
         if (result == null) {
           continue;
         }
 
-        Expression duplicateValue = values[result];
+        final duplicateValue = values[result];
         if (duplicateValue != null) {
           rule.reportLintWithDescription(member,
               message(duplicateValue.toString(), expression.toString()));

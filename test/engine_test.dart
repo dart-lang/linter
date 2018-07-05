@@ -32,14 +32,14 @@ void defineLinterEngineTests() {
       _test(String label, String expected, report(PrintingReporter r)) {
         test(label, () {
           String msg;
-          PrintingReporter reporter = PrintingReporter((m) => msg = m);
+          final reporter = PrintingReporter((m) => msg = m);
           report(reporter);
           expect(msg, expected);
         });
       }
 
       _test('exception', 'EXCEPTION: LinterException: foo',
-          (r) => r.exception(LinterException('foo')));
+          (r) => r.exception(const LinterException('foo')));
       _test('logError', 'ERROR: foo', (r) => r.logError('foo'));
       _test('logInformation', 'INFO: foo', (r) => r.logInformation('foo'));
       _test('warn', 'WARN: foo', (r) => r.warn('foo'));
@@ -56,11 +56,11 @@ void defineLinterEngineTests() {
     });
 
     group('analysis logger', () {
-      var currentErr = errorSink;
-      var currentOut = outSink;
-      var errCollector = CollectingSink();
-      var outCollector = CollectingSink();
-      var logger = StdLogger();
+      final currentErr = errorSink;
+      final currentOut = outSink;
+      final errCollector = CollectingSink();
+      final outCollector = CollectingSink();
+      final logger = StdLogger();
       setUp(() {
         errorSink = errCollector;
         outSink = outCollector;
@@ -88,7 +88,7 @@ void defineLinterEngineTests() {
       });
       test('validation', () {
         expect(() => CamelCaseString('foo'),
-            throwsA(TypeMatcher<ArgumentError>()));
+            throwsA(const TypeMatcher<ArgumentError>()));
       });
       test('toString', () {
         expect(CamelCaseString('FooBar').toString(), 'FooBar');
@@ -112,22 +112,22 @@ void defineLinterEngineTests() {
     group('lint driver', () {
       test('pubspec', () {
         bool visited;
-        var options = LinterOptions([MockLinter((n) => visited = true)])
+        final options = LinterOptions([MockLinter((n) => visited = true)])
           ..previewDart2 = true;
         SourceLinter(options).lintPubspecSource(contents: 'name: foo_bar');
         expect(visited, isTrue);
       });
       test('error collecting', () {
-        var error = AnalysisError(StringSource('foo', ''), 0, 0,
-            LintCode('MockLint', 'This is a test...'));
-        var linter = SourceLinter(LinterOptions([]))..onError(error);
+        final error = AnalysisError(StringSource('foo', ''), 0, 0,
+            const LintCode('MockLint', 'This is a test...'));
+        final linter = SourceLinter(LinterOptions([]))..onError(error);
         expect(linter.errors.contains(error), isTrue);
       });
       test('pubspec visitor error handling', () {
-        var visitor = MockPubVisitor();
-        var rule = MockRule()..pubspecVisitor = visitor;
+        final visitor = MockPubVisitor();
+        final rule = MockRule()..pubspecVisitor = visitor;
 
-        var reporter = MockReporter();
+        final reporter = MockReporter();
         SourceLinter(LinterOptions([rule]), reporter: reporter)
           ..lintPubspecSource(contents: 'author: foo');
         expect(reporter.exceptions, hasLength(1));
@@ -144,7 +144,7 @@ void defineLinterEngineTests() {
         errorSink = stderr;
       });
       test('smoke', () async {
-        FileSystemEntity firstRuleTest =
+        final firstRuleTest =
             Directory(ruleDir).listSync().firstWhere(isDartFile);
         await dartlint.main([firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
@@ -164,17 +164,17 @@ void defineLinterEngineTests() {
       });
       test('custom sdk path', () async {
         // Smoke test to ensure a custom sdk path doesn't sink the ship
-        FileSystemEntity firstRuleTest =
+        final firstRuleTest =
             Directory(ruleDir).listSync().firstWhere(isDartFile);
-        var sdk = getSdkPath();
+        final sdk = getSdkPath();
         await dartlint.main(['--dart-sdk', sdk, firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
       });
       test('custom package root', () async {
         // Smoke test to ensure a custom package root doesn't sink the ship
-        FileSystemEntity firstRuleTest =
+        final firstRuleTest =
             Directory(ruleDir).listSync().firstWhere(isDartFile);
-        var packageDir = Directory('.').path;
+        final packageDir = Directory('.').path;
         await dartlint.main(['--package-root', packageDir, firstRuleTest.path]);
         expect(dartlint.isLinterErrorCode(exitCode), isFalse);
       });
@@ -183,11 +183,11 @@ void defineLinterEngineTests() {
     group('dtos', () {
       group('hyperlink', () {
         test('html', () {
-          Hyperlink link = Hyperlink('dart', 'http://dartlang.org');
+          const link = Hyperlink('dart', 'http://dartlang.org');
           expect(link.html, '<a href="http://dartlang.org">dart</a>');
         });
         test('html - strong', () {
-          Hyperlink link = Hyperlink('dart', 'http://dartlang.org', bold: true);
+          const link = Hyperlink('dart', 'http://dartlang.org', bold: true);
           expect(link.html,
               '<a href="http://dartlang.org"><strong>dart</strong></a>');
         });
@@ -195,19 +195,19 @@ void defineLinterEngineTests() {
 
       group('rule', () {
         test('comparing', () {
-          LintRule r1 = MockLintRule('Bar', Group('acme'));
-          LintRule r2 = MockLintRule('Foo', Group('acme'));
+          final r1 = MockLintRule('Bar', Group('acme'));
+          final r2 = MockLintRule('Foo', Group('acme'));
           expect(r1.compareTo(r2), -1);
-          LintRule r3 = MockLintRule('Bar', Group('acme'));
-          LintRule r4 = MockLintRule('Bar', Group('woody'));
+          final r3 = MockLintRule('Bar', Group('acme'));
+          final r4 = MockLintRule('Bar', Group('woody'));
           expect(r3.compareTo(r4), -1);
         });
       });
       group('maturity', () {
         test('comparing', () {
           // Custom
-          Maturity m1 = Maturity('foo', ordinal: 0);
-          Maturity m2 = Maturity('bar', ordinal: 1);
+          final m1 = Maturity('foo', ordinal: 0);
+          final m2 = Maturity('bar', ordinal: 1);
           expect(m1.compareTo(m2), -1);
           // Builtin
           expect(Maturity.stable.compareTo(Maturity.experimental), -1);

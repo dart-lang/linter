@@ -28,21 +28,21 @@ defineTests() {
     });
 
     group('reporter', () {
-      var lineInfo = LineInfo([3, 6, 9]);
+      final lineInfo = LineInfo([3, 6, 9]);
 
-      var type = MockErrorType()..displayName = 'test';
+      final type = MockErrorType()..displayName = 'test';
 
-      var code = TestErrorCode('mock_code', 'MSG')..type = type;
+      final code = TestErrorCode('mock_code', 'MSG')..type = type;
 
-      var source = MockSource()..fullName = '/foo/bar/baz.dart';
+      final source = MockSource()..fullName = '/foo/bar/baz.dart';
 
-      var error = AnalysisError(source, 10, 3, code);
+      final error = AnalysisError(source, 10, 3, code);
 
-      var info = AnalysisErrorInfoImpl([error], lineInfo);
+      final info = AnalysisErrorInfoImpl([error], lineInfo);
 
-      var out = CollectingSink();
+      final out = CollectingSink();
 
-      var reporter =
+      final reporter =
           SimpleFormatter([info], null, out, fileCount: 1, elapsedMs: 13)
             ..write();
 
@@ -76,24 +76,24 @@ mock_code                               1
     });
 
     group('reporter', () {
-      var lineInfo = LineInfo([3, 6, 9]);
+      final lineInfo = LineInfo([3, 6, 9]);
 
-      var type = MockErrorType()..displayName = 'test';
+      final type = MockErrorType()..displayName = 'test';
 
-      var code = TestErrorCode('MockError', 'MSG')
-        ..errorSeverity = ErrorSeverity('MockErrorSeverity', 0, '', '')
+      final code = TestErrorCode('MockError', 'MSG')
+        ..errorSeverity = const ErrorSeverity('MockErrorSeverity', 0, '', '')
         ..type = type;
 
-      var source = MockSource()..fullName = '/foo/bar/baz.dart';
+      final source = MockSource()..fullName = '/foo/bar/baz.dart';
 
-      var error = AnalysisError(source, 12, 13, code);
+      final error = AnalysisError(source, 12, 13, code);
 
-      var info = AnalysisErrorInfoImpl([error], lineInfo);
+      final info = AnalysisErrorInfoImpl([error], lineInfo);
 
-      var out = CollectingSink();
+      final out = CollectingSink();
 
       group('filtered', () {
-        var reporter = SimpleFormatter([info], _RejectingFilter(), out,
+        final reporter = SimpleFormatter([info], _RejectingFilter(), out,
             fileCount: 1, elapsedMs: 13)
           ..write();
 

@@ -88,13 +88,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (project == null) {
       return;
     }
-    Source source = resolutionMap.elementDeclaredByDirective(node).source;
-    var prefix = Analyzer.facade.createLibraryNamePrefix(
+    final source = resolutionMap.elementDeclaredByDirective(node).source;
+    final prefix = Analyzer.facade.createLibraryNamePrefix(
         libraryPath: source.fullName,
         projectRoot: project.root.absolute.path,
         packageName: project.name);
 
-    var libraryName = resolutionMap.elementDeclaredByDirective(node).name;
+    final libraryName = resolutionMap.elementDeclaredByDirective(node).name;
     if (!matchesOrIsPrefixedBy(libraryName, prefix)) {
       rule.reportLint(node.name);
     }

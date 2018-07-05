@@ -114,7 +114,7 @@ class InvariantBooleans extends LintRule implements NodeLintRule {
 
   @override
   void registerNodeProcessors(NodeLintRegistry registry) {
-    var visitor = _InvariantBooleansVisitor(this);
+    final visitor = _InvariantBooleansVisitor(this);
     registry.addCompilationUnit(this, visitor);
   }
 }
@@ -144,8 +144,8 @@ class _InvariantBooleansVisitor extends ConditionScopeVisitor {
       return;
     }
 
-    TestedExpressions testedNodes = _findPreviousTestedExpressions(node);
-    testedNodes.evaluateInvariant().forEach((ContradictoryComparisons e) {
+    final testedNodes = _findPreviousTestedExpressions(node);
+    testedNodes.evaluateInvariant().forEach((e) {
       final reportRule = _ContradictionReportRule(e);
       reportRule
         ..reporter = rule.reporter
@@ -154,8 +154,7 @@ class _InvariantBooleansVisitor extends ConditionScopeVisitor {
 
     // In dart booleanVariable == true is a valid comparison since the variable
     // can be null.
-    final BinaryExpression binaryExpression =
-        node is BinaryExpression ? node : null;
+    final binaryExpression = node is BinaryExpression ? node : null;
     if (binaryExpression != null &&
         !BooleanExpressionUtilities.EQUALITY_OPERATIONS
             .contains(binaryExpression.operator.type) &&
@@ -168,8 +167,8 @@ class _InvariantBooleansVisitor extends ConditionScopeVisitor {
 
   TestedExpressions _findPreviousTestedExpressions(Expression node) {
     final elements = _getElementsInExpression(node);
-    Iterable<Expression> conjunctions = getTrueExpressions(elements).toSet();
-    Iterable<Expression> negations = getFalseExpressions(elements).toSet();
+    final conjunctions = getTrueExpressions(elements).toSet();
+    final negations = getFalseExpressions(elements).toSet();
     return TestedExpressions(node, conjunctions, negations);
   }
 }

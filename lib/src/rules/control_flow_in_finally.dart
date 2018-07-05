@@ -108,8 +108,8 @@ abstract class ControlFlowInFinallyBlockReporterMixin {
   LintRule get rule;
 
   void reportIfFinallyAncestorExists(AstNode node, {AstNode ancestor}) {
-    final TryStatement tryStatement =
-        node.getAncestor((n) => n is TryStatement);
+    final tryStatement =
+        node.getAncestor<TryStatement>((n) => n is TryStatement);
     final finallyBlock = tryStatement?.finallyBlock;
     bool finallyBlockAncestorPredicate(AstNode n) => n == finallyBlock;
     if (tryStatement == null ||
@@ -118,7 +118,7 @@ abstract class ControlFlowInFinallyBlockReporterMixin {
       return;
     }
 
-    AstNode enablerNode = _findEnablerNode(
+    final enablerNode = _findEnablerNode(
         ancestor, finallyBlockAncestorPredicate, node, tryStatement);
     if (enablerNode == null) {
       rule.reportLint(node);

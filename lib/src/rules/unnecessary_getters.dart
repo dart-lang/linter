@@ -61,11 +61,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    Map<String, MethodDeclaration> getters = {};
-    Map<String, MethodDeclaration> setters = {};
+    final getters = <String, MethodDeclaration>{};
+    final setters = <String, MethodDeclaration>{};
 
     // Filter on public methods
-    var methods = node.members.where(isPublicMethod);
+    final methods = node.members.where(isPublicMethod);
 
     // Build getter/setter maps
     for (MethodDeclaration method in methods) {
@@ -77,7 +77,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     // Only select getters without setters
-    var candidates = getters.keys.where((id) => !setters.keys.contains(id));
+    final candidates = getters.keys.where((id) => !setters.keys.contains(id));
     candidates.map((n) => getters[n]).forEach(_visitGetter);
   }
 

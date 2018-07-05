@@ -74,7 +74,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return null;
     }
 
-    ClassElement classElement =
+    final classElement =
         member.getAncestor((element) => element is ClassElement);
     if (classElement == null) {
       return null;
@@ -84,7 +84,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    LibraryElement library = node == null
+    final library = node == null
         ? null
         : resolutionMap.elementDeclaredByCompilationUnit(node)?.library;
     manager = library == null ? null : InheritanceManager(library);
@@ -92,12 +92,12 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    for (VariableDeclaration field in node.fields.variables) {
+    for (final field in node.fields.variables) {
       if (field?.element != null &&
           !resolutionMap
               .elementDeclaredByVariableDeclaration(field)
               .hasOverride) {
-        ExecutableElement member = getOverriddenMember(field.element);
+        final member = getOverriddenMember(field.element);
         if (member != null) {
           rule.reportLint(field);
         }
@@ -109,7 +109,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     if (node?.element != null &&
         !resolutionMap.elementDeclaredByMethodDeclaration(node).hasOverride) {
-      ExecutableElement member = getOverriddenMember(node.element);
+      final member = getOverriddenMember(node.element);
       if (member != null) {
         rule.reportLint(node.name);
       }

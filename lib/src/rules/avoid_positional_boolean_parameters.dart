@@ -66,7 +66,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    LibraryElement library =
+    final library =
         resolutionMap.elementDeclaredByCompilationUnit(node)?.library;
     manager = library == null ? null : InheritanceManager(library);
   }
@@ -118,7 +118,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return false;
     }
 
-    ClassElement classElement =
+    final classElement =
         member.getAncestor((element) => element is ClassElement);
     if (classElement == null) {
       return false;

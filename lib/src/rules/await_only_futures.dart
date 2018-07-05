@@ -4,7 +4,6 @@
 
 import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
@@ -52,7 +51,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitAwaitExpression(AwaitExpression node) {
-    final DartType type = node.expression.bestType;
+    final type = node.expression.bestType;
     if (!(type.isDartAsyncFuture ||
         type.isDynamic ||
         DartTypeUtilities.extendsClass(type, 'Future', 'dart.async') ||

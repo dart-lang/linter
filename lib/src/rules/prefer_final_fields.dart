@@ -134,7 +134,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    fields.variables.forEach((VariableDeclaration variable) {
+    fields.variables.forEach((variable) {
       final element = variable.element;
       if (!element.isPrivate) {
         return;

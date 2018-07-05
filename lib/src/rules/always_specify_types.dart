@@ -66,10 +66,9 @@ String _META_LIB_NAME = 'meta';
 String _OPTIONAL_TYPE_ARGS_VAR_NAME = 'optionalTypeArgs';
 
 bool _isOptionallyParameterized(ParameterizedType type) {
-  List<ElementAnnotation> metadata = type.element?.metadata;
+  final metadata = type.element?.metadata;
   if (metadata != null) {
-    return metadata
-        .any((ElementAnnotation a) => _isOptionalTypeArgs(a.element));
+    return metadata.any((a) => _isOptionalTypeArgs(a.element));
   }
   return false;
 }
@@ -128,8 +127,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   // Future kernel API.
-  visitNamedType(NamedType namedType) {
-    DartType type = namedType.type;
+  void visitNamedType(NamedType namedType) {
+    final type = namedType.type;
     if (type is ParameterizedType) {
       if (type.typeParameters.isNotEmpty &&
           namedType.typeArguments == null &&
