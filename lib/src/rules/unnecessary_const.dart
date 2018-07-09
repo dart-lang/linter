@@ -51,12 +51,12 @@ class UnnecessaryConst extends LintRule implements NodeLintRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor {
+class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   _Visitor(this.rule);
 
   @override
-  visitInstanceCreationExpression(InstanceCreationExpression node) {
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (node.keyword == null) return;
 
     // remove keyword and check if there's const error
@@ -71,12 +71,12 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   @override
-  visitListLiteral(ListLiteral node) => _visitTypedLiteral(node);
+  void visitListLiteral(ListLiteral node) => _visitTypedLiteral(node);
 
   @override
-  visitMapLiteral(MapLiteral node) => _visitTypedLiteral(node);
+  void visitMapLiteral(MapLiteral node) => _visitTypedLiteral(node);
 
-  _visitTypedLiteral(TypedLiteral node) {
+  void _visitTypedLiteral(TypedLiteral node) {
     if (node.constKeyword == null) return;
 
     // remove keyword and check if there's const error

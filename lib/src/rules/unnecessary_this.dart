@@ -76,7 +76,7 @@ class _UnnecessaryThisVisitor extends ScopedVisitor {
             AnalysisErrorListener.NULL_LISTENER);
 
   @override
-  visitThisExpression(ThisExpression node) {
+  void visitThisExpression(ThisExpression node) {
     final parent = node.parent;
     Element lookUpElement;
     Element localElement;

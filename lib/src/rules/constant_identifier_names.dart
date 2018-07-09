@@ -65,7 +65,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  checkIdentifier(SimpleIdentifier id) {
+  void checkIdentifier(SimpleIdentifier id) {
     if (!isLowerCamelCase(id.name)) {
       rule.reportLint(id);
     }

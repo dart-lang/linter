@@ -97,14 +97,14 @@ class _LineInfo {
   int get length => end - offset;
 }
 
-class _AllowedLongLineVisitor extends RecursiveAstVisitor {
+class _AllowedLongLineVisitor extends RecursiveAstVisitor<void> {
   _AllowedLongLineVisitor(this.lineInfo);
 
   final LineInfo lineInfo;
   final allowedLines = <int>[];
 
   @override
-  visitStringInterpolation(StringInterpolation node) {
+  void visitStringInterpolation(StringInterpolation node) {
     if (node.isMultiline) {
       _handleMultilines(node);
     } else {
@@ -117,14 +117,14 @@ class _AllowedLongLineVisitor extends RecursiveAstVisitor {
   }
 
   @override
-  visitSimpleStringLiteral(SimpleStringLiteral node) {
+  void visitSimpleStringLiteral(SimpleStringLiteral node) {
     if (node.isMultiline)
       _handleMultilines(node);
     else
       _handleSingleLine(node, node.value);
   }
 
-  _handleMultilines(SingleStringLiteral node) {
+  void _handleMultilines(SingleStringLiteral node) {
     final startLine = lineInfo.getLocation(node.offset).lineNumber;
     final endLine = lineInfo.getLocation(node.end).lineNumber;
     for (var i = startLine; i <= endLine; i++) {
@@ -132,7 +132,7 @@ class _AllowedLongLineVisitor extends RecursiveAstVisitor {
     }
   }
 
-  _handleSingleLine(AstNode node, String value) {
+  void _handleSingleLine(AstNode node, String value) {
     if (_looksLikeUriOrPath(value)) {
       final line = lineInfo.getLocation(node.offset).lineNumber;
       allowedLines.add(line);
@@ -140,14 +140,14 @@ class _AllowedLongLineVisitor extends RecursiveAstVisitor {
   }
 }
 
-class _AllowedCommentVisitor extends SimpleAstVisitor {
+class _AllowedCommentVisitor extends SimpleAstVisitor<void> {
   _AllowedCommentVisitor(this.lineInfo);
 
   final LineInfo lineInfo;
   final allowedLines = <int>[];
 
   @override
-  visitCompilationUnit(CompilationUnit node) {
+  void visitCompilationUnit(CompilationUnit node) {
     var token = node.beginToken;
     while (token != null) {
       _getPrecedingComments(token).forEach(_visitComment);

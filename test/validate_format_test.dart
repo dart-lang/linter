@@ -6,15 +6,15 @@ import 'dart:io';
 
 import 'package:test/test.dart';
 
-main() {
+void main() {
   test('validate source formatting', () async {
     try {
       ProcessResult result = await Process.run(
           'dartfmt', ['--dry-run', '--set-exit-if-changed', '.']);
       List<String> violations = result.stdout.toString().split('\n')
         ..removeWhere(formattingIgnored);
-      expect(violations, isEmpty, reason: '''Some files need formatting. 
-  
+      expect(violations, isEmpty, reason: '''Some files need formatting.
+
 Run `dartfmt` and (re)commit.''');
     } on ProcessException {
       // This occurs, notably, on appveyor.

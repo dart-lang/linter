@@ -120,20 +120,20 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 }
 
-class _VisitorHelper extends RecursiveAstVisitor {
+class _VisitorHelper extends RecursiveAstVisitor<void> {
   final LintRule rule;
 
   _VisitorHelper(this.rule);
 
   @override
-  visitSimpleFormalParameter(SimpleFormalParameter param) {
+  void visitSimpleFormalParameter(SimpleFormalParameter param) {
     if (param.type == null && !isJustUnderscores(param.identifier.name)) {
       rule.reportLint(param);
     }
   }
 
   @override
-  visitVariableDeclaration(VariableDeclaration node) {
+  void visitVariableDeclaration(VariableDeclaration node) {
     if (!isPrivate(node.name)) {
       rule.reportLint(node.name);
     }

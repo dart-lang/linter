@@ -71,7 +71,7 @@ class DetailedReporter extends SimpleFormatter {
             quiet: quiet);
 
   @override
-  writeLint(AnalysisError error, {int offset, int line, int column}) {
+  void writeLint(AnalysisError error, {int offset, int line, int column}) {
     super.writeLint(error, offset: offset, column: column, line: line);
 
     if (!machineOutput) {
@@ -104,7 +104,7 @@ abstract class ReportFormatter {
           machineOutput: machineOutput,
           quiet: quiet);
 
-  write();
+  void write();
 }
 
 /// Simple formatter suitable for subclassing.
@@ -155,7 +155,7 @@ class SimpleFormatter implements ReportFormatter {
   }
 
   @override
-  write() {
+  void write() {
     writeLints();
     writeSummary();
     if (showStatistics) {

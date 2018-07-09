@@ -58,7 +58,7 @@ class PreferForeach extends LintRule {
   AstVisitor getVisitor() => _visitor;
 }
 
-class _PreferForEachVisitor extends SimpleAstVisitor {
+class _PreferForEachVisitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   LocalVariableElement element;
   ForEachStatement forEachStatement;
@@ -66,19 +66,19 @@ class _PreferForEachVisitor extends SimpleAstVisitor {
   _PreferForEachVisitor(this.rule);
 
   @override
-  visitBlock(Block node) {
+  void visitBlock(Block node) {
     if (node.statements.length == 1) {
       node.statements.first.accept(this);
     }
   }
 
   @override
-  visitExpressionStatement(ExpressionStatement node) {
+  void visitExpressionStatement(ExpressionStatement node) {
     node.expression.accept(this);
   }
 
   @override
-  visitForEachStatement(ForEachStatement node) {
+  void visitForEachStatement(ForEachStatement node) {
     final element = node.loopVariable?.element;
     if (element != null) {
       forEachStatement = node;
@@ -88,7 +88,7 @@ class _PreferForEachVisitor extends SimpleAstVisitor {
   }
 
   @override
-  visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
+  void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
     final arguments = node.argumentList.arguments;
     if (arguments.length == 1 &&
         DartTypeUtilities.getCanonicalElementFromIdentifier(arguments.first) ==
@@ -98,7 +98,7 @@ class _PreferForEachVisitor extends SimpleAstVisitor {
   }
 
   @override
-  visitMethodInvocation(MethodInvocation node) {
+  void visitMethodInvocation(MethodInvocation node) {
     final arguments = node.argumentList.arguments;
     if (arguments.length == 1 &&
         DartTypeUtilities.getCanonicalElementFromIdentifier(arguments.first) ==
@@ -114,17 +114,17 @@ class _PreferForEachVisitor extends SimpleAstVisitor {
   }
 
   @override
-  visitParenthesizedExpression(ParenthesizedExpression node) {
+  void visitParenthesizedExpression(ParenthesizedExpression node) {
     node.unParenthesized.accept(this);
   }
 }
 
-class _Visitor extends SimpleAstVisitor {
+class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   _Visitor(this.rule);
 
   @override
-  visitForEachStatement(ForEachStatement node) {
+  void visitForEachStatement(ForEachStatement node) {
     final visitor = _PreferForEachVisitor(rule);
     node.accept(visitor);
   }

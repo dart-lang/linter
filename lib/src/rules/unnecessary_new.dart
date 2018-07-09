@@ -47,12 +47,12 @@ class UnnecessaryNew extends LintRule implements NodeLintRule {
   }
 }
 
-class _Visitor extends SimpleAstVisitor {
+class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   _Visitor(this.rule);
 
   @override
-  visitInstanceCreationExpression(InstanceCreationExpression node) {
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (node.keyword?.type == Keyword.NEW) {
       rule.reportLint(node);
     }

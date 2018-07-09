@@ -62,7 +62,8 @@ class UnnecessaryOverrides extends LintRule implements NodeLintRule {
   }
 }
 
-abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
+abstract class _AbstractUnnecessaryOverrideVisitor
+    extends SimpleAstVisitor<void> {
   final LintRule rule;
 
   ExecutableElement inheritedMethod;
@@ -73,29 +74,29 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
   ExecutableElement getInheritedElement(node);
 
   @override
-  visitBlock(Block node) {
+  void visitBlock(Block node) {
     if (node.statements.length == 1) {
       node.statements.first.accept(this);
     }
   }
 
   @override
-  visitBlockFunctionBody(BlockFunctionBody node) {
+  void visitBlockFunctionBody(BlockFunctionBody node) {
     visitBlock(node.block);
   }
 
   @override
-  visitExpressionFunctionBody(ExpressionFunctionBody node) {
+  void visitExpressionFunctionBody(ExpressionFunctionBody node) {
     node.expression.accept(this);
   }
 
   @override
-  visitExpressionStatement(ExpressionStatement node) {
+  void visitExpressionStatement(ExpressionStatement node) {
     node.expression.accept(this);
   }
 
   @override
-  visitMethodDeclaration(MethodDeclaration node) {
+  void visitMethodDeclaration(MethodDeclaration node) {
     // noSuchMethod is mandatory to proxify
     if (node.name.name == 'noSuchMethod') return;
 
@@ -110,17 +111,17 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
   }
 
   @override
-  visitParenthesizedExpression(ParenthesizedExpression node) {
+  void visitParenthesizedExpression(ParenthesizedExpression node) {
     node.unParenthesized.accept(this);
   }
 
   @override
-  visitReturnStatement(ReturnStatement node) {
+  void visitReturnStatement(ReturnStatement node) {
     node.expression?.accept(this);
   }
 
   @override
-  visitSuperExpression(SuperExpression node) {
+  void visitSuperExpression(SuperExpression node) {
     rule.reportLint(declaration.name);
   }
 
@@ -188,7 +189,7 @@ class _UnnecessaryGetterOverrideVisitor
       DartTypeUtilities.lookUpInheritedConcreteGetter(node);
 
   @override
-  visitPropertyAccess(PropertyAccess node) {
+  void visitPropertyAccess(PropertyAccess node) {
     if (node.propertyName.bestElement == inheritedMethod) {
       node.target?.accept(this);
     }
@@ -204,7 +205,7 @@ class _UnnecessaryMethodOverrideVisitor
       DartTypeUtilities.lookUpInheritedMethod(node);
 
   @override
-  visitMethodInvocation(MethodInvocation node) {
+  void visitMethodInvocation(MethodInvocation node) {
     if (node.methodName.bestElement == inheritedMethod &&
         DartTypeUtilities.matchesArgumentsWithParameters(
             node.argumentList.arguments, declaration.parameters.parameters)) {
@@ -222,7 +223,7 @@ class _UnnecessaryOperatorOverrideVisitor
       DartTypeUtilities.lookUpInheritedConcreteMethod(node);
 
   @override
-  visitBinaryExpression(BinaryExpression node) {
+  void visitBinaryExpression(BinaryExpression node) {
     final parameters = declaration.parameters.parameters;
     if (node.operator.type == declaration.name.token.type &&
         parameters.length == 1 &&
@@ -237,7 +238,7 @@ class _UnnecessaryOperatorOverrideVisitor
   }
 
   @override
-  visitPrefixExpression(PrefixExpression node) {
+  void visitPrefixExpression(PrefixExpression node) {
     final parameters = declaration.parameters.parameters;
     if (node.operator.type == declaration.name.token.type &&
         parameters.isEmpty) {
@@ -258,7 +259,7 @@ class _UnnecessarySetterOverrideVisitor
       DartTypeUtilities.lookUpInheritedConcreteSetter(node);
 
   @override
-  visitAssignmentExpression(AssignmentExpression node) {
+  void visitAssignmentExpression(AssignmentExpression node) {
     final parameters = declaration.parameters.parameters;
     if (parameters.length == 1 &&
         parameters.first.identifier.bestElement ==
@@ -271,7 +272,7 @@ class _UnnecessarySetterOverrideVisitor
     }
   }
 
-  _visitPropertyAccess(PropertyAccess node) {
+  void _visitPropertyAccess(PropertyAccess node) {
     if (node.propertyName.bestElement == inheritedMethod) {
       node.target?.accept(this);
     }

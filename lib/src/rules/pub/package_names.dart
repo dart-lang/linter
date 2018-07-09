@@ -32,13 +32,13 @@ class PubPackageNames extends LintRule {
   PubspecVisitor getPubspecVisitor() => Visitor(this);
 }
 
-class Visitor extends PubspecVisitor {
+class Visitor extends PubspecVisitor<void> {
   final LintRule rule;
 
   Visitor(this.rule);
 
   @override
-  visitPackageName(PSEntry name) {
+  void visitPackageName(PSEntry name) {
     if (!isValidPackageName(name.value.text)) {
       rule.reportPubLint(name.value);
     }

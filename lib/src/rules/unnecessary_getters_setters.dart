@@ -89,7 +89,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       ..forEach((id) => _visitGetterSetter(getters[id], setters[id]));
   }
 
-  _visitGetterSetter(MethodDeclaration getter, MethodDeclaration setter) {
+  void _visitGetterSetter(MethodDeclaration getter, MethodDeclaration setter) {
     if (isSimpleSetter(setter) &&
         isSimpleGetter(getter) &&
         !isProtected(getter) &&

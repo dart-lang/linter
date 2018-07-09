@@ -74,38 +74,38 @@ class UseStringBuffers extends LintRule implements NodeLintRule {
   }
 }
 
-class _IdentifierIsPrefixVisitor extends SimpleAstVisitor {
+class _IdentifierIsPrefixVisitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   SimpleIdentifier identifier;
 
   _IdentifierIsPrefixVisitor(this.rule, this.identifier);
 
   @override
-  visitBinaryExpression(BinaryExpression node) {
+  void visitBinaryExpression(BinaryExpression node) {
     if (node.operator.type == TokenType.PLUS) {
       node.leftOperand.accept(this);
     }
   }
 
   @override
-  visitInterpolationExpression(InterpolationExpression node) {
+  void visitInterpolationExpression(InterpolationExpression node) {
     node.expression.accept(this);
   }
 
   @override
-  visitParenthesizedExpression(ParenthesizedExpression node) {
+  void visitParenthesizedExpression(ParenthesizedExpression node) {
     node.unParenthesized.accept(this);
   }
 
   @override
-  visitSimpleIdentifier(SimpleIdentifier node) {
+  void visitSimpleIdentifier(SimpleIdentifier node) {
     if (node.bestElement == identifier.bestElement) {
       rule.reportLint(identifier);
     }
   }
 
   @override
-  visitStringInterpolation(StringInterpolation node) {
+  void visitStringInterpolation(StringInterpolation node) {
     if (node.elements.length >= 2 &&
         _isEmptyInterpolationString(node.elements.first)) {
       node.elements[1].accept(this);
@@ -143,14 +143,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 }
 
-class _UseStringBufferVisitor extends SimpleAstVisitor {
+class _UseStringBufferVisitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   final localElements = Set<Element>();
 
   _UseStringBufferVisitor(this.rule);
 
   @override
-  visitAssignmentExpression(AssignmentExpression node) {
+  void visitAssignmentExpression(AssignmentExpression node) {
     if (node.operator.type != TokenType.PLUS_EQ &&
         node.operator.type != TokenType.EQ) return;
 
@@ -170,22 +170,22 @@ class _UseStringBufferVisitor extends SimpleAstVisitor {
   }
 
   @override
-  visitBlock(Block block) {
+  void visitBlock(Block block) {
     block.visitChildren(this);
   }
 
   @override
-  visitExpressionStatement(ExpressionStatement node) {
+  void visitExpressionStatement(ExpressionStatement node) {
     node.expression.accept(this);
   }
 
   @override
-  visitParenthesizedExpression(ParenthesizedExpression node) {
+  void visitParenthesizedExpression(ParenthesizedExpression node) {
     node.unParenthesized.accept(this);
   }
 
   @override
-  visitVariableDeclarationStatement(VariableDeclarationStatement node) {
+  void visitVariableDeclarationStatement(VariableDeclarationStatement node) {
     for (final variable in node.variables.variables) {
       localElements.add(variable.element);
     }

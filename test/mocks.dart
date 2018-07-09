@@ -23,12 +23,12 @@ class CollectingSink extends MockIOSink {
   String trim() => toString().trim();
 
   @override
-  write(obj) {
+  void write(obj) {
     buffer.write(obj);
   }
 
   @override
-  writeln([Object obj = '']) {
+  void writeln([Object obj = '']) {
     buffer.writeln(obj);
   }
 }
@@ -88,59 +88,59 @@ class MockIOSink implements IOSink {
   void writeln([Object obj = '']) {}
 }
 
-class MockPubVisitor implements PubspecVisitor {
+class MockPubVisitor<R> implements PubspecVisitor<R> {
   @override
-  visitPackageAuthor(PSEntry author) {
+  R visitPackageAuthor(PSEntry author) {
     throw Exception();
   }
 
   @override
-  visitPackageAuthors(PSNodeList authors) {
+  R visitPackageAuthors(PSNodeList authors) {
     throw Exception();
   }
 
   @override
-  visitPackageDependencies(PSDependencyList dependencies) {
+  R visitPackageDependencies(PSDependencyList dependencies) {
     throw Exception();
   }
 
   @override
-  visitPackageDependency(PSDependency dependency) {
+  R visitPackageDependency(PSDependency dependency) {
     throw Exception();
   }
 
   @override
-  visitPackageDescription(PSEntry description) {
+  R visitPackageDescription(PSEntry description) {
     throw Exception();
   }
 
   @override
-  visitPackageDevDependencies(PSDependencyList dependencies) {
+  R visitPackageDevDependencies(PSDependencyList dependencies) {
     throw Exception();
   }
 
   @override
-  visitPackageDevDependency(PSDependency dependency) {
+  R visitPackageDevDependency(PSDependency dependency) {
     throw Exception();
   }
 
   @override
-  visitPackageDocumentation(PSEntry documentation) {
+  R visitPackageDocumentation(PSEntry documentation) {
     throw Exception();
   }
 
   @override
-  visitPackageHomepage(PSEntry homepage) {
+  R visitPackageHomepage(PSEntry homepage) {
     throw Exception();
   }
 
   @override
-  visitPackageName(PSEntry name) {
+  R visitPackageName(PSEntry name) {
     throw Exception();
   }
 
   @override
-  visitPackageVersion(PSEntry version) {
+  R visitPackageVersion(PSEntry version) {
     throw Exception();
   }
 }
@@ -203,7 +203,7 @@ class MockRule implements LintRule {
   AstVisitor getVisitor() => visitor;
 
   @override
-  noSuchMethod(Invocation invocation) => null;
+  dynamic noSuchMethod(Invocation invocation) => null;
 
   @override
   void reportLint(AstNode node, {bool ignoreSyntheticNodes = true}) {}

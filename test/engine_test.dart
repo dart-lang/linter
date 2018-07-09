@@ -21,7 +21,7 @@ import '../bin/linter.dart' as dartlint;
 import 'mocks.dart';
 import 'rule_test.dart' show ruleDir;
 
-main() {
+void main() {
   defineLinterEngineTests();
 }
 
@@ -29,7 +29,7 @@ main() {
 void defineLinterEngineTests() {
   group('engine', () {
     group('reporter', () {
-      _test(String label, String expected, report(PrintingReporter r)) {
+      void _test(String label, String expected, report(PrintingReporter r)) {
         test(label, () {
           String msg;
           PrintingReporter reporter = PrintingReporter((m) => msg = m);
@@ -217,7 +217,7 @@ void defineLinterEngineTests() {
   });
 }
 
-typedef NodeVisitor(node);
+typedef void NodeVisitor(node);
 
 typedef dynamic /* AstVisitor, PubSpecVisitor*/ VisitorCallback();
 
@@ -247,20 +247,21 @@ class MockLintRule extends LintRule {
   AstVisitor getVisitor() => MockVisitor(null);
 }
 
-class MockVisitor extends GeneralizingAstVisitor with PubspecVisitor {
+class MockVisitor extends GeneralizingAstVisitor<void>
+    with PubspecVisitor<void> {
   final nodeVisitor;
 
   MockVisitor(this.nodeVisitor);
 
   @override
-  visitNode(AstNode node) {
+  void visitNode(AstNode node) {
     if (nodeVisitor != null) {
       nodeVisitor(node);
     }
   }
 
   @override
-  visitPackageName(PSEntry node) {
+  void visitPackageName(PSEntry node) {
     if (nodeVisitor != null) {
       nodeVisitor(node);
     }

@@ -92,23 +92,23 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 }
 
-class _ReportNoClearEffectVisitor extends UnifyingAstVisitor {
+class _ReportNoClearEffectVisitor extends UnifyingAstVisitor<void> {
   final LintRule rule;
 
   _ReportNoClearEffectVisitor(this.rule);
 
   @override
-  visitAssignmentExpression(AssignmentExpression node) {
+  void visitAssignmentExpression(AssignmentExpression node) {
     // Has a clear effect
   }
 
   @override
-  visitAwaitExpression(AwaitExpression node) {
+  void visitAwaitExpression(AwaitExpression node) {
     // Has a clear effect
   }
 
   @override
-  visitBinaryExpression(BinaryExpression node) {
+  void visitBinaryExpression(BinaryExpression node) {
     switch (node.operator.lexeme) {
       case '??':
       case '||':
@@ -122,45 +122,45 @@ class _ReportNoClearEffectVisitor extends UnifyingAstVisitor {
   }
 
   @override
-  visitCascadeExpression(CascadeExpression node) {
+  void visitCascadeExpression(CascadeExpression node) {
     // Has a clear effect
   }
 
   @override
-  visitConditionalExpression(ConditionalExpression node) {
+  void visitConditionalExpression(ConditionalExpression node) {
     node.thenExpression.accept(this);
     node.elseExpression.accept(this);
   }
 
   @override
-  visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
+  void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
     // Has a clear effect
   }
 
   @override
-  visitInstanceCreationExpression(InstanceCreationExpression node) {
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
     // A few APIs use this for side effects, like Timer. Also, for constructors
     // that have side effects, they should have tests. Those tests will often
     // include an instantiation expression statement with nothing else.
   }
 
   @override
-  visitMethodInvocation(MethodInvocation node) {
+  void visitMethodInvocation(MethodInvocation node) {
     // Has a clear effect
   }
 
   @override
-  visitNode(AstNode expression) {
+  void visitNode(AstNode expression) {
     rule.reportLint(expression);
   }
 
   @override
-  visitPostfixExpression(PostfixExpression node) {
+  void visitPostfixExpression(PostfixExpression node) {
     // Has a clear effect
   }
 
   @override
-  visitPrefixedIdentifier(PrefixedIdentifier node) {
+  void visitPrefixedIdentifier(PrefixedIdentifier node) {
     // Allow getters; getters with side effects were the main cause of false
     // positives.
     var bestElement = node.identifier.bestElement;
@@ -171,7 +171,7 @@ class _ReportNoClearEffectVisitor extends UnifyingAstVisitor {
   }
 
   @override
-  visitPrefixExpression(PrefixExpression node) {
+  void visitPrefixExpression(PrefixExpression node) {
     if (node.operator.lexeme == '--' || node.operator.lexeme == '++') {
       // Has a clear effect
       return;
@@ -180,7 +180,7 @@ class _ReportNoClearEffectVisitor extends UnifyingAstVisitor {
   }
 
   @override
-  visitPropertyAccess(PropertyAccess node) {
+  void visitPropertyAccess(PropertyAccess node) {
     // Allow getters; getters with side effects were the main cause of false
     // positives.
     var bestElement = node.propertyName.bestElement;
@@ -192,17 +192,17 @@ class _ReportNoClearEffectVisitor extends UnifyingAstVisitor {
   }
 
   @override
-  visitRethrowExpression(RethrowExpression node) {
+  void visitRethrowExpression(RethrowExpression node) {
     // Has a clear effect
   }
 
   @override
-  visitSuperConstructorInvocation(SuperConstructorInvocation node) {
+  void visitSuperConstructorInvocation(SuperConstructorInvocation node) {
     // Has a clear effect
   }
 
   @override
-  visitSimpleIdentifier(SimpleIdentifier node) {
+  void visitSimpleIdentifier(SimpleIdentifier node) {
     // Allow getters; getters with side effects were the main cause of false
     // positives.
     var bestElement = node.bestElement;
@@ -215,7 +215,7 @@ class _ReportNoClearEffectVisitor extends UnifyingAstVisitor {
   }
 
   @override
-  visitThrowExpression(ThrowExpression node) {
+  void visitThrowExpression(ThrowExpression node) {
     // Has a clear effect
   }
 }
