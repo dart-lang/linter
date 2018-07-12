@@ -30,8 +30,7 @@ you could lint your package like this:
 
     $ dartanalyzer --options analysis_options.yaml .
     
-and see any violations of the `annotate_overrides`, `hash_and_equals`, and `prefer_is_not_empty` rules in the console.  In practice you would probably configure quite a few more rules (the full list is [here][lints]).  The evolving list of lints
-enforced internally at Google may serve as inspiration [here][google-lints].
+and see any violations of the `annotate_overrides`, `hash_and_equals`, and `prefer_is_not_empty` rules in the console.  In practice you would probably configure quite a few more rules (the full list is [here][lints]).  The evolving list of lints enforced internally at Google may serve as inspiration [here][google-lints].
 
 If a specific lint warning should be ignored, it can be flagged with a comment.  For example, 
 
