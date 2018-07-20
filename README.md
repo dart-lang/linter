@@ -1,6 +1,7 @@
 # Linter for Dart
 
-A Dart style linter.
+The Dart Linter package defines lint rules that identify and report on "lints" found in Dart Code.
+
 
 [![Build Status](https://travis-ci.org/dart-lang/linter.svg)](https://travis-ci.org/dart-lang/linter)
 [![Build status](https://ci.appveyor.com/api/projects/status/3a2437l58uhmvckm/branch/master?svg=true)](https://ci.appveyor.com/project/pq/linter/branch/master)
