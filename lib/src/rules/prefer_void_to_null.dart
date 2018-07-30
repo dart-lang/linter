@@ -30,6 +30,20 @@ Future<void> f() {}
 Stream<void> f() {}
 f(void x) {}
 ```
+
+Some exceptions include formulating special function types:
+
+```
+Null Function(Null, Null);
+```
+
+and for making empty literals which are safe to pass into read-only locations
+for any type of map or list:
+
+```
+<Null>[];
+<int, Null>{};
+```
 ''';
 
 class PreferVoidToNull extends LintRule implements NodeLintRule {
@@ -56,6 +70,33 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitSimpleIdentifier(SimpleIdentifier id) {
     final element = id.staticElement;
     if (element is ClassElement && element.type.isDartCoreNull) {
+      final typeName =
+          id.parent is PrefixedIdentifier ? id.parent.parent : id.parent;
+
+      final parent = typeName.parent;
+
+      // Null Function()
+      if (parent is GenericFunctionType) {
+        return;
+      }
+
+      // Function(Null)
+      if (parent is SimpleFormalParameter &&
+          parent.parent is FormalParameterList &&
+          parent.parent.parent is GenericFunctionType) {
+        return;
+      }
+
+      // <Null>[] or <Null, Null>{}
+      if (parent is TypeArgumentList) {
+        final literal = parent.parent;
+        if (literal is ListLiteral && literal.elements.isEmpty) {
+          return;
+        } else if (literal is MapLiteral && literal.entries.isEmpty) {
+          return;
+        }
+      }
+
       rule.reportLintForToken(id.token);
     }
   }
