@@ -112,7 +112,7 @@ async_function() {
 
 inference() {
   f(void Function() f) {}
-  f(() // OK
+  f(() // LINT
       {
     return 1; // OK
   });
@@ -124,7 +124,7 @@ generics_with_function() {
       {
     return 1;
   });
-  f<void>(() // OK
+  f<void>(() // LINT
       {
     return 1;
   });
@@ -149,12 +149,29 @@ function_ref_are_ok() {
 }
 
 allow_functionWithReturnType_forFunctionWithout() {
-  forget(void Function() f) {}
-  int foo() => 1;
-  String bar() => "bar";
+  takeVoidFn(void Function() f) {}
+  void Function() voidFn;
 
-  forget(foo); // OK
-  forget(bar); // OK
+  int nonVoidFn() => 1;
+
+  takeVoidFn(nonVoidFn); // OK
+  voidFn = nonVoidFn; // OK
+  void Function() returnsVoidFn() {
+    return nonVoidFn; // OK
+  }
+}
+
+allow_functionWithReturnType_forFunctionWithout_asComplexExpr() {
+  takeVoidFn(void Function() f) {}
+  void Function() voidFn;
+
+  List<int Function()> listNonVoidFn;
+
+  takeVoidFn(listNonVoidFn[0]); // OK
+  voidFn = listNonVoidFn[0]; // OK
+  void Function() returnsVoidFn() {
+    return listNonVoidFn[0]; // OK
+  }
 }
 
 allow_Null_for_void() {
