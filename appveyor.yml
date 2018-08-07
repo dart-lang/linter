@@ -14,5 +14,5 @@ install:
 build: off
 
 test_script:
-#  - pub run test -j1
-  - dart test\all.dart
+  - pub run test -j1
+#  - dart test\all.dart
