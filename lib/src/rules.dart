@@ -43,6 +43,7 @@ import 'package:linter/src/rules/close_sinks.dart';
 import 'package:linter/src/rules/comment_references.dart';
 import 'package:linter/src/rules/constant_identifier_names.dart';
 import 'package:linter/src/rules/control_flow_in_finally.dart';
+import 'package:linter/src/rules/curly_braces_in_flow_control_structures.dart';
 import 'package:linter/src/rules/directives_ordering.dart';
 import 'package:linter/src/rules/empty_catches.dart';
 import 'package:linter/src/rules/empty_constructor_bodies.dart';
@@ -55,11 +56,13 @@ import 'package:linter/src/rules/iterable_contains_unrelated_type.dart';
 import 'package:linter/src/rules/join_return_with_assignment.dart';
 import 'package:linter/src/rules/library_names.dart';
 import 'package:linter/src/rules/library_prefixes.dart';
+import 'package:linter/src/rules/lines_longer_than_80_chars.dart';
 import 'package:linter/src/rules/list_remove_unrelated_type.dart';
 import 'package:linter/src/rules/literal_only_boolean_expressions.dart';
 import 'package:linter/src/rules/no_adjacent_strings_in_list.dart';
 import 'package:linter/src/rules/no_duplicate_case_values.dart';
 import 'package:linter/src/rules/non_constant_identifier_names.dart';
+import 'package:linter/src/rules/null_closures.dart';
 import 'package:linter/src/rules/omit_local_variable_types.dart';
 import 'package:linter/src/rules/one_member_abstracts.dart';
 import 'package:linter/src/rules/only_throw_errors.dart';
@@ -92,6 +95,7 @@ import 'package:linter/src/rules/prefer_is_not_empty.dart';
 import 'package:linter/src/rules/prefer_iterable_whereType.dart';
 import 'package:linter/src/rules/prefer_single_quotes.dart';
 import 'package:linter/src/rules/prefer_typing_uninitialized_variables.dart';
+import 'package:linter/src/rules/prefer_void_to_null.dart';
 import 'package:linter/src/rules/pub/package_names.dart';
 import 'package:linter/src/rules/public_member_api_docs.dart';
 import 'package:linter/src/rules/recursive_getters.dart';
@@ -165,6 +169,7 @@ void registerLintRules() {
     ..register(new CommentReferences())
     ..register(new ControlFlowInFinally())
     ..registerDefault(new ConstantIdentifierNames())
+    ..register(new CurlyBracesInFlowControlStructures())
     ..register(new DirectivesOrdering())
     ..register(new EmptyCatches())
     ..registerDefault(new EmptyConstructorBodies())
@@ -177,11 +182,13 @@ void registerLintRules() {
     ..register(new JoinReturnWithAssignment())
     ..registerDefault(new LibraryNames())
     ..registerDefault(new LibraryPrefixes())
+    ..register(new LinesLongerThan80Chars())
     ..register(new ListRemoveUnrelatedType())
     ..register(new LiteralOnlyBooleanExpressions())
     ..register(new NoAdjacentStringsInList())
     ..register(new NoDuplicateCaseValues())
     ..registerDefault(new NonConstantIdentifierNames())
+    ..register(new NullClosures())
     ..registerDefault(new OneMemberAbstracts())
     ..register(new OmitLocalVariableTypes())
     ..register(new OnlyThrowErrors())
@@ -215,6 +222,7 @@ void registerLintRules() {
     ..register(new PublicMemberApiDocs())
     ..register(new PreferSingleQuotes())
     ..register(new PreferTypingUninitializedVariables())
+    ..register(new PreferVoidToNull())
     ..register(new PubPackageNames())
     ..register(new RecursiveGetters())
     ..registerDefault(new SlashForDocComments())

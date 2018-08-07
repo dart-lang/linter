@@ -24,6 +24,7 @@ List<Element> getChildren(Element parent, [String name]) {
     if (name == null || element.displayName == name) {
       children.add(element);
     }
+    return false;
   });
   return children;
 }
@@ -324,7 +325,7 @@ class HasConstErrorListener extends AnalysisErrorListener {
 
   @override
   void onError(AnalysisError error) {
-    hasConstError = errorCodes.contains(error.errorCode);
+    hasConstError = hasConstError || errorCodes.contains(error.errorCode);
   }
 
   static const List<CompileTimeErrorCode> errorCodes = const [
@@ -335,10 +336,12 @@ class HasConstErrorListener extends AnalysisErrorListener {
     CompileTimeErrorCode.CONST_EVAL_TYPE_NUM,
     CompileTimeErrorCode.CONST_EVAL_THROWS_EXCEPTION,
     CompileTimeErrorCode.CONST_EVAL_THROWS_IDBZE,
+    CompileTimeErrorCode.CONST_WITH_NON_CONST,
     CompileTimeErrorCode.CONST_WITH_NON_CONSTANT_ARGUMENT,
     CompileTimeErrorCode.INVALID_CONSTANT,
     CompileTimeErrorCode.MISSING_CONST_IN_LIST_LITERAL,
     CompileTimeErrorCode.MISSING_CONST_IN_MAP_LITERAL,
+    CompileTimeErrorCode.NON_CONSTANT_CASE_EXPRESSION,
     CompileTimeErrorCode.NON_CONSTANT_LIST_ELEMENT,
     CompileTimeErrorCode.NON_CONSTANT_MAP_KEY,
     CompileTimeErrorCode.NON_CONSTANT_MAP_VALUE,

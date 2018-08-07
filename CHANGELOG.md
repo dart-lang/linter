@@ -1,3 +1,29 @@
+* new lint: `prefer_void_to_null`
+
+# 0.1.58
+
+* roll-back to explicit uses of `new` and `const` to be compatible w/ VMs running `--no-preview-dart-2`
+
+# 0.1.57
+
+* fix to `lines_longer_than_80_chars` to handle CRLF endings
+* doc improvements
+* set max SDK version to <3.0.0
+* fix to `non_constant_identifier_names` to better handle invalid code
+* new lint: `curly_braces_in_flow_control_structures`
+
+# 0.1.56
+
+* fix to `avoid_positional_boolean_parameters` to ignore overridden methods
+* fix to `prefer_is_empty` to not evaluate constants beyond int literals
+* new lint: `null_closures`
+* new lint: `lines_longer_than_80_chars`
+
+# 0.1.55
+
+* fixed an issue in `const` error handling
+* updated `linter` binary to use `previewDart2`
+
 # 0.1.54
 
 * new `unnecessary_const` lint

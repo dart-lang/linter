@@ -3,12 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/analyzer.dart';
-import 'package:analyzer/dart/analysis/declared_variables.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/error/listener.dart';
 import 'package:linter/src/analyzer.dart';
 
 const alwaysFalse = 'Always false because length is always greater or equal 0.';
@@ -132,21 +130,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     BinaryExpression binaryExpression = search;
 
     Token operator = binaryExpression.operator;
-    DeclaredVariables declaredVariables = context.declaredVariables;
 
     // Comparing constants with length.
+    int value = _getIntValue(binaryExpression.rightOperand);
 
-    ConstantVisitor visitor = new ConstantVisitor(
-        new ConstantEvaluationEngine(typeProvider, declaredVariables,
-            typeSystem: typeSystem),
-        new ErrorReporter(
-            AnalysisErrorListener.NULL_LISTENER, rule.reporter.source));
-
-    DartObjectImpl rightValue = binaryExpression.rightOperand.accept(visitor);
-
-    if (rightValue?.type?.name == 'int') {
-      // Constants is on right side of comparison operator
-      int value = rightValue.toIntValue();
+    if (value != null) {
+      // Constant is on right side of comparison operator.
       if (value == 0) {
         if (operator.type == TokenType.EQ_EQ ||
             operator.type == TokenType.LT_EQ) {
@@ -182,12 +171,11 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    DartObjectImpl leftValue = binaryExpression.leftOperand.accept(visitor);
+    value = _getIntValue(binaryExpression.leftOperand);
 
-    if (leftValue?.type?.name == 'int') {
-      // Constants is on left side of comparison operator
-      int value = leftValue.toIntValue();
-
+    // ignore: invariant_booleans
+    if (value != null) {
+      // Constant is on left side of comparison operator.
       if (value == 0) {
         if (operator.type == TokenType.EQ_EQ ||
             operator.type == TokenType.GT_EQ) {
@@ -221,5 +209,21 @@ class _Visitor extends SimpleAstVisitor<void> {
         }
       }
     }
+  }
+
+  /// Returns the value of an [IntegerLiteral] or [PrefixExpression] with a
+  /// minus and then an [IntegerLiteral]. For anything else, returns `null`.
+  int _getIntValue(Expression expressions) {
+    if (expressions is IntegerLiteral) {
+      return expressions.value;
+    } else if (expressions is PrefixExpression) {
+      var operand = expressions.operand;
+      if (expressions.operator.type == TokenType.MINUS &&
+          operand is IntegerLiteral) {
+        return -operand.value;
+      }
+    }
+    // ignore: avoid_returning_null
+    return null;
   }
 }
