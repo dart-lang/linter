@@ -132,8 +132,6 @@ class _Visitor extends SimpleAstVisitor<void> {
             !type.isAssignableTo(_futureDynamicType) &&
             !type.isAssignableTo(_futureOrDynamicType)) {
       rule.reportLint(node);
-    } else if (expectedType is FunctionType && type is FunctionType) {
-      _check(expectedType.returnType, type.returnType, node);
     }
   }
 

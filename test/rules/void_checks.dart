@@ -112,7 +112,7 @@ async_function() {
 
 inference() {
   f(void Function() f) {}
-  f(() //LINT
+  f(() // OK
       {
     return 1; // OK
   });
@@ -124,7 +124,7 @@ generics_with_function() {
       {
     return 1;
   });
-  f<void>(() // LINT
+  f<void>(() // OK
       {
     return 1;
   });
@@ -146,6 +146,15 @@ function_ref_are_ok() {
   fB(f: a1.m5); // OK
   final a2 = new A<void>();
   fA(a2.m5); // OK
+}
+
+allow_functionWithReturnType_forFunctionWithout() {
+  forget(void Function() f) {}
+  int foo() => 1;
+  String bar() => "bar";
+
+  forget(foo); // OK
+  forget(bar); // OK
 }
 
 allow_Null_for_void() {
