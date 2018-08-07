@@ -2,10 +2,10 @@
 # for details. All rights reserved. Use of this source code is governed by a
 # BSD-style license that can be found in the LICENSE file.
 #
-# List of rules following the Effective Dart guide.
+# A living list of rules following the Effective Dart guide.
 # https://www.dartlang.org/guides/language/effective-dart
 #
-# This is a living document that will evolve over time according to the guide.
+# Note: not everything suggested in the guide has a rule associated with it.
 
 linter:
   rules:
