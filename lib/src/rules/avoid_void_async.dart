@@ -53,8 +53,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    if (!node.isSetter &&
-        node.element.isAsynchronous &&
+    if ((node.element.isAsynchronous || node.element.isGenerator) &&
         node.returnType.type.isVoid) {
       rule.reportLint(node.name);
     }
@@ -62,10 +61,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (!node.isSetter &&
-        node.element.isAsynchronous &&
-        node.returnType.type.isVoid &&
-        node.name.token.type != TokenType.INDEX_EQ) {
+    if ((node.element.isAsynchronous || node.element.isGenerator) &&
+        node.returnType.type.isVoid) {
       rule.reportLint(node.name);
     }
   }
