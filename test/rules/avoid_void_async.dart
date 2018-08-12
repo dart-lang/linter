@@ -24,6 +24,12 @@ void h() sync* {} // LINT
 Stream<void> i() async* {} // OK
 Iterable<void> j() sync* {} // OK
 
+void get k => null; // OK
+void get l async => null; // LINT
+
+void set m(_) => null; // OK
+set n(_) => null; // OK
+
 typedef void f1(int x); // OK
 
 typedef Future<void> f2(int x); // OK
@@ -40,4 +46,7 @@ class Foo {
   void h() sync* {} // LINT
   Stream<void> i() async* {} // OK
   Iterable<void> j() sync* {} // OK
+
+  void get k => null; // OK
+  void get l async => null; // LINT
 }
