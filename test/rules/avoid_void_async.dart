@@ -35,6 +35,10 @@ typedef void f1(int x); // OK
 typedef Future<void> f2(int x); // OK
 
 class Foo {
+  static void statica() async {} // LINT
+  static void staticb() {} // OK
+  static Future<void> staticc() async {} // OK
+
   void a() async {} // LINT
   void b() {} // OK
   Future<void> c() async {} // OK
