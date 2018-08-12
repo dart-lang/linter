@@ -49,4 +49,7 @@ class Foo {
 
   void get k => null; // OK
   void get l async => null; // LINT
+
+  void operator |(_) async => null; // LINT
+  void operator &(_) => null; // OK
 }
