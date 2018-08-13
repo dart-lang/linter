@@ -5,6 +5,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 
 const _desc = r'Avoid async functions that return void.';
@@ -53,17 +54,25 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    if ((node.element.isAsynchronous || node.element.isGenerator) &&
-        node.returnType.type.isVoid) {
+    if (_isAsync(node.element) && _isVoid(node.returnType)) {
       rule.reportLint(node.name);
     }
   }
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if ((node.element.isAsynchronous || node.element.isGenerator) &&
-        node.returnType.type.isVoid) {
+    if (_isAsync(node.element) && _isVoid(node.returnType)) {
       rule.reportLint(node.name);
     }
   }
+
+  bool _isAsync(ExecutableElement element) {
+    if (element == null) {
+      return false;
+    }
+    return element.isAsynchronous || element.isGenerator;
+  }
+
+  bool _isVoid(TypeAnnotation typeAnnotation) =>
+      typeAnnotation?.type?.isVoid ?? false;
 }
