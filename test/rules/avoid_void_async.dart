@@ -19,16 +19,9 @@ void d() async => null; // LINT
 void e() => null; // OK
 Future<void> f() async => null; // OK
 
-//TODO(mfairhurst enable this test once it works on appveyor
-//void g() async* {} // LINT
+void g() async* {} // LINT
 void h() sync* {} // LINT
-
-Stream<void> i()
-//TODO(mfairhurst enable this test once it works on appveyor
-    //async* {} // OK
-    =>
-    null; // OK
-
+Stream<void> i() async* {} // OK
 Iterable<void> j() sync* {} // OK
 
 void get k => null; // OK
@@ -53,16 +46,9 @@ class Foo {
   void e() => null; // OK
   Future<void> f() async => null; // OK
 
-  //TODO(mfairhurst enable this test once it works on appveyor
-  //void g() async* {} // LINT
+  void g() async* {} // LINT
   void h() sync* {} // LINT
-
-  Stream<void> i()
-      //TODO(mfairhurst enable this test once it works on appveyor
-      //async* {} // OK
-      =>
-      null; // OK
-
+  Stream<void> i() async* {} // OK
   Iterable<void> j() sync* {} // OK
 
   void get k => null; // OK
