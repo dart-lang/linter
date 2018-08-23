@@ -1,7 +1,7 @@
 # 0.1.60
 
 * new lint: `avoid_void_async`
-* `unwaited_futures` updated to check cascades
+* `unawaited_futures` updated to check cascades
 
 # 0.1.59
 
