@@ -100,3 +100,17 @@ void m() {
      print("won't happen");
   }
 }
+
+class A {
+  m1<T>() {}
+  @optionalTypeArgs
+  m2<T>() {}
+
+  m() {
+    A a;
+    a.m1(); // LINT
+    a.m1<int>(); // OK
+    a.m2(); // OK
+    a.m2<int>(); // OK
+  }
+}
