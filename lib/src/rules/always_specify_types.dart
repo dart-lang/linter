@@ -93,6 +93,7 @@ class AlwaysSpecifyTypes extends LintRule implements NodeLintRule {
     registry.addDeclaredIdentifier(this, visitor);
     registry.addListLiteral(this, visitor);
     registry.addMapLiteral(this, visitor);
+    registry.addMethodInvocation(this, visitor);
     registry.addSimpleFormalParameter(this, visitor);
     registry.addTypeName(this, visitor);
     registry.addVariableDeclarationList(this, visitor);
@@ -162,6 +163,18 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitVariableDeclarationList(VariableDeclarationList list) {
     if (list.type == null) {
       rule.reportLintForToken(list.keyword);
+    }
+  }
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (node.typeArguments == null) {
+      final element = node.methodName.bestElement;
+      if (element is FunctionTypedElement &&
+          element.typeParameters.isNotEmpty &&
+          !element.metadata.any((a) => _isOptionalTypeArgs(a.element))) {
+        rule.reportLint(node.methodName);
+      }
     }
   }
 }
