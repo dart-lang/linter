@@ -7,7 +7,8 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = r'Use Flutter TODO format.';
+const _desc = r'Use Flutter TODO format: '
+    '// TODO(username): message, https://URL-to-issue.';
 
 const _details = r'''
 
@@ -15,7 +16,8 @@ const _details = r'''
 
 **GOOD:**
 ```
-// TODO(username): comment
+// TODO(username): message.
+// TODO(username): message, https://URL-to-issue.
 ```
 
 ''';
@@ -58,10 +60,14 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
+  static final _todoRegExp = new RegExp(r'///*(|.* )TODO(\W|$)');
+  static final _todoExpectedRegExp =
+      new RegExp(r'// TODO\([a-zA-Z][-a-zA-Z0-9]*\): ');
+
   void _visitComment(CommentToken node) {
     final content = node.toString();
-    if (content.startsWith(new RegExp(r'///? ?TODO(\W|$)')) &&
-        !content.startsWith(new RegExp(r'// TODO\([a-zA-Z][^ ]+\): '))) {
+    if (content.startsWith(_todoRegExp) &&
+        !content.startsWith(_todoExpectedRegExp)) {
       rule.reportLintForToken(node);
     }
   }

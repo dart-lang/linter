@@ -14,8 +14,9 @@
 /// nothing here
 /// TODO(user): We
 // TODO(#12357): Bad username
+// TODO(user1,user2): We
+// comment TODO(user1): We
 
 // GOOD
 // TODO(user): We
 // TODO(user-name): We
-// TODO(user1,user2): We
