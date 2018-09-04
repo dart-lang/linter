@@ -7,6 +7,9 @@ import 'package:linter/src/rules/always_declare_return_types.dart';
 import 'package:linter/src/rules/always_put_control_body_on_new_line.dart';
 import 'package:linter/src/rules/always_put_required_named_parameters_first.dart';
 import 'package:linter/src/rules/always_require_non_null_named_parameters.dart';
+import 'package:linter/src/rules/always_specify_type_annotations.dart';
+import 'package:linter/src/rules/always_specify_type_arguments_for_classes.dart';
+import 'package:linter/src/rules/always_specify_type_arguments_for_methods.dart';
 import 'package:linter/src/rules/always_specify_types.dart';
 import 'package:linter/src/rules/annotate_overrides.dart';
 import 'package:linter/src/rules/avoid_annotating_with_dynamic.dart';
@@ -138,6 +141,9 @@ void registerLintRules() {
     ..register(new AlwaysPutControlBodyOnNewLine())
     ..register(new AlwaysPutRequiredNamedParametersFirst())
     ..register(new AlwaysRequireNonNullNamedParameters())
+    ..register(new AlwaysSpecifyTypeAnnotations())
+    ..register(new AlwaysSpecifyTypeArgumentsForClasses())
+    ..register(new AlwaysSpecifyTypeArgumentsForMethods())
     ..register(new AlwaysSpecifyTypes())
     ..register(new AnnotateOverrides())
     ..register(new AvoidAnnotatingWithDynamic())

@@ -6,6 +6,9 @@ linter:
     - always_put_control_body_on_new_line
     - always_put_required_named_parameters_first
     - always_require_non_null_named_parameters
+    - always_specify_type_annotations
+    - always_specify_type_arguments_for_classes
+    - always_specify_type_arguments_for_methods
     - always_specify_types
     - annotate_overrides
     - avoid_annotating_with_dynamic
