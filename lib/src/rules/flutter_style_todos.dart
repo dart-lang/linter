@@ -60,7 +60,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  static final _todoRegExp = new RegExp(r'///*(|.* )TODO(\W|$)');
+  static final _todoRegExp = new RegExp(r'//+(.* )?TODO\b');
   static final _todoExpectedRegExp =
       new RegExp(r'// TODO\([a-zA-Z][-a-zA-Z0-9]*\): ');
 

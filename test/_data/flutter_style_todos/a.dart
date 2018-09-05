@@ -11,7 +11,6 @@
 // TODO(user) remove
 // TODO:(user): Button
 // TODO(user) : We
-/// nothing here
 /// TODO(user): We
 // TODO(#12357): Bad username
 // TODO(user1,user2): We
