@@ -15,7 +15,12 @@
 // TODO(#12357): Bad username
 // TODO(user1,user2): We
 // comment TODO(user1): We
+/// Return all of the TODO comments.
 
 // GOOD
 // TODO(user): We
 // TODO(user-name): We
+
+// UNCHECKED
+/** TODO bla*/
+/* TODO bla*/

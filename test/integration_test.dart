@@ -416,7 +416,8 @@ defineTests() {
               'a.dart 15:1 [lint] Use Flutter TODO format:',
               'a.dart 16:1 [lint] Use Flutter TODO format:',
               'a.dart 17:1 [lint] Use Flutter TODO format:',
-              '1 file analyzed, 10 issues found, in'
+              'a.dart 18:1 [lint] Use Flutter TODO format:',
+              '1 file analyzed, 11 issues found, in'
             ]));
       });
     });
