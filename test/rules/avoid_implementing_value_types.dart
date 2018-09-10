@@ -4,12 +4,12 @@
 
 // test w/ `pub run test -N avoid_implementing_value_types`
 
-class Size {
+class Size { // OK
   final int inBytes;
   const Size(this.inBytes);
 
   @override
-  bool operator==(Object o) => o is Size && o.inBytes == inBytes;
+  bool operator ==(Object o) => o is Size && o.inBytes == inBytes;
 
   @override
   int get hashCode => inBytes.hashCode;
@@ -33,3 +33,15 @@ class EmptyFileSize2 implements SizeWithKilobytes { // LINT
   @override
   double get inKilobytes => 0.0;
 }
+
+abstract class SizeClassMixin { // OK
+  int get inBytes => 0;
+
+  @override
+  bool operator ==(Object o) => o is Size && o.inBytes == o.inBytes;
+
+  @override
+  int get hashCode => inBytes.hashCode;
+}
+
+class UsesSizeClassMixin extends Object with SizeClassMixin {} // OK

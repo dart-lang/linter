@@ -88,7 +88,7 @@ class AvoidImplementingValueTypes extends LintRule implements NodeLintRule {
             name: 'avoid_implementing_value_types',
             description: _desc,
             details: _details,
-            group: Group.errors);
+            group: Group.style);
 
   @override
   void registerNodeProcessors(NodeLintRegistry registry) {
@@ -103,7 +103,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   static bool _overridesEquals(ClassElement node) =>
-      node.getMethod('==') != null ||
+      node.getMethod('==')?.isAbstract == false ||
       _overridesEquals(node.supertype.element) ||
       node.mixins.any((t) => _overridesEquals(t.element));
 
