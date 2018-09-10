@@ -11,9 +11,9 @@ const _desc = r"Don't implement classes that override `==`.";
 
 const _details = r'''**DON'T** implement classes that override `==`.
 
-The `==` operator is contracturally required to be an equivalence relation;
-that is, symmetrically for all objects `o1` and `o2`, `o1 == o2` and `o2 == oq`
-must either both tbe true, or both be false.
+The `==` operator is contractually required to be an equivalence relation;
+that is, symmetrically for all objects `o1` and `o2`, `o1 == o2` and `o2 == o1`
+must either both be true, or both be false.
 
 When using `implements`, you do not inherit the method body of `==`, making it
 nearly impossible to follow the contract of `==`. Classes that override `==`
@@ -26,7 +26,7 @@ class Size {
   const Size(this.inBytes);
 
   @override
-  bool operator ==(Object other) => other is Size && o.inBytes == inBytes;
+  bool operator ==(Object other) => other is Size && other.inBytes == inBytes;
 
   @override
   int get hashCode => inBytes.hashCode;
