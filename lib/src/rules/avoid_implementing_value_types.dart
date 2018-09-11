@@ -102,10 +102,13 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  static bool _overridesEquals(ClassElement node) =>
-      node.getMethod('==')?.isAbstract == false ||
-      _overridesEquals(node.supertype.element) ||
-      node.mixins.any((t) => _overridesEquals(t.element));
+  static bool _overridesEquals(ClassElement element) =>
+      element
+          .lookUpConcreteMethod('==', element.library)
+          ?.enclosingElement
+          ?.type
+          ?.isObject ==
+      false;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
