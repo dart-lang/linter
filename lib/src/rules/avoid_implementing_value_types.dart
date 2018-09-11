@@ -15,6 +15,9 @@ The `==` operator is contractually required to be an equivalence relation;
 that is, symmetrically for all objects `o1` and `o2`, `o1 == o2` and `o2 == o1`
 must either both be true, or both be false.
 
+> _NOTE_: Dart does not have true _value types_, so instead we consider a class
+> that implements `==`  as a _proxy_ for identifying value types.
+
 When using `implements`, you do not inherit the method body of `==`, making it
 nearly impossible to follow the contract of `==`. Classes that override `==`
 typically are usable directly in tests _without_ creating mocks or fakes as
