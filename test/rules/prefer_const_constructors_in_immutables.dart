@@ -76,7 +76,7 @@ class G {
 @immutable
 class H {
   final f;
-  H(f) : f = f ?? f == null; // OK
+  const H(f) : f = f ?? f == null; // OK
 }
 
 // no lint for class with final field initialized with new
