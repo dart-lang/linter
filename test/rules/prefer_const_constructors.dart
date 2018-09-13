@@ -93,3 +93,13 @@ class I {
 
   I makeI() => I(foo: H()); // OK
 }
+
+class J<T> {
+  const J();
+
+  m<T>() {
+    J<T>(); // OK
+    new J<T>(); // OK
+    const J<int>(); // OK
+  }
+}
