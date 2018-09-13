@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>unawaited_futures</title>
+      <title>flutter_style_todos</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,7 +15,7 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>unawaited_futures</h1>
+            <h1>flutter_style_todos</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -26,25 +26,10 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> await functions that return a <code>Future</code> inside of an async function body.</p>
-<p>It's easy to forget await in async methods as naming conventions usually don't
-tell us if a method is sync or async (except for some in <code>dart:io</code>).</p>
-<p>When you really <em>do</em> want to start a fire-and-forget <code>Future</code>, the recommended
-way is to use <code>unawaited</code> from <code>package:pedantic</code>. The <code>// ignore</code> and
-<code>// ignore_for_file</code> comments also work.</p>
+            <p><strong>DO</strong> Use Flutter TODO format.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>Future doSomething() =&gt; ...;
-
-void main() async {
-  await doSomething();
-
-  unawaited(doSomething()); // Explicitly-ignored fire-and-forget.
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code>void main() async {
-  doSomething(); // Likely a bug.
-}
+<pre><code>// TODO(username): message.
+// TODO(username): message, https://URL-to-issue.
 </code></pre>
 
 

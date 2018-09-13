@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>avoid_implementing_value_types</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>avoid_implementing_value_types</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="http://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><strong>DON'T</strong> implement classes that override <code>==</code>.</p>
+<p>The <code>==</code> operator is contractually required to be an equivalence relation;
+that is, symmetrically for all objects <code>o1</code> and <code>o2</code>, <code>o1 == o2</code> and <code>o2 == o1</code>
+must either both be true, or both be false.</p>
+<blockquote>
+<p><em>NOTE</em>: Dart does not have true <em>value types</em>, so instead we consider a class
+that implements <code>==</code>  as a <em>proxy</em> for identifying value types.</p></blockquote>
+<p>When using <code>implements</code>, you do not inherit the method body of <code>==</code>, making it
+nearly impossible to follow the contract of <code>==</code>. Classes that override <code>==</code>
+typically are usable directly in tests <em>without</em> creating mocks or fakes as
+well. For example, for a given class <code>Size</code>:</p>
+<pre><code>class Size {
+  final int inBytes;
+  const Size(this.inBytes);
+
+  @override
+  bool operator ==(Object other) =&gt; other is Size &amp;&amp; other.inBytes == inBytes;
+
+  @override
+  int get hashCode =&gt; inBytes.hashCode;
+}
+</code></pre>
+<p><strong>BAD</strong>:</p>
+<pre><code>class CustomSize implements Size {
+  final int inBytes;
+  const CustomSize(this.inBytes);
+
+  int get inKilobytes =&gt; inBytes ~/ 1000;
+}
+</code></pre>
+<p><strong>BAD</strong>:</p>
+<pre><code>import 'package:test/test.dart';
+import 'size.dart';
+
+class FakeSize implements Size {
+  int inBytes = 0;
+}
+
+void main() {
+  test('should not throw on a size &gt;1Kb', () {
+    expect(() =&gt; someFunction(new FakeSize()..inBytes = 1001), returnsNormally);
+  });
+}
+</code></pre>
+<p><strong>GOOD</strong>:</p>
+<pre><code>class ExtendedSize extends Size {
+  ExtendedSize(int inBytes) : super(inBytes);
+
+  int get inKilobytes =&gt; inBytes ~/ 1000;
+}
+</code></pre>
+<p><strong>GOOD</strong>:</p>
+<pre><code>import 'package:test/test.dart';
+import 'size.dart';
+
+void main() {
+  test('should not throw on a size &gt;1Kb', () {
+    expect(() =&gt; someFunction(new Size(1001)), returnsNormally);
+  });
+}
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>

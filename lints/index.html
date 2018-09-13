@@ -175,6 +175,9 @@ convenient jumping-off point.</p>
 <strong><a href = "avoid_function_literals_in_foreach_calls.html">avoid_function_literals_in_foreach_calls</a></strong><br/><p>Avoid using <code>forEach</code> with a function literal.</p>
 
 
+<strong><a href = "avoid_implementing_value_types.html">avoid_implementing_value_types</a></strong><br/><p>Don't implement classes that override <code>==</code>.</p>
+
+
 <strong><a href = "avoid_init_to_null.html">avoid_init_to_null</a></strong><br/><p>Don't explicitly initialize variables to null.</p>
 
 
@@ -211,7 +214,7 @@ convenient jumping-off point.</p>
 <strong><a href = "avoid_types_on_closure_parameters.html">avoid_types_on_closure_parameters</a></strong><br/><p>Avoid annotating types for function expression parameters.</p>
 
 
-<strong><a href = "avoid_unused_constructor_parameters.html">avoid_unused_constructor_parameters</a></strong><br/><p>Avoid defining unused paramters in constructors.</p>
+<strong><a href = "avoid_unused_constructor_parameters.html">avoid_unused_constructor_parameters</a></strong><br/><p>Avoid defining unused parameters in constructors.</p>
 
 
 <strong><a href = "avoid_void_async.html">avoid_void_async</a></strong><br/><p>Avoid async functions that return void.</p>
@@ -242,6 +245,9 @@ convenient jumping-off point.</p>
 
 
 <strong><a href = "file_names.html">file_names</a></strong><br/><p>Name source files using <code>lowercase_with_underscores</code>.</p>
+
+
+<strong><a href = "flutter_style_todos.html">flutter_style_todos</a></strong><br/><p>Use Flutter TODO format: // TODO(username): message, https://URL-to-issue.</p>
 
 
 <strong><a href = "implementation_imports.html">implementation_imports</a></strong><br/><p>Don't import implementation files from another package.</p>
@@ -355,6 +361,9 @@ convenient jumping-off point.</p>
 <strong><a href = "prefer_iterable_whereType.html">prefer_iterable_whereType</a></strong><br/><p>Prefer to use whereType on iterable.</p>
 
 
+<strong><a href = "prefer_mixin.html">prefer_mixin</a></strong><br/><p>Prefer using mixins.</p>
+
+
 <strong><a href = "prefer_single_quotes.html">prefer_single_quotes</a></strong><br/><p>Prefer single quotes where they won't require escape sequences.</p>
 
 
@@ -385,7 +394,7 @@ convenient jumping-off point.</p>
 <strong><a href = "type_init_formals.html">type_init_formals</a></strong><br/><p>Don't type annotate initializing formals.</p>
 
 
-<strong><a href = "unawaited_futures.html">unawaited_futures</a></strong><br/><p>Await future-returning functions inside async function bodies.</p>
+<strong><a href = "unawaited_futures.html">unawaited_futures</a></strong><br/><p><code>Future</code> results in <code>async</code> function bodies must be <code>await</code>ed or marked <code>unawaited</code> using <code>package:pedantic</code>.</p>
 
 
 <strong><a href = "unnecessary_brace_in_string_interps.html">unnecessary_brace_in_string_interps</a></strong><br/><p>Avoid using braces in interpolation when not needed.</p>
