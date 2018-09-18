@@ -5,18 +5,18 @@
 import 'package:linter/src/analyzer.dart';
 import 'package:analyzer/src/lint/pub.dart'; // ignore: implementation_imports
 
-const _desc = r'Sort dependencies.';
+const _desc = r'Sort pub dependencies.';
 
 const _details = r'''
-**DO** sort dependencies in `pubspec.yaml`.
+**DO** sort pub dependencies in `pubspec.yaml`.
 
-Sorting list of dependencies makes maintenance easier.
+Sorting list of pub dependencies makes maintenance easier.
 ''';
 
-class SortDependencies extends LintRule {
-  SortDependencies()
+class SortPubDependencies extends LintRule {
+  SortPubDependencies()
       : super(
-            name: 'sort_dependencies',
+            name: 'sort_pub_dependencies',
             description: _desc,
             details: _details,
             group: Group.pub);
@@ -37,6 +37,11 @@ class Visitor extends PubspecVisitor<void> {
 
   @override
   void visitPackageDevDependencies(PSDependencyList dependencies) {
+    _visitDeps(dependencies);
+  }
+
+  @override
+  void visitPackageDependencyOverrides(PSDependencyList dependencies) {
     _visitDeps(dependencies);
   }
 

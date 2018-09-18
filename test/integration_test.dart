@@ -772,7 +772,7 @@ defineTests() {
       });
     });
 
-    group('sort_dependencies', () {
+    group('sort_pub_dependencies', () {
       IOSink currentOut = outSink;
       CollectingSink collectingOut = new CollectingSink();
 
@@ -789,16 +789,16 @@ defineTests() {
 
       test('check order', () async {
         await cli.run([
-          'test/_data/sort_dependencies',
-          '--rules=sort_dependencies',
+          'test/_data/sort_pub_dependencies',
+          '--rules=sort_pub_dependencies',
         ]);
         expect(exitCode, 1);
         print(collectingOut.trim());
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
-              'pubspec.yaml 6:3 [lint] Sort dependencies.',
-              'pubspec.yaml 10:3 [lint] Sort dependencies.',
+              'pubspec.yaml 6:3 [lint] Sort pub dependencies.',
+              'pubspec.yaml 10:3 [lint] Sort pub dependencies.',
               '1 file analyzed, 2 issues found',
             ]));
       }, skip: true); // TODO(a14n): remove skip once https://github.com/dart-lang/sdk/pull/34513 is merged
