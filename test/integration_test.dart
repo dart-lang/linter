@@ -772,6 +772,38 @@ defineTests() {
       });
     });
 
+    group('sort_dependencies', () {
+      IOSink currentOut = outSink;
+      CollectingSink collectingOut = new CollectingSink();
+
+      setUp(() {
+        exitCode = 0;
+        outSink = collectingOut;
+      });
+
+      tearDown(() {
+        collectingOut.buffer.clear();
+        outSink = currentOut;
+        exitCode = 0;
+      });
+
+      test('check order', () async {
+        await cli.run([
+          'test/_data/sort_dependencies',
+          '--rules=sort_dependencies',
+        ]);
+        expect(exitCode, 1);
+        print(collectingOut.trim());
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              'pubspec.yaml 6:3 [lint] Sort dependencies.',
+              'pubspec.yaml 10:3 [lint] Sort dependencies.',
+              '1 file analyzed, 2 issues found',
+            ]));
+      }, skip: true); // TODO(a14n): remove skip once https://github.com/dart-lang/sdk/pull/34513 is merged
+    });
+
     group('examples', () {
       test('all.yaml', () {
         String src = readFile('example/all.yaml');
