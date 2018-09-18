@@ -9,3 +9,8 @@ dev_dependencies:
   e: any
   d: any
   f: any
+
+dependency_overrides:
+  i: any
+  h: any
+  g: any

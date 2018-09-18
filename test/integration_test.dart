@@ -799,9 +799,12 @@ defineTests() {
             stringContainsInOrder([
               'pubspec.yaml 6:3 [lint] Sort pub dependencies.',
               'pubspec.yaml 10:3 [lint] Sort pub dependencies.',
-              '1 file analyzed, 2 issues found',
+              'pubspec.yaml 15:3 [lint] Sort pub dependencies.',
+              '1 file analyzed, 3 issues found',
             ]));
-      }, skip: true); // TODO(a14n): remove skip once https://github.com/dart-lang/sdk/pull/34513 is merged
+      },
+          // TODO(a14n): remove skip once https://github.com/dart-lang/sdk/pull/34513 is merged
+          skip: true);
     });
 
     group('examples', () {
