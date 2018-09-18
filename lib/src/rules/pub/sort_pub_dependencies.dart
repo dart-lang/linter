@@ -53,6 +53,7 @@ class Visitor extends PubspecVisitor<void> {
       final name = dep.name.text;
       if (name.compareTo(previousName) < 0) {
         rule.reportPubLint(dep.name);
+        return;
       }
       previousName = name;
     }
