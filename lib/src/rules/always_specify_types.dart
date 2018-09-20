@@ -169,12 +169,29 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.typeArguments == null) {
-      final element = node.methodName.bestElement;
+      final element = node.methodName.staticElement;
       if (element is FunctionTypedElement &&
           element.typeParameters.isNotEmpty &&
+          !_isAllowed(element) &&
           !element.metadata.any((a) => _isOptionalTypeArgs(a.element))) {
         rule.reportLint(node.methodName);
       }
     }
+  }
+
+  bool _isAllowed(FunctionTypedElement element) {
+    final returnType = element.returnType;
+
+    // Special case for methods with return type and parameter types identical
+    // and equal to the type parameter on function
+    // eg. T m<T>(T p1, T p2);
+    if (returnType is TypeParameterType) {
+      if (returnType.element.enclosingElement == element &&
+          element.parameters.every((p) => returnType == p.type)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
