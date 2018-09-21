@@ -47,9 +47,6 @@ class _Visitor extends SimpleAstVisitor {
   _Visitor(this.rule);
 
   @override
-  void visitFunctionTypeAlias(TypeAlias node) {
-    if (node.typedefKeyword.next.isIdentifier) {
-      rule.reportLint(node);
-    }
-  }
+  void visitFunctionTypeAlias(FunctionTypeAlias node) =>
+      rule.reportLint(node.name);
 }
