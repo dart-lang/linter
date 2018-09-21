@@ -64,6 +64,7 @@ import 'package:linter/src/rules/list_remove_unrelated_type.dart';
 import 'package:linter/src/rules/literal_only_boolean_expressions.dart';
 import 'package:linter/src/rules/no_adjacent_strings_in_list.dart';
 import 'package:linter/src/rules/no_duplicate_case_values.dart';
+import 'package:linter/src/rules/no_legacy_typedefs.dart';
 import 'package:linter/src/rules/non_constant_identifier_names.dart';
 import 'package:linter/src/rules/null_closures.dart';
 import 'package:linter/src/rules/omit_local_variable_types.dart';
@@ -195,6 +196,7 @@ void registerLintRules() {
     ..register(new LiteralOnlyBooleanExpressions())
     ..register(new NoAdjacentStringsInList())
     ..register(new NoDuplicateCaseValues())
+    ..register(new NoLegacyTypedefs())
     ..registerDefault(new NonConstantIdentifierNames())
     ..register(new NullClosures())
     ..registerDefault(new OneMemberAbstracts())
