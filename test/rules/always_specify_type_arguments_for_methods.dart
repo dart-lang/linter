@@ -25,16 +25,34 @@ void test() {
   g(); //OK
 }
 
-class A {
+class A<R> {
   m1<T>() {}
   @optionalTypeArgs
   m2<T>() {}
+  // no lint for method with return type and parameters all the same (m3 and m6)
+  T m3<T>() => null;
+  R m4<T>() => null;
+  T m5<T>(int i) => null;
+  T m6<T>(T i) => null;
+
+  @optionalTypeArgs
+  static A<T> f<T extends Object>() => null;
 
   m() {
-    A a;
+    A<int> a;
     a.m1(); // LINT
     a.m1<int>(); // OK
     a.m2(); // OK
     a.m2<int>(); // OK
+    a.m3(); // OK
+    a.m3<int>(); // OK
+    a.m4(); // LINT
+    a.m4<int>(); // OK
+    a.m5(null); // LINT
+    a.m5<int>(null); // OK
+    a.m6(null); // OK
+    a.m6<int>(null); // OK
+    A.f(); // OK
+    A.f<int>(); // OK
   }
 }
