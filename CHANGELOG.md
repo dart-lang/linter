@@ -1,3 +1,7 @@
+# 0.1.67
+
+* fix another mixin-related bug
+
 # 0.1.66
 
 * broadened SDK version constraint
