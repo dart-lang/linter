@@ -335,7 +335,8 @@ testRule(String ruleName, File file, {bool debug = false}) {
     TestResourceProvider resourceProvider =
         new TestResourceProvider(memoryResourceProvider);
 
-    String packageConfigPath = p.join(p.dirname(file.path), '.mock_packages');
+    String packageConfigPath =
+        p.join(p.dirname(file.absolute.path), '.mock_packages');
     if (!resourceProvider.getFile(packageConfigPath).exists) {
       packageConfigPath = null;
     }
