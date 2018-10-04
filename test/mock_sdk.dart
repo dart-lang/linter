@@ -277,11 +277,9 @@ class HtmlElement {}
   MockSdk(this.provider) {
     LIBRARIES.forEach((SdkLibrary library) {
       if (library is _MockSdkLibrary) {
-        provider.newFile(
-            provider.pathContext.normalize(library.path), library.content);
+        provider.newFile(provider.convertPath(library.path), library.content);
         library.parts.forEach((file) {
-          provider.newFile(
-              provider.pathContext.normalize(file.path), file.content);
+          provider.newFile(file.path, file.content);
         });
       }
     });
@@ -351,7 +349,7 @@ class HtmlElement {}
   PackageBundle getLinkedBundle() {
     if (_bundle == null) {
       resource.File summaryFile =
-          provider.getFile(provider.convertPath('/lib/_internal/spec.sum'));
+          provider.getFile(provider.convertPath('/lib/_internal/strong.sum'));
       List<int> bytes;
       if (summaryFile.exists) {
         bytes = summaryFile.readAsBytesSync();
