@@ -278,8 +278,7 @@ class HtmlElement {}
     LIBRARIES.forEach((SdkLibrary library) {
       if (library is _MockSdkLibrary) {
         provider.newFile(
-            provider.convertPath(provider.pathContext.normalize(library.path)),
-            library.content);
+            provider.pathContext.normalize(library.path), library.content);
         library.parts.forEach((file) {
           provider.newFile(
               provider.pathContext.normalize(file.path), file.content);
