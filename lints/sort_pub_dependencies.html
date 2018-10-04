@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>sort_constructors_first</title>
+      <title>sort_pub_dependencies</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,8 +15,8 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>sort_constructors_first</h1>
-            <p>Group: style</p>
+            <h1>sort_pub_dependencies</h1>
+            <p>Group: pub</p>
             <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -26,21 +26,8 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> sort constructor declarations before other members.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>abstract class Animation&lt;T&gt; {
-  const Animation(this.value);
-  double value;
-  void addListener(VoidCallback listener);
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code>abstract class Visitor {
-  double value;
-  visitSomething(Something s);
-  Visitor();
-}
-</code></pre>
+            <p><strong>DO</strong> sort pub dependencies in <code>pubspec.yaml</code>.</p>
+<p>Sorting list of pub dependencies makes maintenance easier.</p>
 
 
          </section>
