@@ -279,7 +279,7 @@ class HtmlElement {}
       if (library is _MockSdkLibrary) {
         provider.newFile(provider.convertPath(library.path), library.content);
         library.parts.forEach((file) {
-          provider.newFile(file.path, file.content);
+          provider.newFile(provider.convertPath(file.path), file.content);
         });
       }
     });
