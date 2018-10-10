@@ -201,6 +201,22 @@ class DartTypeUtilities {
         .any((lookUp) => lookUp(name, library) != null);
   }
 
+  static List<ExecutableElement> overridenMethods(MethodDeclaration node) {
+    final name = node.declaredElement.name;
+    final ClassOrMixinDeclaration clazz = node.parent;
+    final classElement = clazz.declaredElement;
+    final library = classElement.library;
+    return classElement.allSupertypes
+        .map(node.isGetter
+            ? (InterfaceType t) => t.lookUpGetter
+            : node.isSetter
+                ? (InterfaceType t) => t.lookUpSetter
+                : (InterfaceType t) => t.lookUpMethod)
+        .map((lookUp) => lookUp(name, library))
+        .where((e) => e != null)
+        .toList();
+  }
+
   /// Builds the list resulting from traversing the node in DFS and does not
   /// include the node itself, it excludes the nodes for which the exclusion
   /// predicate returns true, if not provided, all is included.
