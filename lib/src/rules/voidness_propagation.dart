@@ -85,10 +85,10 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     final inheritedMethod = DartTypeUtilities.lookUpInheritedMethod(node);
     if (inheritedMethod != null) {
-      _check(inheritedMethod.returnType, node.returnType.type, node.returnType);
+      _check(inheritedMethod.returnType, node.returnType?.type, node.returnType);
     } else {
       for (final e in DartTypeUtilities.overridenMethods(node)) {
-        _check(e.returnType, node.returnType.type, node.returnType);
+        _check(e.returnType, node.returnType?.type, node.returnType);
       }
     }
   }
