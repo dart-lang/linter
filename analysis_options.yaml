@@ -1,6 +1,4 @@
 analyzer:
-  language:
-    enablePreviewDart2: true
   exclude:
     # ignore vscode .history files
     - .history/**
@@ -24,6 +22,7 @@ linter:
     - avoid_empty_else
 #    - avoid_field_initializers_in_const_classes # under review (see #1068)
 #    - avoid_function_literals_in_foreach_calls
+#    - avoid_implementing_value_types
     - avoid_init_to_null
 #    - avoid_js_rounded_ints # under review (see #1068)
     - avoid_null_checks_in_equality_operators
@@ -40,6 +39,7 @@ linter:
 #    - avoid_types_as_parameter_names # under review (see #1068)
 #    - avoid_types_on_closure_parameters
 #    - avoid_unused_constructor_parameters # under review (see #1068)
+#    - avoid_void_async # under review (see #1068)
     - await_only_futures
     - camel_case_types
     - cancel_subscriptions
@@ -87,6 +87,7 @@ linter:
 #    - prefer_const_literals_to_create_immutables # under review (see #1068)
     - prefer_constructors_over_static_methods
     - prefer_contains
+    - prefer_equal_for_default_values
     - prefer_expression_function_bodies
     - prefer_final_fields
 #    - prefer_final_locals
@@ -98,8 +99,10 @@ linter:
     - prefer_is_empty
     - prefer_is_not_empty
 #    - prefer_iterable_whereType # under review (see #1068)
+#    - prefer_mixin
     - prefer_single_quotes
 #    - prefer_typing_uninitialized_variables # under review (see #1068)
+#    - prefer_void_to_null # under review (see #1068)
 #    - public_member_api_docs
     - recursive_getters
     - slash_for_doc_comments
@@ -112,8 +115,10 @@ linter:
     - type_init_formals
     - unawaited_futures
     - unnecessary_brace_in_string_interps
+#    - unnecessary_const # under review (see #1068)
     - unnecessary_getters_setters
     - unnecessary_lambdas
+#    - unnecessary_new # under review (see #1068)
     - unnecessary_null_aware_assignments
     - unnecessary_null_in_if_null_operators
     - unnecessary_overrides

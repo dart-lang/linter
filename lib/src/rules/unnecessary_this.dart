@@ -62,6 +62,7 @@ class UnnecessaryThis extends LintRule implements NodeLintRule {
   void registerNodeProcessors(NodeLintRegistry registry) {
     var visitor = new _Visitor(this);
     registry.addCompilationUnit(this, visitor);
+    registry.addConstructorFieldInitializer(this, visitor);
   }
 }
 
@@ -70,10 +71,17 @@ class _UnnecessaryThisVisitor extends ScopedVisitor {
 
   _UnnecessaryThisVisitor(this.rule, CompilationUnit node)
       : super(
-            node.element.library,
+            node.declaredElement.library,
             rule.reporter.source,
-            node.element.library.context.typeProvider,
+            node.declaredElement.library.context.typeProvider,
             AnalysisErrorListener.NULL_LISTENER);
+
+  @override
+  void visitConstructorFieldInitializer(ConstructorFieldInitializer node) {
+    if (node.thisKeyword != null) {
+      rule.reportLintForToken(node.thisKeyword);
+    }
+  }
 
   @override
   visitThisExpression(ThisExpression node) {
@@ -84,12 +92,13 @@ class _UnnecessaryThisVisitor extends ScopedVisitor {
       lookUpElement = DartTypeUtilities.getCanonicalElement(
           nameScope.lookup(parent.propertyName, definingLibrary));
       localElement = DartTypeUtilities.getCanonicalElement(
-          parent.propertyName.bestElement);
+          parent.propertyName.staticElement);
     } else if (parent is MethodInvocation) {
       lookUpElement = DartTypeUtilities.getCanonicalElement(
           nameScope.lookup(parent.methodName, definingLibrary));
-      localElement = parent.methodName.bestElement;
+      localElement = parent.methodName.staticElement;
     }
+
     // Error in code
     if (localElement == null) {
       return null;

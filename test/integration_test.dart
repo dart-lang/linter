@@ -7,11 +7,11 @@ import 'dart:io';
 import 'package:analyzer/src/lint/io.dart';
 import 'package:analyzer/src/lint/linter.dart';
 import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/cli.dart' as cli;
 import 'package:linter/src/rules.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
-import '../bin/linter.dart' as dartlint;
 import 'mocks.dart';
 
 main() {
@@ -34,26 +34,26 @@ defineTests() {
       });
       group('config', () {
         test('excludes', () async {
-          await dartlint
-              .main(['test/_data/p2', '-c', 'test/_data/p2/lintconfig.yaml']);
-          expect(exitCode, 1);
+          await cli
+              .run(['test/_data/p2', '-c', 'test/_data/p2/lintconfig.yaml']);
           expect(
               collectingOut.trim(),
               stringContainsInOrder(
                   ['4 files analyzed, 1 issue found (2 filtered), in']));
+          expect(exitCode, 1);
         });
         test('overrrides', () async {
-          await dartlint
-              .main(['test/_data/p2', '-c', 'test/_data/p2/lintconfig2.yaml']);
-          expect(exitCode, 0);
+          await cli
+              .run(['test/_data/p2', '-c', 'test/_data/p2/lintconfig2.yaml']);
           expect(collectingOut.trim(),
               stringContainsInOrder(['4 files analyzed, 0 issues found, in']));
+          expect(exitCode, 0);
         });
         test('default', () async {
-          await dartlint.main(['test/_data/p2']);
-          expect(exitCode, 1);
+          await cli.run(['test/_data/p2']);
           expect(collectingOut.trim(),
               stringContainsInOrder(['4 files analyzed, 3 issues found, in']));
+          expect(exitCode, 1);
         });
       });
     });
@@ -66,10 +66,11 @@ defineTests() {
         outSink = currentOut;
       });
       test('bad pubspec', () async {
-        await dartlint.main(['test/_data/p3', 'test/_data/p3/_pubpspec.yaml']);
+        await cli.run(['test/_data/p3', 'test/_data/p3/_pubpspec.yaml']);
         expect(collectingOut.trim(),
             startsWith('1 file analyzed, 0 issues found, in'));
-      });
+        // TODO(pq): re-enable w/ analyzer >=0.33.1 https://github.com/dart-lang/linter/issues/1195
+      }, skip: true);
     });
     group('p4', () {
       IOSink currentOut = outSink;
@@ -82,8 +83,7 @@ defineTests() {
       test('no warnings due to bad canonicalization', () async {
         var packagesFilePath =
             new File('test/_data/p4/_packages').absolute.path;
-        await dartlint.runLinter(
-            ['--packages', packagesFilePath, 'test/_data/p4'],
+        await cli.runLinter(['--packages', packagesFilePath, 'test/_data/p4'],
             new LinterOptions([])..previewDart2 = true);
         expect(collectingOut.trim(),
             startsWith('3 files analyzed, 0 issues found, in'));
@@ -105,8 +105,8 @@ defineTests() {
       group('.packages', () {
         test('basic', () async {
           // Requires .packages to analyze cleanly.
-          await dartlint
-              .main(['test/_data/p5', '--packages', 'test/_data/p5/_packages']);
+          await cli
+              .run(['test/_data/p5', '--packages', 'test/_data/p5/_packages']);
           // Should have 0 issues.
           expect(exitCode, 0);
         });
@@ -128,13 +128,13 @@ defineTests() {
 
       // https://github.com/dart-lang/linter/issues/246
       test('overrides across libraries', () async {
-        await dartlint.main(
+        await cli.run(
             ['test/_data/overridden_fields', '--rules', 'overridden_fields']);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder(
                 ['int public;', '2 files analyzed, 1 issue found, in']));
+        expect(exitCode, 1);
       });
     });
 
@@ -153,13 +153,12 @@ defineTests() {
 
       test('close sinks', () async {
         var packagesFilePath = new File('.packages').absolute.path;
-        await dartlint.main([
+        await cli.run([
           '--packages',
           packagesFilePath,
           'test/_data/close_sinks',
           '--rules=close_sinks'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -167,6 +166,7 @@ defineTests() {
               'IOSink _sinkSomeFunction; // LINT',
               '1 file analyzed, 2 issues found, in'
             ]));
+        expect(exitCode, 1);
       });
     });
 
@@ -184,11 +184,10 @@ defineTests() {
       });
 
       test('cancel subscriptions', () async {
-        await dartlint.main([
+        await cli.run([
           'test/_data/cancel_subscriptions',
           '--rules=cancel_subscriptions'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -196,6 +195,7 @@ defineTests() {
               'StreamSubscription _subscriptionF; // LINT',
               '1 file analyzed, 3 issues found, in'
             ]));
+        expect(exitCode, 1);
       });
     });
 
@@ -214,13 +214,12 @@ defineTests() {
 
       test('dart_directives_go_first', () async {
         var packagesFilePath = new File('.packages').absolute.path;
-        await dartlint.main([
+        await cli.run([
           '--packages',
           packagesFilePath,
           'test/_data/directives_ordering/dart_directives_go_first',
           '--rules=directives_ordering'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -234,17 +233,17 @@ defineTests() {
               "export 'dart:isolate';  // LINT",
               '2 files analyzed, 4 issues found, in'
             ]));
+        expect(exitCode, 1);
       });
 
       test('package_directives_before_relative', () async {
         var packagesFilePath = new File('.packages').absolute.path;
-        await dartlint.main([
+        await cli.run([
           '--packages',
           packagesFilePath,
           'test/_data/directives_ordering/package_directives_before_relative',
           '--rules=directives_ordering'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -258,17 +257,17 @@ defineTests() {
               "export 'package:yaml/yaml.dart'; // LINT",
               '3 files analyzed, 4 issues found, in'
             ]));
+        expect(exitCode, 1);
       });
 
       test('third_party_package_directives_before_own', () async {
         var packagesFilePath = new File('.packages').absolute.path;
-        await dartlint.main([
+        await cli.run([
           '--packages',
           packagesFilePath,
           'test/_data/directives_ordering/third_party_package_directives_before_own',
           '--rules=directives_ordering'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -282,11 +281,12 @@ defineTests() {
               "export 'package:yaml/yaml.dart';  // LINT",
               '1 file analyzed, 4 issues found, in'
             ]));
+        expect(exitCode, 1);
       });
 
       test('export_directives_after_import_directives', () async {
         var packagesFilePath = new File('.packages').absolute.path;
-        await dartlint.main([
+        await cli.run([
           '--packages',
           packagesFilePath,
           'test/_data/directives_ordering/export_directives_after_import_directives',
@@ -306,13 +306,12 @@ defineTests() {
 
       test('sort_directive_sections_alphabetically', () async {
         var packagesFilePath = new File('.packages').absolute.path;
-        await dartlint.main([
+        await cli.run([
           '--packages',
           packagesFilePath,
           'test/_data/directives_ordering/sort_directive_sections_alphabetically',
           '--rules=directives_ordering'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -342,17 +341,17 @@ defineTests() {
               "export 'dummy1.dart'; // LINT",
               '5 files analyzed, 12 issues found, in'
             ]));
+        expect(exitCode, 1);
       });
 
       test('lint_one_node_no_more_than_once', () async {
         var packagesFilePath = new File('.packages').absolute.path;
-        await dartlint.main([
+        await cli.run([
           '--packages',
           packagesFilePath,
           'test/_data/directives_ordering/lint_one_node_no_more_than_once',
           '--rules=directives_ordering'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -360,6 +359,7 @@ defineTests() {
               "import 'package:async/async.dart';  // LINT",
               '2 files analyzed, 1 issue found, in'
             ]));
+        expect(exitCode, 1);
       });
     });
 
@@ -377,13 +377,49 @@ defineTests() {
       });
 
       test('on bad file names', () async {
-        await dartlint.main(['test/_data/file_names', '--rules=file_names']);
-        expect(exitCode, 1);
+        await cli.run(['test/_data/file_names', '--rules=file_names']);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
               'a-b.dart 1:1 [lint] Name source files using `lowercase_with_underscores`.'
             ]));
+        expect(exitCode, 1);
+      });
+    });
+
+    group('flutter_style_todos', () {
+      IOSink currentOut = outSink;
+      CollectingSink collectingOut = new CollectingSink();
+      setUp(() {
+        exitCode = 0;
+        outSink = collectingOut;
+      });
+      tearDown(() {
+        collectingOut.buffer.clear();
+        outSink = currentOut;
+        exitCode = 0;
+      });
+
+      test('on bad TODOs', () async {
+        await cli.run(
+            ['test/_data/flutter_style_todos', '--rules=flutter_style_todos']);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              'a.dart 8:1 [lint] Use Flutter TODO format:',
+              'a.dart 9:1 [lint] Use Flutter TODO format:',
+              'a.dart 10:1 [lint] Use Flutter TODO format:',
+              'a.dart 11:1 [lint] Use Flutter TODO format:',
+              'a.dart 12:1 [lint] Use Flutter TODO format:',
+              'a.dart 13:1 [lint] Use Flutter TODO format:',
+              'a.dart 14:1 [lint] Use Flutter TODO format:',
+              'a.dart 15:1 [lint] Use Flutter TODO format:',
+              'a.dart 16:1 [lint] Use Flutter TODO format:',
+              'a.dart 17:1 [lint] Use Flutter TODO format:',
+              'a.dart 18:1 [lint] Use Flutter TODO format:',
+              '1 file analyzed, 11 issues found, in'
+            ]));
+        expect(exitCode, 1);
       });
     });
 
@@ -401,11 +437,10 @@ defineTests() {
       });
 
       test('only throw errors', () async {
-        await dartlint.main([
+        await cli.run([
           'test/_data/lines_longer_than_80_chars',
           '--rules=lines_longer_than_80_chars'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -415,6 +450,7 @@ defineTests() {
               'a.dart 21:1 [lint] AVOID lines longer than 80 characters',
               '1 file analyzed, 4 issues found, in'
             ]));
+        expect(exitCode, 1);
       });
     });
 
@@ -432,9 +468,8 @@ defineTests() {
       });
 
       test('only throw errors', () async {
-        await dartlint.main(
-            ['test/_data/only_throw_errors', '--rules=only_throw_errors']);
-        expect(exitCode, 1);
+        await cli
+            .run(['test/_data/only_throw_errors', '--rules=only_throw_errors']);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -445,6 +480,7 @@ defineTests() {
               'throw returnString(); // LINT',
               '1 file analyzed, 5 issues found, in'
             ]));
+        expect(exitCode, 1);
       });
     });
 
@@ -462,15 +498,15 @@ defineTests() {
       });
 
       test('only throw errors', () async {
-        await dartlint.runLinter([
+        await cli.runLinter([
           'test/_data/always_require_non_null_named_parameters',
           '--rules=always_require_non_null_named_parameters'
         ], new LinterOptions()..previewDart2 = true);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder(
                 ['b, // LINT', '1 file analyzed, 1 issue found, in']));
+        expect(exitCode, 1);
       });
     });
 
@@ -488,15 +524,15 @@ defineTests() {
       });
 
       test('only throw errors', () async {
-        await dartlint.runLinter([
+        await cli.runLinter([
           'test/_data/prefer_asserts_in_initializer_lists',
           '--rules=prefer_asserts_in_initializer_lists'
         ], new LinterOptions()..previewDart2 = true);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder(
                 ['lib.dart 6:5', '1 file analyzed, 1 issue found, in']));
+        expect(exitCode, 1);
       });
     });
 
@@ -514,15 +550,15 @@ defineTests() {
       });
 
       test('only throw errors', () async {
-        await dartlint.runLinter([
+        await cli.runLinter([
           'test/_data/prefer_const_constructors_in_immutables',
           '--rules=prefer_const_constructors_in_immutables'
         ], new LinterOptions()..previewDart2 = true);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder(
                 ['D.c2(a)', '1 file analyzed, 1 issue found, in']));
+        expect(exitCode, 1);
       });
     });
 
@@ -540,17 +576,17 @@ defineTests() {
       });
 
       test('avoid relative lib imports', () async {
-        await dartlint.runLinter([
+        await cli.runLinter([
           'test/_data/avoid_relative_lib_imports',
           '--rules=avoid_relative_lib_imports',
           '--packages',
           'test/_data/avoid_relative_lib_imports/_packages'
         ], new LinterOptions()..previewDart2 = true);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder(
                 ['main.dart 3:8', '2 files analyzed, 1 issue found, in']));
+        expect(exitCode, 1);
       });
     });
 
@@ -571,13 +607,12 @@ defineTests() {
 
       test('lint lib/ sources and non-lib/ sources', () async {
         var packagesFilePath = new File('.packages').absolute.path;
-        await dartlint.main([
+        await cli.run([
           '--packages',
           packagesFilePath,
           'test/_data/public_member_api_docs',
           '--rules=public_member_api_docs'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -599,6 +634,7 @@ defineTests() {
               'a.dart 89:5 [lint] Document all public members',
               '3 files analyzed, 16 issues found'
             ]));
+        expect(exitCode, 1);
       });
     });
 
@@ -618,13 +654,12 @@ defineTests() {
       });
 
       test('lint lib/ sources and non-lib/ sources', () async {
-        await dartlint.main([
+        await cli.run([
           '--packages',
           'test/_data/avoid_renaming_method_parameters/_packages',
           'test/_data/avoid_renaming_method_parameters',
           '--rules=avoid_renaming_method_parameters'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -636,6 +671,7 @@ defineTests() {
               'a.dart 36:6 [lint] Don\'t rename parameters of overridden methods.',
               '3 files analyzed, 6 issues found',
             ]));
+        expect(exitCode, 1);
       });
     });
 
@@ -655,12 +691,11 @@ defineTests() {
       });
 
       test('handles parts', () async {
-        await dartlint.main([
+        await cli.run([
           'test/_data/avoid_private_typedef_functions/lib.dart',
           'test/_data/avoid_private_typedef_functions/part.dart',
           '--rules=avoid_private_typedef_functions'
         ]);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -668,6 +703,7 @@ defineTests() {
               'part.dart 9:1 [lint] Avoid private typedef functions.',
               '2 files analyzed, 2 issues found',
             ]));
+        expect(exitCode, 1);
       });
     });
 
@@ -688,10 +724,9 @@ defineTests() {
       });
 
       test('avoid keyword to create instances', () async {
-        await dartlint.runLinter(
+        await cli.runLinter(
             ['test/_data/unnecessary_const', '--rules=unnecessary_const'],
             new LinterOptions()..previewDart2 = true);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -701,6 +736,7 @@ defineTests() {
               'a.dart 32:23 [lint] Avoid const keyword.',
               '1 file analyzed, 4 issues found',
             ]));
+        expect(exitCode, 1);
       });
     });
 
@@ -721,10 +757,9 @@ defineTests() {
       });
 
       test('avoid keyword to create instances', () async {
-        await dartlint.runLinter(
+        await cli.runLinter(
             ['test/_data/unnecessary_new', '--rules=unnecessary_new'],
             new LinterOptions()..previewDart2 = true);
-        expect(exitCode, 1);
         expect(
             collectingOut.trim(),
             stringContainsInOrder([
@@ -734,7 +769,41 @@ defineTests() {
               'a.dart 24:14 [lint] Unnecessary new keyword.',
               '1 file analyzed, 4 issues found',
             ]));
+        expect(exitCode, 1);
       });
+    });
+
+    group('sort_pub_dependencies', () {
+      IOSink currentOut = outSink;
+      CollectingSink collectingOut = new CollectingSink();
+
+      setUp(() {
+        exitCode = 0;
+        outSink = collectingOut;
+      });
+
+      tearDown(() {
+        collectingOut.buffer.clear();
+        outSink = currentOut;
+        exitCode = 0;
+      });
+
+      test('check order', () async {
+        await cli.run([
+          'test/_data/sort_pub_dependencies',
+          '--rules=sort_pub_dependencies',
+        ]);
+        expect(
+            collectingOut.trim(),
+            stringContainsInOrder([
+              'pubspec.yaml 6:3 [lint] Sort pub dependencies.',
+              'pubspec.yaml 10:3 [lint] Sort pub dependencies.',
+              'pubspec.yaml 15:3 [lint] Sort pub dependencies.',
+              '1 file analyzed, 3 issues found',
+            ]));
+        expect(exitCode, 1);
+        // TODO(pq): re-enable w/ analyzer >=0.33.1 https://github.com/dart-lang/linter/issues/1195
+      }, skip: true);
     });
 
     group('examples', () {

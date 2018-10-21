@@ -1,3 +1,66 @@
+# 0.1.70
+
+* fix NPE in `prefer_iterable_whereType`
+
+# 0.1.69
+
+* improved message display for `await_only_futures`
+* performance improvements for `null_closures`
+* new lint: `avoid_returning_null_for_void`
+
+# 0.1.68
+
+* updated analyzer compatibility to `^0.33.0`
+
+# 0.1.67
+
+* miscellaneous mixin support fixes
+* update to `sort_constructors_first` to apply to all members
+* update `unnecessary_this` to work on field initializers
+
+# 0.1.66
+
+* broadened SDK version constraint
+
+# 0.1.65
+
+* fix cast exceptions related to mixin support
+
+# 0.1.64
+
+* fixes to better support mixins
+
+# 0.1.63
+
+* updated `unawaited_futures` to ignore assignments within cascades
+* new lint: `sort_pub_dependencies`
+
+# 0.1.62
+
+* new lint: `prefer_mixin`
+* new lint: `avoid_implementing_value_types`
+
+# 0.1.61
+
+* new lint: `flutter_style_todos`
+* improved handling of constant expressions with generic type params
+* NPE fix for `invariant_booleans`
+* Google lints example moved to `package:pedantic`
+* improved docs for `unawaited_futures`
+
+# 0.1.60
+
+* new lint: `avoid_void_async`
+* `unawaited_futures` updated to check cascades
+
+# 0.1.59
+
+* relaxed `void_checks` (allowing `T Function()` to be assigned to `void Function()`)
+* test and build improvements
+* introduced Effective Dart rule set
+* Google ruleset updates
+* (internal cleanup): move cli main into `lib/`
+* fixed false positives in `lines_longer_than_80_chars`
 * new lint: `prefer_void_to_null`
 
 # 0.1.58

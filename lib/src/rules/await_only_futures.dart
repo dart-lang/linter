@@ -52,13 +52,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitAwaitExpression(AwaitExpression node) {
-    final DartType type = node.expression.bestType;
-    if (!(type.isDartAsyncFuture ||
+    final DartType type = node.expression.staticType;
+    if (!(type == null ||
+        type.isDartAsyncFuture ||
         type.isDynamic ||
         DartTypeUtilities.extendsClass(type, 'Future', 'dart.async') ||
         DartTypeUtilities.implementsInterface(type, 'Future', 'dart.async') ||
         DartTypeUtilities.isClass(type, 'FutureOr', 'dart.async'))) {
-      rule.reportLint(node);
+      rule.reportLintForToken(node.awaitKeyword);
     }
   }
 }

@@ -70,15 +70,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
-    final type = node.leftHandSide?.bestType;
-    if (!_isFunctionRef(type, node.rightHandSide)) {
-      _check(type, node.rightHandSide?.bestType, node);
-    }
+    final type = node.leftHandSide?.staticType;
+    _check(type, node.rightHandSide?.staticType, node,
+        checkedNode: node.rightHandSide);
   }
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    final typeProvider = node.element.context.typeProvider;
+    final typeProvider = node.declaredElement.context.typeProvider;
     _futureDynamicType =
         typeProvider.futureType.instantiate([typeProvider.dynamicType]);
     _futureOrDynamicType =
@@ -111,18 +110,25 @@ class _Visitor extends SimpleAstVisitor<void> {
         e is MethodDeclaration ||
         e is FunctionDeclaration);
     if (parent is FunctionExpression) {
-      final type = parent.bestType;
+      final type = parent.staticType;
       if (type is FunctionType) {
-        _check(type.returnType, node.expression?.bestType, node);
+        _check(type.returnType, node.expression?.staticType, node,
+            checkedNode: node.expression);
       }
     } else if (parent is MethodDeclaration) {
-      _check(parent.element.returnType, node.expression?.bestType, node);
+      _check(
+          parent.declaredElement.returnType, node.expression?.staticType, node,
+          checkedNode: node.expression);
     } else if (parent is FunctionDeclaration) {
-      _check(parent.element.returnType, node.expression?.bestType, node);
+      _check(
+          parent.declaredElement.returnType, node.expression?.staticType, node,
+          checkedNode: node.expression);
     }
   }
 
-  void _check(DartType expectedType, DartType type, AstNode node) {
+  void _check(DartType expectedType, DartType type, AstNode node,
+      {AstNode checkedNode}) {
+    checkedNode ??= node;
     if (expectedType == null || type == null) {
       return;
     } else if (expectedType.isVoid &&
@@ -132,28 +138,24 @@ class _Visitor extends SimpleAstVisitor<void> {
             !type.isAssignableTo(_futureDynamicType) &&
             !type.isAssignableTo(_futureOrDynamicType)) {
       rule.reportLint(node);
-    } else if (expectedType is FunctionType && type is FunctionType) {
-      _check(expectedType.returnType, type.returnType, node);
+    } else if (checkedNode is FunctionExpression &&
+        checkedNode.body is! ExpressionFunctionBody &&
+        expectedType is FunctionType &&
+        type is FunctionType) {
+      _check(expectedType.returnType, type.returnType, node,
+          checkedNode: checkedNode);
     }
   }
 
   void _checkArgs(
       NodeList<Expression> args, List<ParameterElement> parameters) {
     for (final arg in args) {
-      final parameterElement = arg.bestParameterElement;
+      final parameterElement = arg.staticParameterElement;
       if (parameterElement != null) {
         final type = parameterElement.type;
         final expression = arg is NamedExpression ? arg.expression : arg;
-        if (!_isFunctionRef(type, expression)) {
-          _check(type, expression?.bestType, expression);
-        }
+        _check(type, expression?.staticType, expression);
       }
     }
   }
-
-  bool _isFunctionRef(DartType type, Expression arg) =>
-      type is FunctionType &&
-      (arg is SimpleIdentifier ||
-          arg is PrefixedIdentifier ||
-          arg is FunctionExpression && arg.body is ExpressionFunctionBody);
 }

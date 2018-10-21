@@ -16,7 +16,7 @@ _InterfaceTypePredicate _buildImplementsDefinitionPredicate(
         interface.element.library.name == definition.library;
 
 List<InterfaceType> _findImplementedInterfaces(InterfaceType type,
-        {List<InterfaceType> acc: const []}) =>
+        {List<InterfaceType> acc = const []}) =>
     acc.contains(type)
         ? acc
         : type.interfaces.fold(
@@ -26,7 +26,7 @@ List<InterfaceType> _findImplementedInterfaces(InterfaceType type,
 
 DartType _findIterableTypeArgument(
     InterfaceTypeDefinition definition, InterfaceType type,
-    {List<InterfaceType> accumulator: const []}) {
+    {List<InterfaceType> accumulator = const []}) {
   if (type == null ||
       type.isObject ||
       type.isDynamic ||
@@ -80,20 +80,27 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
 
     DartType type;
     if (node.target != null) {
-      type = node.target.bestType;
+      type = node.target.staticType;
     } else {
       var classDeclaration =
-          (node.getAncestor((a) => a is ClassDeclaration) as ClassDeclaration);
-      type = classDeclaration == null
-          ? null
-          : resolutionMap
-              .elementDeclaredByClassDeclaration(classDeclaration)
-              ?.type;
+          (node.getAncestor((a) => a is ClassOrMixinDeclaration)
+              as ClassOrMixinDeclaration);
+      if (classDeclaration == null) {
+        type = null;
+      } else if (classDeclaration is ClassDeclaration) {
+        type = resolutionMap
+            .elementDeclaredByClassDeclaration(classDeclaration)
+            ?.type;
+      } else if (classDeclaration is MixinDeclaration) {
+        type = resolutionMap
+            .elementDeclaredByMixinDeclaration(classDeclaration)
+            ?.type;
+      }
     }
     Expression argument = node.argumentList.arguments.first;
     if (type is InterfaceType &&
         DartTypeUtilities.unrelatedTypes(
-            argument.bestType, _findIterableTypeArgument(definition, type))) {
+            argument.staticType, _findIterableTypeArgument(definition, type))) {
       rule.reportLint(node);
     }
   }

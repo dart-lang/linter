@@ -19,6 +19,7 @@ import 'package:linter/src/rules/avoid_double_and_int_checks.dart';
 import 'package:linter/src/rules/avoid_empty_else.dart';
 import 'package:linter/src/rules/avoid_field_initializers_in_const_classes.dart';
 import 'package:linter/src/rules/avoid_function_literals_in_foreach_calls.dart';
+import 'package:linter/src/rules/avoid_implementing_value_types.dart';
 import 'package:linter/src/rules/avoid_init_to_null.dart';
 import 'package:linter/src/rules/avoid_js_rounded_ints.dart';
 import 'package:linter/src/rules/avoid_null_checks_in_equality_operators.dart';
@@ -28,6 +29,7 @@ import 'package:linter/src/rules/avoid_relative_lib_imports.dart';
 import 'package:linter/src/rules/avoid_renaming_method_parameters.dart';
 import 'package:linter/src/rules/avoid_return_types_on_setters.dart';
 import 'package:linter/src/rules/avoid_returning_null.dart';
+import 'package:linter/src/rules/avoid_returning_null_for_void.dart';
 import 'package:linter/src/rules/avoid_returning_this.dart';
 import 'package:linter/src/rules/avoid_setters_without_getters.dart';
 import 'package:linter/src/rules/avoid_single_cascade_in_expression_statements.dart';
@@ -35,6 +37,7 @@ import 'package:linter/src/rules/avoid_slow_async_io.dart';
 import 'package:linter/src/rules/avoid_types_as_parameter_names.dart';
 import 'package:linter/src/rules/avoid_types_on_closure_parameters.dart';
 import 'package:linter/src/rules/avoid_unused_constructor_parameters.dart';
+import 'package:linter/src/rules/avoid_void_async.dart';
 import 'package:linter/src/rules/await_only_futures.dart';
 import 'package:linter/src/rules/camel_case_types.dart';
 import 'package:linter/src/rules/cancel_subscriptions.dart';
@@ -49,6 +52,7 @@ import 'package:linter/src/rules/empty_catches.dart';
 import 'package:linter/src/rules/empty_constructor_bodies.dart';
 import 'package:linter/src/rules/empty_statements.dart';
 import 'package:linter/src/rules/file_names.dart';
+import 'package:linter/src/rules/flutter_style_todos.dart';
 import 'package:linter/src/rules/hash_and_equals.dart';
 import 'package:linter/src/rules/implementation_imports.dart';
 import 'package:linter/src/rules/invariant_booleans.dart';
@@ -93,10 +97,12 @@ import 'package:linter/src/rules/prefer_interpolation_to_compose_strings.dart';
 import 'package:linter/src/rules/prefer_is_empty.dart';
 import 'package:linter/src/rules/prefer_is_not_empty.dart';
 import 'package:linter/src/rules/prefer_iterable_whereType.dart';
+import 'package:linter/src/rules/prefer_mixin.dart';
 import 'package:linter/src/rules/prefer_single_quotes.dart';
 import 'package:linter/src/rules/prefer_typing_uninitialized_variables.dart';
 import 'package:linter/src/rules/prefer_void_to_null.dart';
 import 'package:linter/src/rules/pub/package_names.dart';
+import 'package:linter/src/rules/pub/sort_pub_dependencies.dart';
 import 'package:linter/src/rules/public_member_api_docs.dart';
 import 'package:linter/src/rules/recursive_getters.dart';
 import 'package:linter/src/rules/slash_for_doc_comments.dart';
@@ -146,6 +152,7 @@ void registerLintRules() {
     ..register(new AvoidEmptyElse())
     ..register(new AvoidFieldInitializersInConstClasses())
     ..register(new AvoidFunctionLiteralInForeachMethod())
+    ..register(new AvoidImplementingValueTypes())
     ..register(new AvoidInitToNull())
     ..register(new AvoidJsRoundedInts())
     ..register(new AvoidNullChecksInEqualityOperators())
@@ -154,6 +161,7 @@ void registerLintRules() {
     ..register(new AvoidRelativeLibImports())
     ..register(new AvoidRenamingMethodParameters())
     ..register(new AvoidReturningNull())
+    ..register(new AvoidReturningNullForVoid())
     ..register(new AvoidReturnTypesOnSetters())
     ..register(new AvoidReturningThis())
     ..register(new AvoidSettersWithoutGetters())
@@ -161,6 +169,7 @@ void registerLintRules() {
     ..register(new AvoidSlowAsyncIo())
     ..register(new AvoidTypesAsParameterNames())
     ..register(new AvoidUnusedConstructorParameters())
+    ..register(new AvoidVoidAsync())
     ..register(new AwaitOnlyFutures())
     ..registerDefault(new CamelCaseTypes())
     ..register(new CancelSubscriptions())
@@ -175,6 +184,7 @@ void registerLintRules() {
     ..registerDefault(new EmptyConstructorBodies())
     ..register(new EmptyStatements())
     ..register(new FileNames())
+    ..register(new FlutterStyleTodos())
     ..register(new HashAndEquals())
     ..register(new ImplementationImports())
     ..register(new InvariantBooleans())
@@ -219,14 +229,16 @@ void registerLintRules() {
     ..register(new PreferIterableWhereType())
     ..register(new PreferIsEmpty())
     ..register(new PreferIsNotEmpty())
-    ..register(new PublicMemberApiDocs())
+    ..register(new PreferMixin())
     ..register(new PreferSingleQuotes())
     ..register(new PreferTypingUninitializedVariables())
     ..register(new PreferVoidToNull())
+    ..register(new PublicMemberApiDocs())
     ..register(new PubPackageNames())
     ..register(new RecursiveGetters())
     ..registerDefault(new SlashForDocComments())
     ..register(new SortConstructorsFirst())
+    ..register(new SortPubDependencies())
     ..register(new SortUnnamedConstructorsFirst())
     ..registerDefault(new SuperGoesLast())
     ..register(new TestTypesInEquals())

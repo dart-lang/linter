@@ -110,6 +110,16 @@ class MockPubVisitor implements PubspecVisitor {
   }
 
   @override
+  visitPackageDependencyOverrides(PSDependencyList dependencies) {
+    throw new Exception();
+  }
+
+  @override
+  visitPackageDependencyOverride(PSDependency dependency) {
+    throw new Exception();
+  }
+
+  @override
   visitPackageDescription(PSEntry description) {
     throw new Exception();
   }
@@ -206,10 +216,10 @@ class MockRule implements LintRule {
   noSuchMethod(Invocation invocation) => null;
 
   @override
-  void reportLint(AstNode node, {bool ignoreSyntheticNodes: true}) {}
+  void reportLint(AstNode node, {bool ignoreSyntheticNodes = true}) {}
 
   @override
-  void reportLintForToken(Token token, {bool ignoreSyntheticTokens: true}) {}
+  void reportLintForToken(Token token, {bool ignoreSyntheticTokens = true}) {}
 
   @override
   void reportPubLint(PSNode node) {}

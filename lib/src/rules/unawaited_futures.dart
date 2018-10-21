@@ -6,7 +6,8 @@ import 'package:analyzer/dart/ast/standard_resolution_map.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = r'Await future-returning functions inside async function bodies.';
+const _desc = r'`Future` results in `async` function bodies must be '
+    '`await`ed or marked `unawaited` using `package:pedantic`.';
 
 const _details = r'''
 
@@ -15,6 +16,10 @@ const _details = r'''
 It's easy to forget await in async methods as naming conventions usually don't
 tell us if a method is sync or async (except for some in `dart:io`).
 
+When you really _do_ want to start a fire-and-forget `Future`, the recommended
+way is to use `unawaited` from `package:pedantic`. The `// ignore` and
+`// ignore_for_file` comments also work.
+
 **GOOD:**
 ```
 Future doSomething() => ...;
@@ -22,8 +27,7 @@ Future doSomething() => ...;
 void main() async {
   await doSomething();
 
-  // ignore: unawaited_futures
-  doSomething(); // Explicitly-ignored fire-and-forget.
+  unawaited(doSomething()); // Explicitly-ignored fire-and-forget.
 }
 ```
 
@@ -48,6 +52,7 @@ class UnawaitedFutures extends LintRule implements NodeLintRule {
   void registerNodeProcessors(NodeLintRegistry registry) {
     final visitor = new _Visitor(this);
     registry.addExpressionStatement(this, visitor);
+    registry.addCascadeExpression(this, visitor);
   }
 }
 
@@ -55,6 +60,17 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
   _Visitor(this.rule);
+
+  @override
+  void visitCascadeExpression(CascadeExpression node) {
+    for (final expr in node.cascadeSections) {
+      if (expr.staticType?.isDartAsyncFuture == true &&
+          _isEnclosedInAsyncFunctionBody(expr) &&
+          !(expr is AssignmentExpression)) {
+        rule.reportLint(expr);
+      }
+    }
+  }
 
   @override
   void visitExpressionStatement(ExpressionStatement node) {
@@ -70,15 +86,18 @@ class _Visitor extends SimpleAstVisitor<void> {
         return;
       }
 
-      // Not in an async function body: assume fire-and-forget.
-      var enclosingFunctionBody =
-          node.getAncestor((node) => node is FunctionBody) as FunctionBody;
-      if (enclosingFunctionBody?.isAsynchronous != true) return;
-
-      // Future expression statement that isn't awaited in an async function:
-      // while this is legal, it's a very frequent sign of an error.
-      rule.reportLint(node);
+      if (_isEnclosedInAsyncFunctionBody(node)) {
+        // Future expression statement that isn't awaited in an async function:
+        // while this is legal, it's a very frequent sign of an error.
+        rule.reportLint(node);
+      }
     }
+  }
+
+  bool _isEnclosedInAsyncFunctionBody(AstNode node) {
+    final enclosingFunctionBody =
+        node.getAncestor((node) => node is FunctionBody) as FunctionBody;
+    return enclosingFunctionBody?.isAsynchronous == true;
   }
 
   /// Detects `new Future.delayed(duration, [computation])` creations with a

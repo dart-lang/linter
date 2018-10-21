@@ -5,6 +5,7 @@ import 'dart:math' as math;
 
 import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/ast.dart';
 
@@ -66,13 +67,14 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.isStatic) return;
     if (node.documentationComment != null) return;
 
-    ClassDeclaration clazz = node.parent;
+    Declaration classNode = node.parent;
+    ClassElement classElement = classNode.declaredElement;
 
-    if (clazz.element.isPrivate) return;
+    if (classElement.isPrivate) return;
     if (!isDefinedInLib(getCompilationUnit(node))) return;
 
-    final parentMethod = clazz.element
-        .lookUpInheritedMethod(node.name.name, clazz.element.library);
+    final parentMethod = classElement.lookUpInheritedMethod(
+        node.name.name, classElement.library);
 
     if (parentMethod == null) return;
 
