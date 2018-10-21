@@ -54,20 +54,19 @@ class B extends A {
 ```
 ''';
 
-class AvoidShadowing extends LintRule {
-  _Visitor _visitor;
-
+class AvoidShadowing extends LintRule implements NodeLintRule {
   AvoidShadowing()
       : super(
             name: 'avoid_shadowing',
             description: desc,
             details: details,
-            group: Group.errors) {
-    _visitor = new _Visitor(this);
-  }
+            group: Group.errors);
 
   @override
-  AstVisitor getVisitor() => _visitor;
+  void registerNodeProcessors(NodeLintRegistry registry) {
+    final visitor = new _Visitor(this);
+    registry.addVariableDeclarationStatement(this, visitor);
+  }
 }
 
 class _Visitor extends SimpleAstVisitor {
@@ -78,7 +77,7 @@ class _Visitor extends SimpleAstVisitor {
   @override
   visitVariableDeclarationStatement(VariableDeclarationStatement node) {
     final variables = node.variables.variables.toList();
-    final library = variables.first.element.library;
+    final library = variables.first.declaredElement.library;
 
     // exclude pattern : var name = this.name;
     variables.removeWhere((variable) {
@@ -137,7 +136,8 @@ class _Visitor extends SimpleAstVisitor {
   }) {
     for (final variable in variables) {
       final name = variable.name.name;
-      final getter = clazz.element.lookUpGetter(name, clazz.element.library);
+      final getter = clazz.declaredElement
+          .lookUpGetter(name, clazz.declaredElement.library);
       if (getter != null && (!onlyStatics || getter.isStatic))
         rule.reportLint(variable);
     }
@@ -158,7 +158,7 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   void _checkParameters(
-      FormalParameterList parameters, NodeList<VariableDeclaration> variables) {
+      FormalParameterList parameters, List<VariableDeclaration> variables) {
     if (parameters == null) return;
 
     final parameterNames =
@@ -172,8 +172,7 @@ class _Visitor extends SimpleAstVisitor {
     }
   }
 
-  void _checkParentBlock(
-      AstNode node, NodeList<VariableDeclaration> variables) {
+  void _checkParentBlock(AstNode node, List<VariableDeclaration> variables) {
     final block = node.parent as Block;
     final names = <String>[];
     for (final statement in block.statements.takeWhile((n) => n != node)) {
