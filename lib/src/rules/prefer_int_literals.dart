@@ -76,7 +76,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node == null) {
       return false;
     } else if (node is VariableDeclarationList) {
-      return node.type != null;
+      return node.type?.type?.name == 'double';
     } else if (node is ArgumentList) {
       // TODO(danrubel): Determine type associated with this argument
     } else if (node is Expression) {

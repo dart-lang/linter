@@ -7,6 +7,8 @@
 const double okDouble = 7.3; // OK
 const double shouldBeInt = 8.0; // LINT
 const inferredAsDouble = 8.0; // OK
+Object inferredAsDouble2 = 8.0; // OK
+dynamic inferredAsDouble3 = 8.0; // OK
 
 class A {
   var w = 7.0e2; // OK
