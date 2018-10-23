@@ -67,7 +67,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     // Ensure that replacing the double would not change the semantics
     if (isDoubleContext(node)) {
-      rule.reportLintForToken(node.literal);
+      rule.reportLint(node);
     }
   }
 
@@ -75,12 +75,22 @@ class _Visitor extends SimpleAstVisitor<void> {
     final node = child.parent;
     if (node == null) {
       return false;
+    } else if (node is ArgumentList) {
+      if (child is Expression) {
+        return child.staticParameterElement?.type?.name == 'double';
+      }
+      return false;
+    } else if (node is AssignmentExpression) {
+      return node.rightHandSide?.staticType?.name == 'double';
+    } else if (node is BinaryExpression) {
+      Expression operand = identical(child, node.rightOperand)
+          ? node.leftOperand
+          : node.rightOperand;
+      return operand is DoubleLiteral
+          ? isDoubleContext(node)
+          : operand?.staticType?.name == 'double';
     } else if (node is VariableDeclarationList) {
       return node.type?.type?.name == 'double';
-    } else if (node is ArgumentList) {
-      // TODO(danrubel): Determine type associated with this argument
-    } else if (node is Expression) {
-      // TODO(danrubel): Determine type of expression
     }
     return isDoubleContext(node);
   }
