@@ -97,12 +97,19 @@ class F2 extends F {
   }
 }
 
-// exclude pattern : same name as current getter name
+// exclude pattern : same name as current getter name in class
 class G {
   var i;
   get g {
-    var i = ''; // LINT
     var g = ''; // OK
+    var i = ''; // LINT
     return g;
   }
+}
+
+// exclude pattern : same name as current getter name in top level
+get g {
+  var g = ''; // OK
+  var top = ''; // LINT
+  return g;
 }

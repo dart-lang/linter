@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library linter.src.rules.avoid_shadowing;
-
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -89,11 +87,10 @@ class _Visitor extends SimpleAstVisitor {
     });
 
     // exclude pattern : same name as current getter name
-    var currentGetter = _getCurrentGetter(node);
-    if (currentGetter != null) {
-      variables.removeWhere(
-          (variable) => currentGetter.name.name == variable.name.name);
-    }
+    variables.removeWhere(_hasSameNameAsItsGetter);
+
+    // exit on empty variables to check
+    if (variables.isEmpty) return;
 
     bool skipInstanceMembers = false;
     AstNode current = node;
@@ -188,17 +185,34 @@ class _Visitor extends SimpleAstVisitor {
     }
   }
 
-  MethodDeclaration _getCurrentGetter(VariableDeclarationStatement node) {
-    AstNode current = node.parent;
-    while (current != null) {
-      if (current is Block || current is FunctionBody) {
-        current = current.parent;
-      } else if (current is MethodDeclaration && current.isGetter) {
-        return current;
-      } else {
-        break;
-      }
+  /// excludes pattern:
+  ///
+  /// ```dart
+  /// get name {
+  ///   var name;
+  ///   ...
+  /// }
+  /// ```
+  bool _hasSameNameAsItsGetter(VariableDeclaration node) {
+    final name = node.name.name;
+    VariableDeclarationList variableList = node.parent;
+    final variableDeclarationStatement = variableList.parent;
+
+    var current = variableDeclarationStatement.parent;
+    if (current is! Block) return false;
+
+    current = current.parent;
+    if (current is! BlockFunctionBody) return false;
+
+    current = current.parent;
+    if (current is MethodDeclaration && current.isGetter)
+      return current.name.name == name;
+    if (current is FunctionExpression) {
+      final parent = current.parent;
+      if (parent is FunctionDeclaration && parent.isGetter)
+        return parent.name.name == name;
     }
-    return null;
+
+    return false;
   }
 }
