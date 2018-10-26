@@ -104,6 +104,7 @@ linter:
     - prefer_void_to_null
     - public_member_api_docs
     - recursive_getters
+    - shadow_type_parameters
     - slash_for_doc_comments
     - sort_constructors_first
     - sort_pub_dependencies
