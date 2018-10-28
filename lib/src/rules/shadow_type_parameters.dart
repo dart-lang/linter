@@ -40,7 +40,7 @@ class ShadowTypeParameters extends LintRule implements NodeLintRule {
   void registerNodeProcessors(NodeLintRegistry registry) {
     final visitor = _Visitor(this);
     registry.addMethodDeclaration(this, visitor);
-    registry.addFunctionExpression(this, visitor);
+    registry.addFunctionDeclarationStatement(this, visitor);
   }
 }
 
@@ -57,30 +57,22 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     // Static methods have nothing above them to shadow.
     if (!node.isStatic) {
-      _checkAncestorParameters(node);
+      _checkAncestorParameters(node.typeParameters, node);
     }
   }
 
   @override
-  void visitFunctionExpression(FunctionExpression node) {
-    if (node.typeParameters == null) {
+  void visitFunctionDeclarationStatement(FunctionDeclarationStatement node) {
+    var functionExpression = node.functionDeclaration.functionExpression;
+    if (functionExpression.typeParameters == null) {
       return;
     }
-
-    _checkAncestorParameters(node);
+    _checkAncestorParameters(functionExpression.typeParameters, node);
   }
 
   // Check the ancestors of [node] for type parameter shadowing.
-  _checkAncestorParameters(AstNode node) {
-    TypeParameterList typeParameters = (node as dynamic).typeParameters;
+  _checkAncestorParameters(TypeParameterList typeParameters, AstNode node) {
     var parent = node.parent;
-
-    // If node is the `functionExpression` of a FunctionDeclaration, we must
-    // skip `node.parent`, or we will be comparing its type parameters with
-    // themselves.
-    if (node is FunctionExpression && node.parent is FunctionDeclaration) {
-      parent = parent.parent;
-    }
 
     while (parent != null) {
       if (parent is ClassDeclaration) {
