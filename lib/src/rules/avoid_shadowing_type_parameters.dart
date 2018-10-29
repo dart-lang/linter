@@ -28,10 +28,10 @@ class A<T> {
 
 ''';
 
-class ShadowTypeParameters extends LintRule implements NodeLintRule {
-  ShadowTypeParameters()
+class AvoidShadowingTypeParameters extends LintRule implements NodeLintRule {
+  AvoidShadowingTypeParameters()
       : super(
-            name: 'shadow_type_parameters',
+            name: 'avoid_shadowing_type_parameters',
             description: _desc,
             details: _details,
             group: Group.style);
