@@ -10,7 +10,7 @@ const _desc = r'Avoid shadowing type parameters.';
 
 const _details = r'''
 
-**DO NOT** shadow type parameters.
+**AVOID** shadow type parameters.
 
 **BAD:**
 ```
