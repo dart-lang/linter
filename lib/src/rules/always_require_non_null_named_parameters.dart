@@ -5,9 +5,9 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
+import 'package:linter/src/utils.dart' show isRequired;
 
 const _desc = r'Use @required.';
 
@@ -37,17 +37,6 @@ m1({a}) {
 NOTE: Only asserts at the start of the bodies will be taken into account.
 
 ''';
-
-/// The name of `meta` library, used to define analysis annotations.
-String _META_LIB_NAME = 'meta';
-
-/// The name of the top-level variable used to mark a required named parameter.
-String _REQUIRED_VAR_NAME = 'required';
-
-bool _isRequired(Element element) =>
-    element is PropertyAccessorElement &&
-    element.name == _REQUIRED_VAR_NAME &&
-    element.library?.name == _META_LIB_NAME;
 
 class AlwaysRequireNonNullNamedParameters extends LintRule
     implements NodeLintRule {
@@ -85,7 +74,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         // without default value
         .where((p) => p.defaultValue == null)
         // without @required
-        .where((p) => !p.metadata.any((a) => _isRequired(a.element)))
+        .where((p) => !p.metadata.any((a) => isRequired(a.element)))
         .toList();
     final parent = node.parent;
     if (parent is FunctionExpression) {
