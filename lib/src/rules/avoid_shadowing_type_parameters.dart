@@ -90,6 +90,10 @@ class _Visitor extends SimpleAstVisitor<void> {
   // Check whether any of [typeParameters] shadow [ancestorTypeParameters].
   _checkForShadowing(TypeParameterList typeParameters,
       TypeParameterList ancestorTypeParameters) {
+    if (ancestorTypeParameters == null) {
+      return;
+    }
+
     var typeParameterIds = typeParameters.typeParameters.map((tp) => tp.name);
     var ancestorTypeParameterNames =
         ancestorTypeParameters.typeParameters.map((tp) => tp.name.name);
