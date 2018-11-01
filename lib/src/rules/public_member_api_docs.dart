@@ -90,7 +90,7 @@ class PublicMemberApiDocs extends LintRule implements NodeLintRule {
   }
 }
 
-class _Visitor extends GeneralizingAstVisitor {
+class _Visitor extends SimpleAstVisitor {
   InheritanceManager manager;
   bool isInLibFolder;
 
