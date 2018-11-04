@@ -10,7 +10,13 @@ abstract class A {
 
   void setW(int w) => _w = w; // LINT
 
+  void setW1(int w) => this._w = w; // LINT
+  
   void setX(int x) { // LINT
+    _x = x;
+  }
+
+  void setX1(int x) { // LINT
     this._x = x;
   }
 
