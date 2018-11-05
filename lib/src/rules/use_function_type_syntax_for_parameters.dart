@@ -6,11 +6,11 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = r'Use function type syntax for parameters.';
+const _desc = r'Use generic function type syntax for parameters.';
 
 const _details = r'''
 
-**USE** function type syntax for parameters.
+Use generic function type syntax for parameters.
 
 **BAD:**
 ```
