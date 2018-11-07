@@ -11,8 +11,9 @@ const _desc = r'Unnecessary await keyword.';
 
 const _details = r'''
 
-Avoid using await on an expression with a type that is assignable to the return
-type.
+Avoid returning an awaited expression when the expression type is assignable to
+the function's return type.
+
 
 **BAD:**
 ```
