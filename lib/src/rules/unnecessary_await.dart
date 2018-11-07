@@ -53,9 +53,9 @@ class UnnecessaryAwait extends LintRule implements NodeLintRuleWithContext {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  final LintRule rule;
-
   _Visitor(this.rule);
+
+  final LintRule rule;
 
   @override
   void visitExpressionFunctionBody(ExpressionFunctionBody node) {
@@ -92,7 +92,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (returnType != null &&
         returnType.isDartAsyncFuture &&
         type.isAssignableTo(returnType)) {
-      rule.reportLintForToken((expression as AwaitExpression).awaitKeyword);
+      final returnTypeArgument =
+          (returnType as ParameterizedType).typeArguments.first;
+      if (!returnTypeArgument.isDynamic && !returnTypeArgument.isObject) {
+        rule.reportLintForToken((expression as AwaitExpression).awaitKeyword);
+      }
     }
   }
 }
