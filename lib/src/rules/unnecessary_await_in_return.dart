@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = r'Unnecessary await keyword.';
+const _desc = r'Unnecessary await keyword in return.';
 
 const _details = r'''
 
@@ -35,10 +35,11 @@ Future<int> f2() {
 
 ''';
 
-class UnnecessaryAwait extends LintRule implements NodeLintRuleWithContext {
-  UnnecessaryAwait()
+class UnnecessaryAwaitInReturn extends LintRule
+    implements NodeLintRuleWithContext {
+  UnnecessaryAwaitInReturn()
       : super(
-            name: 'unnecessary_await',
+            name: 'unnecessary_await_in_return',
             description: _desc,
             details: _details,
             group: Group.style);
