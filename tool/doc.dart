@@ -12,7 +12,6 @@ import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';
 import 'package:markdown/markdown.dart';
 
-
 /// Generates lint rule docs for publishing to http://dart-lang.github.io/
 void main([List<String> args]) async {
   var parser = new ArgParser(allowTrailingOptions: true)
@@ -200,7 +199,8 @@ class Badger {
     var lintCount = rules.length;
 
     var client = new http.Client();
-    var req = await client.get(Uri.parse('https://img.shields.io/badge/lints-$lintCount-blue.svg'));
+    var req = await client.get(
+        Uri.parse('https://img.shields.io/badge/lints-$lintCount-blue.svg'));
     var bytes = req.bodyBytes;
     await new File('$dirPath/count-badge.svg').writeAsBytes(bytes);
   }
