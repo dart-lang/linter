@@ -32,8 +32,8 @@ assert(() {
 }());
 ```
 
-**DEPRECATED:** In Dart 2, `assert`s no longer accept `bool` values so this rule
-is made redundant by the Dart analyzer's basic checks and is no longer
+**DEPRECATED:** In Dart 2, `assert`s no longer accept  non-`bool` values so this
+rule is made redundant by the Dart analyzer's basic checks and is no longer
 necessary.
  
 The rule will be removed in a future Linter release.
