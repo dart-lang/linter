@@ -17,7 +17,7 @@
          <header>
             <h1>prefer_foreach</h1>
             <p>Group: style</p>
-            <p>Maturity: stable</p>
+            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
                <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
@@ -39,7 +39,8 @@ terse.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>map.keys.toList().forEach(map.remove);
 </code></pre>
-<p><strong>NOTE:</strong> Replacing a for each statement with a forEach call may change the behavior in the case there are side-effects on the iterable itself.</p>
+<p><strong>NOTE:</strong> Replacing a for each statement with a forEach call may change the 
+behavior in the case where there are side-effects on the iterable itself.</p>
 <pre><code>for (final v in myList) {
   foo().f(v); // This code invokes foo() many times.
 }

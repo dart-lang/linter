@@ -17,7 +17,7 @@
          <header>
             <h1>prefer_bool_in_asserts</h1>
             <p>Group: style</p>
-            <p>Maturity: stable</p>
+            <p>Maturity: <span style="color:orangered;font-weight:bold;" >deprecated</span></p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
                <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
@@ -41,6 +41,10 @@ what the intention of the assert statement is.</p>
   return true;
 }());
 </code></pre>
+<p><strong>DEPRECATED:</strong> In Dart 2, <code>assert</code>s no longer accept  non-<code>bool</code> values so this
+rule is made redundant by the Dart analyzer's basic checks and is no longer
+necessary.</p>
+<p>The rule will be removed in a future Linter release.</p>
 
 
          </section>

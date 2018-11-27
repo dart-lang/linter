@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>prefer_void_to_null</title>
+      <title>unnecessary_await_in_return</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,9 +15,9 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_void_to_null</h1>
-            <p>Group: errors</p>
-            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
+            <h1>unnecessary_await_in_return</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
                <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
@@ -26,26 +26,21 @@
          </header>
          <section>
 
-            <p><strong>DO NOT</strong> use the type Null where void would work.</p>
+            <p>Avoid returning an awaited expression when the expression type is assignable to
+the function's return type.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Null f() {}
-Future&lt;Null&gt; f() {}
-Stream&lt;Null&gt; f() {}
-f(Null x) {}
+<pre><code>Future&lt;int&gt; future;
+Future&lt;int&gt; f1() async =&gt; await future;
+Future&lt;int&gt; f2() async {
+  return await future;
+}
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void f() {}
-Future&lt;void&gt; f() {}
-Stream&lt;void&gt; f() {}
-f(void x) {}
-</code></pre>
-<p>Some exceptions include formulating special function types:</p>
-<pre><code>Null Function(Null, Null);
-</code></pre>
-<p>and for making empty literals which are safe to pass into read-only locations
-for any type of map or list:</p>
-<pre><code>&lt;Null&gt;[];
-&lt;int, Null&gt;{};
+<pre><code>Future&lt;int&gt; future;
+Future&lt;int&gt; f1() =&gt; future;
+Future&lt;int&gt; f2() {
+  return future;
+}
 </code></pre>
 
 

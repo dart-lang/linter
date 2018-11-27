@@ -47,7 +47,8 @@
             <p>
                <p>In addition, rules can be further distinguished by <em>maturity</em>.  Unqualified
 rules are considered stable, while others may be marked <strong>experimental</strong>
-to indicate that they are under review.</p>
+to indicate that they are under review.  Lints that are marked as <strong>deprecated</strong>
+should not be used and are subject to removal in future Linter releases.</p>
 <p>Rules can be selectively enabled in the analyzer using
 <a href="https://pub.dartlang.org/packages/analyzer">analysis options</a>
 or through an
@@ -104,7 +105,7 @@ convenient jumping-off point.</p>
 <strong><a href = "list_remove_unrelated_type.html">list_remove_unrelated_type</a></strong><br/><p>Invocation of <code>remove</code> with references of unrelated types.</p>
 
 
-<strong><a href = "literal_only_boolean_expressions.html">literal_only_boolean_expressions (stable)</a></strong><br/><p>Boolean expression composed only with literals.</p>
+<strong><a href = "literal_only_boolean_expressions.html">literal_only_boolean_expressions (experimental)</a></strong><br/><p>Boolean expression composed only with literals.</p>
 
 
 <strong><a href = "no_adjacent_strings_in_list.html">no_adjacent_strings_in_list</a></strong><br/><p>Don't use adjacent strings in list.</p>
@@ -113,7 +114,7 @@ convenient jumping-off point.</p>
 <strong><a href = "no_duplicate_case_values.html">no_duplicate_case_values</a></strong><br/><p>Don't use more than one case with same value.</p>
 
 
-<strong><a href = "prefer_void_to_null.html">prefer_void_to_null (stable)</a></strong><br/><p>Don't use the Null type, unless you are positive that you don't want void.</p>
+<strong><a href = "prefer_void_to_null.html">prefer_void_to_null (experimental)</a></strong><br/><p>Don't use the Null type, unless you are positive that you don't want void.</p>
 
 
 <strong><a href = "test_types_in_equals.html">test_types_in_equals</a></strong><br/><p>Test type arguments in operator ==(Object other).</p>
@@ -190,7 +191,7 @@ convenient jumping-off point.</p>
 <strong><a href = "avoid_null_checks_in_equality_operators.html">avoid_null_checks_in_equality_operators</a></strong><br/><p>Don't check for null in custom == operators.</p>
 
 
-<strong><a href = "avoid_positional_boolean_parameters.html">avoid_positional_boolean_parameters (stable)</a></strong><br/><p>Avoid positional boolean parameters.</p>
+<strong><a href = "avoid_positional_boolean_parameters.html">avoid_positional_boolean_parameters (experimental)</a></strong><br/><p>Avoid positional boolean parameters.</p>
 
 
 <strong><a href = "avoid_private_typedef_functions.html">avoid_private_typedef_functions</a></strong><br/><p>Avoid private typedef functions.</p>
@@ -307,7 +308,7 @@ convenient jumping-off point.</p>
 <strong><a href = "prefer_asserts_in_initializer_lists.html">prefer_asserts_in_initializer_lists</a></strong><br/><p>Prefer putting asserts in initializer list.</p>
 
 
-<strong><a href = "prefer_bool_in_asserts.html">prefer_bool_in_asserts</a></strong><br/><p>Prefer using a boolean as the assert condition.</p>
+<strong><a href = "prefer_bool_in_asserts.html">prefer_bool_in_asserts (deprecated)</a></strong><br/><p>Prefer using a boolean as the assert condition.</p>
 
 
 <strong><a href = "prefer_collection_literals.html">prefer_collection_literals</a></strong><br/><p>Use collection literals when possible.</p>
@@ -346,7 +347,7 @@ convenient jumping-off point.</p>
 <strong><a href = "prefer_final_locals.html">prefer_final_locals</a></strong><br/><p>Prefer final for variable declaration if reference is not reassigned.</p>
 
 
-<strong><a href = "prefer_foreach.html">prefer_foreach (stable)</a></strong><br/><p>Use <code>forEach</code> to only apply a function to all the elements.</p>
+<strong><a href = "prefer_foreach.html">prefer_foreach (experimental)</a></strong><br/><p>Use <code>forEach</code> to only apply a function to all the elements.</p>
 
 
 <strong><a href = "prefer_function_declarations_over_variables.html">prefer_function_declarations_over_variables</a></strong><br/><p>Use a function declaration to bind a function to a name.</p>
@@ -407,6 +408,9 @@ convenient jumping-off point.</p>
 
 
 <strong><a href = "unawaited_futures.html">unawaited_futures</a></strong><br/><p><code>Future</code> results in <code>async</code> function bodies must be <code>await</code>ed or marked <code>unawaited</code> using <code>package:pedantic</code>.</p>
+
+
+<strong><a href = "unnecessary_await_in_return.html">unnecessary_await_in_return</a></strong><br/><p>Unnecessary await keyword in return.</p>
 
 
 <strong><a href = "unnecessary_brace_in_string_interps.html">unnecessary_brace_in_string_interps</a></strong><br/><p>Avoid using braces in interpolation when not needed.</p>
