@@ -27,6 +27,7 @@ main() async {
   true ? [] : []..add(''); // OK
   m(p: (1 + 3)); // LINT
   a..b = (c..d); // OK
+  ((x) => x is bool ? x : false)(a); // OK
 }
 
 m({p}) => null;
