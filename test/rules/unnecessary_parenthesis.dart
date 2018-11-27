@@ -28,6 +28,9 @@ main() async {
   m(p: (1 + 3)); // LINT
   a..b = (c..d); // OK
   ((x) => x is bool ? x : false)(a); // OK
+  (fn)(a); // LINT
 }
 
 m({p}) => null;
+
+bool Function(dynamic) get fn => (x) => x is bool ? x : false;
