@@ -50,7 +50,7 @@ class PreferForeach extends LintRule implements NodeLintRuleWithContext {
             description: _desc,
             details: _details,
             group: Group.style,
-            maturity: Maturity.experimental);
+            maturity: Maturity.stable);
 
   @override
   void registerNodeProcessors(NodeLintRegistry registry,

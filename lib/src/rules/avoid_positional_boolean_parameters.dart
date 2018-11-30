@@ -45,7 +45,7 @@ class AvoidPositionalBooleanParameters extends LintRule
             description: _desc,
             details: _details,
             group: Group.style,
-            maturity: Maturity.experimental);
+            maturity: Maturity.stable);
 
   @override
   void registerNodeProcessors(NodeLintRegistry registry,
