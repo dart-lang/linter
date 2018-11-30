@@ -109,7 +109,7 @@ class InvariantBooleans extends LintRule implements NodeLintRuleWithContext {
             name: 'invariant_booleans',
             description: _desc,
             details: _details,
-            group: Group.errors;
+            group: Group.errors);
 
   @override
   void registerNodeProcessors(NodeLintRegistry registry,
