@@ -4,15 +4,19 @@
 
 // test w/ `pub run test -N avoid_undefined_escape_sequences`
 
+// ignore_for_file: unused_local_variable, prefer_single_quotes
 main() {
-  final okLiteral = 'z is OK'; // OK
-  final badLiteral = '\z is not OK'; // LINT
-  final badAdjacentStrings = '\z lint here, ' 'no lint there'; // LINT
-  final badInterpolationString = '\z has some interpolation $okLiteral'; // LINT
+  const okLiteral = 'z'; // OK
+  const badLiteral = '\z'; // LINT
+  const badAdjacentStrings = '\z' 'z'; // LINT
+  const badInterpolationString = '\z $okLiteral'; // LINT
 
-  final okSingleQuoteEscape = 'this has a single quote \''; // OK
-  final okDoubleQuote = "some double quote \", and a single quote to make double quotes necessary'"; // OK
+  const okSingleQuoteEscape = '\''; // OK
+  const okDoubleQuote = "\""; // OK
 
-  final unnecessarySingleQuoteEscape = "not needed \'"; // LINT
-  final unnecessaryDoubleQuoteEscape = 'not needed \"'; // LINT
+  const unnecessarySingleQuoteEscape = "\'"; // LINT
+  const unnecessaryDoubleQuoteEscape = '\"'; // LINT
+
+  const rawStringsAreIgnored = r'\z'; // OK
+  const multilineLiteralsAreConsidered = '''\z'''; // LINT
 }
