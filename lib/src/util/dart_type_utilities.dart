@@ -8,6 +8,7 @@ import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/src/dart/element/member.dart';
 
 typedef bool AstNodePredicate(AstNode node);
 
@@ -17,8 +18,20 @@ class DartTypeUtilities {
       (type is InterfaceType &&
           extendsClass(type.superclass, className, library));
 
-  static Element getCanonicalElement(Element element) =>
-      element is PropertyAccessorElement ? element.variable : element;
+  static Element getCanonicalElement(Element element) {
+    if (element is PropertyAccessorElement) {
+      final variable = element.variable;
+      if (variable is FieldMember) {
+        // A field element defined in a parameterized type where the values of
+        // the type parameters are known.
+        return variable.baseElement;
+      } else {
+        return variable;
+      }
+    } else {
+      return element;
+    }
+  }
 
   static Element getCanonicalElementFromIdentifier(AstNode rawNode) {
     if (rawNode is Expression) {
