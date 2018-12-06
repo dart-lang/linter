@@ -128,7 +128,7 @@ Future<void> generateDocs(String dir) async {
 }
 
 String getBadges(String rule) => isPedantic(rule)
-    ? '<a href="https://github.com/dart-lang/pedantic/#enabled-lints"><img alt="pedantic" src="pedantic-1.4.svg"></a>'
+    ? '<a href="https://github.com/dart-lang/pedantic/#enabled-lints"><img alt="pedantic" src="style-pedantic.svg"></a>'
     : '';
 
 bool isPedantic(String rule) => pedanticRules.contains(rule);
