@@ -29,6 +29,8 @@ main() async {
   a..b = (c..d); // OK
   ((x) => x is bool ? x : false)(a); // OK
   (fn)(a); // LINT
+  !(const [7].contains(42)); // OK
+  !(await Future.value(false)); // OK
 }
 
 m({p}) => null;
