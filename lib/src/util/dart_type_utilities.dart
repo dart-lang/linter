@@ -24,6 +24,11 @@ class DartTypeUtilities {
       if (variable is FieldMember) {
         // A field element defined in a parameterized type where the values of
         // the type parameters are known.
+        //
+        // This concept should be invisible when comparing FieldElements, but a
+        // bug in the analyzer causes FieldElements to not evaluate as
+        // equivalent to equivalent FieldMembers. See
+        // https://github.com/dart-lang/sdk/issues/35343.
         return variable.baseElement;
       } else {
         return variable;
