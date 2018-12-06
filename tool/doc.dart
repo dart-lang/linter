@@ -59,7 +59,7 @@ List<String> pedanticRules =
   'avoid_relative_lib_imports',
   'avoid_return_types_on_setters',
   'avoid_types_as_parameter_names',
-  ' no_duplicate_case_values',
+  'no_duplicate_case_values',
   'prefer_contains',
   'prefer_equal_for_default_values',
   'prefer_is_not_empty',
