@@ -19,4 +19,7 @@ main() {
 
   const rawStringsAreIgnored = r'\z'; // OK
   const multilineLiteralsAreConsidered = '''\z'''; // LINT
+
+  const handleInterpolationString =
+      '$okLiteral'; // OK, this casued a bug earlier
 }

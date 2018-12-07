@@ -60,16 +60,18 @@ class _Visitor extends SimpleAstVisitor {
   _Visitor(this.rule);
 
   bool _containsUndefinedOrUnnecessaryEscapeSequence(String str) {
-    final otherQuote = str[0] == "'" ? '"' : "'";
-    var slashIndex = str.indexOf(r'\');
-    while (slashIndex >= 0) {
-      if (!definedEscapes.contains(str[slashIndex + 1])) {
-        return true;
+    if (str.isNotEmpty) {
+      final otherQuote = str[0] == "'" ? '"' : "'";
+      var slashIndex = str.indexOf(r'\');
+      while (slashIndex >= 0) {
+        if (!definedEscapes.contains(str[slashIndex + 1])) {
+          return true;
+        }
+        if (str[slashIndex + 1] == otherQuote) {
+          return true;
+        }
+        slashIndex = str.indexOf(r'\', slashIndex + 1);
       }
-      if (str[slashIndex + 1] == otherQuote) {
-        return true;
-      }
-      slashIndex = str.indexOf(r'\', slashIndex + 1);
     }
     return false;
   }
