@@ -6,7 +6,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = r'Avoid escape sequences without a well-defined meaning, or which are unnecessary.';
+const _desc =
+    r'Avoid escape sequences without a well-defined meaning, or which are unnecessary.';
 
 const _details = r'''
 
@@ -33,7 +34,8 @@ print('For some reason we want to print \\z.') // Prints 'For some reason we wan
 
 ''';
 
-class AvoidUndefinedAndUnnecessaryEscapeSequences extends LintRule implements NodeLintRule {
+class AvoidUndefinedAndUnnecessaryEscapeSequences extends LintRule
+    implements NodeLintRule {
   AvoidUndefinedAndUnnecessaryEscapeSequences()
       : super(
             name: 'avoid_undefined_and_unnecessary_escape_sequences',
@@ -42,7 +44,8 @@ class AvoidUndefinedAndUnnecessaryEscapeSequences extends LintRule implements No
             group: Group.style);
 
   @override
-  void registerNodeProcessors(NodeLintRegistry registry, [LinterContext context]) {
+  void registerNodeProcessors(NodeLintRegistry registry,
+      [LinterContext context]) {
     final visitor = _Visitor(this);
     registry.addSimpleStringLiteral(this, visitor);
     registry.addInterpolationString(this, visitor);
@@ -50,7 +53,8 @@ class AvoidUndefinedAndUnnecessaryEscapeSequences extends LintRule implements No
 }
 
 class _Visitor extends SimpleAstVisitor {
-  static final definedEscapes = Set<String>.from(['n', 'r', 'f', 'b', 't', 'v', 'x', 'u', r'\', "\'", '"']);
+  static final definedEscapes = Set<String>.from(
+      ['n', 'r', 'f', 'b', 't', 'v', 'x', 'u', r'\', "\'", '"']);
   final LintRule rule;
 
   _Visitor(this.rule);
@@ -72,7 +76,8 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitSimpleStringLiteral(SimpleStringLiteral node) {
-    if (!node.isRaw && _containsUndefinedOrUnnecessaryEscapeSequence(node.beginToken.lexeme)) {
+    if (!node.isRaw &&
+        _containsUndefinedOrUnnecessaryEscapeSequence(node.beginToken.lexeme)) {
       rule.reportLint(node);
     }
   }
