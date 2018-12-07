@@ -6,7 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 
-const _desc = r'Avoid escape sequences without a well-defined meaning.';
+const _desc = r'Avoid escape sequences without a well-defined meaning, or which are unnecessary.';
 
 const _details = r'''
 
