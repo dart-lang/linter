@@ -33,7 +33,7 @@ print('For some reason we want to print \\z.') // Prints 'For some reason we wan
 
 ''';
 
-class AvoidUndefinedAndUnnecessaryEscapeSequences extends LintRule implements NodeLintRuleWithContext {
+class AvoidUndefinedAndUnnecessaryEscapeSequences extends LintRule implements NodeLintRule {
   AvoidUndefinedAndUnnecessaryEscapeSequences()
       : super(
             name: 'avoid_undefined_and_unnecessary_escape_sequences',
