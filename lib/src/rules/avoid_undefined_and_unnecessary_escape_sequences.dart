@@ -54,21 +54,33 @@ class AvoidUndefinedAndUnnecessaryEscapeSequences extends LintRule
 
 class _Visitor extends SimpleAstVisitor {
   static final definedEscapes = Set<String>.from(
-      ['n', 'r', 'f', 'b', 't', 'v', 'x', 'u', r'\', "\'", '"']);
+      ['n', 'r', 'f', 'b', 't', 'v', 'x', 'u', r'\', "'", '"']);
   final LintRule rule;
 
   _Visitor(this.rule);
 
-  bool _containsUndefinedOrUnnecessaryEscapeSequence(String str) {
+  bool _containsUndefinedOrUnnecessaryEscapeSequence(
+      String str, bool isSingleQuoted) {
     if (str.isNotEmpty) {
-      final otherQuote = str[0] == "'" ? '"' : "'";
+      final otherQuote = isSingleQuoted ? '"' : "'";
       var slashIndex = str.indexOf(r'\');
       while (slashIndex >= 0) {
+        if (slashIndex == str.length - 1) {
+          // Slash at the end of unterminated string; skip
+          break;
+        }
         if (!definedEscapes.contains(str[slashIndex + 1])) {
+          // Escape sequence undefined
           return true;
         }
         if (str[slashIndex + 1] == otherQuote) {
+          // Quote unnecessarily escaped
           return true;
+        }
+
+        if (str[slashIndex + 1] == r'\') {
+          // Skip over the next, escaped slash
+          slashIndex++;
         }
         slashIndex = str.indexOf(r'\', slashIndex + 1);
       }
@@ -79,14 +91,17 @@ class _Visitor extends SimpleAstVisitor {
   @override
   void visitSimpleStringLiteral(SimpleStringLiteral node) {
     if (!node.isRaw &&
-        _containsUndefinedOrUnnecessaryEscapeSequence(node.beginToken.lexeme)) {
+        _containsUndefinedOrUnnecessaryEscapeSequence(
+            node.beginToken.lexeme, node.isSingleQuoted)) {
       rule.reportLint(node);
     }
   }
 
   @override
   void visitInterpolationString(InterpolationString node) {
-    if (_containsUndefinedOrUnnecessaryEscapeSequence(node.contents.lexeme)) {
+    final isSingleQuoted = (node.parent as StringInterpolation).isSingleQuoted;
+    if (_containsUndefinedOrUnnecessaryEscapeSequence(
+        node.contents.lexeme, isSingleQuoted)) {
       rule.reportLint(node);
     }
   }

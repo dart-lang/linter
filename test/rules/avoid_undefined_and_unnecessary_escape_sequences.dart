@@ -6,13 +6,16 @@
 
 // ignore_for_file: unused_local_variable, prefer_single_quotes
 main() {
-  const okLiteral = 'z'; // OK
-  const badLiteral = '\z'; // LINT
-  const badAdjacentStrings = '\z' 'z'; // LINT
-  const badInterpolationString = '\z $okLiteral'; // LINT
+  const okLiteral = 'Jurassic'; // OK
+  const okEscapeSequences =
+      'Some escapes sequences \n \r \f \b \t \v \x01 \u0776 \\, quotes covered later'; // OK
 
   const okSingleQuoteEscape = '\''; // OK
   const okDoubleQuote = "\""; // OK
+
+  const badEscapeSequence = '\z'; // LINT
+  const badAdjacentStrings = '\z' 'z'; // LINT
+  const badInterpolationString = '\z $okLiteral'; // LINT
 
   const unnecessarySingleQuoteEscape = "\'"; // LINT
   const unnecessaryDoubleQuoteEscape = '\"'; // LINT
@@ -20,6 +23,7 @@ main() {
   const rawStringsAreIgnored = r'\z'; // OK
   const multilineLiteralsAreConsidered = '''\z'''; // LINT
 
-  const handleInterpolationString =
-      '$okLiteral'; // OK, this casued a bug earlier
+  const handleEmptyInterpolationString =
+      '$okLiteral'; // OK, this caused a bug earlier
+  const interpolationWithinString = 'Welcome to $okLiteral World'; // OK
 }
