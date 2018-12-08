@@ -8,7 +8,7 @@
 main() {
   const okLiteral = 'Jurassic'; // OK
   const okEscapeSequences =
-      'Some escapes sequences \n \r \f \b \t \v \x01 \u0776 \\, quotes covered later'; // OK
+      'Some escapes sequences \n \r \f \b \t \v \x01 \u0776 \\ \$, quotes covered later'; // OK
 
   const okSingleQuoteEscape = '\''; // OK
   const okDoubleQuote = "\""; // OK

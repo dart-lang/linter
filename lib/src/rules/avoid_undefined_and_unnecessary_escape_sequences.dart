@@ -11,7 +11,7 @@ const _desc =
 
 const _details = r'''
 
-**DO** only use well-defined escape sequences (\n, \r, \f, \b, \t, \v, \x, \u, \\, \', \") in String literals.
+**DO** only use well-defined escape sequences (\n, \r, \f, \b, \t, \v, \x, \u, \\, \$, \', \") in String literals.
 Dart ignores unknown escape sequences and simply uses the following characters as is, which can lead to unexpected results.
 They should also only be used when necessary, for example, \' should only be used in single quoted strings.
 
@@ -54,7 +54,7 @@ class AvoidUndefinedAndUnnecessaryEscapeSequences extends LintRule
 
 class _Visitor extends SimpleAstVisitor {
   static final definedEscapes = Set<String>.from(
-      ['n', 'r', 'f', 'b', 't', 'v', 'x', 'u', r'\', "'", '"']);
+      ['n', 'r', 'f', 'b', 't', 'v', 'x', 'u', r'\', r'$', "'", '"']);
   final LintRule rule;
 
   _Visitor(this.rule);
