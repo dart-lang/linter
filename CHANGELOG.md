@@ -3,7 +3,7 @@
 * `unnecessary_parenthesis` updated to allow wrapping a `!` argument
 * miscellaneous documentation grammar and spelling fixes
 * improved error messages for `always_declare_return_types`
-* fix `prefer_final_fields ` to work with classes that have generic type arrguments
+* fix `prefer_final_fields ` to work with classes that have generic type arguments
 * (internal): deprecated code cleanup
 * fixed false positives in `unrelated_type_equality_checks`
 
