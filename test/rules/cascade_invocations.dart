@@ -199,9 +199,6 @@ class A {
   int f;
   int g;
 
-  void x() {}
-  void y() {}
-
   int get p => 7;
   int get q => 6;
 }
