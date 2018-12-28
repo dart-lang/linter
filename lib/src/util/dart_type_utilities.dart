@@ -79,13 +79,11 @@ class DartTypeUtilities {
   /// and 3 are considered to be equal, even though `A.b` may have side effects
   /// which alter the returned value.
   static bool canonicalElementsFromIdentifiersAreEqual(
-      AstNode rawNode1, AstNode rawNode2) {
-    if (rawNode1 is! Expression || rawNode2 is! Expression) {
-      return false;
-    }
+      Expression rawExpression1, Expression rawExpression2) {
+    if (rawExpression1 == null || rawExpression2 == null) return false;
 
-    final expression1 = (rawNode1 as Expression).unParenthesized;
-    final expression2 = (rawNode2 as Expression).unParenthesized;
+    final expression1 = rawExpression1.unParenthesized;
+    final expression2 = rawExpression2.unParenthesized;
 
     if (expression1 is SimpleIdentifier) {
       return expression2 is SimpleIdentifier &&

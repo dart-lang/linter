@@ -122,8 +122,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       thirdLastExpression =
           _getExpressionFromAssignmentStatement(thirdLastStatement);
     }
-    if (lastExpression != null &&
-        !DartTypeUtilities.canonicalElementsFromIdentifiersAreEqual(
+    if (!DartTypeUtilities.canonicalElementsFromIdentifiersAreEqual(
             secondLastExpression, thirdLastExpression) &&
         DartTypeUtilities.canonicalElementsFromIdentifiersAreEqual(
             lastExpression, secondLastExpression)) {

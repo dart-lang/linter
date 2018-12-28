@@ -52,7 +52,7 @@ bool _checkStatement(Statement statement, Expression condition) {
   return false;
 }
 
-Expression _getElementInCondition(Expression rawExpression) {
+Expression _getExpressionCondition(Expression rawExpression) {
   final expression = rawExpression.unParenthesized;
   if (expression is BinaryExpression &&
       expression.operator.type == TokenType.EQ_EQ) {
@@ -92,7 +92,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.elseStatement != null) {
       return;
     }
-    final expressionInCondition = _getElementInCondition(node.condition);
+    final expressionInCondition = _getExpressionCondition(node.condition);
     if (expressionInCondition != null &&
         _checkStatement(node.thenStatement, expressionInCondition)) {
       rule.reportLint(node);
