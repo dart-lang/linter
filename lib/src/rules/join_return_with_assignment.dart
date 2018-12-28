@@ -35,15 +35,15 @@ class A {
 
 ''';
 
-Element _getElementFromAssignmentStatement(Statement node) {
+Expression _getExpressionFromAssignmentStatement(Statement node) {
   final visitor = new _AssignmentStatementVisitor();
   node.accept(visitor);
-  return visitor.element;
+  return visitor.expression;
 }
 
-Element _getElementFromReturnStatement(Statement node) {
+Expression _getExpressionFromReturnStatement(Statement node) {
   if (node is ReturnStatement) {
-    return DartTypeUtilities.getCanonicalElementFromIdentifier(node.expression);
+    return node.expression;
   }
   return null;
 }
@@ -65,11 +65,10 @@ class JoinReturnWithAssignment extends LintRule implements NodeLintRule {
 }
 
 class _AssignmentStatementVisitor extends SimpleAstVisitor {
-  Element element;
+  Expression expression;
   @override
   visitAssignmentExpression(AssignmentExpression node) {
-    element =
-        DartTypeUtilities.getCanonicalElementFromIdentifier(node.leftHandSide);
+    expression = node.leftHandSide;
   }
 
   @override
@@ -84,12 +83,12 @@ class _AssignmentStatementVisitor extends SimpleAstVisitor {
 
   @override
   visitPostfixExpression(PostfixExpression node) {
-    element = DartTypeUtilities.getCanonicalElementFromIdentifier(node.operand);
+    expression = node.operand;
   }
 
   @override
   visitPrefixExpression(PrefixExpression node) {
-    element = DartTypeUtilities.getCanonicalElementFromIdentifier(node.operand);
+    expression = node.operand;
   }
 }
 
@@ -107,17 +106,27 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
     final secondLastStatement = statements[length - 2];
     final lastStatement = statements.last;
-    final secondLastElement =
-        _getElementFromAssignmentStatement(secondLastStatement);
-    final lastElement = _getElementFromReturnStatement(lastStatement);
-    Element thirdLastElement;
+    final secondLastExpression =
+        _getExpressionFromAssignmentStatement(secondLastStatement);
+    final lastExpression = _getExpressionFromReturnStatement(lastStatement);
+
+    // In this case, the last statement was not a return statement with a
+    // simple target.
+    if (lastExpression == null) {
+      return;
+    }
+
+    Expression thirdLastExpression;
     if (length >= 3) {
       final thirdLastStatement = statements[length - 3];
-      thirdLastElement = _getElementFromAssignmentStatement(thirdLastStatement);
+      thirdLastExpression =
+          _getExpressionFromAssignmentStatement(thirdLastStatement);
     }
-    if (lastElement != null &&
-        secondLastElement != thirdLastElement &&
-        lastElement == secondLastElement) {
+    if (lastExpression != null &&
+        !DartTypeUtilities.canonicalElementsFromIdentifiersAreEqual(
+            secondLastExpression, thirdLastExpression) &&
+        DartTypeUtilities.canonicalElementsFromIdentifiersAreEqual(
+            lastExpression, secondLastExpression)) {
       rule.reportLint(secondLastStatement);
     }
   }
