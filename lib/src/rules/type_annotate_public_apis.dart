@@ -75,7 +75,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule) : v = new _VisitorHelper(rule);
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    if (node.fields.type == null) {
+    if (node.fields.type == null && !node.fields.isConst) {
       node.fields.accept(v);
     }
   }
@@ -115,7 +115,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
-    if (node.variables.type == null) {
+    if (node.variables.type == null && !node.variables.isConst) {
       node.variables.accept(v);
     }
   }
