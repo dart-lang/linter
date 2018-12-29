@@ -75,14 +75,17 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule) : v = new _VisitorHelper(rule);
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    if (node.fields.type == null) {
+    if (node.fields.type == null && !_isParentClassOrMixinPrivate(node)) {
       node.fields.accept(v);
     }
   }
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    if (!isPrivate(node.name)) {
+    if (!isPrivate(node.name) &&
+        // Only report on top-level functions, not those declared within the
+        // scope of another function.
+        node.parent is CompilationUnit) {
       if (node.returnType == null && !node.isSetter) {
         rule.reportLint(node.name);
       } else {
@@ -104,7 +107,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (!isPrivate(node.name)) {
+    if (!isPrivate(node.name) && !_isParentClassOrMixinPrivate(node)) {
       if (node.returnType == null && !node.isSetter) {
         rule.reportLint(node.name);
       } else {
@@ -119,6 +122,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       node.variables.accept(v);
     }
   }
+
+  bool _isParentClassOrMixinPrivate(ClassMember node) =>
+      isPrivate((node.parent as ClassOrMixinDeclaration).name);
 }
 
 class _VisitorHelper extends RecursiveAstVisitor {
