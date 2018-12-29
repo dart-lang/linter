@@ -41,12 +41,8 @@ Expression _getExpressionFromAssignmentStatement(Statement node) {
   return visitor.expression;
 }
 
-Expression _getExpressionFromReturnStatement(Statement node) {
-  if (node is ReturnStatement) {
-    return node.expression;
-  }
-  return null;
-}
+Expression _getExpressionFromReturnStatement(Statement node) =>
+    node is ReturnStatement ? node.expression : null;
 
 class JoinReturnWithAssignment extends LintRule implements NodeLintRule {
   JoinReturnWithAssignment()
