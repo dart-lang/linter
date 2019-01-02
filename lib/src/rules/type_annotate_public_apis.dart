@@ -76,6 +76,13 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     if (node.fields.type == null && !_isParentClassOrMixinPrivate(node)) {
+      // This is an untyped field in a public class or mixin.
+
+      // kevmoo@ points out that a private class with a public field may be
+      // extended by a public class which inherits the private class's
+      // implementation of that field, in which case it becomes public API.
+      // TODO(srawlins): Add logic checking "is this field somehow inherited in
+      // a public class"?
       node.fields.accept(v);
     }
   }
