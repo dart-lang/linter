@@ -70,19 +70,5 @@ class A {
   static _k(var x) {}
 }
 
-class _B {
-  var x; // OK
-
-  f() {} // OK
-  static g() {} // OK
-}
-
-mixin _M {
-  var x; // OK
-
-  f() {} // OK
-  static g() {} // OK
-}
-
 typedef _PrivateMethod(int value); //OK
 typedef void _PrivateMethod2(value); //OK

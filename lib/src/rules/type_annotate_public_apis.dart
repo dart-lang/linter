@@ -75,14 +75,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule) : v = new _VisitorHelper(rule);
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    if (node.fields.type == null && !_isParentClassOrMixinPrivate(node)) {
-      // This is an untyped field in a public class or mixin.
-
-      // kevmoo@ points out that a private class with a public field may be
-      // extended by a public class which inherits the private class's
-      // implementation of that field, in which case it becomes public API.
-      // TODO(srawlins): Add logic checking "is this field somehow inherited in
-      // a public class"?
+    if (node.fields.type == null) {
       node.fields.accept(v);
     }
   }
@@ -114,7 +107,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (!isPrivate(node.name) && !_isParentClassOrMixinPrivate(node)) {
+    if (!isPrivate(node.name)) {
       if (node.returnType == null && !node.isSetter) {
         rule.reportLint(node.name);
       } else {
@@ -129,9 +122,6 @@ class _Visitor extends SimpleAstVisitor<void> {
       node.variables.accept(v);
     }
   }
-
-  bool _isParentClassOrMixinPrivate(ClassMember node) =>
-      isPrivate((node.parent as ClassOrMixinDeclaration).name);
 }
 
 class _VisitorHelper extends RecursiveAstVisitor {
