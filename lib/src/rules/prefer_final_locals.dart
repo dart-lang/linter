@@ -69,8 +69,16 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitForEachStatement(ForEachStatement node) {
-    if (!node.loopVariable.isFinal) {
-      rule.reportLint(node.loopVariable.identifier);
+    final loopVariable = node.loopVariable;
+
+    if (loopVariable.isFinal) {
+      return;
+    }
+
+    FunctionBody function = node.thisOrAncestorOfType<FunctionBody>();
+    if (function != null &&
+        !function.isPotentiallyMutatedInScope(loopVariable.declaredElement)) {
+      rule.reportLint(loopVariable.identifier);
     }
   }
 

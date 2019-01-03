@@ -29,4 +29,9 @@ void fn() {
   for (final i in [1, 2, 3]) { // OK
     print(i);
   }
+
+  for (var i in [1, 2, 3]) { // OK
+    i += 1;
+    print(i);
+  }
 }
