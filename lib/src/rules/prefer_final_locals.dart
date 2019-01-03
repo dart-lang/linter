@@ -70,6 +70,12 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitForEachStatement(ForEachStatement node) {
     final loopVariable = node.loopVariable;
+    if (loopVariable == null) {
+      // This statement is something like `for(a in b) { ... }`. Notice `a` is
+      // not actually declared from within the loop. `a` is a variable declared
+      // outside the loop.
+      return;
+    }
 
     if (loopVariable.isFinal) {
       return;

@@ -34,4 +34,9 @@ void fn() {
     i += 1;
     print(i);
   }
+
+  int j;
+  for (j in [1, 2, 3]) { // OK
+    print(j);
+  }
 }
