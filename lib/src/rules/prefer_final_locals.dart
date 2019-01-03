@@ -57,6 +57,7 @@ class PreferFinalLocals extends LintRule implements NodeLintRule {
   void registerNodeProcessors(NodeLintRegistry registry,
       [LinterContext context]) {
     final visitor = new _Visitor(this);
+    registry.addForEachStatement(this, visitor);
     registry.addVariableDeclaration(this, visitor);
   }
 }
@@ -65,6 +66,13 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
   _Visitor(this.rule);
+
+  @override
+  void visitForEachStatement(ForEachStatement node) {
+    if (!node.loopVariable.isFinal) {
+      rule.reportLint(node.loopVariable.identifier);
+    }
+  }
 
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
