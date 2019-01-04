@@ -7,10 +7,8 @@ import 'package:http/http.dart' as http;
 
 const _flutterOptionsUrl =
     'https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/analysis_options_user.yaml';
-
 const _flutterRepoOptionsUrl =
-'https://raw.githubusercontent.com/flutter/flutter/master/analysis_options.yaml';
-
+    'https://raw.githubusercontent.com/flutter/flutter/master/analysis_options.yaml';
 const _pedanticOptionsUrl =
     'https://raw.githubusercontent.com/dart-lang/pedantic/master/lib/analysis_options.yaml';
 const _stagehandOptionsUrl =
