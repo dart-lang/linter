@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>test_types_in_equals</title>
+      <title>prefer_final_in_for_each</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>test_types_in_equals</h1>
-            <p>Group: errors</p>
+            <h1>prefer_final_in_for_each</h1>
+            <p>Group: style</p>
             <p>Maturity: stable</p>
-            <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> 
+            
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
                <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
@@ -27,53 +27,25 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> test type arguments in operator ==(Object other).</p>
-<p>Not testing types might result in null pointer exceptions which will be
-unexpected for consumers of your class.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>class Field {
-}
-
-class Good {
-  final Field someField;
-
-  Good(this.someField);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    return other is Good &amp;&amp;
-        this.someField == other.someField;
-  }
-
-  @override
-  int get hashCode {
-    return someField.hashCode;
-  }
+            <p><strong>DO</strong> prefer declaring for-each loop variables as final if they are not
+reassigned later in the code.</p>
+<p>Declaring for-each loop variables as final when possible is a good practice
+because it helps avoid accidental reassignments and allows the compiler to do
+optimizations.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>for (var element in elements) { // LINT
+  print('Element: $element');
 }
 </code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code>class Field {
+<p><strong>GOOD:</strong></p>
+<pre><code>for (final element in elements) {
+  print('Element: $element');
 }
-
-class Bad {
-  final Field someField;
-
-  Bad(this.someField);
-
-  @override
-  bool operator ==(Object other) {
-    Bad otherBad = other as Bad; // LINT
-    bool areEqual = otherBad != null &amp;&amp; otherBad.someField == someField;
-    return areEqual;
-  }
-
-  @override
-  int get hashCode {
-    return someField.hashCode;
-  }
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>for (var element in elements) {
+  element = element + element;
+  print('Element: $element');
 }
 </code></pre>
 
