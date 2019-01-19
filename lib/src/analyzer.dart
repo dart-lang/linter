@@ -101,6 +101,10 @@ class Analyzer {
 
   /// Register this [lint] with the analyzer's rule registry.
   void register(LintRule lint) {
+    if (Registry.ruleRegistry.getRule(lint.name) != null) {
+      // Don't re-register.
+      return;
+    }
     if (Pedantic.rules.contains(lint.name)) {
       Registry.ruleRegistry.registerDefault(lint);
     } else {
