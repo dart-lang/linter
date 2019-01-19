@@ -9,6 +9,7 @@ import 'engine_test.dart' as engine_test;
 import 'formatter_test.dart' as formatter_test;
 import 'integration_test.dart' as integration_test;
 import 'mocks.dart';
+import 'pedantic_test.dart' as pedantic_test;
 import 'rule_test.dart' as rule_test;
 import 'utils_test.dart' as utils_test;
 import 'validate_format_test.dart' as validate_format;
@@ -22,6 +23,7 @@ main() {
   engine_test.main();
   formatter_test.main();
   integration_test.main();
+  pedantic_test.main();
   rule_test.main();
   utils_test.main();
   validate_format.main();

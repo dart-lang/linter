@@ -15,6 +15,7 @@ import 'package:analyzer/src/lint/registry.dart'; // ignore: implementation_impo
 import 'package:analyzer/src/lint/util.dart' // ignore: implementation_imports
     as util;
 import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/pedantic.dart';
 
 export 'package:analyzer/src/dart/ast/token.dart';
 export 'package:analyzer/src/dart/constant/evaluation.dart'
@@ -86,6 +87,9 @@ class Analyzer {
   /// Returns currently registered lint rules.
   Iterable<LintRule> get registeredRules => Registry.ruleRegistry;
 
+  /// Returns default lint rules.
+  Iterable<LintRule> get defaultRules => Registry.ruleRegistry.defaultRules;
+
   /// Create a library name prefix based on [libraryPath], [projectRoot] and
   /// current [packageName].
   String createLibraryNamePrefix(
@@ -97,13 +101,11 @@ class Analyzer {
 
   /// Register this [lint] with the analyzer's rule registry.
   void register(LintRule lint) {
-    Registry.ruleRegistry.register(lint);
-  }
-
-  /// Register this [lint] with the analyzer's rule registry and mark it as a
-  /// a default.
-  void registerDefault(LintRule lint) {
-    Registry.ruleRegistry.registerDefault(lint);
+    if (Pedantic.rules.contains(lint.name)) {
+      Registry.ruleRegistry.registerDefault(lint);
+    } else {
+      Registry.ruleRegistry.register(lint);
+    }
   }
 }
 
