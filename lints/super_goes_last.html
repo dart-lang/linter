@@ -17,9 +17,9 @@
          <header>
             <h1>super_goes_last</h1>
             <p>Group: style</p>
-            <p>Maturity: stable</p>
+            <p>Maturity: <span style="color:orangered;font-weight:bold;" >deprecated</span></p>
             <p style="padding-bottom: 10px;">Dart SDK: >= 2.0.0 • <small>(Linter v0.1.1)</small></p>
-            <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> 
+            
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
                <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
@@ -51,6 +51,11 @@ performance.</p>
     : super(style),
       _children = children {
 </code></pre>
+<p><strong>DEPRECATED:</strong> In Dart 2, it is a compile-time error if a superinitializer
+appears in an initializer list at any other position than at the end so this
+rule is made redundant by the Dart analyzer's basic checks and is no longer
+necessary.</p>
+<p>The rule will be removed in a future Linter release.</p>
 
 
          </section>
