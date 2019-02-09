@@ -4,12 +4,9 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
-import 'package:linter/src/util/dart_type_utilities.dart';
 
-const _desc = r'Give a deprecation message, via `Deprecation("message")`.';
+const _desc = r'Give a deprecation message, via `Deprecated("message")`.';
 
 const _details = r'''
 
