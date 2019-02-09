@@ -56,7 +56,16 @@ Element _getElementFromVariableDeclarationStatement(
     VariableDeclarationStatement statement) {
   final variables = statement.variables.variables;
   if (variables.length == 1) {
-    return variables.first.declaredElement;
+    var variable = variables.single;
+    if (variable.initializer is AwaitExpression) {
+      // `await` has a higher precedence than a cascade, but because the token
+      // `await` is followed by whitespace, it may look like the cascade binds
+      // tighter, for example in `await Future.value([1,2,3])..forEach(print)`.
+      //
+      // In such a case, we should not return any cascadable element here.
+      return null;
+    }
+    return variable.declaredElement;
   }
   return null;
 }
@@ -258,7 +267,7 @@ class _CascadableExpression {
       this.canBeCascaded,
       this.isCritical = false});
 
-  /// Whether [this] is compatible to be joined with [expressionBox] with a
+  /// Whether `this` is compatible to be joined with [expressionBox] with a
   /// cascade operation.
   bool compatibleWith(_CascadableExpression expressionBox) =>
       element != null &&

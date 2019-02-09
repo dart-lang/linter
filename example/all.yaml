@@ -89,6 +89,7 @@ linter:
     - prefer_equal_for_default_values
     - prefer_expression_function_bodies
     - prefer_final_fields
+    - prefer_final_in_for_each
     - prefer_final_locals
     - prefer_foreach
     - prefer_function_declarations_over_variables
@@ -100,6 +101,7 @@ linter:
     - prefer_is_not_empty
     - prefer_iterable_whereType
     - prefer_mixin
+    - prefer_null_aware_operators
     - prefer_single_quotes
     - prefer_typing_uninitialized_variables
     - prefer_void_to_null
@@ -109,7 +111,6 @@ linter:
     - sort_constructors_first
     - sort_pub_dependencies
     - sort_unnamed_constructors_first
-    - super_goes_last
     - test_types_in_equals
     - throw_in_finally
     - type_annotate_public_apis
@@ -128,6 +129,7 @@ linter:
     - unnecessary_statements
     - unnecessary_this
     - unrelated_type_equality_checks
+    - use_full_hex_values_for_flutter_colors
     - use_function_type_syntax_for_parameters
     - use_rethrow_when_possible
     - use_setters_to_change_properties

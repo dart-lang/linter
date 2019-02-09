@@ -91,6 +91,7 @@ import 'package:linter/src/rules/prefer_contains.dart';
 import 'package:linter/src/rules/prefer_equal_for_default_values.dart';
 import 'package:linter/src/rules/prefer_expression_function_bodies.dart';
 import 'package:linter/src/rules/prefer_final_fields.dart';
+import 'package:linter/src/rules/prefer_final_in_for_each.dart';
 import 'package:linter/src/rules/prefer_final_locals.dart';
 import 'package:linter/src/rules/prefer_foreach.dart';
 import 'package:linter/src/rules/prefer_function_declarations_over_variables.dart';
@@ -102,6 +103,7 @@ import 'package:linter/src/rules/prefer_is_empty.dart';
 import 'package:linter/src/rules/prefer_is_not_empty.dart';
 import 'package:linter/src/rules/prefer_iterable_whereType.dart';
 import 'package:linter/src/rules/prefer_mixin.dart';
+import 'package:linter/src/rules/prefer_null_aware_operators.dart';
 import 'package:linter/src/rules/prefer_single_quotes.dart';
 import 'package:linter/src/rules/prefer_typing_uninitialized_variables.dart';
 import 'package:linter/src/rules/prefer_void_to_null.dart';
@@ -131,6 +133,7 @@ import 'package:linter/src/rules/unnecessary_parenthesis.dart';
 import 'package:linter/src/rules/unnecessary_statements.dart';
 import 'package:linter/src/rules/unnecessary_this.dart';
 import 'package:linter/src/rules/unrelated_type_equality_checks.dart';
+import 'package:linter/src/rules/use_full_hex_values_for_flutter_colors.dart';
 import 'package:linter/src/rules/use_function_type_syntax_for_parameters.dart';
 import 'package:linter/src/rules/use_rethrow_when_possible.dart';
 import 'package:linter/src/rules/use_setters_to_change_properties.dart';
@@ -179,17 +182,17 @@ void registerLintRules() {
     ..register(new AvoidUnusedConstructorParameters())
     ..register(new AvoidVoidAsync())
     ..register(new AwaitOnlyFutures())
-    ..registerDefault(new CamelCaseTypes())
+    ..register(new CamelCaseTypes())
     ..register(new CancelSubscriptions())
     ..register(new CascadeInvocations())
     ..register(new CloseSinks())
     ..register(new CommentReferences())
     ..register(new ControlFlowInFinally())
-    ..registerDefault(new ConstantIdentifierNames())
+    ..register(new ConstantIdentifierNames())
     ..register(new CurlyBracesInFlowControlStructures())
     ..register(new DirectivesOrdering())
     ..register(new EmptyCatches())
-    ..registerDefault(new EmptyConstructorBodies())
+    ..register(new EmptyConstructorBodies())
     ..register(new EmptyStatements())
     ..register(new FileNames())
     ..register(new FlutterStyleTodos())
@@ -199,16 +202,16 @@ void registerLintRules() {
     ..register(new InvariantBooleans())
     ..register(new IterableContainsUnrelatedType())
     ..register(new JoinReturnWithAssignment())
-    ..registerDefault(new LibraryNames())
-    ..registerDefault(new LibraryPrefixes())
+    ..register(new LibraryNames())
+    ..register(new LibraryPrefixes())
     ..register(new LinesLongerThan80Chars())
     ..register(new ListRemoveUnrelatedType())
     ..register(new LiteralOnlyBooleanExpressions())
     ..register(new NoAdjacentStringsInList())
     ..register(new NoDuplicateCaseValues())
-    ..registerDefault(new NonConstantIdentifierNames())
+    ..register(new NonConstantIdentifierNames())
     ..register(new NullClosures())
-    ..registerDefault(new OneMemberAbstracts())
+    ..register(new OneMemberAbstracts())
     ..register(new OmitLocalVariableTypes())
     ..register(new OnlyThrowErrors())
     ..register(new OverriddenFields())
@@ -229,6 +232,7 @@ void registerLintRules() {
     ..register(new PreferEqualForDefaultValues())
     ..register(new PreferExpressionFunctionBodies())
     ..register(new PreferFinalFields())
+    ..register(new PreferFinalInForEach())
     ..register(new PreferFinalLocals())
     ..register(new PreferForeach())
     ..register(new PreferFunctionDeclarationsOverVariables())
@@ -240,29 +244,30 @@ void registerLintRules() {
     ..register(new PreferIsEmpty())
     ..register(new PreferIsNotEmpty())
     ..register(new PreferMixin())
+    ..register(new PreferNullAwareOperators())
     ..register(new PreferSingleQuotes())
     ..register(new PreferTypingUninitializedVariables())
     ..register(new PreferVoidToNull())
     ..register(new PublicMemberApiDocs())
     ..register(new PubPackageNames())
     ..register(new RecursiveGetters())
-    ..registerDefault(new SlashForDocComments())
+    ..register(new SlashForDocComments())
     ..register(new SortConstructorsFirst())
     ..register(new SortPubDependencies())
     ..register(new SortUnnamedConstructorsFirst())
-    ..registerDefault(new SuperGoesLast())
+    ..register(new SuperGoesLast())
     ..register(new TestTypesInEquals())
     ..register(new ThrowInFinally())
     ..register(new TypeAnnotatePublicApis())
-    ..registerDefault(new TypeInitFormals())
+    ..register(new TypeInitFormals())
     ..register(new UnawaitedFutures())
     ..register(new UnnecessaryAwaitInReturn())
-    ..registerDefault(new UnnecessaryBraceInStringInterps())
+    ..register(new UnnecessaryBraceInStringInterps())
     ..register(new UnnecessaryConst())
     ..register(new UnnecessaryNew())
-    ..registerDefault(new UnnecessaryNullAwareAssignments())
-    ..registerDefault(new UnnecessaryNullInIfNullOperators())
-    // Disabled pending fix: https://github.com/dart-lang/linter/issues/35
+    ..register(new UnnecessaryNullAwareAssignments())
+    ..register(new UnnecessaryNullInIfNullOperators())
+    // Disabled pending fix: https://github.com/dart-lang/linter/issues/23
     //..register(new UnnecessaryGetters())
     ..register(new UnnecessaryGettersSetters())
     ..register(new UnnecessaryLambdas())
@@ -271,6 +276,7 @@ void registerLintRules() {
     ..register(new UnnecessaryStatements())
     ..register(new UnnecessaryThis())
     ..register(new UnrelatedTypeEqualityChecks())
+    ..register(new UseFullHexValuesForFlutterColors())
     ..register(new UseFunctionTypeSyntaxForParameters())
     ..register(new UseRethrowWhenPossible())
     ..register(new UseSettersToChangeAProperty())

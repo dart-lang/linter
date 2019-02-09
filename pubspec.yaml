@@ -1,16 +1,21 @@
 name: linter
-version: 0.1.76
+version: 0.1.80
 
 author: Dart Team <misc@dartlang.org>
 
-description: Style linter for Dart.
+description: >-
+  A linter for Dart, bundled with the SDK, that helps enforce coding style,
+  flags potentially difficult to maintain, error-prone or non-performant
+  source and generally nudges you towards writing more idiomatic Dart.
+  This package is vended into the SDK, where it is plugged into the analyzer
+  framework; it is not intended to be used directly.
 homepage: https://github.com/dart-lang/linter
 
 environment:
   sdk: '>=2.1.0 <3.0.0'
 
 dependencies:
-  analyzer: ^0.34.0
+  analyzer: ^0.35.0
   args: '>=1.4.0 <2.0.0'
   glob: ^1.0.3
   meta: ^1.0.2
@@ -20,8 +25,10 @@ dependencies:
 dev_dependencies:
   cli_util: ^0.1.2
   dart_style: ^1.1.0
+  github: ^4.0.1
   grinder: ^0.8.0
   markdown: ^2.0.0
   matcher: ^0.12.0
   path: ^1.2.0
+  pub_semver: ^1.4.2
   test: ^1.0.0
