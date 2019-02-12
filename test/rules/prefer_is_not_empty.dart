@@ -4,9 +4,11 @@
 
 // test w/ `pub run test -N prefer_is_not_empty`
 
-bool lne = ![].isEmpty; //LINT [12:11]
-bool mne = !{}.isEmpty; //LINT
-bool ine = !iterable.isEmpty; //LINT
+bool lne = ![].isEmpty; // LINT [12:11]
+bool mne = !{}.isEmpty; // LINT
+bool ine = !iterable.isEmpty; // LINT
+bool parens = !([].isEmpty); // LINT
+bool parens = !(([].isEmpty)); // LINT
 
 bool le = [].isEmpty;
 bool me = {}.isEmpty;
