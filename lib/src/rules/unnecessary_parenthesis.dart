@@ -85,8 +85,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (parent is MethodInvocation) {
         Expression target = parent.target;
         if (parent.parent is PrefixExpression &&
-            target is ParenthesizedExpression &&
-            _expressionStartsWithWhitespace(target.expression)) return;
+            target == node &&
+            _expressionStartsWithWhitespace(node.expression)) return;
       }
 
       if (parent.precedence < node.expression.precedence) {
