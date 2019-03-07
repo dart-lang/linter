@@ -67,6 +67,13 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
+    // Constructor field initializers are rather unguarded by delimiting
+    // tokens, which can get confused with a function literal. See test cases
+    // for issues #1395 and #1473.
+    if (parent is ConstructorFieldInitializer) {
+      return;
+    }
+
     if (parent is Expression) {
       if (parent is BinaryExpression) return;
       if (parent is ConditionalExpression) return;

@@ -6,7 +6,7 @@
 
 import 'dart:async';
 
-var a,b,c,d;
+var a, b, c, d;
 
 main() async {
   1; // OK
@@ -59,6 +59,9 @@ class ClassWithFunction {
 
 class UnnecessaryParenthesis {
   final value;
-  //https://github.com/dart-lang/linter/issues/1395
+  // https://github.com/dart-lang/linter/issues/1395
   UnnecessaryParenthesis() : value = (ClassWithFunction()..f = () => 42); // OK
+  // https://github.com/dart-lang/linter/issues/1473
+  UnnecessaryParenthesis.named(Function value)
+      : this.value = (value ?? (_) => 42); // OK
 }
