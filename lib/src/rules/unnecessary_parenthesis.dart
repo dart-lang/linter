@@ -108,7 +108,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _containsFunctionExpression(ParenthesizedExpression node) {
-    final containsFunctionExpressionVisitor = _ContainsFunctionExpressionVisitor();
+    final containsFunctionExpressionVisitor =
+        _ContainsFunctionExpressionVisitor();
     node.accept(containsFunctionExpressionVisitor);
     return containsFunctionExpressionVisitor.hasFunctionExpression;
   }
