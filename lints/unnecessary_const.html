@@ -30,14 +30,14 @@
 
             <p><strong>AVOID</strong> repeating const keyword in a const context.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A() { const A(); }
+<pre><code>class A { const A(); }
 m(){
   const a = const A();
   final b = const [const A()];
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A() { const A(); }
+<pre><code>class A { const A(); }
 m(){
   const a = A();
   final b = const [A()];
