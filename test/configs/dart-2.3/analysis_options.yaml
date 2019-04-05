@@ -1,4 +1,5 @@
 analyzer:
   enable-experiment:
+    - constant-update-2018
     - control-flow-collections
     - spread-collections
