@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>diagnostic_describe_all_properties</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>diagnostic_describe_all_properties</h1>
+            <p>Group: errors</p>
+            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
+            <p style="padding-bottom: 10px;">Dart SDK: >= <unreleased> • <small>(Linter v0.1.85)</small></p>
+            
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="https://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p><strong>DO</strong> reference all public properties in <code>debug</code> method implementations.</p>
+<p>Implementers of <code>Diagnosticable</code> should reference all public properties in
+a <code>debugFillProperties(...)</code> or <code>debugDescribeChildren(...)</code> method
+implementation to improve debuggability at runtime.</p>
+<p>Public properties are defined as fields and getters that are</p><ul><li>not package-private (e.g., prefixed with <code>_</code>)</li><li>not <code>static</code> or overriding</li><li>not themselves <code>Widget</code>s or collections of <code>Widget</code>s</li></ul>
+<p>In addition, the "debug" prefix is treated specially for properties in Flutter.
+For the purposes of diagnostics, a property <code>foo</code> and a prefixed property
+<code>debugFoo</code> are treated as effectively describing the same property and it is
+sufficient to refer to one or the other.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>class Absorber extends Widget {
+  bool get absorbing =&gt; _absorbing;
+  bool _absorbing;
+  bool get ignoringSemantics =&gt; _ignoringSemantics;
+  bool _ignoringSemantics;
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty&lt;bool&gt;('absorbing', absorbing));
+    // Missing reference to ignoringSemantics
+  }
+}  
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>class Absorber extends Widget {
+  bool get absorbing =&gt; _absorbing;
+  bool _absorbing;
+  bool get ignoringSemantics =&gt; _ignoringSemantics;
+  bool _ignoringSemantics;
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty&lt;bool&gt;('absorbing', absorbing));
+    properties.add(DiagnosticsProperty&lt;bool&gt;('ignoringSemantics', ignoringSemantics));
+  }
+}  
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>
