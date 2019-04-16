@@ -324,7 +324,7 @@ class DartTypeUtilities {
   /// * Two types, each representing a type variable, are related if their
   ///   bounds are related.
   /// * Otherwise, the types are related.
-  // TODO(srawlins): typedefs :D
+  // TODO(srawlins): typedefs and functions in general.
   static bool unrelatedTypes(DartType leftType, DartType rightType) {
     // If we don't have enough information, or can't really compare the types,
     // return false as they _might_ be related.
@@ -373,6 +373,15 @@ class DartTypeUtilities {
     } else if (leftElement is TypeParameterElement &&
         rightElement is TypeParameterElement) {
       return unrelatedTypes(leftElement.bound, rightElement.bound);
+    } else if ((leftType is FunctionType &&
+            rightType is! FunctionType &&
+            rightType != Type) ||
+        (rightType is FunctionType &&
+            leftType is! FunctionType &&
+            leftType != Type)) {
+      // One side is a function, and the other side is not a function nor a
+      // class (which might have a call method).
+      return true;
     }
     return false;
   }
