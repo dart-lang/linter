@@ -34,7 +34,6 @@ class UnsafeScriptSrc extends LintRule implements NodeLintRule {
   void registerNodeProcessors(NodeLintRegistry registry,
       [LinterContext context]) {
     final visitor = new _Visitor(this);
-    registry.addPropertyAccess(this, visitor);
     registry.addAssignmentExpression(this, visitor);
   }
 }
@@ -60,10 +59,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void _checkAssignment(Expression target, SimpleIdentifier property,
       AssignmentExpression assignment) {
-    DartType type = target?.staticType;
     // It is more efficient to first check if `src` is being assigned, _then_
     // check if the target is ScriptElement or dynamic.
     if (property?.name == 'src') {
+      DartType type = target?.staticType;
       if (DartTypeUtilities.extendsClass(
               type, 'ScriptElement', 'dart.dom.html') ||
           type.isDynamic) {

@@ -126,6 +126,7 @@ linter:
 #    - unnecessary_statements # under review (see #1068)
     - unnecessary_this
     - unrelated_type_equality_checks
+    - unsafe_script_src
     - use_rethrow_when_possible
     - use_setters_to_change_properties
     - use_string_buffers
