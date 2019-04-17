@@ -373,17 +373,29 @@ class DartTypeUtilities {
     } else if (leftElement is TypeParameterElement &&
         rightElement is TypeParameterElement) {
       return unrelatedTypes(leftElement.bound, rightElement.bound);
-    } else if ((leftType is FunctionType &&
-            rightType is! FunctionType &&
-            rightType != Type) ||
-        (rightType is FunctionType &&
-            leftType is! FunctionType &&
-            leftType != Type)) {
-      // One side is a function, and the other side is not a function nor a
-      // class (which might have a call method).
-      return true;
+    } else if (leftType is FunctionType) {
+      if (_isFunctionTypeUnrelatedToType(leftType, rightType)) {
+        return true;
+      }
+    } else if (rightType is FunctionType) {
+      if (_isFunctionTypeUnrelatedToType(rightType, leftType)) {
+        return true;
+      }
     }
     return false;
+  }
+
+  static bool _isFunctionTypeUnrelatedToType(
+      FunctionType type1, DartType type2) {
+    if (type2 is FunctionType) {
+      return false;
+    }
+    Element element2 = type2.element;
+    if (element2 is ClassElement &&
+        element2.lookUpConcreteMethod('call', element2.library) != null) {
+      return false;
+    }
+    return true;
   }
 }
 

@@ -172,6 +172,10 @@ void function30() {
   if (c.determinant == double) print('someFunction30'); // LINT
   if (c.determinant == c.determinspider) print('someFunction30'); // OK
   if (int == double) print('someFunction30'); // OK
+  ClassWCall callable = ClassWCall();
+  if (c.determinant == callable) print('someFunction30'); // OK
+  SubClassWCall callable2 = SubClassWCall2();
+  if (c.determinant == callable2) print('someFunction30'); // OK
 }
 
 class ClassBase {}
@@ -193,3 +197,9 @@ class ClassWMethod {
 
   String determinspider() => "";
 }
+
+class ClassWCall {
+  String call() => 'hey';
+}
+
+class SubClassWCall extends ClassWCall {}
