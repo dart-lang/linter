@@ -7,6 +7,12 @@
 import 'dart:html';
 
 void main() {
+  AnchorElement()..href = 'foo'; // LINT
+  var embed = EmbedElement();
+  embed.src = 'foo'; // LINT
+  IFrameElement()..src = 'foo'; // LINT
+  ImageElement()..src = 'foo'; // LINT
+
   var script = ScriptElement();
   script.src = 'foo.js'; // LINT
   var src = 'foo.js'; // OK
@@ -25,9 +31,11 @@ void main() {
 
   dynamic d;
   d.src = 'foo.js'; // LINT
+  d.href = 'foo.js'; // LINT
   (script as dynamic).src = 'foo.js'; // LINT
 }
 
 class C {
   String src;
+  String href;
 }

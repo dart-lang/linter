@@ -59,13 +59,26 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void _checkAssignment(Expression target, SimpleIdentifier property,
       AssignmentExpression assignment) {
-    // It is more efficient to first check if `src` is being assigned, _then_
-    // check if the target is ScriptElement or dynamic.
+    // It is more efficient to first check if `src` (or `href`) is being
+    // assigned, _then_ check if the target of an interesting  type.
     if (property?.name == 'src') {
       DartType type = target?.staticType;
-      if (DartTypeUtilities.extendsClass(
-              type, 'ScriptElement', 'dart.dom.html') ||
-          type.isDynamic) {
+      if (type.isDynamic ||
+          DartTypeUtilities.extendsClass(
+              type, 'EmbedElement', 'dart.dom.html') ||
+          DartTypeUtilities.extendsClass(
+              type, 'IFrameElement', 'dart.dom.html') ||
+          DartTypeUtilities.extendsClass(
+              type, 'ImageElement', 'dart.dom.html') ||
+          DartTypeUtilities.extendsClass(
+              type, 'ScriptElement', 'dart.dom.html')) {
+        rule.reportLint(assignment);
+      }
+    } else if (property?.name == 'href') {
+      DartType type = target?.staticType;
+      if (type.isDynamic ||
+          DartTypeUtilities.extendsClass(
+              type, 'AnchorElement', 'dart.dom.html')) {
         rule.reportLint(assignment);
       }
     }
