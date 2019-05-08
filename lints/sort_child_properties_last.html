@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <title>sort_child_properties_last</title>
+      <link rel="stylesheet" href="../stylesheets/styles.css">
+      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+      <script src="../javascripts/scale.fix.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>sort_child_properties_last</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <p style="padding-bottom: 10px;">Dart SDK: >= <unreleased> • <small>(Linter v0.1.88)</small></p>
+            
+            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
+            <ul>
+               <li><a href="https://www.dartlang.org/articles/style-guide/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="https://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
+            </ul>
+         </header>
+         <section>
+
+            <p>Sort child properties last in widget instance creations.  This improves
+readability and plays nicest with UI as Code visualization in IDEs with UI as
+Code Guides in editors (such as IntelliJ) where Properties in the correct order 
+appear clearly associated with the constructor call and separated from the 
+children.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>return Scaffold(
+  appBar: AppBar(
+    title: Text(widget.title),
+  ),
+  body: Center(
+    child: Column(
+      children: &lt;Widget&gt;[
+        Text(
+          'You have pushed the button this many times:',
+         ),
+        Text(
+          '$_counter',
+          style: Theme.of(context).textTheme.display1,
+         ),
+      ],
+      mainAxisAlignment: MainAxisAlignment.center,
+    ),
+    floatingActionButton: FloatingActionButton(
+      child: Icon(Icons.add),
+      onPressed: _incrementCounter,
+      tooltip: 'Increment',
+    ),
+  ),
+);
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>return Scaffold(
+  appBar: AppBar(
+    title: Text(widget.title),
+  ),
+  body: Center(
+    mainAxisAlignment: MainAxisAlignment.center,
+    child: Column(
+      children: &lt;Widget&gt;[
+        Text(
+          'You have pushed the button this many times:',
+         ),
+        Text(
+          '$_counter',
+          style: Theme.of(context).textTheme.display1,
+         ),
+      ],
+    ),
+    floatingActionButton: FloatingActionButton(
+      onPressed: _incrementCounter,
+      tooltip: 'Increment',
+      child: Icon(Icons.add),
+    ),
+  ),
+);
+</code></pre>
+
+
+         </section>
+      </div>
+      <footer>
+         <p>Project maintained by <a href="https://github.com/dart-lang">dart-lang</a></p>
+         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      </footer>
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+   </body>
+</html>

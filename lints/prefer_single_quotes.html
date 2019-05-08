@@ -45,11 +45,11 @@ Arguably strings within string interpolations should be its own type of lint.</p
 <p><strong>GOOD:</strong></p>
 <pre><code>useStrings(
     'should be single quote',
-    r'should be single quote",
+    r'should be single quote',
     r'''should be single quotes''',
     "here's ok",
     "nested ${a ? 'strings' : 'can'} be wrapped by a double quote",
-    'and nested ${a ? "strings" : "can be double quoted themselves"});
+    'and nested ${a ? "strings" : "can be double quoted themselves"}');
 </code></pre>
 
 

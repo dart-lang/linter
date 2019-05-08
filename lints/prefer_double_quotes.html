@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>type_annotate_public_apis</title>
+      <title>prefer_double_quotes</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>type_annotate_public_apis</h1>
+            <h1>prefer_double_quotes</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.0.0 • <small>(Linter v0.1.5)</small></p>
+            <p style="padding-bottom: 10px;">Dart SDK: >= <unreleased> • <small>(Linter v0.1.88)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,29 +28,29 @@
          </header>
          <section>
 
-            <p>From <a href="https://www.dartlang.org/guides/language/effective-dart/design#prefer-type-annotating-public-fields-and-top-level-variables-if-the-type-isnt-obvious">effective dart</a>:</p>
-<p><strong>PREFER</strong> type annotating public APIs.</p>
-<p>Type annotations are important documentation for how a library should be used.
-Annotating the parameter and return types of public methods and functions helps
-users understand what the API expects and what it provides.</p>
-<p>Note that if a public API accepts a range of values that Dart's type system
-cannot express, then it is acceptable to leave that untyped.  In that case, the
-implicit <code>dynamic</code> is the correct type for the API.</p>
-<p>For code internal to a library (either private, or things like nested functions)
-annotate where you feel it helps, but don't feel that you <em>must</em> provide them.</p>
+            <p><strong>DO</strong> use double quotes where they wouldn't require additional escapes.</p>
+<p>That means strings with a double quote may use apostrophes so that the double
+quote isn't escaped (note: we don't lint the other way around, ie, a double
+quoted string with an escaped double quote is not flagged).</p>
+<p>It's also rare, but possible, to have strings within string interpolations.  In
+this case, its much more readable to use a single quote somewhere.  So single
+quotes are allowed either within, or containing, an interpolated string literal.
+Arguably strings within string interpolations should be its own type of lint.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>install(id, destination) {
-  // ...
-}
+<pre><code>useStrings(
+    'should be double quote',
+    r'should be double quote',
+    r'''should be double quotes''')
 </code></pre>
-<p>Here, it's unclear what <code>id</code> is.  A string? And what is <code>destination</code>? A string
-or a <code>File</code> object? Is this method synchronous or asynchronous?</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>Future&lt;bool&gt; install(PackageId id, String destination) {
-  // ...
-}
+<pre><code>useStrings(
+    "should be double quote",
+    r"should be double quote",
+    r"""should be double quotes""",
+    'ok with " inside',
+    'nested ${a ? "strings" : "can"} be wrapped by a double quote',
+    "and nested ${a ? 'strings' : 'can be double quoted themselves'}");
 </code></pre>
-<p>With types, all of this is clarified.</p>
 
 
          </section>
