@@ -58,7 +58,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       } else if (parent is MethodInvocation) {
         if (parent.methodName.name == 'noSuchMethod' ||
             parent.methodName.name == 'toString') {
-          // Code like `(String).hashCode` is allowed.
+          // Code like `(String).noSuchMethod()` is allowed.
           return;
         }
       }
