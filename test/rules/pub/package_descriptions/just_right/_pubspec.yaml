@@ -1,0 +1,7 @@
+name: foo
+version: 0.0.1
+author: Foo
+#     5   10   15   20   25   30   35   40   45   50   55   60
+description: >- # OK
+  This description runs multiple lines, 40   45   50   55   60
+  but is well within the limits of length.  105  110  115  120

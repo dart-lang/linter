@@ -72,12 +72,9 @@ defineRuleTests() {
 
     group('pub', () {
       for (var entry in new Directory(p.join(ruleDir, 'pub')).listSync()) {
-        if (entry is! Directory) continue;
-        Directory pubTestDir = entry;
-        for (var file in pubTestDir.listSync()) {
-          if (file is! File || !isPubspecFile(file)) continue;
-          var ruleName = p.basename(pubTestDir.path);
-          testRule(ruleName, file);
+        if (entry is Directory) {
+          var ruleName = p.basename(entry.path);
+          testRuleInDirectory(ruleName, entry);
         }
       }
     });
@@ -334,6 +331,15 @@ testRules(String ruleDir, {String analysisOptions}) {
     if (entry is! File || !isDartFile(entry)) continue;
     var ruleName = p.basenameWithoutExtension(entry.path);
     testRule(ruleName, entry, debug: true, analysisOptions: analysisOptions);
+  }
+}
+
+/// Test [ruleName] recursively through [directory] against pubspec files.
+void testRuleInDirectory(String ruleName, Directory directory) {
+  for (var entry in directory.listSync()) {
+    if (entry is Directory) testRuleInDirectory(ruleName, entry);
+    if (entry is! File || !isPubspecFile(entry)) continue;
+    testRule(ruleName, entry);
   }
 }
 

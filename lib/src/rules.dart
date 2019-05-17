@@ -114,6 +114,7 @@ import 'package:linter/src/rules/prefer_spread_collections.dart';
 import 'package:linter/src/rules/prefer_typing_uninitialized_variables.dart';
 import 'package:linter/src/rules/prefer_void_to_null.dart';
 import 'package:linter/src/rules/provide_deprecation_message.dart';
+import 'package:linter/src/rules/pub/package_descriptions.dart';
 import 'package:linter/src/rules/pub/package_names.dart';
 import 'package:linter/src/rules/pub/sort_pub_dependencies.dart';
 import 'package:linter/src/rules/public_member_api_docs.dart';
@@ -265,6 +266,7 @@ void registerLintRules() {
     ..register(new PreferVoidToNull())
     ..register(new ProvideDeprecationMessage())
     ..register(new PublicMemberApiDocs())
+    ..register(new PubPackageDescriptions())
     ..register(new PubPackageNames())
     ..register(new RecursiveGetters())
     ..register(new SlashForDocComments())

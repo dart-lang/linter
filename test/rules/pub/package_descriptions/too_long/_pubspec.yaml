@@ -1,0 +1,10 @@
+name: foo
+version: 0.0.1
+author: Foo
+#     5   10   15   20   25   30   35   40   45   50   55   60
+description: >- # LINT
+  This is a super long description. Too long, some would say.
+  Let's count how many characters. 95  100  105  110  115  120
+  Keep going. 135  140  145  150  155  160  165  170  175  180
+  This crosses the line. Over 180 characters.
+
