@@ -46,7 +46,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   visitAssignmentExpression(AssignmentExpression node) {
-    final parent = node.parent;
     final leftPart = node.leftHandSide.unParenthesized;
     if (leftPart is PropertyAccess) {
       _checkAssignment(leftPart.realTarget, leftPart.propertyName, node);
