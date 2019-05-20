@@ -1,3 +1,20 @@
+# 0.1.88
+
+* fixed `prefer_asserts_in_initializer_lists` false positives
+* fixed `curly_braces_in_flow_control_structures` to handle more cases
+* new lint: `prefer_double_quotes`
+* new lint: `sort_child_properties_last`
+* fixed `type_annotate_public_apis` false positive for `static const` initializers
+
+# 0.1.87
+
+* change: `prefer_const_constructors_in_immutables` is currently overly permissive, pending analyzer changes (#1537)
+* fixed `unnecessary_await_in_return` false positive
+* fixed `unrelated_type_equality_checks` false negative with functions
+* fixed `prefer_spread_collections` to not lint in const contexts
+* fixed false positive in `prefer_iterable_whereType` for `is!`
+* fixed false positive in `prefer_collection_literals` for constructors with params
+
 # 0.1.86
 
 * updated `prefer_spread_collections` to ignore calls to `addAll` that could be inlined

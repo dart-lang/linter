@@ -89,6 +89,7 @@ import 'package:linter/src/rules/prefer_const_declarations.dart';
 import 'package:linter/src/rules/prefer_const_literals_to_create_immutables.dart';
 import 'package:linter/src/rules/prefer_constructors_over_static_methods.dart';
 import 'package:linter/src/rules/prefer_contains.dart';
+import 'package:linter/src/rules/prefer_double_quotes.dart';
 import 'package:linter/src/rules/prefer_equal_for_default_values.dart';
 import 'package:linter/src/rules/prefer_expression_function_bodies.dart';
 import 'package:linter/src/rules/prefer_final_fields.dart';
@@ -118,6 +119,7 @@ import 'package:linter/src/rules/pub/sort_pub_dependencies.dart';
 import 'package:linter/src/rules/public_member_api_docs.dart';
 import 'package:linter/src/rules/recursive_getters.dart';
 import 'package:linter/src/rules/slash_for_doc_comments.dart';
+import 'package:linter/src/rules/sort_child_properties_last.dart';
 import 'package:linter/src/rules/sort_constructors_first.dart';
 import 'package:linter/src/rules/sort_unnamed_constructors_first.dart';
 import 'package:linter/src/rules/super_goes_last.dart';
@@ -238,6 +240,7 @@ void registerLintRules() {
     ..register(new PreferAssertsInInitializerLists())
     ..register(new PreferConstructorsInsteadOfStaticMethods())
     ..register(new PreferContainsOverIndexOf())
+    ..register(new PreferDoubleQuotes())
     ..register(new PreferEqualForDefaultValues())
     ..register(new PreferExpressionFunctionBodies())
     ..register(new PreferFinalFields())
@@ -266,6 +269,7 @@ void registerLintRules() {
     ..register(new PubPackageNames())
     ..register(new RecursiveGetters())
     ..register(new SlashForDocComments())
+    ..register(new SortChildPropertiesLast())
     ..register(new SortConstructorsFirst())
     ..register(new SortPubDependencies())
     ..register(new SortUnnamedConstructorsFirst())

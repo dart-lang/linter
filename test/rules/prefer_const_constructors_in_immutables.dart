@@ -45,7 +45,7 @@ class D {
   D.c1(a) : _a = a.toString(); // OK
   D.c2(a) : _a = a; // LINT
   D.c3(bool a) : _a = a && a; // LINT
-  D.c4(a) : _a = '${a ? a : ''}'; // OK
+  D.c4(a) : _a = '${a ? a : ''}'; // LINT
 }
 
 class Mixin1 {}

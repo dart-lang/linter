@@ -88,6 +88,7 @@ linter:
     - prefer_const_literals_to_create_immutables
     - prefer_constructors_over_static_methods
     - prefer_contains
+    - prefer_double_quotes
     - prefer_equal_for_default_values
     - prefer_expression_function_bodies
     - prefer_final_fields
@@ -115,6 +116,7 @@ linter:
     - public_member_api_docs
     - recursive_getters
     - slash_for_doc_comments
+    - sort_child_properties_last
     - sort_constructors_first
     - sort_pub_dependencies
     - sort_unnamed_constructors_first
