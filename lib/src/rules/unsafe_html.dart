@@ -49,9 +49,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   visitAssignmentExpression(AssignmentExpression node) {
     final parent = node.parent;
     final leftPart = node.leftHandSide.unParenthesized;
-    if (parent is CascadeExpression) {
-      _checkAssignment(
-          parent.target, (leftPart as PropertyAccess).propertyName, node);
+    if (parent is CascadeExpression && leftPart is PropertyAccess) {
+      _checkAssignment(parent.target, leftPart.propertyName, node);
     } else if (leftPart is PropertyAccess) {
       _checkAssignment(leftPart.target, leftPart.propertyName, node);
     } else if (leftPart is PrefixedIdentifier) {
