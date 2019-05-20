@@ -9,11 +9,13 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/util/dart_type_utilities.dart';
 
-const _desc = r'Avoid unsafe ScriptElement src=.';
+const _desc = r'Avoid unsafe HTML APIs.';
 
 const _details = r'''
 
-**AVOID** assigning directly to the src field of a ScriptElement.
+**AVOID** assigning directly to the src field of an EmbedElement,
+IFrameElement, ImageElement, or ScriptElement, or the href field of an
+AnchorElement.
 
 
 **BAD:**
@@ -22,10 +24,10 @@ var script = ScriptElement()..src = 'foo.js';
 ```
 ''';
 
-class UnsafeScriptSrc extends LintRule implements NodeLintRule {
-  UnsafeScriptSrc()
+class UnsafeHtml extends LintRule implements NodeLintRule {
+  UnsafeHtml()
       : super(
-            name: 'unsafe_script_src',
+            name: 'unsafe_html',
             description: _desc,
             details: _details,
             group: Group.errors);
