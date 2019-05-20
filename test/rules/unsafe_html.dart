@@ -33,6 +33,7 @@ void main() {
   d.src = 'foo.js'; // LINT
   d.href = 'foo.js'; // LINT
   (script as dynamic).src = 'foo.js'; // LINT
+  (C() as dynamic).src = 'foo.js'; // LINT
 }
 
 class C {

@@ -48,10 +48,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   visitAssignmentExpression(AssignmentExpression node) {
     final parent = node.parent;
     final leftPart = node.leftHandSide.unParenthesized;
-    if (parent is CascadeExpression && leftPart is PropertyAccess) {
-      _checkAssignment(parent.target, leftPart.propertyName, node);
-    } else if (leftPart is PropertyAccess) {
-      _checkAssignment(leftPart.target, leftPart.propertyName, node);
+    if (leftPart is PropertyAccess) {
+      _checkAssignment(leftPart.realTarget, leftPart.propertyName, node);
     } else if (leftPart is PrefixedIdentifier) {
       _checkAssignment(leftPart.prefix, leftPart.identifier, node);
     }
@@ -59,10 +57,12 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void _checkAssignment(Expression target, SimpleIdentifier property,
       AssignmentExpression assignment) {
+    if (property == null || target == null) return;
+
     // It is more efficient to first check if `src` (or `href`) is being
     // assigned, _then_ check if the target of an interesting  type.
-    if (property?.name == 'src') {
-      DartType type = target?.staticType;
+    if (property.name == 'src') {
+      DartType type = target.staticType;
       if (type.isDynamic ||
           DartTypeUtilities.extendsClass(
               type, 'EmbedElement', 'dart.dom.html') ||
@@ -74,8 +74,8 @@ class _Visitor extends SimpleAstVisitor<void> {
               type, 'ScriptElement', 'dart.dom.html')) {
         rule.reportLint(assignment);
       }
-    } else if (property?.name == 'href') {
-      DartType type = target?.staticType;
+    } else if (property.name == 'href') {
+      DartType type = target.staticType;
       if (type.isDynamic ||
           DartTypeUtilities.extendsClass(
               type, 'AnchorElement', 'dart.dom.html')) {
