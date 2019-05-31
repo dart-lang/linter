@@ -4,6 +4,10 @@
 
 // test w/ `pub run test -N avoid_function_literals_in_foreach_calls`
 
+class Person {
+  Iterable<Person> children;
+}
+
 void main() {
   Iterable<String> people;
 
@@ -17,4 +21,17 @@ void main() {
   people.forEach((person) => print(person)); // LINT
 
   people.forEach(print); // OK
+
+  people
+      .where((person) => person != null)
+      .map((person) => '$person!')
+      .forEach((person) => print(person)); // OK
+
+  Person()
+      .children
+      .firstWhere((person) => person != null)
+      .children
+      .forEach((person) => print(person)); // OK
+
+  Person().children.first.children.forEach((person) => print(person)); // OK
 }
