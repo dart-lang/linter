@@ -29,6 +29,7 @@ import 'rules/avoid_positional_boolean_parameters.dart';
 import 'rules/avoid_print.dart';
 import 'rules/avoid_private_typedef_functions.dart';
 import 'rules/avoid_redundant_argument_values.dart';
+import 'rules/avoid_relative_imports.dart';
 import 'rules/avoid_relative_lib_imports.dart';
 import 'rules/avoid_renaming_method_parameters.dart';
 import 'rules/avoid_return_types_on_setters.dart';
@@ -205,6 +206,7 @@ void registerLintRules() {
     ..register(AvoidPrint())
     ..register(AvoidPrivateTypedefFunctions())
     ..register(AvoidRedundantArgumentValues())
+    ..register(new AvoidRelativeImports())
     ..register(AvoidRelativeLibImports())
     ..register(AvoidRenamingMethodParameters())
     ..register(AvoidReturningNull())
