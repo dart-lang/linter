@@ -27,11 +27,18 @@ void main() {
       .map((person) => person.toUpperCase())
       .forEach((person) => print('$person!')); // OK
 
+  people
+      .where((person) => person != null)
+      .map((person) => person.toUpperCase())
+      .forEach(print); // OK
+
   Person()
       .children
       .firstWhere((person) => person != null)
       .children
       .forEach((person) => print('$person!')); // OK
+
+  Person().children.forEach(print); // OK
 
   Person()
       .children
