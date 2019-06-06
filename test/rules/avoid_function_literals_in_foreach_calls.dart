@@ -12,26 +12,30 @@ void main() {
   Iterable<String> people;
 
   for (var person in people) { // OK
-    print(person);
+    print('$person!');
   }
   people.forEach((person) { // LINT
-    print(person);
+    print('$person!');
   });
 
-  people.forEach((person) => print(person)); // LINT
+  people.forEach((person) => print('$person!')); // LINT
 
   people.forEach(print); // OK
 
   people
       .where((person) => person != null)
-      .map((person) => '$person!')
-      .forEach((person) => print(person)); // OK
+      .map((person) => person.toUpperCase())
+      .forEach((person) => print('$person!')); // OK
 
   Person()
       .children
       .firstWhere((person) => person != null)
       .children
-      .forEach((person) => print(person)); // OK
+      .forEach((person) => print('$person!')); // OK
 
-  Person().children.first.children.forEach((person) => print(person)); // OK
+  Person()
+      .children
+      .first
+      .children
+      .forEach((person) => print('$person!')); // LINT
 }
