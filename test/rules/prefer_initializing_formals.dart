@@ -231,7 +231,6 @@ class GoodCaseWithDifferentNamedArgsInitializer {
 
 class GoodCaseWithDifferentType {
   Iterable<int> ids;
-
   GoodCaseWithDifferentType(List<int> ids) {
     this.ids = ids; // OK
     ids.add(12);
