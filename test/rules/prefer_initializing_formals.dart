@@ -238,10 +238,9 @@ class GoodCaseWithDifferentType {
   }
 }
 
-class GoodCaseWithDifferentTypeNamed {
+class GoodCaseWithDifferentTypeNamedParam {
   Iterable<int> ids;
-
-  GoodCaseWithDifferentTypeNamed({List<int> ids}) {
+  GoodCaseWithDifferentTypeNamedParam({List<int> ids}) {
     this.ids = ids; // OK
     ids.add(12);
   }
@@ -249,17 +248,15 @@ class GoodCaseWithDifferentTypeNamed {
 
 class GoodCaseWithDifferentTypeInitializer {
   Iterable<int> ids;
-
   GoodCaseWithDifferentTypeInitializer(List<int> ids)
       : this.ids = ids { // OK
     ids.add(12);
   }
 }
 
-class GoodCaseWithDifferentTypeNamedInitializer {
+class GoodCaseWithDifferentTypeNamedParamInitializer {
   Iterable<int> ids;
-
-  GoodCaseWithDifferentTypeNamedInitializer({List<int> ids})
+  GoodCaseWithDifferentTypeNamedParamInitializer({List<int> ids})
       : this.ids = ids { // OK
     ids.add(12);
   }

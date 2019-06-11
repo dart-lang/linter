@@ -88,14 +88,14 @@ Iterable<ConstructorFieldInitializer>
             ConstructorDeclaration node) =>
         node.initializers.whereType<ConstructorFieldInitializer>();
 
-FieldElement _getLeftElement(AssignmentExpression assignment) =>
+Element _getLeftElement(AssignmentExpression assignment) =>
     DartTypeUtilities.getCanonicalElementFromIdentifier(
         assignment.leftHandSide);
 
 Iterable<Element> _getParameters(ConstructorDeclaration node) =>
     node.parameters.parameters.map((e) => e.identifier.staticElement);
 
-VariableElement _getRightElement(AssignmentExpression assignment) =>
+Element _getRightElement(AssignmentExpression assignment) =>
     DartTypeUtilities.getCanonicalElementFromIdentifier(
         assignment.rightHandSide);
 
@@ -131,6 +131,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       final rightElement = _getRightElement(assignment);
       return leftElement != null &&
           rightElement != null &&
+          rightElement is VariableElement &&
           !leftElement.isPrivate &&
           leftElement is FieldElement &&
           !leftElement.isSynthetic &&
