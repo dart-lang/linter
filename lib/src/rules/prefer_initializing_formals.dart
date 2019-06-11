@@ -88,14 +88,14 @@ Iterable<ConstructorFieldInitializer>
             ConstructorDeclaration node) =>
         node.initializers.whereType<ConstructorFieldInitializer>();
 
-Element _getLeftElement(AssignmentExpression assignment) =>
+FieldElement _getLeftElement(AssignmentExpression assignment) =>
     DartTypeUtilities.getCanonicalElementFromIdentifier(
         assignment.leftHandSide);
 
 Iterable<Element> _getParameters(ConstructorDeclaration node) =>
     node.parameters.parameters.map((e) => e.identifier.staticElement);
 
-Element _getRightElement(AssignmentExpression assignment) =>
+VariableElement _getRightElement(AssignmentExpression assignment) =>
     DartTypeUtilities.getCanonicalElementFromIdentifier(
         assignment.rightHandSide);
 
@@ -136,6 +136,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           !leftElement.isSynthetic &&
           leftElement.enclosingElement ==
               node.declaredElement.enclosingElement &&
+          leftElement.type == rightElement.type &&
           parameters.contains(rightElement) &&
           (!parametersUsedMoreThanOnce.contains(rightElement) &&
                   !(rightElement as ParameterElement).isNamed ||
@@ -145,14 +146,15 @@ class _Visitor extends SimpleAstVisitor<void> {
     bool isConstructorFieldInitializerToLint(
         ConstructorFieldInitializer constructorFieldInitializer) {
       final expression = constructorFieldInitializer.expression;
-      return !(constructorFieldInitializer.fieldName.staticElement?.isPrivate ??
-              true) &&
+      final FieldElement fieldElement =
+          constructorFieldInitializer.fieldName.staticElement;
+      return !(fieldElement?.isPrivate ?? true) &&
           expression is SimpleIdentifier &&
+          fieldElement.type == expression.staticType &&
           parameters.contains(expression.staticElement) &&
           (!parametersUsedMoreThanOnce.contains(expression.staticElement) &&
                   !(expression.staticElement as ParameterElement).isNamed ||
-              (constructorFieldInitializer.fieldName.staticElement?.name ==
-                  expression.staticElement.name));
+              (fieldElement?.name == expression.staticElement.name));
     }
 
     void processElement(Element element) {
