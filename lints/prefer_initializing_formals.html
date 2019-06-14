@@ -45,6 +45,34 @@
   Point(this.x, this.y);
 }
 </code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>class Point {
+  num x, y;
+  Point({num x, num y}) {
+    this.x = x;
+    this.y = y;
+  }
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>class Point {
+  num x, y;
+  Point({this.x, this.y});
+}
+</code></pre>
+<p><strong>NOTE</strong>
+This rule will not generate a lint for named parameters unless the parameter
+name and the field name are the same. The reason for this is that resolving
+such a lint would require either renaming the field or renaming the parameter,
+and both of those actions would potentially be a breaking change. For example,
+the following will not generate a lint:</p>
+<pre><code>class Point {
+  bool isEnabled;
+  Point({bool enabled}) {
+    this.isEnabled = enable; // OK
+  }
+}
+</code></pre>
 
 
          </section>
