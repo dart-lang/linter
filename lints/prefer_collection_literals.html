@@ -33,11 +33,34 @@
 <pre><code>var points = new List();
 var addresses = new Map();
 var uniqueNames = new Set();
+var ids = new LinkedHashSet();
+var coordinates = new LinkedHashMap();
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code>var points = [];
 var addresses = &lt;String,String&gt;{};
 var uniqueNames = &lt;String&gt;{};
+var ids = &lt;int&gt;{};
+var coordinates = &lt;int,int&gt;{};
+</code></pre>
+<p><strong>EXCEPTIONS:</strong></p>
+<p>There are cases with <code>LinkedHashSet</code> or <code>LinkedHashMap</code> where a literal constructor
+will trigger a type error so those will be excluded from the lint.</p>
+<pre><code>void main() {
+  LinkedHashSet&lt;int&gt; linkedHashSet =  LinkedHashSet.from([1, 2, 3]); // OK
+  LinkedHashMap linkedHashMap = LinkedHashMap(); // OK
+  
+  printSet(LinkedHashSet&lt;int&gt;()); // LINT
+  printHashSet(LinkedHashSet&lt;int&gt;()); // OK
+
+  printMap(LinkedHashMap&lt;int, int&gt;()); // LINT
+  printHashMap(LinkedHashMap&lt;int, int&gt;()); // OK
+}
+
+void printSet(Set&lt;int&gt; ids) =&gt; print('$ids!');
+void printHashSet(LinkedHashSet&lt;int&gt; ids) =&gt; printSet(ids);
+void printMap(Map map) =&gt; print('$map!');
+void printHashMap(LinkedHashMap map) =&gt; printMap(map);
 </code></pre>
 
 

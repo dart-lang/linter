@@ -69,6 +69,20 @@ avoid accidental reassignments and allows the compiler to do optimizations.</p>
   }
 }
 </code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>class AssignedInAllConstructors {
+  var _label; // LINT
+  AssignedInAllConstructors(this._label);
+  AssignedInAllConstructors.withDefault() : _label = 'Hello';
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>class NotAssignedInAllConstructors {
+  var _label; // OK
+  NotAssignedInAllConstructors();
+  NotAssignedInAllConstructors.withDefault() : _label = 'Hello';
+}
+</code></pre>
 
 
          </section>
