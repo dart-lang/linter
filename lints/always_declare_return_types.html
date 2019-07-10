@@ -36,7 +36,7 @@ runtime.</p>
 <p><strong>BAD:</strong></p>
 <pre><code>main() { }
 
-_bar() =&gt; new _Foo();
+_bar() =&gt; _Foo();
 
 class _Foo {
   _foo() =&gt; 42;
@@ -45,7 +45,7 @@ class _Foo {
 <p><strong>GOOD:</strong></p>
 <pre><code>void main() { }
 
-_Foo _bar() =&gt; new _Foo();
+_Foo _bar() =&gt; _Foo();
 
 class _Foo {
   int _foo() =&gt; 42;

@@ -34,21 +34,21 @@
 <p><strong>BAD:</strong></p>
 <pre><code>class Bar {
   Foo myMethod() {
-    return new Foo.from(this);
+    return Foo.from(this);
   }
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code>class Bar {
   Foo toFoo() {
-    return new Foo.from(this);
+    return Foo.from(this);
   }
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code>class Bar {
   Foo asFoo() {
-    return new Foo.from(this);
+    return Foo.from(this);
   }
 }
 </code></pre>

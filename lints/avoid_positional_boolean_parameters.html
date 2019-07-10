@@ -33,16 +33,16 @@
 ambiguous.  Using named boolean parameters is much more readable because it
 inherently describes what the boolean value represents.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>new Task(true);
-new Task(false);
-new ListBox(false, true, true);
-new Button(false);
+<pre><code>Task(true);
+Task(false);
+ListBox(false, true, true);
+Button(false);
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>new Task.oneShot();
-new Task.repeating();
-new ListBox(scroll: true, showScrollbars: true);
-new Button(ButtonState.enabled);
+<pre><code>Task.oneShot();
+Task.repeating();
+ListBox(scroll: true, showScrollbars: true);
+Button(ButtonState.enabled);
 </code></pre>
 
 

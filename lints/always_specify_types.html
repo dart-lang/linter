@@ -36,13 +36,13 @@ unknown.  Use <code>Object</code> if you are being explicit that you want an obj
 implements <code>==</code> and <code>hashCode</code>.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>int foo = 10;
-final Bar bar = new Bar();
+final Bar bar = Bar();
 String baz = 'hello';
 const int quux = 20;
 </code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code>var foo = 10;
-final bar = new Bar();
+final bar = Bar();
 const quux = 20;
 </code></pre>
 <p>NOTE: Using the the <code>@optionalTypeArgs</code> annotation in the <code>meta</code> package, API
@@ -58,7 +58,7 @@ class Key&lt;T&gt; {
 }
 
 main() {
-  Key s = new Key(); // OK!
+  Key s = Key(); // OK!
 }
 </code></pre>
 

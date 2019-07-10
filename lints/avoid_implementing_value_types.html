@@ -68,7 +68,7 @@ class FakeSize implements Size {
 
 void main() {
   test('should not throw on a size &gt;1Kb', () {
-    expect(() =&gt; someFunction(new FakeSize()..inBytes = 1001), returnsNormally);
+    expect(() =&gt; someFunction(FakeSize()..inBytes = 1001), returnsNormally);
   });
 }
 </code></pre>
