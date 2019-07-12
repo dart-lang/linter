@@ -14,7 +14,7 @@ class B extends A {}
 
 //https://github.com/dart-lang/linter/issues/1414
 void test_cycle() {
-  new A(null);
+  A(null);
 }
 
 void list_firstWhere() {
@@ -40,12 +40,12 @@ void future_wait() {
 
 void list_generate() {
   // List.generate is a _constructor_ with a _positional_ argument.
-  new List.generate(3, null); // LINT
-  new List.generate(3, (_) => null); // OK
+  List.generate(3, null); // LINT
+  List.generate(3, (_) => null); // OK
 }
 
 void map_otherMethods() {
   // These methods have nothing we are concerned with.
-  new Map().keys; // OK
-  new Map().addAll({}); // OK
+  <dynamic,dynamic>{}.keys; // OK
+  <dynamic,dynamic>{}.addAll({}); // OK
 }
