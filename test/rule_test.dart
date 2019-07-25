@@ -197,7 +197,7 @@ defineRuleUnitTests() {
   });
 }
 
-// Test framework sanity.
+/// Test framework sanity.
 defineSanityTests() {
   group('reporting', () {
     // https://github.com/dart-lang/linter/issues/193
@@ -214,7 +214,7 @@ defineSanityTests() {
   });
 }
 
-// Handy for debugging.
+/// Handy for debugging.
 defineSoloRuleTest(String ruleToTest) {
   for (var entry in Directory(ruleDir).listSync()) {
     if (entry is! File || !isDartFile(entry)) continue;
