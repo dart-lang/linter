@@ -21,7 +21,9 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
 import 'rules/experiments/experiments.dart';
-import 'util/rule_test_utils.dart';
+import 'util/annotation.dart';
+import 'util/annotation_matcher.dart';
+import 'util/test_resource_provider.dart';
 import 'util/test_utils.dart';
 
 main() {
@@ -170,11 +172,6 @@ defineRuleUnitTests() {
       testEach(bad, isValidDartIdentifier, isFalse);
     });
     group('libary_name_prefixes', () {
-      testEach(
-          Iterable<List<String>> values, dynamic f(List<String> s), Matcher m) {
-        values.forEach((s) => test('${s[3]}', () => expect(f(s), m)));
-      }
-
       bool isGoodPrefx(List<String> v) => matchesOrIsPrefixedBy(
           v[3],
           Analyzer.facade.createLibraryNamePrefix(
@@ -200,57 +197,10 @@ defineRuleUnitTests() {
   });
 }
 
-/// Test framework sanity
+// Test framework sanity.
 defineSanityTests() {
-  group('test framework', () {
-    group('annotation', () {
-      test('extraction', () {
-        expect(extractAnnotation('int x; // LINT [1:3]'), isNotNull);
-        expect(extractAnnotation('int x; //LINT'), isNotNull);
-        expect(extractAnnotation('int x; // OK'), isNull);
-        expect(extractAnnotation('int x;'), isNull);
-        expect(extractAnnotation('dynamic x; // LINT dynamic is bad').message,
-            'dynamic is bad');
-        expect(
-            extractAnnotation('dynamic x; // LINT [1:3] dynamic is bad')
-                .message,
-            'dynamic is bad');
-        expect(
-            extractAnnotation('dynamic x; // LINT [1:3] dynamic is bad').column,
-            1);
-        expect(
-            extractAnnotation('dynamic x; // LINT [1:3] dynamic is bad').length,
-            3);
-        expect(extractAnnotation('dynamic x; //LINT').message, isNull);
-        expect(extractAnnotation('dynamic x; //LINT ').message, isNull);
-        // Commented out lines shouldn't get linted.
-        expect(extractAnnotation('// dynamic x; //LINT '), isNull);
-      });
-    });
-    test('equality', () {
-      expect(Annotation('Actual message (to be ignored)', ErrorType.LINT, 1),
-          matchesAnnotation(null, ErrorType.LINT, 1));
-      expect(Annotation('Message', ErrorType.LINT, 1),
-          matchesAnnotation('Message', ErrorType.LINT, 1));
-    });
-    test('inequality', () {
-      expect(
-          () => expect(Annotation('Message', ErrorType.LINT, 1),
-              matchesAnnotation('Message', ErrorType.HINT, 1)),
-          throwsA(TypeMatcher<TestFailure>()));
-      expect(
-          () => expect(Annotation('Message', ErrorType.LINT, 1),
-              matchesAnnotation('Message2', ErrorType.LINT, 1)),
-          throwsA(TypeMatcher<TestFailure>()));
-      expect(
-          () => expect(Annotation('Message', ErrorType.LINT, 1),
-              matchesAnnotation('Message', ErrorType.LINT, 2)),
-          throwsA(TypeMatcher<TestFailure>()));
-    });
-  });
-
   group('reporting', () {
-    //https://github.com/dart-lang/linter/issues/193
+    // https://github.com/dart-lang/linter/issues/193
     group('ignore synthetic nodes', () {
       String path = p.join('test', '_data', 'synthetic', 'synthetic.dart');
       File file = File(path);
@@ -264,7 +214,7 @@ defineSanityTests() {
   });
 }
 
-/// Handy for debugging.
+// Handy for debugging.
 defineSoloRuleTest(String ruleToTest) {
   for (var entry in Directory(ruleDir).listSync()) {
     if (entry is! File || !isDartFile(entry)) continue;
@@ -275,26 +225,14 @@ defineSoloRuleTest(String ruleToTest) {
   }
 }
 
-AnnotationMatcher matchesAnnotation(
-        String message, ErrorType type, int lineNumber) =>
-    AnnotationMatcher(Annotation(message, type, lineNumber));
-
 testRules(String ruleDir, {String analysisOptions}) {
   for (var entry in Directory(ruleDir).listSync()) {
     if (entry is! File || !isDartFile(entry)) continue;
     var ruleName = p.basenameWithoutExtension(entry.path);
     if (ruleName == 'unnecessary_getters') {
-<<<<<<< HEAD
       // Disabled pending fix: https://github.com/dart-lang/linter/issues/23
       continue;
     }
-=======
-      // Skip this test while this rule is not registered.
-      // https://github.com/dart-lang/linter/issues/23
-      continue;
-    }
-
->>>>>>> Move some of rule_test into a util directory
     testRule(ruleName, entry as File,
         debug: true, analysisOptions: analysisOptions);
   }
@@ -321,8 +259,13 @@ testRule(String ruleName, File file,
       ++lineNumber;
     }
 
+    LintRule rule = Registry.ruleRegistry[ruleName];
+    if (rule == null) {
+      fail('rule `$ruleName` is not registered; unable to test.');
+    }
+
     DartLinter driver =
-        buildDriver(ruleName, file, analysisOptions: analysisOptions);
+        buildDriver(rule, file, analysisOptions: analysisOptions);
 
     Iterable<AnalysisErrorInfo> lints = await driver.lintFiles([file]);
 
@@ -361,7 +304,8 @@ class NoFilter implements LintFilter {
   bool filter(AnalysisError lint) => false;
 }
 
-/// A [DetailedReporter] that filters no lint.
+/// A [DetailedReporter] that filters no lint, only used in debug mode, when
+/// actual lints do not match expectations.
 class ResultReporter extends DetailedReporter {
   ResultReporter(Iterable<AnalysisErrorInfo> errors)
       : super(errors, NoFilter(), stdout);
