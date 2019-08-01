@@ -106,15 +106,19 @@ class _Visitor extends SimpleAstVisitor<void> {
       // PrefixExpression.
       if (parent is MethodInvocation) {
         Expression target = parent.target;
-
-        // Something like `({1, 2, 3}).forEach(print);`.
-        // The parens cannot be removed because then the curly brackets are not
-        // interpreted as a set-or-map literal.
-        if (target == node && node.expression is SetOrMapLiteral) return;
-
         if (parent.parent is PrefixExpression &&
             target == node &&
             _expressionStartsWithWhitespace(node.expression)) return;
+      }
+
+      // Something like `({1, 2, 3}).forEach(print);`.
+      // The parens cannot be removed because then the curly brackets are not
+      // interpreted as a set-or-map literal.
+      if (parent is PropertyAccess || parent is MethodInvocation) {
+        Expression target = (parent as dynamic).target;
+        if (target == node &&
+            node.expression is SetOrMapLiteral &&
+            parent.parent is ExpressionStatement) return;
       }
 
       if (parent.precedence < node.expression.precedence) {

@@ -58,6 +58,8 @@ main() async {
 
   ({false: 'false', true: 'true'}).forEach((k, v) => print('$k: $v'));
   ({false, true}).forEach(print);
+  ({false, true}).length;
+  print(({1, 2, 3}).length); // LINT
   ([false, true]).forEach(print); // LINT
 }
 
