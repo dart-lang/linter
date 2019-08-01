@@ -55,6 +55,10 @@ main() async {
   (int).runtimeType;
   (bool).noSuchMethod();
   (double).toString();
+
+  ({false: 'false', true: 'true'}).forEach((k, v) => print('$k: $v'));
+  ({false, true}).forEach(print);
+  ([false, true]).forEach(print); // LINT
 }
 
 m({p}) => null;
