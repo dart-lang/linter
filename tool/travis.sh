@@ -25,10 +25,11 @@ set -e
       mv $SNAPSHOT.corpus.new $SNAPSHOT.corpus
     fi
 
-    # Fuzz the snapshot with the rule tests as a seed, with 10000 cases.
-    pub global run dust $SNAPSHOT --seed_dir test/rules/ --count 10000
+    # Fuzz the snapshot with the rule tests as a seed, with 5000 cases.
+    #pub global run dust $SNAPSHOT --seed_dir test/rules/ --count 5000
+    pub global run dust $SNAPSHOT --count 5000
 
-    # if any failures were detected the bot will fail
+    # if any failures were detected, dust will return 1 and the bot will fail
   fi
 
   exit 0
