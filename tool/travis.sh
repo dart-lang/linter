@@ -18,10 +18,10 @@ set -e
     dart --snapshot=$SNAPSHOT --snapshot-kind=kernel tool/fuzz.dart
 
     # if a fuzz corpus already exists, then minify it
-    if [[ -e "tool/$SNAPSHOT.corpus" ]]
+    if [[ -e "$SNAPSHOT.corpus" ]]
     then
-      timeout --preserve-status 10m pub global run dust $SNAPSHOT --seed_dir $SNAPSHOT.corpus --corpus_dir $SNAPSHOT.corpus.new --count 0 --timeout 20 --vm_count 3 || :
-      rm -rf $SNAPSHOT.corpus.old
+      pub global run dust $SNAPSHOT --seed_dir $SNAPSHOT.corpus --corpus_dir $SNAPSHOT.corpus.new --count 0 --timeout 20 --vm_count 3
+      rm -rf $SNAPSHOT.corpus
       mv $SNAPSHOT.corpus.new $SNAPSHOT.corpus
     fi
 
