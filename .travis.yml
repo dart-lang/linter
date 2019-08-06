@@ -4,10 +4,13 @@ dart:
 sudo: false
 script: ./tool/travis.sh
 env:
+  # these do not run on cron jobs
   - LINTER_BOT=main
   - LINTER_BOT=benchmark
   - LINTER_BOT=pana_baseline
   - LINTER_BOT=release
+  # this only runs on cron jobs
+  - LINTER_BOT=fuzz
 
 # Only building master means that we don't run two builds for each pull request.
 branches:
@@ -16,3 +19,4 @@ branches:
 cache:
   directories:
     - $HOME/.pub-cache
+    - ./tool/fuzz.dart.snapshot.corpus

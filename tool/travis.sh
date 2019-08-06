@@ -7,6 +7,32 @@
 # Fast fail the script on failures.
 set -e
 
+# DO NOT SUBMIT until recommenting this line.
+#if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]
+#then
+  if [[ "$LINTER_BOT" = "fuzz" ]]
+  then
+    pub global activate dust
+    # snapshot fuzzer for better performance
+    SNAPSHOT=tool/fuzz.dart.snapshot
+    dart --snapshot=$SNASHOT --snapshot-kind=kernel tool/fuzz.dart
+
+    # if a fuzz corpus already exists, then minify it
+    if [[ -e "tool/$SNAPSHOT.corpus" ]]
+    then
+      pub global run dust $SNAPSHOT --seed_dir $SNAPSHOT.corpus --corpus_dir $SNAPSHOT.corpus.new --count 0
+      rm -rf $SNAPSHOT.corpus.old
+      mv $SNAPSHOT.corpus.new $SNAPSHOT.corpus
+    fi
+
+    # Fuzz the snapshot with the rule tests as a seed, with 10000 cases.
+    pub global run dust $SNAPSHOT --seed_dir test/rules/ --count 10000
+
+    # if any failures were detected the bot will fail
+  fi
+
+  exit 0
+#fi
 
 if [ "$LINTER_BOT" = "release" ]; then
   echo "Validating release..."
@@ -57,4 +83,3 @@ else
       test/all.dart
   fi
 fi
-
