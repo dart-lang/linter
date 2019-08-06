@@ -27,7 +27,7 @@ set -e
 
     
     # Fuzz the snapshot with the rule tests as a seed, with 1000 cases.
-    timeout 45m --preserve-status pub global run dust $SNAPSHOT --seed_dir test/rules/ --count 1000 --timeout 20 --vm_count 3
+    timeout --preserve-status 45m pub global run dust $SNAPSHOT --seed_dir test/rules/ --count 1000 --timeout 20 --vm_count 3
 
     # if any failures were detected, dust will return 1 and the bot will fail
   fi
