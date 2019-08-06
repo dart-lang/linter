@@ -15,7 +15,7 @@ set -e
     pub global activate dust
     # snapshot fuzzer for better performance
     SNAPSHOT="tool/fuzz.dart.snapshot"
-    dart --snapshot=$SNASHOT --snapshot-kind=kernel tool/fuzz.dart
+    dart --snapshot=$SNAPSHOT --snapshot-kind=kernel tool/fuzz.dart
 
     # if a fuzz corpus already exists, then minify it
     if [[ -e "tool/$SNAPSHOT.corpus" ]]
