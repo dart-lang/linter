@@ -17,20 +17,23 @@ set -e
     SNAPSHOT="tool/fuzz.dart.snapshot"
     dart --snapshot=$SNAPSHOT --snapshot-kind=kernel tool/fuzz.dart
 
-    #SEED_DIR=test/rules
+    SEED_DIR=""
+    CORPUS="$SNAPSHOT.corpus"
+    #SEED_DIR="--seed_dir test/rules"
     # if a fuzz corpus already exists, then minify it
-    #if [[ -e "$SNAPSHOT.corpus" ]]
+    #if [[ -e "$CORPUS" ]]
     #then
-    #  pub global run dust $SNAPSHOT --seed_dir $SNAPSHOT.corpus --corpus_dir $SNAPSHOT.corpus.new --count 0 --timeout 20 --vm_count 3
-    #  rm -rf $SNAPSHOT.corpus
-    #  mv $SNAPSHOT.corpus.new $SNAPSHOT.corpus
+    #  pub global run dust $SNAPSHOT --seed_dir $CORPUS --corpus_dir $CORPUS.new --count 0 --timeout 20 --vm_count 3
+    #  rm -rf $CORPUS
+    #  mv $CORPUS.new $CORPUS
     #else
-      SEED_DIR=tool/fuzz/birth_corpus
+      rm -r $CORPUS
+      cp -r tool/fuzz/birth_corpus $CORPUS
     #fi
 
     
     # Fuzz the snapshot with the rule tests as a seed, with 1000 cases.
-    timeout --preserve-status 35m pub global run dust $SNAPSHOT --seed_dir $SEED_DIR --count 1000 --timeout 20 --vm_count 3 || :
+    timeout --preserve-status 35m pub global run dust $SNAPSHOT $SEED_DIR --count 1000 --timeout 20 --vm_count 3 || :
 
     # if any failures were detected, dust will return 1 and the bot will fail
   fi
