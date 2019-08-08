@@ -85,6 +85,12 @@ void main(List<String> args) async {
     await resolveFile(path);
   }
 
-  addTestFile(input);
-  await resolveTestFile();
+  try {
+    addTestFile(input);
+    await resolveTestFile();
+  } on dynamic catch (e, st) {
+    if (st.toString().contains('linter') || e.toString().contains('linter')) {
+      rethrow;
+    }
+  }
 }

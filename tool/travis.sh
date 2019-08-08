@@ -19,21 +19,24 @@ set -e
 
     SEED_DIR=""
     CORPUS="$SNAPSHOT.corpus"
-    #SEED_DIR="--seed_dir test/rules"
     # if a fuzz corpus already exists, then minify it
-    #if [[ -e "$CORPUS" ]]
-    #then
-    #  pub global run dust $SNAPSHOT --seed_dir $CORPUS --corpus_dir $CORPUS.new --count 0 --timeout 20 --vm_count 3
-    #  rm -rf $CORPUS
-    #  mv $CORPUS.new $CORPUS
-    #else
-      rm -r $CORPUS
-      cp -r tool/fuzz/birth_corpus $CORPUS
-    #fi
+    if [[ -e "$CORPUS" ]]
+    then
+      # One in 10 chance of reseeding the rule tests in case they changed.
+      #if [[ "$RANDOM" -gt "$(( 32767 * 0.9 ))" ]]
+      #then
+        SEED_DIR="--seed_dir test/rules"
+      #fi
 
-    
-    # Fuzz the snapshot with the rule tests as a seed, with 1000 cases.
-    timeout --preserve-status 35m pub global run dust $SNAPSHOT $SEED_DIR --count 1000 --timeout 20 --vm_count 3 || :
+      # TODO(mfairhurst): Enable periodic corpus minification. Currently too slow.
+      # pub global run dust $SNAPSHOT --seed_dir $CORPUS --corpus_dir $CORPUS.new --count 0 --timeout 20 --vm_count 3
+      # rm -rf $CORPUS
+      # mv $CORPUS.new $CORPUS
+    else
+     cp -r tool/fuzz/birth_corpus $CORPUS
+    fi
+
+    pub global run dust $SNAPSHOT $SEED_DIR --timeout 20 --vm_count 3 --count 1000
 
     # if any failures were detected, dust will return 1 and the bot will fail
   fi
