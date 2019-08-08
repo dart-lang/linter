@@ -1,0 +1,1 @@
+import'dart:async'class<T>implements Future{final T v>then<E>(FutureOr<E>f(),{){final u=f(;is F<dynamic>?u as Future<then(v>v as E

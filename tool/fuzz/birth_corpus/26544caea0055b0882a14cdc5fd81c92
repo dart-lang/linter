@@ -1,0 +1,4 @@
+///
+library meta literal
+class K{@literal
+const K(=K(

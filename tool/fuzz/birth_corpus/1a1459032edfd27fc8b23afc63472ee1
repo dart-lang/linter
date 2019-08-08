@@ -1,0 +1,1 @@
+class I{var m member9}class J{get m;{}/member9(}class B implements I,J}class extends B{member9

@@ -1,0 +1,3 @@
+class I<class C0<>extend I
+mixin M6<S,extends S>on I
+class A extend C0<with M6{(

@@ -1,0 +1,8 @@
+covariant static t.static
+covariant
+static t(covariant//
+final)final
+covariant//
+class B{covariant//
+t x covariant//
+get x

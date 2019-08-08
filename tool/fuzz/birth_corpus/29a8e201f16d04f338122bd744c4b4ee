@@ -1,0 +1,2 @@
+mixin M1{value}///
+mixin A on M1{f=this.value

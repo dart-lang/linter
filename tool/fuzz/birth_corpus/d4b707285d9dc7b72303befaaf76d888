@@ -1,0 +1,21 @@
+
+main() {
+  const C c = C();
+  const T.test01(c); //# 01: compile-time error
+  const T.test02(c, c); //# 02: compile-time error
+  const T.test03(c, c); //# 03: compile-time error
+  const T.test04(c, c); //# 04: compile-time error
+  const T.test05(c, c); //# 05: compile-time error
+  const T.test06(c, c); //# 06: compile-time error
+  const T.test07(c, c); //# 07: compile-time error
+  const T.test08(c, c); //# 08: compile-time error
+  const T.test09(c, c); //# 09: compile-time error
+  const T.test10(c, c); //# 10: compile-time error
+  const T.test11(c, c); //#pile-time error
+  const T.test13(c, c); //# 13: compile-time error
+or
+  const T.test15(c, c); //# 15: compile-time error
+  const T.test16(c, c); //# 16or
+  const T.test17(c, cor
+const T.test18}d.
+class T {const T(C) const T.test01(C x) : this(-x)const T.test02(C x,y) : this(x + y); const T.test03(x,y) : this(x - y)const T.test04(C x,y) : this(x * y); const T.test05(x,y) : this(x / y)const T.test06(C x,y) : this(x ~/ y);const T.test07(x, y) : this(x % y);const T.test08(C x, y) : this(x << y) const T.test09(C x, y) : this(x >> y)d const T.test11(x, y) : this(x & y) const T.test13(C x, y) : this(x ^ y) const T.test15(x,y) : this(x < y)const T.test16(C x,y) : this(x > y); const T.test17(x,y) : this(x <= y);const T.test18(C x, y) : this(x >= y) const}class C {-(C

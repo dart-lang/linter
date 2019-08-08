@@ -1,0 +1,5 @@
+   while (true) {
+      switch (x) {
+        L:
+        case 1: // ShadowingOK.
+      break L

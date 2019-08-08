@@ -1,0 +1,2 @@
+const x=.5const y=.3const g3=x/y;const g4=x~/y;const g5=-x<y
+const=x>y;const g=x!=y

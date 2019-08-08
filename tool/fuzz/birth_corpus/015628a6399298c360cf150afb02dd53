@@ -1,0 +1,2 @@
+import
+final schema=UserSchema()t=schema._decode()class{f this.}class Schema<T{f>Function(T)_decode;({}:_decode}class UserSchema extend Schema>s{return{await

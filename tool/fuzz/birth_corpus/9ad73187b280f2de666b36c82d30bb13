@@ -1,0 +1,3 @@
+class Base<typedef funcType<T
+extends T
+class extends Base<funcType<>>

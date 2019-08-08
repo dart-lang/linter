@@ -1,0 +1,1 @@
+Stream<String>f()async*{d yield yield*

@@ -1,0 +1,1 @@
+class A{B b}class B{set c}var a=new A:C=a.b.c??=

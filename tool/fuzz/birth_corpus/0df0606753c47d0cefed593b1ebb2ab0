@@ -1,0 +1,1 @@
+class A{foo}class B extend A{static foo

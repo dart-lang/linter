@@ -1,0 +1,1 @@
+class C{C.n}class D extend C{():this.

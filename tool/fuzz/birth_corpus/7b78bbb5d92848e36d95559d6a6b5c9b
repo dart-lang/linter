@@ -1,0 +1,2 @@
+class Hest<extends void Function//
+<T extends Hest>(

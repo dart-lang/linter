@@ -1,0 +1,2 @@
+import'dart:async'class Derived>implements Future{noSuchMethod(I=>super.noSuchMethod(i}class{noSuchMethod((i;/*
+*/()async{await new Derived

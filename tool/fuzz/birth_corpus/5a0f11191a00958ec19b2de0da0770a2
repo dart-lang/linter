@@ -1,0 +1,3 @@
+ class C<E> {
+  E get first;
+  set first(E valuerator []=(int ind}b class CMixin<E>implements C<E>{ get first=>this[0set first(E}}b class CBase<E with CMixin<E>class DMixin<implements''}abstract class DBase<E=CBase<>with DMixin>class DView<>extend DBase{final I.e}class F<>extend CBase<with{{var d=new DView)a(d.first=>d.first=

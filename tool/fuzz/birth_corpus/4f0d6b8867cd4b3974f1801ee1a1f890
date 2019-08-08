@@ -1,0 +1,1 @@
+class C<T{instanceFn<S extends T>(S x}class extends C<>{Function(i)k=instanceFn

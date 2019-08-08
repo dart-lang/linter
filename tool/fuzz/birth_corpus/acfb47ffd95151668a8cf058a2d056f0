@@ -1,0 +1,1 @@
+class Base{field=''something}class Bad1 extend Base{final,field}class GC13 with Bad1{field}class GC21{something}class G extend GC21 with GC13{o

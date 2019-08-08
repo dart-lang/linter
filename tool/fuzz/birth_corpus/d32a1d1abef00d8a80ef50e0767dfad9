@@ -1,0 +1,1 @@
+class I<mixin M0<X,Y extends Comparable<Y>on I}class M1 implements I/class A extend M1 with M0

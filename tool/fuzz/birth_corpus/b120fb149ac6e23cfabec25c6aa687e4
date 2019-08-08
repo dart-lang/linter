@@ -1,0 +1,1 @@
+d<T extends num>(Generic<T>?generic,G{generic?.getter+1}class Generic<T{T get getter=>throw Exception(
