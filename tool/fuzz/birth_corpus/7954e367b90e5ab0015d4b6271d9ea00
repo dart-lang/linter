@@ -1,0 +1,2 @@
+class I<class C1>implements I<>mixin M1<>on I}mixin M3>on I
+class with C1,M3,M1

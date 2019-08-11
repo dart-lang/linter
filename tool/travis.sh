@@ -20,8 +20,8 @@ set -e
     SEED_DIR=""
     CORPUS="$SNAPSHOT.corpus"
     # if a fuzz corpus already exists, then minify it
-    if [[ -e "$CORPUS" ]]
-    then
+    #if [[ -e "$CORPUS" ]]
+    #then
       # One in 10 chance of reseeding the rule tests in case they changed.
       #if [[ "$RANDOM" -gt "$(( 32767 * 0.9 ))" ]]
       #then
@@ -32,9 +32,10 @@ set -e
       # pub global run dust $SNAPSHOT --seed_dir $CORPUS --corpus_dir $CORPUS.new --count 0 --timeout 20 --vm_count 3
       # rm -rf $CORPUS
       # mv $CORPUS.new $CORPUS
-    else
+    #else
+     rm $CORPUS -r
      cp -r tool/fuzz/birth_corpus $CORPUS
-    fi
+    #fi
 
     pub global run dust $SNAPSHOT $SEED_DIR --timeout 20 --vm_count 3 --count 1000
 

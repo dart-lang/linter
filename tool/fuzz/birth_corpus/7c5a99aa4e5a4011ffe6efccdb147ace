@@ -1,3 +1,0 @@
-class StaticField2RunNegativeTest{static//
-x){var foo=new StaticField2RunNegativeTest;foo.x}}class StaticField2aRunNegativeTest{m(){var foo=new StaticField2aRunNegativeTest//
-foo.m=

@@ -1,0 +1,2 @@
+class StaticField2RunNegativeTest{static//
+x){var foo=new StaticField2RunNegativeTest;foo.x

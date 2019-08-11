@@ -1,0 +1,7 @@
+const INT_LIT=5const INT_LIT_REF=INT_LIT;const DOUBLE_LIT=.5const BOOL_LIT=true;const STRING_LIT=""const B6=INT_LIT/1const B_=DOUBLE_LIT+.5const O21=.5+5-DOUBLE_LIT;const _4=DOUBLE_LIT*.5const O2=INT_LIT<2const BO3=2>INT_LIT const BP=2<DOUBLE_LIT
+const O3=DOUBLE_LIT<2const O_=2>DOUBLE_LIT;const _=DOUBLE_LIT>2const P3=2<=INT_LIT const B0=2>=INT_LIT
+const BO1=.0<=DOUBLE_LIT;const B3=.0>=DOUBLE_LIT;const B3_=DOUBLE_LIT>=2const B4_=5%INT_LIT;const B4=DOUBLE_LIT%.0const O0=0&0const _1=0|4const P5=0<<0const B5=0>>0const O4=0x~/4const B5_=0^0const B=STRING_LIT==""const P=""!=STRING_LIT
+const OP=INT_LIT==INT_LIT_REF;const B1=BOOL_LIT!=true
+const BO=1*2const O1=BOOL_LIT||;const U1=!BOOL_LIT||true
+const O=BOOL_LIT&&true
+const=~0const U=DOUBLE_LIT*0

@@ -1,0 +1,9 @@
+n(){const T.test01)const T.test02
+const T.test03)const T.test04
+const T.test05)const T.test06
+const T.test07)const T.test08
+const T.test09)const T.test11
+const T.test13
+const T.test15)const T.test16
+const T.test17
+const T.test18}class T{const T()const T.test01(x):this(-x)const T.test02(x,y):this(x+y)const T.test03(x,y):this(x-y)const T.test04(x,y):this(x*y)const T.test05(x,y):this(x/y)const T.test06(x,y):this(x~/y)const T.test07(x,y):this(x%y)const T.test08(x,y):this(x<<y)const T.test09(x,y):this(x>>y)const T.test11(x,y):this(x&y)const T.test13(x,y):this(x^y)const T.test15(x,y):this(x<y)const T.test16(x,y):this(x>y)const T.test17(x,y):this(x<=y)const T.test18(x,y):this(x>=y)const}class{-(C

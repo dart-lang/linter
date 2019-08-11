@@ -1,6 +1,0 @@
-import'dart:async
-import'dart:core'as core;v v
-core.Null T
-Future<void>future_void
-u(){v _
-future_void.then<void>((_){

@@ -1,0 +1,1 @@
+class UnaryNum{num foo}mixin M on UnaryNum{static t=>++c=foo(
