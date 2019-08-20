@@ -188,10 +188,15 @@ class DartTypeUtilities {
   static bool isNullLiteral(Expression expression) =>
       expression?.unParenthesized is NullLiteral;
 
-  static PropertyAccessorElement lookUpGetter(MethodDeclaration node) =>
-      (node.parent as ClassOrMixinDeclaration)
-          .declaredElement
-          .lookUpGetter(node.name.name, node.declaredElement.library);
+  static PropertyAccessorElement lookUpGetter(MethodDeclaration node) {
+    final parent = node.parent;
+    if (parent is ExtensionDeclaration) {
+      return parent.declaredElement.getGetter(node.name.name);
+    }
+    return (parent as ClassOrMixinDeclaration)
+        .declaredElement
+        .lookUpGetter(node.name.name, node.declaredElement.library);
+  }
 
   static PropertyAccessorElement lookUpInheritedConcreteGetter(
           MethodDeclaration node) =>
@@ -207,11 +212,15 @@ class DartTypeUtilities {
               node.name.name, node.declaredElement.library);
 
   static PropertyAccessorElement lookUpInheritedConcreteSetter(
-          MethodDeclaration node) =>
-      (node.parent as ClassOrMixinDeclaration)
-          .declaredElement
-          .lookUpInheritedConcreteSetter(
-              node.name.name, node.declaredElement.library);
+      MethodDeclaration node) {
+    final parent = node.parent;
+    return parent is! ClassOrMixinDeclaration
+        ? null
+        : (parent as ClassOrMixinDeclaration)
+            .declaredElement
+            .lookUpInheritedConcreteSetter(
+                node.name.name, node.declaredElement.library);
+  }
 
   static MethodElement lookUpInheritedMethod(MethodDeclaration node) =>
       (node.parent as ClassOrMixinDeclaration)

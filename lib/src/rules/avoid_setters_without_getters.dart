@@ -63,6 +63,7 @@ class AvoidSettersWithoutGetters extends LintRule implements NodeLintRule {
       NodeLintRegistry registry, LinterContext context) {
     final visitor = _Visitor(this);
     registry.addClassDeclaration(this, visitor);
+    registry.addExtensionDeclaration(this, visitor);
   }
 }
 
@@ -73,8 +74,17 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    for (var member in node.members.where(isMethod)) {
-      var method = member as MethodDeclaration;
+    _checkMembers(node.members);
+  }
+
+  @override
+  void visitExtensionDeclaration(ExtensionDeclaration node) {
+    _checkMembers(node.members);
+  }
+
+  void _checkMembers(NodeList<ClassMember> members) {
+    for (var member in members.where(isMethod)) {
+      final method = member as MethodDeclaration;
       if (method.isSetter &&
           !_hasInheritedSetter(method) &&
           !_hasGetter(method)) {
