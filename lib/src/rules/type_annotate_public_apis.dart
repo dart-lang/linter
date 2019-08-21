@@ -60,10 +60,14 @@ class TypeAnnotatePublicApis extends LintRule implements NodeLintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     final visitor = _Visitor(this);
+    registry.addClassDeclaration(this, visitor);
+    registry.addEnumConstantDeclaration(this, visitor);
+    registry.addEnumDeclaration(this, visitor);
     registry.addFieldDeclaration(this, visitor);
     registry.addFunctionDeclaration(this, visitor);
     registry.addFunctionTypeAlias(this, visitor);
     registry.addMethodDeclaration(this, visitor);
+    registry.addMixinDeclaration(this, visitor);
     registry.addTopLevelVariableDeclaration(this, visitor);
   }
 }
@@ -73,6 +77,28 @@ class _Visitor extends SimpleAstVisitor<void> {
   final _VisitorHelper v;
 
   _Visitor(this.rule) : v = _VisitorHelper(rule);
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    if (!isPrivate(node.name)) {
+      rule.reportLint(node.name);
+    }
+  }
+
+  @override
+  void visitEnumConstantDeclaration(EnumConstantDeclaration node) {
+    if (!isPrivate(node.name)) {
+      rule.reportLint(node.name);
+    }
+  }
+
+  @override
+  void visitEnumDeclaration(EnumDeclaration node) {
+    if (!isPrivate(node.name)) {
+      rule.reportLint(node.name);
+    }
+  }
+
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     if (node.fields.type == null) {
@@ -113,6 +139,13 @@ class _Visitor extends SimpleAstVisitor<void> {
       } else {
         node.parameters?.accept(v);
       }
+    }
+  }
+
+  @override
+  void visitMixinDeclaration(MixinDeclaration node) {
+    if (!isPrivate(node.name)) {
+      rule.reportLint(node.name);
     }
   }
 

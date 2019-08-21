@@ -30,7 +30,7 @@ set xx(int x) {} // OK
 _f() {}
 const _X = '';
 
-class A {
+class A { // LINT
   var x; // LINT
   final xx = 1; //LINT
   static const y = ''; //OK
@@ -72,3 +72,11 @@ class A {
 
 typedef _PrivateMethod(int value); //OK
 typedef void _PrivateMethod2(value); //OK
+
+mixin M { // LINT
+}
+
+enum Enum { // LINT
+  foo, // LINT
+  _bar, // OK
+}
