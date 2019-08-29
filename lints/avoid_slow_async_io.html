@@ -29,7 +29,7 @@
          <section>
 
             <p><strong>AVOID</strong> using the following asynchronous file I/O methods because they are
-much slower than their synchronous counterparts.</p><ul><li><code>File.lastModified</code></li><li><code>File.exists</code></li><li><code>File.stat</code></li><li><code>FileSystemEntity.isDirectory</code></li><li><code>FileSystemEntity.isFile</code></li><li><code>FileSystemEntity.isLink</code></li><li><code>FileSystemEntity.type</code></li></ul>
+much slower than their synchronous counterparts.</p><ul><li><code>Directory.exists</code></li><li><code>Directory.stat</code></li><li><code>File.lastModified</code></li><li><code>File.exists</code></li><li><code>File.stat</code></li><li><code>FileSystemEntity.isDirectory</code></li><li><code>FileSystemEntity.isFile</code></li><li><code>FileSystemEntity.isLink</code></li><li><code>FileSystemEntity.type</code></li></ul>
 <p><strong>BAD:</strong></p>
 <pre><code>import 'dart:io';
 
