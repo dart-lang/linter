@@ -99,7 +99,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         if (collector.foundTypeParamElement) {
           return;
         }
-        rule.reportLint(node);
+        rule.reportLint(node.constructorName);
       }
     }
   }
