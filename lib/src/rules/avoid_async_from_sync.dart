@@ -41,10 +41,15 @@ void main() {
 
 class AvoidAsyncFromSync extends LintRule implements NodeLintRule {
   AvoidAsyncFromSync()
-      : super(name: 'avoid_async_from_sync', description: _desc, details: _details, group: Group.style);
+      : super(
+            name: 'avoid_async_from_sync',
+            description: _desc,
+            details: _details,
+            group: Group.style);
 
   @override
-  void registerNodeProcessors(NodeLintRegistry registry, LinterContext context) {
+  void registerNodeProcessors(
+      NodeLintRegistry registry, LinterContext context) {
     final visitor = _Visitor(this);
     registry.addExpressionStatement(this, visitor);
     registry.addCascadeExpression(this, visitor);
@@ -75,7 +80,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     var type = expr?.staticType;
     if (type?.isDartAsyncFuture == true) {
       // Ignore a couple of special known cases.
-      if (_isFutureDelayedInstanceCreationWithComputation(expr) || _isMapPutIfAbsentInvocation(expr)) {
+      if (_isFutureDelayedInstanceCreationWithComputation(expr) ||
+          _isMapPutIfAbsentInvocation(expr)) {
         return;
       }
 
@@ -100,7 +106,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       expr.constructorName?.name?.name == 'delayed' &&
       expr.argumentList.arguments.length == 2;
 
-  bool _isMapClass(Element e) => e is ClassElement && e.name == 'Map' && e.library?.name == 'dart.core';
+  bool _isMapClass(Element e) =>
+      e is ClassElement && e.name == 'Map' && e.library?.name == 'dart.core';
 
   /// Detects Map.putIfAbsent invocations.
   bool _isMapPutIfAbsentInvocation(Expression expr) =>
