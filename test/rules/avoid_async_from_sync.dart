@@ -4,7 +4,6 @@
 
 // test w/ `pub run test -N avoid_async_from_sync`
 
-
 import 'dart:async';
 
 Future fut() => null;
@@ -51,18 +50,15 @@ foo8() {
 }
 
 foo9() async {
-  _Foo()
-    ..futureField = fut();
+  _Foo()..futureField = fut();
 }
 
 foo10() async {
-  _Foo()
-    ..futureListField[0] = fut();
+  _Foo()..futureListField[0] = fut();
 }
 
 foo11() async {
-  _Foo()
-    ..bar.futureField = fut();
+  _Foo()..bar.futureField = fut();
 }
 
 foo12() async {

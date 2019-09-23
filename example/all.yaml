@@ -10,6 +10,7 @@ linter:
     - annotate_overrides
     - avoid_annotating_with_dynamic
     - avoid_as
+    - avoid_async_from_sync
     - avoid_bool_literals_in_conditional_expressions
     - avoid_catches_without_on_clauses
     - avoid_catching_errors
@@ -129,7 +130,6 @@ linter:
     - type_annotate_public_apis
     - type_init_formals
     - unawaited_futures
-    - avoid_async_from_sync
     - unnecessary_await_in_return
     - unnecessary_brace_in_string_interps
     - unnecessary_const
