@@ -66,6 +66,11 @@ foo12() async {
   x..[0] = fut();
 }
 
+foo13() {
+  _Foo foo = _Foo();
+  var x = foo.asyncProperty;
+}
+
 class _Bar {
   Future<void> futureField;
 }
