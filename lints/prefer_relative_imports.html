@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>avoid_equals_and_hash_code_on_mutable_classes</title>
+      <title>prefer_relative_imports</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_equals_and_hash_code_on_mutable_classes</h1>
-            <p>Group: style</p>
+            <h1>prefer_relative_imports</h1>
+            <p>Group: errors</p>
             <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.6.0-dev.3.0 • <small>(Linter v0.1.97)</small></p>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.99)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,43 +28,16 @@
          </header>
          <section>
 
-            <p><strong>AVOID</strong> overloading operator == and hashCode on classes not marked <code>@immutable</code>.</p>
-<p>If a class is not immutable, overloading operator == and hashCode can lead to
-unpredictable and undesirable behavior when used in collections. See
-https://dart.dev/guides/language/effective-dart/design#avoid-defining-custom-equality-for-mutable-classes
-for more information.</p>
+            <p>Prefer relative imports for files in <code>lib/</code>.</p>
+<p>When mixing relative and absolute imports it's possible to create confusion
+where the same member gets imported in two different ways. One way to avoid
+that is to ensure you consistently use relative imports for files withing the
+<code>lib/</code> directory.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>@immutable
-class A {
-  final String key;
-  const A(this.key);
-  @override
-  operator ==(other) =&gt; other is A &amp;&amp; other.key == key;
-  @override
-  int hashCode() =&gt; key.hashCode;
-}
+<pre><code>import 'bar.dart';
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class B {
-  String key;
-  const B(this.key);
-  @override
-  operator ==(other) =&gt; other is B &amp;&amp; other.key == key;
-  @override
-  int hashCode() =&gt; key.hashCode;
-}
-</code></pre>
-<p>NOTE: The lint checks the use of the @immutable annotation, and will trigger
-even if the class is otherwise not mutable. Thus:</p>
-<p><strong>BAD:</strong></p>
-<pre><code>class C {
-  final String key;
-  const C(this.key);
-  @override
-  operator ==(other) =&gt; other is B &amp;&amp; other.key == key;
-  @override
-  int hashCode() =&gt; key.hashCode;
-}
+<pre><code>import 'package:my_package/bar.dart';
 </code></pre>
 
 
