@@ -1,4 +1,4 @@
-// Copyright (c) 2016, the Dart project authors. Please see the AUTHORS file
+// Copyright (c) 2019, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -42,6 +42,27 @@ class TestClass {
     var foo_value = 0; // OK
     var foo__value = 0; // OK
     var foo__value_ = 0; // OK
+
+    for(var _x in [1,2,3]) {} // LINT
+    for(var x in [1,2,3]) {} // OK
+
+    [1,2,3].forEach((_x) => fn()); // LINT
+    [1,2,3].forEach((x) => fn()); // OK
+    [1,2,3].forEach((_) => fn()); // OK
+
+    try {}
+    catch(_error) {} // LINT
+
+    try {}
+    catch(error) { // OK
+    }
+
+    try {}
+    catch(error, _stackTrace) {} // LINT
+
+    try {}
+    catch(error, stackTrace) { // OK
+    }
   }
 
   foo1(_param) => null; // LINT
@@ -51,4 +72,10 @@ class TestClass {
   foo3(_) => null; // OK
 
   foo4(param_value) => null; // OK
+
+  foo5(param, [_positional]) => null; // LINT
+
+  foo6(param, [positional]) => null; // OK
+
+  foo7(param, {_named}) => null; // OK
 }

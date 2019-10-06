@@ -20,8 +20,6 @@ final _pubspec = RegExp(r'^[_]?pubspec\.yaml$');
 
 final _underscores = RegExp(r'^[_]+$');
 
-final _leadingUnderscores = RegExp(r'^_+[\w]+');
-
 final _validLibraryPrefix = RegExp(r'^[\$]?[_]*[a-z]+[_a-z0-9]*$');
 
 /// Check if this [string] is formatted in `CamelCase`.
@@ -36,8 +34,8 @@ bool isIdentifier(String name) => _identifier.hasMatch(name);
 /// Returns `true` of the given [name] is composed only of `_`s.
 bool isJustUnderscores(String name) => _underscores.hasMatch(name);
 
-/// Returns `true` if the given [name] has leading `_`s.
-bool hasLeadingUnderscores(String name) => _leadingUnderscores.hasMatch(name);
+/// Returns `true` if the given [name] has leading `_`.
+bool hasLeadingUnderscore(String name) => name.startsWith('_');
 
 /// Returns `true` if this [id] is `lowerCamelCase`.
 bool isLowerCamelCase(String id) =>
