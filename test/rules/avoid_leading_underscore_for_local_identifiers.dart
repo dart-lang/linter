@@ -2,12 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// test w/ `pub run test -N avoid_leading_underscore_for_non_private_identifiers`
-
-import 'dart:async' as _async; // LINT
-import 'dart:convert' as _convert; // LINT
-import 'dart:core' as dart_core; // OK
-import 'dart:math' as dart_math; // OK
+// test w/ `pub run test -N avoid_leading_underscore_for_local_identifiers`
 
 var _foo = 0; // OK
 const _foo1 = 1; // OK

@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/utils.dart';
 
-const _desc = r'Avoid leading underscore for identifiers that aren’t private.';
+const _desc = r'Avoid leading underscore for local identifiers.';
 
 const _details = r'''
 
@@ -18,9 +18,9 @@ top-level declarations as private. This trains users to associate a
 leading underscore with one of those kinds of declarations. 
 They see “_” and think “private”.
 
-There is no concept of “private” for local variables, parameters, 
-or library prefixes. When one of those has a name that starts with 
-an underscore, it sends a confusing signal to the reader. To avoid that,
+There is no concept of “private” for local variables or parameters. 
+When one of those has a name that starts with an underscore, 
+it sends a confusing signal to the reader. To avoid that,
 don’t use leading underscores in those names.
 
 **Exception**: An unused parameter can be named _, __, ___, etc. 
@@ -52,11 +52,11 @@ print(string name) {
 
 ''';
 
-class AvoidLeadingUnderscoreForNonPrivateIdentifiers extends LintRule
+class AvoidLeadingUnderscoreForLocalIdentifiers extends LintRule
     implements NodeLintRule {
-  AvoidLeadingUnderscoreForNonPrivateIdentifiers()
+  AvoidLeadingUnderscoreForLocalIdentifiers()
       : super(
-            name: 'avoid_leading_underscore_for_non_private_identifiers',
+            name: 'avoid_leading_underscore_for_local_identifiers',
             description: _desc,
             details: _details,
             group: Group.style);
@@ -67,7 +67,6 @@ class AvoidLeadingUnderscoreForNonPrivateIdentifiers extends LintRule
     final visitor = _Visitor(this);
     registry.addFormalParameterList(this, visitor);
     registry.addVariableDeclarationStatement(this, visitor);
-    registry.addImportDirective(this, visitor);
     registry.addDeclaredIdentifier(this, visitor);
     registry.addCatchClause(this, visitor);
   }
@@ -89,11 +88,6 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
       rule.reportLint(id);
     }
-  }
-
-  @override
-  void visitImportDirective(ImportDirective node) {
-    checkIdentifier(node.prefix);
   }
 
   @override
