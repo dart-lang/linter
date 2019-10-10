@@ -17,7 +17,7 @@
          <header>
             <h1>diagnostic_describe_all_properties</h1>
             <p>Group: errors</p>
-            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
+            <p>Maturity: stable</p>
             <p style="padding-bottom: 10px;">Dart SDK: >= 2.2.1-dev.4.0 • <small>(Linter v0.1.85)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
@@ -32,7 +32,12 @@
 <p>Implementers of <code>Diagnosticable</code> should reference all public properties in
 a <code>debugFillProperties(...)</code> or <code>debugDescribeChildren(...)</code> method
 implementation to improve debuggability at runtime.</p>
-<p>Public properties are defined as fields and getters that are</p><ul><li>not package-private (e.g., prefixed with <code>_</code>)</li><li>not <code>static</code> or overriding</li><li>not themselves <code>Widget</code>s or collections of <code>Widget</code>s</li></ul>
+<p>Public properties are defined as fields and getters that are</p>
+<ul>
+<li>not package-private (e.g., prefixed with <code>_</code>)</li>
+<li>not <code>static</code> or overriding</li>
+<li>not themselves <code>Widget</code>s or collections of <code>Widget</code>s</li>
+</ul>
 <p>In addition, the "debug" prefix is treated specially for properties in Flutter.
 For the purposes of diagnostics, a property <code>foo</code> and a prefixed property
 <code>debugFoo</code> are treated as effectively describing the same property and it is

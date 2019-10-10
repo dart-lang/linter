@@ -34,10 +34,23 @@ be all lowercase. Using a separating character allows names to still be readable
 in that form. Using underscores as the separator ensures that the name is still
 a valid Dart identifier, which may be helpful if the language later supports
 symbolic imports.</p>
-<p><strong>GOOD:</strong></p><ul><li><code>slider_menu.dart</code></li><li><code>file_system.dart</code></li></ul>
-<p><strong>BAD:</strong></p><ul><li><code>SliderMenu.dart</code></li><li><code>filesystem.dart</code></li><li><code>file-system.dart</code></li></ul>
+<p><strong>GOOD:</strong></p>
+<ul>
+<li><code>slider_menu.dart</code></li>
+<li><code>file_system.dart</code></li>
+</ul>
+<p><strong>BAD:</strong></p>
+<ul>
+<li><code>SliderMenu.dart</code></li>
+<li><code>filesystem.dart</code></li>
+<li><code>file-system.dart</code></li>
+</ul>
 <p>Files without a strict <code>.dart</code> extension are ignored.  For example:</p>
-<p><strong>OK:</strong></p><ul><li><code>file-system.g.dart</code></li><li><code>SliderMenu.css.dart</code></li></ul>
+<p><strong>OK:</strong></p>
+<ul>
+<li><code>file-system.g.dart</code></li>
+<li><code>SliderMenu.css.dart</code></li>
+</ul>
 <p>The lint <code>library_names</code> can be used to enforce the same kind of naming on the
 library.</p>
 

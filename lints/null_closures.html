@@ -34,11 +34,67 @@ so that tests and "happy path" production calls do not reveal that <code>null</c
 result in an exception being thrown.</p>
 <p>This rule only catches null literals being passed where closures are expected
 in the following locations:</p>
-<h4>Constructors</h4><ul><li>From <code>dart:async</code><ul><li><code>Future</code> at the 0th positional parameter</li><li><code>Future.microtask</code> at the 0th positional parameter</li><li><code>Future.sync</code> at the 0th positional parameter</li><li><code>Timer</code> at the 0th positional parameter</li><li><code>Timer.periodic</code> at the 1st positional parameter</li></ul></li><li>From <code>dart:core</code><ul><li><code>List.generate</code> at the 1st positional parameter</li></ul></li></ul>
-<h4>Static functions</h4><ul><li>From <code>dart:async</code><ul><li><code>sheduleMicrotask</code> at the 0th positional parameter</li><li><code>Future.doWhile</code> at the 0th positional parameter</li><li><code>Future.forEach</code> at the 0th positional parameter</li><li><code>Future.wait</code> at the named parameter <code>cleanup</code></li><li><code>Timer.run</code> at the 0th positional parameter</li></ul></li></ul>
-<h4>Instance methods</h4><ul><li>From <code>dart:async</code><ul><li><code>Future.then</code> at the 0th positional parameter</li><li><code>Future.complete</code> at the 0th positional parameter</li></ul></li><li>From <code>dart:collection</code><ul><li><code>Queue.removeWhere</code> at the 0th positional parameter</li><li>`Queue.retain</li><li><code>Iterable.firstWhere</code> at the 0th positional parameter, and the named
-parameter <code>orElse</code></li><li><code>Iterable.forEach</code> at the 0th positional parameter</li><li><code>Iterable.fold</code> at the 1st positional parameter</li><li><code>Iterable.lastWhere</code> at the 0th positional parameter, and the named
-parameter <code>orElse</code></li><li><code>Iterable.map</code> at the 0th positional parameter</li><li><code>Iterable.reduce</code> at the 0th positional parameter</li><li><code>Iterable.singleWhere</code> at the 0th positional parameter</li><li><code>Iterable.skipWhile</code> at the 0th positional parameter</li><li><code>Iterable.takeWhile</code> at the 0th positional parameter</li><li><code>Iterable.where</code> at the 0th positional parameter</li><li><code>List.removeWhere</code> at the 0th positional parameter</li><li><code>List.retainWhere</code> at the 0th positional parameter</li><li><code>String.replaceAllMapped</code> at the 1st positional parameter</li><li><code>String.replaceFirstMapped</code> at the 1st positional parameter</li><li><code>String.splitMapJoin</code> at the named parameters <code>onMatch</code> and <code>onNonMatch</code></li></ul></li></ul>
+<h4>Constructors</h4>
+<ul>
+<li>From <code>dart:async</code>
+<ul>
+<li><code>Future</code> at the 0th positional parameter</li>
+<li><code>Future.microtask</code> at the 0th positional parameter</li>
+<li><code>Future.sync</code> at the 0th positional parameter</li>
+<li><code>Timer</code> at the 0th positional parameter</li>
+<li><code>Timer.periodic</code> at the 1st positional parameter</li>
+</ul>
+</li>
+<li>From <code>dart:core</code>
+<ul>
+<li><code>List.generate</code> at the 1st positional parameter</li>
+</ul>
+</li>
+</ul>
+<h4>Static functions</h4>
+<ul>
+<li>From <code>dart:async</code>
+<ul>
+<li><code>sheduleMicrotask</code> at the 0th positional parameter</li>
+<li><code>Future.doWhile</code> at the 0th positional parameter</li>
+<li><code>Future.forEach</code> at the 0th positional parameter</li>
+<li><code>Future.wait</code> at the named parameter <code>cleanup</code></li>
+<li><code>Timer.run</code> at the 0th positional parameter</li>
+</ul>
+</li>
+</ul>
+<h4>Instance methods</h4>
+<ul>
+<li>From <code>dart:async</code>
+<ul>
+<li><code>Future.then</code> at the 0th positional parameter</li>
+<li><code>Future.complete</code> at the 0th positional parameter</li>
+</ul>
+</li>
+<li>From <code>dart:collection</code>
+<ul>
+<li><code>Queue.removeWhere</code> at the 0th positional parameter</li>
+<li>`Queue.retain</li>
+<li><code>Iterable.firstWhere</code> at the 0th positional parameter, and the named
+parameter <code>orElse</code></li>
+<li><code>Iterable.forEach</code> at the 0th positional parameter</li>
+<li><code>Iterable.fold</code> at the 1st positional parameter</li>
+<li><code>Iterable.lastWhere</code> at the 0th positional parameter, and the named
+parameter <code>orElse</code></li>
+<li><code>Iterable.map</code> at the 0th positional parameter</li>
+<li><code>Iterable.reduce</code> at the 0th positional parameter</li>
+<li><code>Iterable.singleWhere</code> at the 0th positional parameter</li>
+<li><code>Iterable.skipWhile</code> at the 0th positional parameter</li>
+<li><code>Iterable.takeWhile</code> at the 0th positional parameter</li>
+<li><code>Iterable.where</code> at the 0th positional parameter</li>
+<li><code>List.removeWhere</code> at the 0th positional parameter</li>
+<li><code>List.retainWhere</code> at the 0th positional parameter</li>
+<li><code>String.replaceAllMapped</code> at the 1st positional parameter</li>
+<li><code>String.replaceFirstMapped</code> at the 1st positional parameter</li>
+<li><code>String.splitMapJoin</code> at the named parameters <code>onMatch</code> and <code>onNonMatch</code></li>
+</ul>
+</li>
+</ul>
 <p><strong>BAD:</strong></p>
 <pre><code>[1, 3, 5].firstWhere((e) =&gt; e.isOdd, orElse: null);
 </code></pre>

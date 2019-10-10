@@ -31,7 +31,13 @@
             <p><strong>AVOID</strong> returning this from methods just to enable a fluent interface.</p>
 <p>Returning <code>this</code> from a method is redundant; Dart has a cascade operator which
 allows method chaining universally.</p>
-<p>Returning <code>this</code> is allowed for:</p><ul><li>operators</li><li>methods with a return type different of the current class</li><li>methods defined in parent classes / mixins or interfaces</li><li>methods defined in extensions</li></ul>
+<p>Returning <code>this</code> is allowed for:</p>
+<ul>
+<li>operators</li>
+<li>methods with a return type different of the current class</li>
+<li>methods defined in parent classes / mixins or interfaces</li>
+<li>methods defined in extensions</li>
+</ul>
 <p><strong>BAD:</strong></p>
 <pre><code>var buffer = StringBuffer()
   .write('one')

@@ -45,7 +45,13 @@ int max_int(int a, int b) { ... }
 <p>Note that the square bracket comment format is designed to allow 
 comments to refer to declarations using a fairly natural format 
 but does not allow <em>arbitrary expressions</em>.  In particular, code 
-references within square brackets can consist of either</p><ul><li>a single identifier where the identifier is any identifier in scope for the comment (see the spec for what is in scope in doc comments),</li><li>two identifiers separated by a period where the first identifier is the name of a class that is in scope and the second is the name of a member declared in the class,</li><li>a single identifier followed by a pair of parentheses where the identifier is the name of a class that is in scope (used to refer to the unnamed constructor for the class), or</li><li>two identifiers separated by a period and followed by a pair of parentheses where the first identifier is the name of a class that is in scope and the second is the name of a named constructor (not strictly necessary, but allowed for consistency).</li></ul>
+references within square brackets can consist of either</p>
+<ul>
+<li>a single identifier where the identifier is any identifier in scope for the comment (see the spec for what is in scope in doc comments),</li>
+<li>two identifiers separated by a period where the first identifier is the name of a class that is in scope and the second is the name of a member declared in the class,</li>
+<li>a single identifier followed by a pair of parentheses where the identifier is the name of a class that is in scope (used to refer to the unnamed constructor for the class), or</li>
+<li>two identifiers separated by a period and followed by a pair of parentheses where the first identifier is the name of a class that is in scope and the second is the name of a named constructor (not strictly necessary, but allowed for consistency).</li>
+</ul>
 
 
          </section>

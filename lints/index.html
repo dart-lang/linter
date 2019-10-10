@@ -52,7 +52,10 @@ should not be used and are subject to removal in future Linter releases.</p>
 <p>Rules can be selectively enabled in the analyzer using
 <a href="https://pub.dartlang.org/packages/analyzer">analysis options</a>
 or through an
-<a href="https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file">analysis options file</a>. </p><ul><li><strong>An auto-generated list enabling all options is provided <a href="options/options.html">here</a>.</strong> </li></ul>
+<a href="https://www.dartlang.org/guides/language/analysis-options#the-analysis-options-file">analysis options file</a>. </p>
+<ul>
+<li><strong>An auto-generated list enabling all options is provided <a href="options/options.html">here</a>.</strong> </li>
+</ul>
 <p>As some lints may contradict each other, only a subset of these will be
 enabled in practice, but this list should provide a
 convenient jumping-off point.</p>
@@ -81,6 +84,9 @@ convenient jumping-off point.</p>
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_types_as_parameter_names.html">avoid_types_as_parameter_names</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid types as parameter names.</p>
 
 
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_web_libraries_in_flutter.html">avoid_web_libraries_in_flutter (experimental)</a></strong><br/>  <p>Avoid using web-only libraries outside Flutter web projects.</p>
+
+
 <!--suppress HtmlUnknownTarget --><strong><a href = "cancel_subscriptions.html">cancel_subscriptions</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Cancel instances of dart.async.StreamSubscription.</p>
 
 
@@ -93,7 +99,7 @@ convenient jumping-off point.</p>
 <!--suppress HtmlUnknownTarget --><strong><a href = "control_flow_in_finally.html">control_flow_in_finally</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Avoid control flow in finally blocks.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "diagnostic_describe_all_properties.html">diagnostic_describe_all_properties (experimental)</a></strong><br/>  <p>DO reference all public properties in debug methods.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "diagnostic_describe_all_properties.html">diagnostic_describe_all_properties</a></strong><br/>  <p>DO reference all public properties in debug methods.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "empty_statements.html">empty_statements</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Avoid empty statements.</p>
@@ -362,7 +368,7 @@ convenient jumping-off point.</p>
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_equal_for_default_values.html">prefer_equal_for_default_values</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use <code>=</code> to separate a named parameter from its default value.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_expression_function_bodies.html">prefer_expression_function_bodies</a></strong><br/>  <p>Use => for short members whose body is a single return statement.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_expression_function_bodies.html">prefer_expression_function_bodies</a></strong><br/>  <p>Use =&gt; for short members whose body is a single return statement.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_final_fields.html">prefer_final_fields</a></strong><br/>  <p>Private field could be final.</p>

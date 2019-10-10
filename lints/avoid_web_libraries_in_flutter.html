@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>unnecessary_overrides</title>
+      <title>avoid_web_libraries_in_flutter</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>unnecessary_overrides</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.0.0 • <small>(Linter v0.1.31)</small></p>
+            <h1>avoid_web_libraries_in_flutter</h1>
+            <p>Group: errors</p>
+            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.101)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,31 +28,16 @@
          </header>
          <section>
 
-            <p><strong>DON'T</strong> override a method to do a super method invocation with same parameters.</p>
-<p><strong>BAD:</strong></p>
-<pre><code>class A extends B {
-  @override
-  void foo() {
-    super.foo();
-  }
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code>class A extends B {
-  @override
-  void foo() {
-    doSomethingElse();
-  }
-}
-</code></pre>
-<p>It's valid to override method for the following cases:</p>
+            <p>Avoid using web libraries, <code>dart:html</code>, <code>dart:js</code> and 
+<code>dart:js_util</code> in non-web Flutter projects.  These libraries are not supported
+outside a web context and functionality that depends on them will fail at
+runtime.</p>
+<p>Web library access is allowed in:</p>
 <ul>
-<li>if a type (return type or a parameter type) is not the exactly the same as the
-super method,</li>
-<li>if <code>covariant</code> keyword is added to one of the parameter,</li>
-<li>if documentation comments are present on the method.</li>
+<li>projects meant to run on the web (e.g., have a <code>web/</code> directory)</li>
+<li>plugin packages that declare <code>web</code> as a supported context</li>
 </ul>
-<p><code>noSuchMethod</code> is a special method and is not checked by this rule.</p>
+<p>otherwise, imports of <code>dart:html</code>, <code>dart:js</code> and  <code>dart:js_util</code> are flagged.</p>
 
 
          </section>

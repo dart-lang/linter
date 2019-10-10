@@ -34,7 +34,8 @@ that is, symmetrically for all objects <code>o1</code> and <code>o2</code>, <cod
 must either both be true, or both be false.</p>
 <blockquote>
 <p><em>NOTE</em>: Dart does not have true <em>value types</em>, so instead we consider a class
-that implements <code>==</code>  as a <em>proxy</em> for identifying value types.</p></blockquote>
+that implements <code>==</code>  as a <em>proxy</em> for identifying value types.</p>
+</blockquote>
 <p>When using <code>implements</code>, you do not inherit the method body of <code>==</code>, making it
 nearly impossible to follow the contract of <code>==</code>. Classes that override <code>==</code>
 typically are usable directly in tests <em>without</em> creating mocks or fakes as
