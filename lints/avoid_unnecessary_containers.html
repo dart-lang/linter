@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>avoid_web_libraries_in_flutter</title>
+      <title>avoid_unnecessary_containers</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_web_libraries_in_flutter</h1>
-            <p>Group: errors</p>
-            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.6.0-dev.8.0 • <small>(Linter v0.1.101)</small></p>
+            <h1>avoid_unnecessary_containers</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,16 +28,35 @@
          </header>
          <section>
 
-            <p>Avoid using web libraries, <code>dart:html</code>, <code>dart:js</code> and 
-<code>dart:js_util</code> in Flutter packages that are not web plugins. These libraries are 
-not supported outside a web context; functionality that depends on them will
-fail at runtime in Flutter mobile, and their use is generally discouraged in
-Flutter web.</p>
-<p>Web library access <em>is</em> allowed in:</p>
-<ul>
-<li>plugin packages that declare <code>web</code> as a supported context</li>
-</ul>
-<p>otherwise, imports of <code>dart:html</code>, <code>dart:js</code> and  <code>dart:js_util</code> are disallowed.</p>
+            <p>Avoid wrapping widgets in unnecessary containers.</p>
+<p>Wrapping a widget in <code>Container</code> with no other parameters set has no effect 
+and makes code needlessly more complex.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>Widget buildRow() {
+  return Container(
+      child: Row(
+        children: &lt;Widget&gt;[
+          const MyLogo(),
+          const Expanded(
+            child: Text('...'),
+          ),
+        ],
+      )
+  );
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>Widget buildRow() {
+  return Row(
+    children: &lt;Widget&gt;[
+      const MyLogo(),
+      const Expanded(
+        child: Text('...'),
+      ),
+    ],
+  );
+}
+</code></pre>
 
 
          </section>
