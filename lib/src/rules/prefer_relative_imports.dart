@@ -75,7 +75,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return false;
     }
 
-    final source = node.uriElement.library?.source;
+    final source = node.uriElement?.library?.source;
     if (source == null) return false;
     // todo (pq): should context.package.contains(source)work?
     return path.isWithin(context.package.root, source.fullName);
