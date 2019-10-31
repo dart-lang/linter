@@ -121,8 +121,8 @@ bool isHashCode(ClassMember element) =>
     (element is FieldDeclaration &&
         getFieldIdentifier(element, 'hashCode') != null);
 
-/// Return true if the given compilation unit is declared in the given [package]'s
-/// `lib/` directory.
+/// Return true if this compilation unit [node] is declared within the given
+/// [package]'s `lib/` directory.
 bool isInLibDir(CompilationUnit node, WorkspacePackage package) {
   final libDir = path.join(package.root, 'lib');
   final cuPath = node.declaredElement.library?.source?.fullName;
