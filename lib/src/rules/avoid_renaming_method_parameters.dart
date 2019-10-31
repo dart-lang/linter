@@ -65,6 +65,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   final LinterContext context;
 
+  /// Tracks if we are in a compilation unit within a `lib/` dir so we can
+  /// short-circuit needless checking of method declarations.
   bool isInLib;
 
   _Visitor(this.rule, this.context);
