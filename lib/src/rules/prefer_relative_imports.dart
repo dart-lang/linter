@@ -8,7 +8,6 @@ import 'package:path/path.dart' as path;
 
 import '../analyzer.dart';
 import '../ast.dart';
-import '../rules/implementation_imports.dart';
 
 const _desc = r'Prefer relative imports for files in `lib/`.';
 
@@ -63,21 +62,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (!isInLibFolder) return false;
 
     // Is it a package: import?
-    String importUri = node?.uri?.stringValue;
-    if (importUri == null) return false;
+    final importUri = node.uriContent;
+    if (importUri?.startsWith('package:') != true) return false;
 
-    // todo (pq): is there a better way to do this?
-    Uri uri;
-    try {
-      uri = Uri.parse(importUri);
-      if (!isPackage(uri)) return false;
-    } on FormatException catch (_) {
-      return false;
-    }
-
-    final source = node.uriElement?.library?.source;
+    final source = node.uriSource;
     if (source == null) return false;
-    // todo (pq): should context.package.contains(source)work?
+
+    // todo (pq): context.package.contains(source) should work (but does not)
     return path.isWithin(context.package.root, source.fullName);
   }
 
