@@ -2,13 +2,15 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/file_system/file_system.dart';
+import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
 import '../analyzer.dart';
-import '../ast.dart';
 
 const _desc =
     r'Avoid using web-only libraries outside Flutter web plugin packages.';
@@ -26,20 +28,6 @@ Web library access *is* allowed in:
 otherwise, imports of `dart:html`, `dart:js` and  `dart:js_util` are disallowed.
 ''';
 
-/// todo (pq): consider making a utility and sharing w/ `prefer_relative_imports`
-YamlMap _parseYaml(String content) {
-  try {
-    final doc = loadYamlNode(content);
-    if (doc is YamlMap) {
-      return doc;
-    }
-    // ignore: avoid_catches_without_on_clauses
-  } catch (_) {
-    // Fall-through.
-  }
-  return YamlMap();
-}
-
 class AvoidWebLibrariesInFlutter extends LintRule implements NodeLintRule {
   AvoidWebLibrariesInFlutter()
       : super(
@@ -52,33 +40,82 @@ class AvoidWebLibrariesInFlutter extends LintRule implements NodeLintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    final visitor = _Visitor(this);
+    final visitor = _Visitor(this, context);
     registry.addCompilationUnit(this, visitor);
     registry.addImportDirective(this, visitor);
   }
 }
 
-class _Visitor extends SimpleAstVisitor<void> {
-  File pubspecFile;
+class Entry {
+  final File file;
+  YamlMap yaml;
+  int timestamp;
+  Entry(this.file) {
+    update();
+  }
 
-  final rule;
+  void update() {
+    timestamp = file.modificationStamp;
+    final content = file.readAsStringSync();
+    yaml = _parseYaml(content);
+  }
+
+  static YamlMap _parseYaml(String content) {
+    try {
+      final doc = loadYamlNode(content);
+      if (doc is YamlMap) {
+        return doc;
+      }
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      // Fall-through.
+    }
+    return YamlMap();
+  }
+
+}
+
+class Pubspec {
+  static Map<String, Entry> cache = <String, Entry>{};
+
+  static YamlMap forUnit(CompilationUnit unit, LinterContext context) {
+    final filePath = path.join(context.package.root, 'pubspec.yaml');
+    final entry = cache[filePath];
+    if (entry != null) {
+      if (entry.file.modificationStamp != entry.timestamp) {
+        entry.update();
+      }
+      return entry.yaml;
+    } else {
+      final resourceProvider = unit?.declaredElement?.session?.resourceProvider;
+      if (resourceProvider == null) {
+        return null;
+      }
+      final file = resourceProvider.getFile(filePath);
+      if (!file.exists) {
+        // todo (pq): cache and stuff
+        return null;
+      }
+      final entry = Entry(file);
+      cache[filePath] = entry;
+      return entry.yaml;
+    }
+  }
+}
+
+class _Visitor extends SimpleAstVisitor<void> {
+  YamlMap parsedPubspec;
+
+  final LintRule rule;
+  final LinterContext context;
   bool _shouldValidateUri;
 
-  _Visitor(this.rule);
+  _Visitor(this.rule, this.context);
 
   bool get shouldValidateUri => _shouldValidateUri ??= checkForValidation();
 
   bool checkForValidation() {
-    if (pubspecFile == null) {
-      return false;
-    }
-
-    var parsedPubspec;
-    try {
-      final content = pubspecFile.readAsStringSync();
-      parsedPubspec = _parseYaml(content);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (_) {
+    if (parsedPubspec == null) {
       return false;
     }
 
@@ -102,7 +139,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    pubspecFile = locatePubspecFile(node);
+    parsedPubspec = Pubspec.forUnit(node, context);
   }
 
   @override
