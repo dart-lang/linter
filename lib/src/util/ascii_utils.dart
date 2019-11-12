@@ -22,33 +22,38 @@ bool isNumber(int character) => character >= 48 && character <= 57;
 /// Return `true` if the given [character] is the ASCII '_' character.
 bool isUnderScore(int character) => character == $_;
 
-/// Check if the given [name] is a valid filename.
-/// Valid file names are
-/// * `lower_snake_case`
-/// * limited to valid Dart identifiers, and
-/// * may contain `.`s (e.g., to delimit extensions like `foo.dart` or `foo.g.dart`)
-bool isValidFileName(String name) {
-  var dot = false;
-  final length = name.length;
+/// Check if the given [name] is a valid Dart filename.
+///
+/// Files with a strict `.dart` extension are required to use:
+/// * `lower_snake_case` and are
+/// * limited to valid Dart identifiers
+///
+/// (Files without a strict `.dart` extension are considered valid.)
+bool isValidDartFileName(String name) {
+  if (name.length < 6 || !name.endsWith('.dart')) {
+    return true;
+  }
+
+  final length = name.length - 5;
+  for (int i = 1; i < length - 1; ++i) {
+    final character = name.codeUnitAt(i);
+    // Indicates a prefixed suffix (like `.g.dart`) which is considered a
+    // non-strict Dart filename.
+    if (isDot(character)) {
+      return true;
+    }
+  }
+
   for (int i = 0; i < length; ++i) {
     final character = name.codeUnitAt(i);
-    if (isLowerCase(character) || isUnderScore(character)) {
-      dot = false;
-    } else {
+    if (!isLowerCase(character) && !isUnderScore(character)) {
       if (isNumber(character)) {
         if (i == 0) {
           return false;
         }
         continue;
       }
-      if (!dot) {
-        dot = isDot(character);
-        if (!dot || i == length - 1) {
-          return false;
-        }
-      } else {
-        return false;
-      }
+      return false;
     }
   }
   return true;

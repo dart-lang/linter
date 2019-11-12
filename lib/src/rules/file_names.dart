@@ -7,7 +7,6 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 import '../util/ascii_utils.dart';
-import '../utils.dart';
 
 const _desc = r'Name source files using `lowercase_with_underscores`.';
 
@@ -68,7 +67,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitCompilationUnit(CompilationUnit node) {
     final fileName = node.declaredElement.source.shortName;
-    if (isStrictDartFileName(fileName) && !isValidFileName(fileName)) {
+    if (!isValidDartFileName(fileName)) {
       rule.reportLint(node);
     }
   }

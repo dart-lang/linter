@@ -5,26 +5,68 @@
 import 'package:linter/src/util/ascii_utils.dart';
 import 'package:test/test.dart';
 
-import '../test/utils_test.dart' as utils_test;
-
-final badFileNames = utils_test.badFileNames;
-final goodFileNames = utils_test.goodFileNames;
-
 main() {
   group('fileNames', () {
     group('good', () {
       for (var name in goodFileNames) {
         test(name, () {
-          expect(isValidFileName(name), isTrue);
+          expect(isValidDartFileName(name), isTrue);
         });
       }
     });
+
     group('bad', () {
       for (var name in badFileNames) {
         test(name, () {
-          expect(isValidFileName(name), isFalse);
+          expect(isValidDartFileName(name), isFalse);
         });
       }
     });
   });
 }
+
+final badFileNames = [
+  'Foo.dart',
+  'fooBar.dart',
+  '.foo_Bar.dart',
+  'F_B.dart',
+  'JS.dart',
+  'JSON.dart',
+];
+
+final goodFileNames = [
+  'bwu_server.shared.datastore.some_file',
+  'foo_bar.baz',
+  'foo_bar.dart',
+  'foo_bar.g.dart',
+  'foo_bar',
+  'foo.bar',
+  'foo_bar_baz',
+  'foo',
+  'foo_',
+  'foo.bar_baz.bang',
+  //See: https://github.com/flutter/flutter/pull/1996
+  'pointycastle.impl.ec_domain_parameters.gostr3410_2001_cryptopro_a',
+  'a.b',
+  'a.b.c',
+  'p2.src.acme',
+  //See: https://github.com/dart-lang/linter/issues/1803
+  '_',
+  '_f',
+  '__f',
+  '___f',
+  '_file.dart',
+  '_file.g.dart',
+  // Generated files.
+  'file-system.g.dart',
+  'SliderMenu.css.dart',
+  // Non-strict Dart.
+  'Foo',
+  'fooBar.',
+  '.foo_Bar',
+  '_.',
+  '.',
+  'F_B',
+  'JS',
+  'JSON',
+];

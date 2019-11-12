@@ -6,7 +6,7 @@ import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:linter/src/util/ascii_utils.dart';
 import 'package:linter/src/utils.dart';
 
-import '../test/utils_test.dart' as utils_test;
+import '../test/ascii_utils_test.dart' as utils_test;
 
 main() {
   FileNameRegexpTestBenchmarkGood().report();
@@ -73,7 +73,7 @@ class FileNameCharLoopTestBenchmarkBad extends BenchmarkBase {
 
   @override
   void run() {
-    badFileNames.forEach(isValidFileName);
+    badFileNames.forEach(isValidDartFileName);
   }
 }
 
@@ -82,7 +82,7 @@ class FileNameCharLoopTestBenchmarkGood extends BenchmarkBase {
 
   @override
   void run() {
-    goodFileNames.forEach(isValidFileName);
+    goodFileNames.forEach(isValidDartFileName);
   }
 }
 
