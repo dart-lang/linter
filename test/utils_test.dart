@@ -126,26 +126,9 @@ main() {
     testEach(bad, isLowerCaseUnderScore, isFalse);
   });
 
-  group('qualified lower_case_underscores', () {
-    var good = [
-      'bwu_server.shared.datastore.some_file',
-      'foo_bar.baz',
-      'foo_bar',
-      'foo.bar',
-      'foo_bar_baz',
-      'foo',
-      'foo_',
-      'foo.bar_baz.bang',
-      //See: https://github.com/flutter/flutter/pull/1996
-      'pointycastle.impl.ec_domain_parameters.gostr3410_2001_cryptopro_a',
-      'a.b',
-      'a.b.c',
-      'p2.src.acme'
-    ];
-    testEach(good, isLowerCaseUnderScoreWithDots, isTrue);
-
-    var bad = ['Foo', 'fooBar.', '.foo_Bar', '_f', 'F_B', 'JS', 'JSON'];
-    testEach(bad, isLowerCaseUnderScoreWithDots, isFalse);
+  group('isLowerCaseUnderScoreWithDots', () {
+    testEach(goodFileNames, isLowerCaseUnderScoreWithDots, isTrue);
+    testEach(badFileNames, isLowerCaseUnderScoreWithDots, isFalse);
   });
 
   group('lowerCamelCase', () {
@@ -179,3 +162,39 @@ main() {
     testEach(bad, isUpperCase, isFalse);
   });
 }
+
+final badFileNames = [
+  'Foo',
+  'fooBar.',
+  '.foo_Bar',
+  '_.',
+  '.',
+  'F_B',
+  'JS',
+  'JSON',
+];
+
+final goodFileNames = [
+  'bwu_server.shared.datastore.some_file',
+  'foo_bar.baz',
+  'foo_bar.dart',
+  'foo_bar.g.dart',
+  'foo_bar',
+  'foo.bar',
+  'foo_bar_baz',
+  'foo',
+  'foo_',
+  'foo.bar_baz.bang',
+  //See: https://github.com/flutter/flutter/pull/1996
+  'pointycastle.impl.ec_domain_parameters.gostr3410_2001_cryptopro_a',
+  'a.b',
+  'a.b.c',
+  'p2.src.acme',
+  //See: https://github.com/dart-lang/linter/issues/1803
+  '_',
+  '_f',
+  '__f',
+  '___f',
+  '_file.dart',
+  '_file.g.dart',
+];
