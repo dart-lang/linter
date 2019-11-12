@@ -35,6 +35,12 @@ final badFileNames = [
 ];
 
 final goodFileNames = [
+  // Generated files.
+  'file-system.g.dart',
+  'SliderMenu.css.dart',
+  '_file.dart',
+  '_file.g.dart',
+  // Non-strict Dart.
   'bwu_server.shared.datastore.some_file',
   'foo_bar.baz',
   'foo_bar.dart',
@@ -55,12 +61,6 @@ final goodFileNames = [
   '_f',
   '__f',
   '___f',
-  '_file.dart',
-  '_file.g.dart',
-  // Generated files.
-  'file-system.g.dart',
-  'SliderMenu.css.dart',
-  // Non-strict Dart.
   'Foo',
   'fooBar.',
   '.foo_Bar',
