@@ -7,6 +7,9 @@
 # Fast fail the script on failures.
 set -e
 
+echo "running on..."
+echo "$TRAVIS_OS_NAME"
+
 
 if [ ["$LINTER_BOT" = "release"] && ["$TRAVIS_OS_NAME" = "osx"] ]; then
   echo "Validating release..."
