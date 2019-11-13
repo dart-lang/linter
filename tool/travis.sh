@@ -11,7 +11,7 @@ echo "running on..."
 echo "$TRAVIS_OS_NAME"
 
 
-if [ ["$LINTER_BOT" = "release"] && ["$TRAVIS_OS_NAME" = "osx"] ]; then
+if [[ ["$LINTER_BOT" = "release"] && ["$TRAVIS_OS_NAME" = "osx"] ]]; then
   echo "Validating release..."
   dart tool/bot/version_check.dart
 
@@ -31,7 +31,7 @@ elif [ "$LINTER_BOT" = "benchmark" ]; then
     exit 1
   fi
 
-elif [ ["$LINTER_BOT" = "pana_baseline"] && ["$TRAVIS_OS_NAME" = "osx"] ]; then
+elif [[ ["$LINTER_BOT" = "pana_baseline"] && ["$TRAVIS_OS_NAME" = "osx"] ]]; then
   echo "Checking the linter pana baseline..."
 
   dart tool/pana_baseline.dart
