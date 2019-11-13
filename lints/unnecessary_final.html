@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>prefer_is_not_operator</title>
+      <title>unnecessary_final</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_is_not_operator</h1>
+            <h1>unnecessary_final</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.7.0-dev.0.0 • <small>(Linter v0.1.102)</small></p>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.104)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,15 +28,22 @@
          </header>
          <section>
 
-            <p>When checking if an object is not of a specified type, it is preferable to use the 'is!' operator.</p>
+            <p><strong>DON'T</strong> use <code>final</code> for local variables.</p>
+<p><code>var</code> is shorter, and <code>final</code> does not change the meaning of the code.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>if (!(foo is Foo)) {
-  ...
+<pre><code>void badMethod() {
+  final label = 'Final or var?';
+  for (final char in ['v', 'a', 'r']) {
+    print(char);
+  }
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>if (foo is! Foo) {
-  ...
+<pre><code>void goodMethod() {
+  var label = 'Final or var?';
+  for (var char in ['v', 'a', 'r']) {
+    print(char);
+  }
 }
 </code></pre>
 
