@@ -43,7 +43,7 @@ It's valid to override a member in the following cases:
 super method,
 * if the `covariant` keyword is added to one of the parameters,
 * if documentation comments are present on the member,
-* if annotations are added to the member (e.g., `@nonVirtual`).
+* if the member has annotations other than `@override`.
 
 `noSuchMethod` is a special method and is not checked by this rule.
 
