@@ -41,7 +41,7 @@ It's valid to override a member in the following cases:
 
 * if a type (return type or a parameter type) is not the exactly the same as the
 super method,
-* if `covariant` keyword is added to one of the parameters,
+* if the `covariant` keyword is added to one of the parameters,
 * if documentation comments are present on the member,
 * if annotations are added to the member (e.g., `@nonVirtual`).
 
