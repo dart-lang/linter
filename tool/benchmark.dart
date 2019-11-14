@@ -2,6 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// Micro-benchmarks.
+///
+/// More comprehensive benchmarks are run like so:
+///
+///     dart bin/linter.dart --benchmark -q -c example/all.yaml .
+library micro_benchmarks;
+
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:linter/src/util/ascii_utils.dart';
 import 'package:linter/src/utils.dart';
