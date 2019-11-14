@@ -151,7 +151,8 @@ Future<List<String>> _fetchEffectiveDartRules() async {
   var req = await client.get(_effectiveDartOptionsUrl);
   var includedOptions =
       req.body.split('include: package:effective_dart/')[1].trim();
-  return score_utils.fetchRules('$_effectiveDartOptionsRootUrl/$includedOptions');
+  return score_utils
+      .fetchRules('$_effectiveDartOptionsRootUrl/$includedOptions');
 }
 
 Future<String> _fetchLinterForVersion(String version) async {
