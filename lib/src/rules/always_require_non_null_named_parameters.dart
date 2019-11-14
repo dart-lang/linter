@@ -95,37 +95,31 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  void _checkAsserts(
-      List<Expression> asserts, List<DefaultFormalParameter> params) {
-    for (final expression in asserts) {
-      for (final param in params) {
-        if (_hasAssertNotNull(expression, param.identifier.name)) {
-          rule.reportLintForToken(param.identifier.beginToken);
-        }
+  void _checkAssert(
+      Expression assertExpression, List<DefaultFormalParameter> params) {
+    for (final param in params) {
+      if (_hasAssertNotNull(assertExpression, param.identifier.name)) {
+        rule.reportLintForToken(param.identifier.beginToken);
       }
     }
   }
 
   void _checkInitializerList(List<DefaultFormalParameter> params,
       NodeList<ConstructorInitializer> initializers) {
-    final asserts = <Expression>[];
     for (final initializer in initializers) {
       if (initializer is AssertInitializer) {
-        asserts.add(initializer.condition);
+        _checkAssert(initializer.condition, params);
       }
     }
-    _checkAsserts(asserts, params);
   }
 
   void _checkParams(List<DefaultFormalParameter> params, FunctionBody body) {
     if (body is BlockFunctionBody) {
-      final asserts = <Expression>[];
       for (final statement in body.block.statements) {
         if (statement is AssertStatement) {
-          asserts.add(statement.condition);
+          _checkAssert(statement.condition, params);
         }
       }
-      _checkAsserts(asserts, params);
     }
   }
 
