@@ -100,6 +100,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     for (final param in params) {
       if (_hasAssertNotNull(assertExpression, param.identifier.name)) {
         rule.reportLintForToken(param.identifier.beginToken);
+        params.remove(param);
+        return;
       }
     }
   }
