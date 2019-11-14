@@ -6,7 +6,7 @@ import 'dart:io';
 
 import 'package:analyzer/src/lint/config.dart';
 import 'package:analyzer/src/lint/registry.dart';
-import 'package:github/server.dart';
+import 'package:github/github.dart';
 import 'package:http/http.dart' as http;
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';
@@ -82,7 +82,7 @@ Future<List<String>> get sdkTags async => _sdkTags ??= await _fetchSdkTags();
 final Version bottomDartSdk = Version(2, 0, 0);
 
 Future<List<String>> _fetchSdkTags() {
-  var github = createGitHubClient();
+  var github = GitHub();
   var slug = RepositorySlug('dart-lang', 'sdk');
 
   return github.repositories.listTags(slug).map((t) => t.name).where((t) {
