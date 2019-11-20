@@ -28,7 +28,8 @@ export 'package:analyzer/src/dart/error/lint_codes.dart';
 export 'package:analyzer/src/generated/engine.dart'
     show AnalysisContext, AnalysisErrorInfo;
 export 'package:analyzer/src/generated/resolver.dart'
-    show ExitDetector, TypeProvider, TypeSystem;
+    show ExitDetector, TypeProvider;
+export 'package:analyzer/dart/element/type_system.dart' show TypeSystem;
 export 'package:analyzer/src/generated/source.dart' show LineInfo, Source;
 export 'package:analyzer/src/lint/linter.dart'
     show
