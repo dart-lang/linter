@@ -59,7 +59,7 @@ class MyStatefulState extends State<MyStateful> {
 ''';
 
 class NoStateConstructor extends LintRule implements NodeLintRule {
-  NoStateConstructor() 
+  NoStateConstructor()
       : super(
             name: 'no_state_constructor',
             description: _desc,
@@ -67,7 +67,8 @@ class NoStateConstructor extends LintRule implements NodeLintRule {
             group: Group.errors);
 
   @override
-  void registerNodeProcessors(NodeLintRegistry registry, [LinterContext context]) {
+  void registerNodeProcessors(NodeLintRegistry registry,
+      [LinterContext context]) {
     final visitor = _Visitor(this);
     registry.addConstructorDeclaration(this, visitor);
   }
