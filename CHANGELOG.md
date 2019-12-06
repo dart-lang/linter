@@ -1,3 +1,14 @@
+# 0.1.105+1
+
+* fixed regressions in `always_require_non_null_named_parameters`
+* (internal) pedantic lint clean-up
+
+# 0.1.105
+
+* hardened check for lib dir location (fixing crashes in `avoid_renaming_method_parameters`,
+  `prefer_relative_imports` and `public_member_api_docs`)
+* improved performance for `always_require_non_null_named_parameters`
+
 # 0.1.104
 
 * updated `unnecessary_overrides` to allow overrides when annotations (besides `@override` are specified)
