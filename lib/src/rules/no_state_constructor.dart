@@ -80,12 +80,11 @@ class _Visitor extends SimpleAstVisitor {
   _Visitor(this.rule);
 
   @override
-  visitConstructorDeclaration(ConstructorDeclaration node) {
+  void visitConstructorDeclaration(ConstructorDeclaration node) {
     final parent = node.parent;
     if (parent is ClassDeclaration) {
-      // ignore: deprecated_member_use
-      final type = parent.declaredElement.type;
-      if (isStateType(type)) {
+      final classElement = parent.declaredElement;
+      if (isState(classElement)) {
         rule.reportLint(node);
       }
     }

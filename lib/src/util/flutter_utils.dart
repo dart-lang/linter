@@ -22,7 +22,7 @@ _Flutter get _flutter => _flutterInstance;
 bool isExactWidgetTypeContainer(DartType type) =>
     _flutter.isExactWidgetTypeContainer(type);
 
-bool isStateType(DartType type) => _flutter.isStateType(type);
+bool isState(ClassElement element) => _flutter.isState(element);
 
 bool isWidgetProperty(DartType type) {
   if (isWidgetType(type)) {
@@ -66,16 +66,13 @@ class _Flutter {
     if (_isExactWidget(element, _nameState, _uriFramework)) {
       return true;
     }
-    for (InterfaceType type in element.allSupertypes) {
+    for (var type in element.allSupertypes) {
       if (_isExactWidget(type.element, _nameState, _uriFramework)) {
         return true;
       }
     }
     return false;
   }
-
-  bool isStateType(DartType type) =>
-      type is InterfaceType && isState(type.element);
 
   bool isWidget(ClassElement element) {
     if (element == null) {
