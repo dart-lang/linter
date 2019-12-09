@@ -6,7 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/listener.dart';
-import 'package:analyzer/src/generated/resolver.dart'; // ignore: implementation_imports
+import 'package:analyzer/src/generated/resolver.dart';
 
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
@@ -68,13 +68,18 @@ class UnnecessaryThis extends LintRule implements NodeLintRule {
   }
 }
 
+// todo (pq): refactor to not use scoped visitor
 class _UnnecessaryThisVisitor extends ScopedVisitor {
   final LintRule rule;
 
   _UnnecessaryThisVisitor(
       this.rule, LinterContext context, CompilationUnit node)
-      : super(node.declaredElement.library, rule.reporter.source,
-            context.typeProvider, AnalysisErrorListener.NULL_LISTENER);
+      : super(
+          node.declaredElement.library,
+          rule.reporter.source,
+          context.typeProvider as TypeProviderImpl,
+          AnalysisErrorListener.NULL_LISTENER,
+        );
 
   @override
   void visitConstructorFieldInitializer(ConstructorFieldInitializer node) {
