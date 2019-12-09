@@ -4,9 +4,9 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:linter/src/util/flutter_utils.dart';
 
 import '../analyzer.dart';
+import '../util/flutter_utils.dart';
 
 const _desc = r"Don't put any logic in createState.";
 
