@@ -40,7 +40,8 @@ int max_int(int a, int b) { ... }
 </code></pre>
 <p>On the other hand, assuming <code>outOfScopeId</code> is out of scope:</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void f(int outOfScopeId) { ... }
+<pre><code>/// Return true if [value] is larger than [outOfScopeId].
+bool isOutOfRange(int value) { ... }
 </code></pre>
 <p>Note that the square bracket comment format is designed to allow 
 comments to refer to declarations using a fairly natural format 

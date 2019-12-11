@@ -19,7 +19,7 @@
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <p style="padding-bottom: 10px;">Dart SDK: >= 2.0.0 • <small>(Linter v0.1.31)</small></p>
-            
+            <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a>
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
                <li><a href="https://dart.dev/guides/language/effective-dart/style/">See the <strong>Style Guide</strong></a></li>
@@ -28,8 +28,8 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> specify <code>@required</code> on named parameter without default value on which an
-assert(param != null) is done.</p>
+            <p><strong>DO</strong> specify <code>@required</code> on named parameters without a default value on which 
+an <code>assert(param != null)</code> is done.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>m1({@required a}) {
   assert(a != null);
