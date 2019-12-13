@@ -55,13 +55,13 @@ else
     git clone https://github.com/pq/dart-coveralls.git --branch updates
     cd dart-coveralls
     pub get
-    dart bin/dart_coveralls.dart report \
+    cd ..
+    dart dart-coveralls/bin/dart_coveralls.dart report \
       --token $COVERALLS_TOKEN \
       --retry 10 \
       --debug \
       --exclude-test-files \
-      ../test/all.dart
-      # test/all.dart
+      test/all.dart
   fi
 fi
 
