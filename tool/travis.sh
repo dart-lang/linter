@@ -53,7 +53,7 @@ else
     # pub global activate dart_coveralls
     # pub global run dart_coveralls report \
     git clone https://github.com/pq/dart-coveralls.git --branch updates
-    dart dart-coveralls/bin/dart_coveralls report \
+    dart dart-coveralls/bin/dart_coveralls.dart report \
       --token $COVERALLS_TOKEN \
       --retry 10 \
       --debug \
