@@ -52,7 +52,8 @@ else
     # run our local copy of coveralls until 0.6.0+5 lands
     # pub global activate dart_coveralls
     # pub global run dart_coveralls report \
-    pub run dart_coveralls report \
+    git clone https://github.com/pq/dart-coveralls.git --branch updates
+    dart dart-coveralls/bin/dart_coveralls report \
       --token $COVERALLS_TOKEN \
       --retry 10 \
       --debug \
