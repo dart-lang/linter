@@ -26,11 +26,6 @@ dev_dependencies:
   async: any # referenced in tests
   benchmark_harness: ^1.0.0
   cli_util: ^0.1.2
-  dart_coveralls:
-    git:
-      # TODO(pq): remove once 0.6.0+5 lands.
-      url: https://github.com/block-forest/dart-coveralls.git
-      ref: 16fd0e827bb672ba6c194d66035554f366191907
   dart_style: ^1.3.3
   fixnum:
     path: test/mock_packages/fixnum
