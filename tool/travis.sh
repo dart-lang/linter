@@ -60,7 +60,8 @@ else
       --retry 10 \
       --debug \
       --exclude-test-files \
-      test/all.dart
+      ../test/all.dart
+      # test/all.dart
   fi
 fi
 
