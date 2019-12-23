@@ -27,6 +27,7 @@ linter:
     - avoid_print
     - avoid_private_typedef_functions
     - avoid_relative_lib_imports
+    - avoid_redundant_parameter_values
     - avoid_renaming_method_parameters
     - avoid_return_types_on_setters
     - avoid_returning_null
