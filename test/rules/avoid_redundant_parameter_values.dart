@@ -6,6 +6,8 @@
 
 class A {
   void f({bool valWithDefault = true, bool val}) {}
+  void g({int valWithDefault = 1, bool val}) {}
+  void h({String valWithDefault = 'default', bool val}) {}
 }
 
 bool q() => true;
@@ -14,6 +16,9 @@ void ff({bool valWithDefault = true, bool val}) {}
 
 void main() {
   A().f(valWithDefault: true); //LINT
+  A().g(valWithDefault: 1); //LINT
+  A().h(valWithDefault: 'default'); //LINT
+
   A().f(val: false); //OK
   A().f(val: false, valWithDefault: false); //OK
 

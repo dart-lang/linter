@@ -75,19 +75,20 @@ class _Visitor extends SimpleAstVisitor {
     if (element is FunctionElement) {
       parameters = element.parameters;
     }
+    if (parameters == null) {
+      return;
+    }
 
-    if (parameters != null) {
-      for (var arg in node.argumentList.arguments) {
-        if (arg is NamedExpression) {
-          for (var param in parameters) {
-            if (param.name == arg.name.label.name) {
-              final expression = arg.expression;
-              final value = param.constantValue;
-              if (value != null) {
-                final expressionValue = context.evaluateConstant(expression);
-                if (expressionValue.value == value) {
-                  rule.reportLint(arg);
-                }
+    for (var arg in node.argumentList.arguments) {
+      if (arg is NamedExpression) {
+        for (var param in parameters) {
+          if (param.name == arg.name.label.name) {
+            final expression = arg.expression;
+            final value = param.constantValue;
+            if (value != null) {
+              final expressionValue = context.evaluateConstant(expression);
+              if (expressionValue.value == value) {
+                rule.reportLint(arg);
               }
             }
           }
