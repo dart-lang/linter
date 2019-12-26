@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// test w/ `pub run test -N avoid_redundant_parameter_values`
+// test w/ `pub run test -N avoid_redundant_argument_values`
 
 class A {
   void f({bool valWithDefault = true, bool val}) {}

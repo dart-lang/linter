@@ -8,11 +8,11 @@ import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Avoid redundant parameter values.';
+const _desc = r'Avoid redundant argument values.';
 
-const _details = r'''Avoid redundant parameter values.
+const _details = r'''Avoid redundant argument values.
 
-**DON'T** declare parameters with values that match their defaults.
+**DON'T** declare argument with values that match their defaults.
 
 **BAD:**
 ```
@@ -38,10 +38,10 @@ void main() {
 ```
 ''';
 
-class AvoidRedundantParameterValues extends LintRule implements NodeLintRule {
-  AvoidRedundantParameterValues()
+class AvoidRedundantArgumentValues extends LintRule implements NodeLintRule {
+  AvoidRedundantArgumentValues()
       : super(
-            name: 'avoid_redundant_parameter_values',
+            name: 'avoid_redundant_argument_values',
             description: _desc,
             details: _details,
             group: Group.style);
