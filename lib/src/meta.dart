@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Linter metadata annotations.
+library linter_meta;
 
 /// Used to annotate a lint rule `r` whose semantics are incompatible with
 /// a given list of rules `r1`...`rn`.
@@ -27,7 +28,7 @@
 ///     }
 ///
 class IncompatibleWith {
-  /// A list of incompatible rules.
+  /// A list of the ids of incompatible rules.
   final List<String> rules;
 
   /// Initialize a newly created instance to have the given [rules].
