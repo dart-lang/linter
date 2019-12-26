@@ -21,7 +21,7 @@ void f({bool valWithDefault = true, bool val}) {
 }
 
 void main() {
-  f(valWithDefault = true);
+  f(valWithDefault: true);
 }
 ```
 
@@ -32,7 +32,7 @@ void f({bool valWithDefault = true, bool val}) {
 }
 
 void main() {
-  f(valWithDefault = false);
+  f(valWithDefault: false);
   f();
 }
 ```
