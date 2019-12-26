@@ -4,7 +4,10 @@
 
 // test w/ `pub run test -N avoid_redundant_argument_values`
 
+import 'package:meta/meta.dart';
+
 class A {
+  A({bool valWithDefault = true, bool val});
   void f({bool valWithDefault = true, bool val}) {}
   void g({int valWithDefault = 1, bool val}) {}
   void h({String valWithDefault = 'default', bool val}) {}
@@ -13,8 +16,12 @@ class A {
 bool q() => true;
 
 void ff({bool valWithDefault = true, bool val}) {}
+void g({@required bool valWithDefault = true, bool val}) {}
+
+void gg(int x, [int y = 0]) {}
 
 void main() {
+  A(valWithDefault: true); //LINT
   A().f(valWithDefault: true); //LINT
   A().g(valWithDefault: 1); //LINT
   A().h(valWithDefault: 'default'); //LINT
@@ -32,4 +39,21 @@ void main() {
 
   ff(val: false, valWithDefault: v); //OK
   ff(val: false, valWithDefault: q()); //OK
+
+  void fff({bool valWithDefault = true, bool val}) {}
+
+  fff(valWithDefault: true); //LINT
+  fff(val: false); //OK
+  fff(val: false, valWithDefault: false); //OK
+
+  fff(val: false, valWithDefault: v); //OK
+  fff(val: false, valWithDefault: q()); //OK
+
+  // Required.
+  g(valWithDefault: true); //OK
+
+  // Optional positional.
+  gg(1, 0); //LINT
+  gg(1, 1); //OK
+  gg(1); //OK
 }

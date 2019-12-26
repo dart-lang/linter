@@ -12,7 +12,7 @@ const _desc = r'Avoid redundant argument values.';
 
 const _details = r'''Avoid redundant argument values.
 
-**DON'T** declare argument with values that match their defaults.
+**DON'T** declare arguments with values that match their defaults.
 
 **BAD:**
 ```
@@ -50,6 +50,7 @@ class AvoidRedundantArgumentValues extends LintRule implements NodeLintRule {
   void registerNodeProcessors(NodeLintRegistry registry,
       [LinterContext context]) {
     final visitor = _Visitor(this, context);
+    registry.addInstanceCreationExpression(this, visitor);
     registry.addMethodInvocation(this, visitor);
   }
 }
@@ -60,40 +61,45 @@ class _Visitor extends SimpleAstVisitor {
 
   _Visitor(this.rule, this.context);
 
-  @override
-  void visitMethodInvocation(MethodInvocation node) {
-    if (node.argumentList.arguments.isEmpty) {
+  void check(ArgumentList argumentList, List<ParameterElement> parameters) {
+    if (argumentList.arguments.isEmpty || parameters == null) {
       return;
     }
 
-    final type = node.staticInvokeType;
-    final element = type.element;
-    var parameters;
+    for (var arg in argumentList.arguments) {
+      final param = arg.staticParameterElement;
+      if (param.hasRequired) {
+        continue;
+      }
+      final value = param.constantValue;
+      if (value != null) {
+        if (arg is NamedExpression) {
+          arg = (arg as NamedExpression).expression;
+        }
+        final expressionValue = context.evaluateConstant(arg);
+        if (expressionValue.value == value) {
+          rule.reportLint(arg);
+        }
+      }
+    }
+  }
+
+  @override
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    check(node.argumentList, node.staticElement?.parameters);
+  }
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    final element = node.staticInvokeType.element;
+    List<ParameterElement> parameters;
     if (element is MethodElement) {
       parameters = element.parameters;
     }
     if (element is FunctionElement) {
       parameters = element.parameters;
     }
-    if (parameters == null) {
-      return;
-    }
 
-    for (var arg in node.argumentList.arguments) {
-      if (arg is NamedExpression) {
-        for (var param in parameters) {
-          if (param.name == arg.name.label.name) {
-            final expression = arg.expression;
-            final value = param.constantValue;
-            if (value != null) {
-              final expressionValue = context.evaluateConstant(expression);
-              if (expressionValue.value == value) {
-                rule.reportLint(arg);
-              }
-            }
-          }
-        }
-      }
-    }
+    check(node.argumentList, parameters);
   }
 }
