@@ -25,6 +25,8 @@ bool isExactWidgetTypeContainer(DartType type) =>
 bool isStatefulWidget(ClassElement element) =>
     _flutter.isStatefulWidget(element);
 
+bool isWidget(ClassElement element) => _flutter.isWidget(element);
+
 bool isWidgetProperty(DartType type) {
   if (isWidgetType(type)) {
     return true;

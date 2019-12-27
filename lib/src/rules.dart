@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+
 import 'analyzer.dart';
 import 'rules/always_declare_return_types.dart';
 import 'rules/always_put_control_body_on_new_line.dart';
@@ -154,6 +155,7 @@ import 'rules/unrelated_type_equality_checks.dart';
 import 'rules/unsafe_html.dart';
 import 'rules/use_full_hex_values_for_flutter_colors.dart';
 import 'rules/use_function_type_syntax_for_parameters.dart';
+import 'rules/use_key_in_widget_constructors.dart';
 import 'rules/use_rethrow_when_possible.dart';
 import 'rules/use_setters_to_change_properties.dart';
 import 'rules/use_string_buffers.dart';
@@ -317,6 +319,7 @@ void registerLintRules() {
     ..register(UnsafeHtml())
     ..register(UseFullHexValuesForFlutterColors())
     ..register(UseFunctionTypeSyntaxForParameters())
+    ..register(UseKeyInWidgetConstructors())
     ..register(UseRethrowWhenPossible())
     ..register(UseSettersToChangeAProperty())
     ..register(UseStringBuffers())
