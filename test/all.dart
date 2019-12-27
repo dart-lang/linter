@@ -16,7 +16,7 @@ import 'validate_headers_test.dart' as validate_headers;
 import 'validate_metadata.dart' as validate_metadata;
 import 'version_test.dart' as version_test;
 
-void main() async {
+void main() {
   // Redirect output.
   outSink = MockIOSink();
 
@@ -28,6 +28,6 @@ void main() async {
   utils_test.main();
   validate_format.main();
   validate_headers.main();
-  await validate_metadata.main();
+  validate_metadata.main();
   version_test.main();
 }

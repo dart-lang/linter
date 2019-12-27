@@ -26,6 +26,8 @@ bool _isIncompatibleWithAnnotation(Element element) =>
 class LintCache {
   List<LintRuleDetails> details = <LintRuleDetails>[];
 
+  bool _initialized = false;
+
   LintRuleDetails findDetailsByClassName(String className) {
     for (var detail in details) {
       if (detail.className == className) {
@@ -45,6 +47,9 @@ class LintCache {
   }
 
   Future<void> init() async {
+    if (_initialized) {
+      return;
+    }
     registerLintRules();
 
     // Setup details.
@@ -85,6 +90,7 @@ class LintCache {
         }
       }
     }
+    _initialized = true;
   }
 }
 
@@ -111,6 +117,7 @@ class _LintVisitor extends RecursiveAstVisitor {
     for (var superType in classElement.allSupertypes) {
       if (superType.name == _LINT_RULE_CLASS_NAME) {
         classElements.add(classElement);
+        return;
       }
     }
   }
