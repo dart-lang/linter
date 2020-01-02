@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>prefer_generic_function_type_aliases</title>
+      <title>avoid_redundant_argument_values</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,11 +15,11 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_generic_function_type_aliases</h1>
+            <h1>avoid_redundant_argument_values</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.0.0 • <small>(Linter v0.1.47)</small></p>
-            <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.107)</small></p>
+            
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
                <li><a href="https://dart.dev/guides/language/effective-dart/style/">See the <strong>Style Guide</strong></a></li>
@@ -28,18 +28,27 @@
          </header>
          <section>
 
-            <p><strong>PREFER</strong> generic function type aliases.</p>
-<p>With the introduction of generic functions, function type aliases
-(<code>typedef void F()</code>) couldn't express all of the possible kinds of
-parameterization that users might want to express. Generic function type aliases
-(<code>typedef F = void Function()</code>) fixed that issue.</p>
-<p>For consistency and readability reasons, it's better to only use one syntax and
-thus prefer generic function type aliases.</p>
+            <p>Avoid redundant argument values.</p>
+<p><strong>DON'T</strong> declare arguments with values that match the defaults for the
+corresponding parameter.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>typedef void F();
+<pre><code>void f({bool valWithDefault = true, bool val}) {
+  ...
+}
+
+void main() {
+  f(valWithDefault: true);
+}
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>typedef F = void Function();
+<pre><code>void f({bool valWithDefault = true, bool val}) {
+  ...
+}
+
+void main() {
+  f(valWithDefault: false);
+  f();
+}
 </code></pre>
 
 
