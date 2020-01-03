@@ -20,6 +20,8 @@ void g({@required bool valWithDefault = true, bool val}) {}
 
 void gg(int x, [int y = 0]) {}
 
+void ggg([int a = 1, int b = 2]) {}
+
 void main() {
   A(valWithDefault: true); //LINT
   A().f(valWithDefault: true); //LINT
@@ -56,4 +58,9 @@ void main() {
   gg(1, 0); //LINT
   gg(1, 1); //OK
   gg(1); //OK
+
+  ggg(
+      1, // OK the  - first argument is required so that we can provide the second argument.
+      3);
+  ggg(1, 2); // LINT
 }
