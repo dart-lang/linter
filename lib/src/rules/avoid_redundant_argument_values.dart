@@ -63,11 +63,13 @@ class _Visitor extends SimpleAstVisitor {
   _Visitor(this.rule, this.context);
 
   void check(ArgumentList argumentList, List<ParameterElement> parameters) {
-    if (argumentList.arguments.isEmpty || parameters == null) {
+    final arguments = argumentList.arguments;
+    if (arguments.isEmpty || parameters == null) {
       return;
     }
 
-    for (var arg in argumentList.arguments) {
+    for (var i = 0; i < arguments.length; ++i) {
+      var arg = arguments[i];
       final param = arg.staticParameterElement;
       if (param == null || param.hasRequired) {
         continue;
@@ -79,7 +81,17 @@ class _Visitor extends SimpleAstVisitor {
         }
         final expressionValue = context.evaluateConstant(arg);
         if (expressionValue.value == value) {
-          rule.reportLint(arg);
+          var okToRemove = true;
+          for (var j = i + 1; j < arguments.length && okToRemove; ++j) {
+            final param = arg.staticParameterElement;
+            // todo (pq): consider instead starting from the end and reporting if the last optional positional is removable
+            if (param.isOptionalPositional) {
+              okToRemove = false;
+            }
+          }
+          if (okToRemove) {
+            rule.reportLint(arg);
+          }
         }
       }
     }
