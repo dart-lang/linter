@@ -85,7 +85,7 @@ class _Visitor extends SimpleAstVisitor {
           for (var j = i + 1; j < arguments.length && okToRemove; ++j) {
             final param = arg.staticParameterElement;
             // todo (pq): consider instead starting from the end and reporting if the last optional positional is removable
-            if (param.isOptionalPositional) {
+            if (param != null && param.isOptionalPositional) {
               okToRemove = false;
             }
           }
