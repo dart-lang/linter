@@ -25,7 +25,7 @@ bool isExactWidgetTypeContainer(DartType type) =>
 bool isStatefulWidget(ClassElement element) =>
     _flutter.isStatefulWidget(element);
 
-bool isWidget(ClassElement element) => _flutter.isWidget(element);
+bool hasWidgetAsAscendant(ClassElement element) => _flutter.hasWidgetAsAscendant(element);
 
 bool isWidgetProperty(DartType type) {
   if (isWidgetType(type)) {
@@ -90,6 +90,16 @@ class _Flutter {
       }
     }
     return false;
+  }
+
+  bool hasWidgetAsAscendant(ClassElement element) {
+    if (element == null) {
+      return false;
+    }
+    if (_isExactWidget(element, _nameWidget, _uriFramework)) {
+      return true;
+    }
+    return hasWidgetAsAscendant(element.supertype?.element);
   }
 
   bool isWidgetType(DartType type) =>

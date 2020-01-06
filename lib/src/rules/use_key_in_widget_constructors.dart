@@ -15,7 +15,7 @@ const _desc = r'Use key in widget constructors.';
 const _details = r'''
 **DO** use key in widget constructors.
 
-It's a good pratice to expose the ability to provide a key when creating public
+It's a good practice to expose the ability to provide a key when creating public
 widgets.
 
 **BAD:**
@@ -58,8 +58,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitClassDeclaration(ClassDeclaration node) {
     var classElement = node.declaredElement;
     if (classElement.isPublic &&
-        !classElement.isAbstract &&
-        isWidget(classElement) &&
+        hasWidgetAsAscendant(classElement) &&
         classElement.constructors.where((e) => !e.isSynthetic).isEmpty) {
       rule.reportLint(node.name);
     }
@@ -73,7 +72,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (constructorElement.isPublic &&
         !constructorElement.isFactory &&
         classElement.isPublic &&
-        isWidget(classElement) &&
+        hasWidgetAsAscendant(classElement) &&
         !constructorElement.parameters
             .any((e) => e.name == 'key' && e.isNamed && _isKeyType(e.type)) &&
         !node.initializers.any((e) =>
