@@ -98,14 +98,17 @@ class _Flutter {
     return false;
   }
 
-  bool hasWidgetAsAscendant(ClassElement element) {
-    if (element == null) {
+  bool hasWidgetAsAscendant(ClassElement element,
+      [List<ClassElement> alreadySeen]) {
+    alreadySeen ??= [];
+    if (element == null || alreadySeen.contains(element)) {
       return false;
     }
+    alreadySeen.add(element);
     if (_isExactWidget(element, _nameWidget, _uriFramework)) {
       return true;
     }
-    return hasWidgetAsAscendant(element.supertype?.element);
+    return hasWidgetAsAscendant(element.supertype?.element, alreadySeen);
   }
 
   bool isWidgetType(DartType type) =>
