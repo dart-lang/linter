@@ -19,13 +19,16 @@ _Flutter _flutterInstance = _Flutter('flutter', 'package:flutter');
 
 _Flutter get _flutter => _flutterInstance;
 
+bool isExactWidget(ClassElement element) => _flutter.isExactWidget(element);
+
 bool isExactWidgetTypeContainer(DartType type) =>
     _flutter.isExactWidgetTypeContainer(type);
 
 bool isStatefulWidget(ClassElement element) =>
     _flutter.isStatefulWidget(element);
 
-bool hasWidgetAsAscendant(ClassElement element) => _flutter.hasWidgetAsAscendant(element);
+bool hasWidgetAsAscendant(ClassElement element) =>
+    _flutter.hasWidgetAsAscendant(element);
 
 bool isWidgetProperty(DartType type) {
   if (isWidgetType(type)) {
@@ -61,6 +64,9 @@ class _Flutter {
   bool isExactWidgetTypeContainer(DartType type) =>
       type is InterfaceType &&
       _isExactWidget(type.element, _nameContainer, _uriContainer);
+
+  bool isExactWidget(ClassElement element) =>
+      _isExactWidget(element, _nameWidget, _uriFramework);
 
   bool isStatefulWidget(ClassElement element) {
     if (element == null) {

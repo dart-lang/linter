@@ -4,7 +4,6 @@
 
 // test w/ `pub run test -N use_key_in_widget_constructors`
 
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
@@ -16,9 +15,8 @@ class _PrivateWidget extends StatefulWidget { // OK
 
 class MyWidget extends StatelessWidget {
   MyWidget(); // LINT
-  MyWidget.withKey({Key key}); // OK
-  MyWidget.withKeyRequired(Key key); // LINT
-  MyWidget.withKeyOptional([Key key]); // LINT
+  MyWidget.withKey({Key key}) : super(key: key); // OK
+  MyWidget.withUnusedKey({Key key}); // LINT
   factory MyWidget.fact() => null; // OK
   MyWidget._private(); // OK
   MyWidget.redirect() : this.withKey(key: Key('')); // OK

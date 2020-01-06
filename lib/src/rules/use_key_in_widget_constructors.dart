@@ -4,6 +4,7 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
@@ -73,21 +74,24 @@ class _Visitor extends SimpleAstVisitor<void> {
         !constructorElement.isFactory &&
         classElement.isPublic &&
         hasWidgetAsAscendant(classElement) &&
-        !constructorElement.parameters
-            .any((e) => e.name == 'key' && e.isNamed && _isKeyType(e.type)) &&
-        !node.initializers.any((e) =>
-            e is SuperConstructorInvocation &&
-                e.argumentList.arguments.any((a) =>
-                    a.staticParameterElement.name == 'key' &&
-                    _isKeyType(a.staticType)) ||
-            e is RedirectingConstructorInvocation &&
-                e.argumentList.arguments.any((a) =>
-                    a.staticParameterElement.name == 'key' &&
-                    _isKeyType(a.staticType)))) {
+        !isExactWidget(classElement) &&
+        !node.initializers.any((initializer) =>
+            initializer is SuperConstructorInvocation &&
+                (!_defineKeyParameter(initializer.staticElement) ||
+                    _defineKeyArgument(initializer.argumentList)) ||
+            initializer is RedirectingConstructorInvocation &&
+                (!_defineKeyParameter(initializer.staticElement) ||
+                    _defineKeyArgument(initializer.argumentList)))) {
       rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);
     }
     super.visitConstructorDeclaration(node);
   }
+
+  bool _defineKeyParameter(ConstructorElement element) =>
+      element.parameters.any((e) => e.name == 'key' && _isKeyType(e.type));
+
+  bool _defineKeyArgument(ArgumentList argumentList) =>
+      argumentList.arguments.any((a) => a.staticParameterElement.name == 'key');
 
   bool _isKeyType(DartType type) =>
       DartTypeUtilities.implementsInterface(type, 'Key', '');
