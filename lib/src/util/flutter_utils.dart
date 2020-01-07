@@ -99,8 +99,8 @@ class _Flutter {
   }
 
   bool hasWidgetAsAscendant(ClassElement element,
-      [List<ClassElement> alreadySeen]) {
-    alreadySeen ??= [];
+      [Set<ClassElement> alreadySeen]) {
+    alreadySeen ??= {};
     if (element == null || alreadySeen.contains(element)) {
       return false;
     }
