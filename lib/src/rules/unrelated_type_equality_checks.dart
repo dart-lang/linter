@@ -177,8 +177,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
-    final isDartCoreBoolean = node.staticType.isDartCoreBool;
-    if (!isDartCoreBoolean ||
+    final isDartCoreBoolean = node.staticType?.isDartCoreBool;
+    if (isDartCoreBoolean == null ||
+        !isDartCoreBoolean ||
         (node.operator.type != TokenType.EQ_EQ &&
             node.operator.type != TokenType.BANG_EQ)) {
       return;
