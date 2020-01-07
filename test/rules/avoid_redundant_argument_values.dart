@@ -62,5 +62,6 @@ void main() {
   ggg(
       1, // OK the  - first argument is required so that we can provide the second argument.
       3);
-  ggg(1, 2); // LINT
+  ggg(1,  // LINT
+      2); // LINT
 }

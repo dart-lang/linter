@@ -68,10 +68,12 @@ class _Visitor extends SimpleAstVisitor {
       return;
     }
 
-    for (var i = 0; i < arguments.length; ++i) {
+    for (var i = arguments.length - 1; i >= 0; --i) {
       var arg = arguments[i];
       final param = arg.staticParameterElement;
-      if (param == null || param.hasRequired) {
+      if (param.isRequiredPositional) {
+        break;
+      } else if (param == null || param.hasRequired || param.isRequiredNamed) {
         continue;
       }
       final value = param.constantValue;
@@ -81,17 +83,9 @@ class _Visitor extends SimpleAstVisitor {
         }
         final expressionValue = context.evaluateConstant(arg);
         if (expressionValue.value == value) {
-          var okToRemove = true;
-          for (var j = i + 1; j < arguments.length && okToRemove; ++j) {
-            final param = arg.staticParameterElement;
-            // todo (pq): consider instead starting from the end and reporting if the last optional positional is removable
-            if (param != null && param.isOptionalPositional) {
-              okToRemove = false;
-            }
-          }
-          if (okToRemove) {
-            rule.reportLint(arg);
-          }
+          rule.reportLint(arg);
+        } else if (param.isOptionalPositional) {
+          break;
         }
       }
     }
