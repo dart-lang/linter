@@ -64,7 +64,7 @@ class _Visitor extends SimpleAstVisitor {
 
   void check(ArgumentList argumentList, List<ParameterElement> parameters) {
     final arguments = argumentList.arguments;
-    if (arguments.isEmpty || parameters == null) {
+    if (arguments.isEmpty) {
       return;
     }
 

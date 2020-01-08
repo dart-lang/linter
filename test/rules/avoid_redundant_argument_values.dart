@@ -19,8 +19,10 @@ void ff({bool valWithDefault = true, bool val}) {}
 void g({@required bool valWithDefault = true, bool val}) {}
 
 void gg(int x, [int y = 0]) {}
-
 void ggg([int a = 1, int b = 2]) {}
+void gggg([int a = 0, int b]) {}
+
+void h([int a, int b = 1]) {}
 
 void main() {
   A(valWithDefault: true); //LINT
@@ -64,4 +66,9 @@ void main() {
       3);
   ggg(1,  // LINT
       2); // LINT
+
+  gggg(0, 1); //OK
+  
+  h(0,
+      1); //LINT
 }
