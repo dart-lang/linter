@@ -84,9 +84,10 @@ class _Visitor extends SimpleAstVisitor {
         final expressionValue = context.evaluateConstant(arg);
         if (expressionValue.value == value) {
           rule.reportLint(arg);
-        } else if (param.isOptionalPositional) {
-          break;
         }
+      }
+      if (param.isOptionalPositional) {
+        break;
       }
     }
   }

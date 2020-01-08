@@ -64,11 +64,11 @@ void main() {
   ggg(
       1, // OK the  - first argument is required so that we can provide the second argument.
       3);
-  ggg(1,  // LINT
+  ggg(1,
       2); // LINT
 
   gggg(0, 1); //OK
-  
+
   h(0,
       1); //LINT
 }
