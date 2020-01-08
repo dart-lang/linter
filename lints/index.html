@@ -57,8 +57,14 @@ or through an
 <li><strong>An auto-generated list enabling all options is provided <a href="options/options.html">here</a>.</strong> </li>
 </ul>
 <p>As some lints may contradict each other, only a subset of these will be
-enabled in practice, but this list should provide a
-convenient jumping-off point.</p>
+enabled in practice, but this list should provide a convenient jumping-off point.</p>
+<p>Other rulesets to consider are:</p>
+<ul>
+<li><a href="https://github.com/dart-lang/pedantic">package:pedantic</a> for rules enforced internally at Google, and </li>
+<li><a href="https://github.com/tenhobi/effective_dart">package:effective_dart</a> for rules corresponding to the <a href="https://dart.dev/guides/language/effective-dart">Effective Dart</a> guide</li>
+</ul>
+<p>(Rules included in these rulesets are badged in the documentation below;
+rules enforced by the <code>flutter analyze</code> command are badged <strong>Flutter</strong> as well.)</p>
 <p>These rules are under active development.  Feedback is
 <a href="https://github.com/dart-lang/linter/issues">welcome</a>!</p>
 
@@ -148,6 +154,9 @@ convenient jumping-off point.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "unsafe_html.html">unsafe_html</a></strong><br/>  <p>Avoid unsafe HTML APIs.</p>
+
+
+<!--suppress HtmlUnknownTarget --><strong><a href = "use_key_in_widget_constructors.html">use_key_in_widget_constructors</a></strong><br/>  <p>Use key in widget constructors.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "valid_regexps.html">valid_regexps</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use valid regular expression syntax.</p>
@@ -356,7 +365,7 @@ convenient jumping-off point.</p>
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_const_constructors.html">prefer_const_constructors</a></strong><br/>  <p>Prefer const with constant constructors.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_const_constructors_in_immutables.html">prefer_const_constructors_in_immutables</a></strong><br/>  <p>Prefer declare const constructors on <code>@immutable</code> classes.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_const_constructors_in_immutables.html">prefer_const_constructors_in_immutables</a></strong><br/>  <p>Prefer declaring const constructors on <code>@immutable</code> classes.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_const_declarations.html">prefer_const_declarations</a></strong><br/>  <p>Prefer const over final for declarations.</p>
