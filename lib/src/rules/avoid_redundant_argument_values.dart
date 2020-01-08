@@ -62,7 +62,7 @@ class _Visitor extends SimpleAstVisitor {
 
   _Visitor(this.rule, this.context);
 
-  void check(ArgumentList argumentList, List<ParameterElement> parameters) {
+  void check(ArgumentList argumentList) {
     final arguments = argumentList.arguments;
     if (arguments.isEmpty) {
       return;
@@ -94,20 +94,11 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    check(node.argumentList, node.staticElement?.parameters);
+    check(node.argumentList);
   }
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    final element = node.staticInvokeType.element;
-    List<ParameterElement> parameters;
-    if (element is MethodElement) {
-      parameters = element.parameters;
-    }
-    if (element is FunctionElement) {
-      parameters = element.parameters;
-    }
-
-    check(node.argumentList, parameters);
+    check(node.argumentList);
   }
 }
