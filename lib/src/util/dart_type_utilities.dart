@@ -6,7 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_system.dart';
-import 'package:analyzer/src/dart/element/member.dart';  // ignore: implementation_imports
+import 'package:analyzer/src/dart/element/member.dart'; // ignore: implementation_imports
 import 'package:meta/meta.dart';
 
 typedef AstNodePredicate = bool Function(AstNode node);
