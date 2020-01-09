@@ -176,12 +176,12 @@ class DartTypeUtilities {
 
   static bool isClass(DartType type, String className, String library) =>
       type != null &&
-      type.name == className &&
+      type.element?.name == className &&
       type.element?.library?.name == library;
 
   static bool isInterface(
           InterfaceType type, String interface, String library) =>
-      type.name == interface && type.element.library.name == library;
+      type.element?.name == interface && type.element.library.name == library;
 
   static bool isNullLiteral(Expression expression) =>
       expression?.unParenthesized is NullLiteral;

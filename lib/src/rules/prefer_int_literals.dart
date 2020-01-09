@@ -71,10 +71,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node is FunctionExpression) {
       var functDeclaration = node.parent;
       if (functDeclaration is FunctionDeclaration) {
-        return functDeclaration.returnType?.type?.name == 'double';
+        return functDeclaration.returnType?.type?.isDartCoreDouble == true;
       }
     } else if (node is MethodDeclaration) {
-      return node.returnType?.type?.name == 'double';
+      return node.returnType?.type?.isDartCoreDouble == true;
     }
     return false;
   }
@@ -82,15 +82,15 @@ class _Visitor extends SimpleAstVisitor<void> {
   bool hasTypeDouble(Expression expression) {
     final parent = expression.parent;
     if (parent is ArgumentList) {
-      return expression.staticParameterElement?.type?.name == 'double';
+      return expression.staticParameterElement?.type?.isDartCoreDouble == true;
     } else if (parent is ListLiteral) {
       final typeArguments = parent.typeArguments?.arguments;
       return typeArguments?.length == 1 &&
-          typeArguments[0]?.type?.name == 'double';
+          typeArguments[0]?.type?.isDartCoreDouble == true;
     } else if (parent is NamedExpression) {
       final argList = parent.parent;
       if (argList is ArgumentList) {
-        return parent.staticParameterElement?.type?.name == 'double';
+        return parent.staticParameterElement?.type?.isDartCoreDouble == true;
       }
     } else if (parent is ExpressionFunctionBody) {
       return hasReturnTypeDouble(parent.parent);
@@ -100,7 +100,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     } else if (parent is VariableDeclaration) {
       final varList = parent.parent;
       if (varList is VariableDeclarationList) {
-        return varList.type?.type?.name == 'double';
+        return varList.type?.type?.isDartCoreDouble == true;
       }
     }
     return false;
