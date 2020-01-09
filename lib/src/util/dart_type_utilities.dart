@@ -6,7 +6,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_system.dart';
-import 'package:analyzer/src/dart/element/member.dart'; // ignore: implementation_imports
+import 'package:analyzer/src/dart/element/member.dart';  // ignore: implementation_imports
+import 'package:meta/meta.dart';
 
 typedef AstNodePredicate = bool Function(AstNode node);
 
@@ -174,14 +175,24 @@ class DartTypeUtilities {
         !element.isSynthetic && element.allSupertypes.any(predicate);
   }
 
+  // todo (pq): unify and  `isInterface` into a shared method: `isInterfaceType`
   static bool isClass(DartType type, String className, String library) =>
-      type != null &&
-      type.element?.name == className &&
-      type.element?.library?.name == library;
+      type is InterfaceType &&
+      type.element.name == className &&
+      type.element.library?.name == library;
+
+  static bool isConstructorElement(ConstructorElement element,
+          {@required String uriStr,
+          @required String className,
+          @required String constructorName}) =>
+      element != null &&
+      element.library?.name == uriStr &&
+      element.enclosingElement.name == className &&
+      element.name == constructorName;
 
   static bool isInterface(
           InterfaceType type, String interface, String library) =>
-      type.element?.name == interface && type.element.library.name == library;
+      type.element.name == interface && type.element.library.name == library;
 
   static bool isNullLiteral(Expression expression) =>
       expression?.unParenthesized is NullLiteral;
