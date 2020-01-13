@@ -58,7 +58,6 @@ analyzer:
   errors:
     avoid_as: error
 ```  
-
 tells the analyzer to treat `avoid_as` lints as errors.  For more on configuring analysis see the analysis option file [docs][options_file].
 
 ## Contributing
