@@ -59,7 +59,7 @@ void main() {
 }
 ```
 
-tells the `dartanalyzer` to ignore all occurences of the `avoid_as` warning.
+tells the `dartanalyzer` to ignore all occurences of the `avoid_as` warning in this file.
 
 As lints are treated the same as errors and warnings by the analyzer, their severity can similarly be configured in an options file.  For example, an analysis options file that specifies
 
