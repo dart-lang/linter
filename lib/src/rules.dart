@@ -35,6 +35,7 @@ import 'rules/avoid_returning_null.dart';
 import 'rules/avoid_returning_null_for_future.dart';
 import 'rules/avoid_returning_null_for_void.dart';
 import 'rules/avoid_returning_this.dart';
+import 'rules/avoid_runtimeType_toString.dart';
 import 'rules/avoid_setters_without_getters.dart';
 import 'rules/avoid_shadowing_type_parameters.dart';
 import 'rules/avoid_single_cascade_in_expression_statements.dart';
@@ -198,6 +199,7 @@ void registerLintRules() {
     ..register(AvoidReturningNullForVoid())
     ..register(AvoidReturningThis())
     ..register(AvoidReturnTypesOnSetters())
+    ..register(AvoidRuntimeTypeToString())
     ..register(AvoidSettersWithoutGetters())
     ..register(AvoidShadowingTypeParameters())
     ..register(AvoidSingleCascadeInExpressionStatements())
