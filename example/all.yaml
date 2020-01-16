@@ -34,7 +34,6 @@ linter:
     - avoid_returning_null_for_future
     - avoid_returning_null_for_void
     - avoid_returning_this
-    - avoid_runtimeType_toString
     - avoid_setters_without_getters
     - avoid_shadowing_type_parameters
     - avoid_single_cascade_in_expression_statements
@@ -75,6 +74,7 @@ linter:
     - no_adjacent_strings_in_list
     - no_duplicate_case_values
     - no_logic_in_create_state
+    - no_runtimeType_toString
     - non_constant_identifier_names
     - null_closures
     - omit_local_variable_types

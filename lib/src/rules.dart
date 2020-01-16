@@ -35,7 +35,6 @@ import 'rules/avoid_returning_null.dart';
 import 'rules/avoid_returning_null_for_future.dart';
 import 'rules/avoid_returning_null_for_void.dart';
 import 'rules/avoid_returning_this.dart';
-import 'rules/avoid_runtimeType_toString.dart';
 import 'rules/avoid_setters_without_getters.dart';
 import 'rules/avoid_shadowing_type_parameters.dart';
 import 'rules/avoid_single_cascade_in_expression_statements.dart';
@@ -76,6 +75,7 @@ import 'rules/literal_only_boolean_expressions.dart';
 import 'rules/no_adjacent_strings_in_list.dart';
 import 'rules/no_duplicate_case_values.dart';
 import 'rules/no_logic_in_create_state.dart';
+import 'rules/no_runtimeType_toString.dart';
 import 'rules/non_constant_identifier_names.dart';
 import 'rules/null_closures.dart';
 import 'rules/omit_local_variable_types.dart';
@@ -199,7 +199,6 @@ void registerLintRules() {
     ..register(AvoidReturningNullForVoid())
     ..register(AvoidReturningThis())
     ..register(AvoidReturnTypesOnSetters())
-    ..register(AvoidRuntimeTypeToString())
     ..register(AvoidSettersWithoutGetters())
     ..register(AvoidShadowingTypeParameters())
     ..register(AvoidSingleCascadeInExpressionStatements())
@@ -241,6 +240,7 @@ void registerLintRules() {
     ..register(NoDuplicateCaseValues())
     ..register(NonConstantIdentifierNames())
     ..register(NoLogicInCreateState())
+    ..register(NoRuntimeTypeToString())
     ..register(NullClosures())
     ..register(OmitLocalVariableTypes())
     ..register(OneMemberAbstracts())

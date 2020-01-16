@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// test w/ `pub run test -N avoid_runtimeType_toString`
+// test w/ `pub run test -N no_runtimeType_toString`
 
 var o;
 
@@ -22,6 +22,7 @@ class A {
     } catch (e) {
       final s10 = '${runtimeType}'; // OK
     }
+    final s11 = super.runtimeType.toString(); // LINT
     throw '${runtimeType}'; // OK
   }
 }
@@ -36,4 +37,18 @@ mixin C {
   void f() {
     final s1 = '$runtimeType'; // OK
   }
+}
+
+class D {
+  void f() {
+    var runtimeType = 'C';
+    print('$runtimeType'); // OK
+  }
+}
+
+extension on A {
+  String f() => '$runtimeType'; // LINT
+}
+extension on B {
+  String f() => '$runtimeType'; // OK
 }
