@@ -69,7 +69,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
     if (node.methodName.name == 'toString' &&
         _isRuntimeTypeAccess(node.realTarget)) {
-      rule.reportLint(node.realTarget);
+      rule.reportLint(node.methodName);
     }
   }
 
