@@ -14,8 +14,8 @@ const _details = r'''
 Add a trailing whitespace to prevent missing whitespace between adjacent
 strings.
 
-With long text splitted accross adjacent strings it's easy to forget a
-whitespace between strings.
+With long text split accross adjacent strings it's easy to forget a whitespace
+between strings.
 
 **BAD:**
 ```
@@ -94,20 +94,14 @@ class _Visitor extends RecursiveAstVisitor<void> {
         if (e is InterpolationString) return e.value;
         return '';
       }));
-    } else if (string is AdjacentStrings) {
-      return string.strings.any((e) => _visit(e, test));
     }
     throw ArgumentError('${string.runtimeType}: $string');
   }
 
-  bool _hasWhitespace(String value) =>
-      value.contains(eol) || value.contains(space);
-
-  bool _endsWithWhitespace(String string) =>
-      string.endsWith(eol) || string.endsWith(space);
-  bool _startsWithWhitespace(String string) =>
-      string.startsWith(eol) || string.startsWith(space);
+  bool _hasWhitespace(String value) => _whitespaces.any(value.contains);
+  bool _endsWithWhitespace(String value) => _whitespaces.any(value.endsWith);
+  bool _startsWithWhitespace(String value) =>
+      _whitespaces.any(value.startsWith);
 }
 
-const eol = '\u000A';
-const space = '\u0020';
+const _whitespaces = [' ', '\n', '\r', '\t'];

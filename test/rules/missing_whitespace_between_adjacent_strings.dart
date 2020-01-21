@@ -13,6 +13,9 @@ f(o) {
   f('long line ' 'is long'); // OK
   f('long $f line ' 'is long'); // OK
   f('longLineWithoutSpaceCouldBe' 'AnURL'); // OK
+  f('long line\n' 'is long'); // OK
+  f('long line\r' 'is long'); // OK
+  f('long line\t' 'is long'); // OK
 
   f(RegExp('(\n)+' '(\n)+' '(\n)+')); // OK
   matches('(\n)+' '(\n)+' '(\n)+'); // OK
