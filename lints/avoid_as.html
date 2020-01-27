@@ -28,8 +28,7 @@
          </header>
          <section>
 
-            <p>From the <a href="https://github.com/flutter/engine/blob/master/sky/specs/style-guide.md">flutter style guide</a>:</p>
-<p><strong>AVOID</strong> using <code>as</code>.</p>
+            <p><strong>AVOID</strong> using <code>as</code>.</p>
 <p>If you know the type is correct, use an assertion or assign to a more
 narrowly-typed variable (this avoids the type check in release mode; <code>as</code> is not
 compiled out in release mode).  If you don't know whether the type is
@@ -37,11 +36,6 @@ correct, check using <code>is</code> (this avoids the exception that <code>as</c
 <p><strong>BAD:</strong></p>
 <pre><code>(pm as Person).firstName = 'Seth';
 </code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code>Person person = pm;
-person.firstName = 'Seth';
-</code></pre>
-<p>or</p>
 <p><strong>GOOD:</strong></p>
 <pre><code>if (pm is Person)
   pm.firstName = 'Seth';
@@ -51,7 +45,6 @@ person.firstName = 'Seth';
 <pre><code>try {
    (pm as Person).firstName = 'Seth';
 } on CastError { }
-
 </code></pre>
 <p>Note that an exception is made in the case of <code>dynamic</code> since the cast has no
 performance impact.</p>

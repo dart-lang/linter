@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>prefer_const_declarations</title>
+      <title>missing_whitespace_between_adjacent_strings</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_const_declarations</h1>
+            <h1>missing_whitespace_between_adjacent_strings</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.0.0 • <small>(Linter v0.1.43)</small></p>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.110)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,22 +28,19 @@
          </header>
          <section>
 
-            <p><strong>PREFER</strong> using <code>const</code> for const declarations.</p>
-<p>Const declarations are more hot-reload friendly and allow to use const
-constructors if an instantiation references this declaration.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>const o = &lt;int&gt;[];
-
-class A {
-  static const o = &lt;int&gt;[];
-}
-</code></pre>
+            <p>Add a trailing whitespace to prevent missing whitespace between adjacent
+strings.</p>
+<p>With long text split accross adjacent strings it's easy to forget a whitespace
+between strings.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>final o = const &lt;int&gt;[];
-
-class A {
-  static final o = const &lt;int&gt;[];
-}
+<pre><code>var s =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed'
+  'do eiusmod tempor incididunt ut labore et dolore magna';
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>var s =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed '
+  'do eiusmod tempor incididunt ut labore et dolore magna';
 </code></pre>
 
 
