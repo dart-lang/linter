@@ -9,11 +9,11 @@ import 'package:meta/meta.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Remove unnecessary backslash in strings.';
+const _desc = r'Remove unnecessary backslashes in strings.';
 
 const _details = r'''
 
-Remove unnecessary backslash in strings.
+Remove unnecessary backslashes in strings.
 
 **BAD:**
 ```
