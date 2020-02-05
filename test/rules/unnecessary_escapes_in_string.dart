@@ -14,6 +14,18 @@ f(o){
   f('\"$f');// LINT
   f("\"$f");// OK
   f('\'$f');// OK
+  f("$f\'");// LINT
+  f('$f\"');// LINT
+  f("$f\"");// OK
+  f('$f\'');// OK
+  f("""\'$f""");// LINT
+  f('''\"$f''');// LINT
+  f("""\"$f""");// LINT
+  f('''\'$f''');// LINT
+  f("""$f\'""");// LINT
+  f('''$f\"''');// LINT
+  f("""$f\"""");// OK
+  f('''$f\'''');// OK
 
   f('\:'); // LINT
   f('\a'); // LINT
@@ -27,4 +39,22 @@ f(o){
 
   f(r"\'");// OK
   f(r'\"');// OK
+
+  f('''_\'_'''); // LINT
+  f('''_\''''); // OK otherwise parsing error
+  f('''\'_'''); // LINT
+  f('''_\"_'''); // LINT
+  f('''_\''_'''); // LINT
+  f('''_\'\'\'_'''); // OK otherwise parsing error
+  f('''_'\''_'''); // OK otherwise parsing error
+  f('''_\'\'\'\'\'\'_'''); // OK for >= 3 consecutive quotes
+
+  f("""_\"_"""); // LINT
+  f("""_\""""); // OK otherwise parsing error
+  f("""\"_"""); // LINT
+  f("""_\'_"""); // LINT
+  f("""_\""_"""); // LINT
+  f("""_\"\"\"_"""); // OK otherwise parsing error
+  f("""_"\""_"""); // OK otherwise parsing error
+  f("""_\"\"\"\"\"\"_"""); // OK for >= 3 consecutive quotes
 }
