@@ -130,6 +130,7 @@ import 'rules/pub/package_names.dart';
 import 'rules/pub/sort_pub_dependencies.dart';
 import 'rules/public_member_api_docs.dart';
 import 'rules/recursive_getters.dart';
+import 'rules/replace_escapes_by_raw_strings.dart';
 import 'rules/slash_for_doc_comments.dart';
 import 'rules/sort_child_properties_last.dart';
 import 'rules/sort_constructors_first.dart';
@@ -296,6 +297,7 @@ void registerLintRules() {
     ..register(PublicMemberApiDocs())
     ..register(PubPackageNames())
     ..register(RecursiveGetters())
+    ..register(ReplaceEscapesByRawStrings())
     ..register(SlashForDocComments())
     ..register(SortChildPropertiesLast())
     ..register(SortConstructorsFirst())

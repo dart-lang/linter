@@ -127,6 +127,7 @@ linter:
     - provide_deprecation_message
     - public_member_api_docs
     - recursive_getters
+    - replace_escapes_by_raw_strings
     - slash_for_doc_comments
     - sort_child_properties_last
     - sort_constructors_first
