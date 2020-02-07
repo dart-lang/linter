@@ -130,7 +130,6 @@ import 'rules/pub/package_names.dart';
 import 'rules/pub/sort_pub_dependencies.dart';
 import 'rules/public_member_api_docs.dart';
 import 'rules/recursive_getters.dart';
-import 'rules/replace_escapes_by_raw_strings.dart';
 import 'rules/slash_for_doc_comments.dart';
 import 'rules/sort_child_properties_last.dart';
 import 'rules/sort_constructors_first.dart';
@@ -161,6 +160,7 @@ import 'rules/unsafe_html.dart';
 import 'rules/use_full_hex_values_for_flutter_colors.dart';
 import 'rules/use_function_type_syntax_for_parameters.dart';
 import 'rules/use_key_in_widget_constructors.dart';
+import 'rules/use_raw_strings.dart';
 import 'rules/use_rethrow_when_possible.dart';
 import 'rules/use_setters_to_change_properties.dart';
 import 'rules/use_string_buffers.dart';
@@ -297,7 +297,6 @@ void registerLintRules() {
     ..register(PublicMemberApiDocs())
     ..register(PubPackageNames())
     ..register(RecursiveGetters())
-    ..register(ReplaceEscapesByRawStrings())
     ..register(SlashForDocComments())
     ..register(SortChildPropertiesLast())
     ..register(SortConstructorsFirst())
@@ -332,6 +331,7 @@ void registerLintRules() {
     ..register(UseFunctionTypeSyntaxForParameters())
     ..register(UseKeyInWidgetConstructors())
     ..register(UseRethrowWhenPossible())
+    ..register(UseRawStrings())
     ..register(UseSettersToChangeAProperty())
     ..register(UseStringBuffers())
     ..register(UseToAndAsIfApplicable())

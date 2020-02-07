@@ -127,7 +127,6 @@ linter:
     - provide_deprecation_message
     - public_member_api_docs
     - recursive_getters
-    - replace_escapes_by_raw_strings
     - slash_for_doc_comments
     - sort_child_properties_last
     - sort_constructors_first
@@ -159,6 +158,7 @@ linter:
     - use_function_type_syntax_for_parameters
     - use_key_in_widget_constructors
     - use_rethrow_when_possible
+    - use_raw_strings
     - use_setters_to_change_properties
     - use_string_buffers
     - use_to_and_as_if_applicable

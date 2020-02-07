@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Replace escaping by a raw string.';
+const _desc = r'Use raw string to avoid escapes.';
 
 const _details = r'''
 
@@ -25,10 +25,10 @@ var s = r'A string with only \ and $';
 
 ''';
 
-class ReplaceEscapesByRawStrings extends LintRule implements NodeLintRule {
-  ReplaceEscapesByRawStrings()
+class UseRawStrings extends LintRule implements NodeLintRule {
+  UseRawStrings()
       : super(
-            name: 'replace_escapes_by_raw_strings',
+            name: 'use_raw_strings',
             description: _desc,
             details: _details,
             group: Group.style);
