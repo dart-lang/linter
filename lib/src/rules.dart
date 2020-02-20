@@ -18,6 +18,7 @@ import 'rules/avoid_classes_with_only_static_members.dart';
 import 'rules/avoid_double_and_int_checks.dart';
 import 'rules/avoid_empty_else.dart';
 import 'rules/avoid_equals_and_hash_code_on_mutable_classes.dart';
+import 'rules/avoid_escaping_inner_quotes.dart';
 import 'rules/avoid_field_initializers_in_const_classes.dart';
 import 'rules/avoid_function_literals_in_foreach_calls.dart';
 import 'rules/avoid_implementing_value_types.dart';
@@ -50,7 +51,6 @@ import 'rules/camel_case_extensions.dart';
 import 'rules/camel_case_types.dart';
 import 'rules/cancel_subscriptions.dart';
 import 'rules/cascade_invocations.dart';
-import 'rules/change_quotes.dart';
 import 'rules/close_sinks.dart';
 import 'rules/comment_references.dart';
 import 'rules/constant_identifier_names.dart';
@@ -186,6 +186,7 @@ void registerLintRules() {
     ..register(AvoidClassesWithOnlyStaticMembers())
     ..register(AvoidDoubleAndIntChecks())
     ..register(AvoidEmptyElse())
+    ..register(AvoidEscapingInnerQuotes())
     ..register(AvoidFieldInitializersInConstClasses())
     ..register(AvoidFunctionLiteralInForeachMethod())
     ..register(AvoidImplementingValueTypes())
@@ -219,7 +220,6 @@ void registerLintRules() {
     ..register(CamelCaseTypes())
     ..register(CancelSubscriptions())
     ..register(CascadeInvocations())
-    ..register(ChangeQuotes())
     ..register(CloseSinks())
     ..register(CommentReferences())
     ..register(ConstantIdentifierNames())

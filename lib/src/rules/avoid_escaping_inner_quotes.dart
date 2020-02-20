@@ -8,11 +8,11 @@ import 'package:meta/meta.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Change quotes to avoid escaping inner quotes.';
+const _desc = r'Avoid escaping inner quotes by converting surrounding quotes.';
 
 const _details = r'''
 
-Change quotes to avoid escaping inner quotes.
+Avoid escaping inner quotes by converting surrounding quotes.
 
 **BAD:**
 ```
@@ -26,10 +26,10 @@ var s = "It's not fun";
 
 ''';
 
-class ChangeQuotes extends LintRule implements NodeLintRule {
-  ChangeQuotes()
+class AvoidEscapingInnerQuotes extends LintRule implements NodeLintRule {
+  AvoidEscapingInnerQuotes()
       : super(
-            name: 'change_quotes',
+            name: 'avoid_escaping_inner_quotes',
             description: _desc,
             details: _details,
             group: Group.style);
