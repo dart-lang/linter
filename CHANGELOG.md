@@ -2,7 +2,7 @@
 
 * new lint: `unnecessary_raw_strings`
 * new lint: `avoid_escaping_inner_quotes`
-* new lint: `unecessary_string_escapes`
+* new lint: `unnecessary_string_escapes`
 * incompatible rule documentation improvements
 
 # 0.1.110
