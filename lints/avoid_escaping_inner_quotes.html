@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>missing_whitespace_between_adjacent_strings</title>
+      <title>avoid_escaping_inner_quotes</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>missing_whitespace_between_adjacent_strings</h1>
+            <h1>avoid_escaping_inner_quotes</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.8.0-dev.10.0 • <small>(Linter v0.1.110)</small></p>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.111)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,19 +28,12 @@
          </header>
          <section>
 
-            <p>Add a trailing whitespace to prevent missing whitespace between adjacent
-strings.</p>
-<p>With long text split accross adjacent strings it's easy to forget a whitespace
-between strings.</p>
+            <p>Avoid escaping inner quotes by converting surrounding quotes.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>var s =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed'
-  'do eiusmod tempor incididunt ut labore et dolore magna';
+<pre><code>var s = 'It\'s not fun';
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>var s =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed '
-  'do eiusmod tempor incididunt ut labore et dolore magna';
+<pre><code>var s = "It's not fun";
 </code></pre>
 
             
