@@ -58,6 +58,7 @@ import 'rules/control_flow_in_finally.dart';
 import 'rules/curly_braces_in_flow_control_structures.dart';
 import 'rules/diagnostic_describe_all_properties.dart';
 import 'rules/directives_ordering.dart';
+import 'rules/duplicated_keys.dart';
 import 'rules/empty_catches.dart';
 import 'rules/empty_constructor_bodies.dart';
 import 'rules/empty_statements.dart';
@@ -228,6 +229,7 @@ void registerLintRules() {
     ..register(CurlyBracesInFlowControlStructures())
     ..register(DiagnosticsDescribeAllProperties())
     ..register(DirectivesOrdering())
+    ..register(DuplicatedKeys())
     ..register(EmptyCatches())
     ..register(EmptyConstructorBodies())
     ..register(EmptyStatements())
