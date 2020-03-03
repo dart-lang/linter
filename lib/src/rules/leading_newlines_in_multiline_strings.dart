@@ -9,36 +9,35 @@ import '../analyzer.dart';
 
 const _desc = r'Start multiline strings with a newline.';
 
-const _details = r'''
-
+const _details = r"""
 Multiline strings are easier to read when they start with a newline (a newline
 starting a multiline string is ignored).
 
 **BAD:**
 ```
-var s1 = """{
+var s1 = '''{
   "a": 1,
   "b": 2
-}""";
+}''';
 ```
 
 **GOOD:**
 ```
-var s1 = """
+var s1 = '''
 {
   "a": 1,
   "b": 2
-}""";
+}''';
 
-var s2 = """This onliner multiline string is ok. It usually allows to escape both ' and " in the string.""";
+var s2 = '''This onliner multiline string is ok. It usually allows to escape both ' and " in the string.''';
 ```
 
-''';
+""";
 
-class NewlineToStartMultilineStrings extends LintRule implements NodeLintRule {
-  NewlineToStartMultilineStrings()
+class LeadingNewlinesInMultilineStrings extends LintRule implements NodeLintRule {
+  LeadingNewlinesInMultilineStrings()
       : super(
-            name: 'newline_to_start_multiline_strings',
+            name: 'leading_newlines_in_multiline_strings',
             description: _desc,
             details: _details,
             group: Group.style);
@@ -48,10 +47,12 @@ class NewlineToStartMultilineStrings extends LintRule implements NodeLintRule {
       [LinterContext context]) {
     final visitor = _Visitor(this);
     registry.addCompilationUnit(this, visitor);
+    registry.addSimpleStringLiteral(this, visitor);
+    registry.addStringInterpolation(this, visitor);
   }
 }
 
-class _Visitor extends RecursiveAstVisitor<void> {
+class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   final LintRule rule;
@@ -61,29 +62,26 @@ class _Visitor extends RecursiveAstVisitor<void> {
   @override
   void visitCompilationUnit(CompilationUnit node) {
     lineInfo = node.lineInfo;
-    super.visitCompilationUnit(node);
   }
 
   @override
   void visitSimpleStringLiteral(SimpleStringLiteral node) {
     _visitSingleStringLiteral(node, node.literal.lexeme);
-    super.visitSimpleStringLiteral(node);
   }
 
   @override
   void visitStringInterpolation(StringInterpolation node) {
     _visitSingleStringLiteral(
         node, (node.elements.first as InterpolationString).contents.lexeme);
-    super.visitStringInterpolation(node);
   }
 
   void _visitSingleStringLiteral(SingleStringLiteral node, String lexeme) {
     if (node.isMultiline &&
         lineInfo.getLocation(node.offset).lineNumber !=
             lineInfo.getLocation(node.end).lineNumber) {
-      var index = 3;
-      if (node.isRaw) index += 1;
-      if (['\n', '\r'].every((e) => e != lexeme[index])) {
+      bool startWithNewLine(int index) =>
+          lexeme.startsWith('\n', index) || lexeme.startsWith('\r', index);
+      if (!startWithNewLine(node.isRaw ? 4 : 3)) {
         rule.reportLint(node);
       }
     }

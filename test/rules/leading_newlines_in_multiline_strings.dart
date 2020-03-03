@@ -2,11 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// test w/ `pub run test -N newline_to_start_multiline_strings`
+// test w/ `pub run test -N leading_newlines_in_multiline_strings`
 
 f(o) {
   f(''''''); // OK
   f('''this is a multiline string'''); // OK
+  f('''$o'''); // OK
+  f("""uses double quotes"""); // OK
   // OK
   f('''
 this is a multiline string''');
