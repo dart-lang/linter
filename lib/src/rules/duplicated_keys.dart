@@ -4,14 +4,16 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/constant/value.dart';
 
 import '../analyzer.dart';
 
-const _desc = r"Two keys in a constant set/map shouldn't be equal.";
+const _desc =
+    r"Two constant-valued elements / keys in a set / map literal shouldn't be equal.";
 
 const _details = r'''
 
-Two keys in a constant set/map shouldn't be equal.
+Two constant-valued elements / keys in a set / map literal shouldn't be equal.
 
 **BAD:**
 ```
@@ -68,15 +70,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     final expressions = node.isSet
         ? node.elements.whereType<Expression>()
         : node.elements.whereType<MapLiteralEntry>().map((e) => e.key);
-    final alreadySeen = [];
+    final alreadySeen = <DartObject>{};
     for (final expression in expressions) {
       final constEvaluation = context.evaluateConstant(expression);
       if (constEvaluation.errors.isNotEmpty) continue;
-      final dartObject = constEvaluation.value;
-      if (alreadySeen.contains(dartObject)) {
+      if (!alreadySeen.add(constEvaluation.value)) {
         rule.reportLint(expression);
-      } else {
-        alreadySeen.add(dartObject);
       }
     }
   }
