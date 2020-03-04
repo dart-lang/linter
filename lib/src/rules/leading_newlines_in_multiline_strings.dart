@@ -34,7 +34,8 @@ var s2 = '''This onliner multiline string is ok. It usually allows to escape bot
 
 """;
 
-class LeadingNewlinesInMultilineStrings extends LintRule implements NodeLintRule {
+class LeadingNewlinesInMultilineStrings extends LintRule
+    implements NodeLintRule {
   LeadingNewlinesInMultilineStrings()
       : super(
             name: 'leading_newlines_in_multiline_strings',
