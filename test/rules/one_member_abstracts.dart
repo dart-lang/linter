@@ -37,3 +37,11 @@ abstract class FooBarable {
 abstract class Bazable implements FooBarable {
   void baz(); // OK
 }
+
+mixin M {
+  void m();
+}
+
+abstract class Bazable2 with M {
+  void baz(); // OK
+}
