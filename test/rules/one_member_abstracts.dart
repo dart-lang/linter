@@ -27,3 +27,14 @@ abstract class ZZ extends Predicate {}
 abstract class Config {
   String get datasetId; //OK -- Issue #64
 }
+
+
+/// https://github.com/dart-lang/linter/issues/1826
+abstract class FooBarable {
+  void foo();
+  void bar();
+}
+
+abstract class Bazable implements FooBarable {
+  void baz(); // OK
+}
