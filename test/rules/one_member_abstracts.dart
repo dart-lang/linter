@@ -28,7 +28,6 @@ abstract class Config {
   String get datasetId; //OK -- Issue #64
 }
 
-
 /// https://github.com/dart-lang/linter/issues/1826
 abstract class FooBarable {
   void foo();
