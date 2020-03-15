@@ -159,8 +159,8 @@ void defineLinterEngineTests() {
         });
         test('html - strong', () {
           final link = Hyperlink('dart', 'http://dart.dev', bold: true);
-          expect(link.html,
-              '<a href="http://dart.dev"><strong>dart</strong></a>');
+          expect(
+              link.html, '<a href="http://dart.dev"><strong>dart</strong></a>');
         });
       });
 
