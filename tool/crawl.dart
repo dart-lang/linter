@@ -87,6 +87,9 @@ Future<String> dartSdkForLinter(String version) async {
   return sdkVersions.isNotEmpty ? sdkVersions.first : null;
 }
 
+Future<List<String>> fetchRulesForVersion(String version) async =>
+    score_utils.fetchRules('$_repoPathPrefix$version$_allPathSuffix');
+
 Future<String> findSinceDartSdk(String linterVersion) async =>
     await dartSdkForLinter(linterVersion);
 
@@ -116,13 +119,10 @@ Future<String> findSinceLinter(String lint) async {
 Future<String> linterForDartSdk(String sdk) async =>
     _dartSdkToLinterMap[sdk] ??= await _fetchLinterForVersion(sdk);
 
-Future<List<String>> fetchRulesForVersion(String version) async =>
-    score_utils.fetchRules('$_repoPathPrefix$version$_allPathSuffix');
-
 Future<List<String>> rulesForVersion(int minor) async {
   var version = '0.1.$minor';
   if (minor >= 31) {
-    return _sinceMap[version] ??=  await fetchRulesForVersion(version);
+    return _sinceMap[version] ??= await fetchRulesForVersion(version);
   }
   return null;
 }
