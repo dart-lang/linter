@@ -54,11 +54,12 @@ class _ConstructorVisitor extends RecursiveAstVisitor {
   final Set<FormalParameter> unusedParameters;
 
   _ConstructorVisitor(this.rule, this.element)
-      : unusedParameters = element.parameters.parameters
-            .where((p) =>
-                p.declaredElement is! FieldFormalParameterElement &&
-                !p.declaredElement.hasDeprecated)
-            .toSet();
+      : unusedParameters = element.parameters.parameters.where((p) {
+          final element = p.declaredElement;
+          return element is! FieldFormalParameterElement &&
+              !element.hasDeprecated &&
+              element.name != '_';
+        }).toSet();
 
   @override
   void visitSimpleIdentifier(SimpleIdentifier node) {
