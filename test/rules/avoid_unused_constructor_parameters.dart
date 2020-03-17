@@ -102,5 +102,5 @@ class O {
 }
 
 class P {
-  P(int _); // OK by naming convention: https://github.com/dart-lang/linter/issues/1793
+  P(int _, Object __); // OK by naming convention: https://github.com/dart-lang/linter/issues/1793
 }
