@@ -124,6 +124,7 @@ import 'rules/prefer_mixin.dart';
 import 'rules/prefer_null_aware_operators.dart';
 import 'rules/prefer_relative_imports.dart';
 import 'rules/prefer_single_quotes.dart';
+import 'rules/prefer_sizedbox_over_container.dart';
 import 'rules/prefer_spread_collections.dart';
 import 'rules/prefer_typing_uninitialized_variables.dart';
 import 'rules/prefer_void_to_null.dart';
@@ -295,6 +296,7 @@ void registerLintRules() {
     ..register(PreferNullAwareOperators())
     ..register(PreferRelativeImports())
     ..register(PreferSingleQuotes())
+    ..register(PreferSizedBoxOverContainer())
     ..register(PreferSpreadCollections())
     ..register(PreferTypingUninitializedVariables())
     ..register(PreferVoidToNull())
