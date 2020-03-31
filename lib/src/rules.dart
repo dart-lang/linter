@@ -124,7 +124,6 @@ import 'rules/prefer_mixin.dart';
 import 'rules/prefer_null_aware_operators.dart';
 import 'rules/prefer_relative_imports.dart';
 import 'rules/prefer_single_quotes.dart';
-import 'rules/prefer_sizedbox_over_container.dart';
 import 'rules/prefer_spread_collections.dart';
 import 'rules/prefer_typing_uninitialized_variables.dart';
 import 'rules/prefer_void_to_null.dart';
@@ -133,6 +132,7 @@ import 'rules/pub/package_names.dart';
 import 'rules/pub/sort_pub_dependencies.dart';
 import 'rules/public_member_api_docs.dart';
 import 'rules/recursive_getters.dart';
+import 'rules/sized_box_for_whitespace.dart';
 import 'rules/slash_for_doc_comments.dart';
 import 'rules/sort_child_properties_last.dart';
 import 'rules/sort_constructors_first.dart';
@@ -296,7 +296,6 @@ void registerLintRules() {
     ..register(PreferNullAwareOperators())
     ..register(PreferRelativeImports())
     ..register(PreferSingleQuotes())
-    ..register(PreferSizedBoxOverContainer())
     ..register(PreferSpreadCollections())
     ..register(PreferTypingUninitializedVariables())
     ..register(PreferVoidToNull())
@@ -304,6 +303,7 @@ void registerLintRules() {
     ..register(PublicMemberApiDocs())
     ..register(PubPackageNames())
     ..register(RecursiveGetters())
+    ..register(SizedBoxForWhitespace())
     ..register(SlashForDocComments())
     ..register(SortChildPropertiesLast())
     ..register(SortConstructorsFirst())

@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// test w/ `pub run test -N prefer_sizedbox_over_container`
+// test w/ `pub run test -N sized_box_for_whitespace`
 
-// ignore_for_file: prefer_expression_function_bodies
+// ignore_for_file: sized_box_for_whitespace
 
 import 'package:flutter/widgets.dart';
 
@@ -59,40 +59,3 @@ Widget emptyContainerWithWidthAndHeight() {
     height: 10,
   );
 }
-
-Widget buildRowWidth() {
-  return Row(
-    children: <Widget>[
-      const MyLogo(),
-      Container(width: 4), // LINT
-      const Expanded(
-        child: Text('...'),
-      ),
-    ],
-  );
-}
-
-Widget buildRowHeight() {
-  return Row(
-    children: <Widget>[
-      const MyLogo(),
-      Container(height: 4), // LINT
-      const Expanded(
-        child: Text('...'),
-      ),
-    ],
-  );
-}
-
-Widget buildRowWidthAndHeight() {
-  return Row(
-    children: <Widget>[
-      const MyLogo(),
-      Container(width: 4, height: 4), // LINT
-      const Expanded(
-        child: Text('...'),
-      ),
-    ],
-  );
-}
-

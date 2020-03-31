@@ -8,9 +8,9 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 import '../util/flutter_utils.dart';
 
-const _desc = r'Prefer SizedBox over Container.';
+const _desc = r'SizedBox for whitespace.';
 
-const _details = r'''Prefer SizedBox over Container for introducing blank space.
+const _details = r'''Use SizedBox to add whitespace to a layout.
 
 A `Container` is a heavier Widget than a `SizedBox`, and as bonus, `SizedBox` 
 has a `const` constructor.
@@ -46,10 +46,10 @@ Widget buildRow() {
 ```
 ''';
 
-class PreferSizedBoxOverContainer extends LintRule implements NodeLintRule {
-  PreferSizedBoxOverContainer()
+class SizedBoxForWhitespace extends LintRule implements NodeLintRule {
+  SizedBoxForWhitespace()
       : super(
-            name: 'prefer_sizedbox_over_container',
+            name: 'sized_box_for_whitespace',
             description: _desc,
             details: _details,
             group: Group.style);
