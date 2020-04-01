@@ -4,8 +4,6 @@
 
 // test w/ `pub run test -N sized_box_for_whitespace`
 
-// ignore_for_file: sized_box_for_whitespace
-
 import 'package:flutter/widgets.dart';
 
 Widget containerWithChild() {
