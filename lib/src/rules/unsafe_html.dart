@@ -62,22 +62,12 @@ class _Visitor extends SimpleAstVisitor<void> {
   // single-quotes to match the convention in the analyzer and linter packages.
   // This requires some coordination within Google, as various allow-lists are
   // keyed on the exact text of the LintCode message.
-  static const hrefAttributeCode =
-      LintCode('unsafe_html', '$_descPrefix (assigning "href" attribute).');
-  static const srcAttributeCode =
-      LintCode('unsafe_html', '$_descPrefix (assigning "src" attribute).');
-  static const srcdocAttributeCode =
-      LintCode('unsafe_html', '$_descPrefix (assigning "srcdoc" attribute).');
-  static const createFragmentMethodCode = LintCode('unsafe_html',
-      "$_descPrefix (calling the 'createFragment' method of Element).");
-  static const openMethodCode = LintCode(
-      'unsafe_html', "$_descPrefix (calling the 'open' method of Window).");
-  static const setInnerHtmlMethodCode = LintCode('unsafe_html',
-      "$_descPrefix (calling the 'setInnerHtml' method of Element).");
-  static const documentFragmentHtmlConstructorCode = LintCode('unsafe_html',
-      "$_descPrefix (calling the 'html' constructor of DocumentFragment).");
-  static const elementHtmlConstructorCode = LintCode('unsafe_html',
-      "$_descPrefix (calling the 'html' constructor of Element).");
+  static const unsafeAttributeCode =
+      LintCode('unsafe_html', '$_descPrefix (assigning "{0}" attribute).');
+  static const unsafeMethodCode = LintCode(
+      'unsafe_html', "$_descPrefix (calling the '{0}' method of {1}).");
+  static const unsafeConstructorCode = LintCode(
+      'unsafe_html', "$_descPrefix (calling the '{0}' constructor of {1}).");
 
   final LintRule rule;
 
@@ -102,7 +92,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (property.name == 'href') {
       final type = target.staticType;
       if (type.isDynamic || type.extendsDartHtmlClass('AnchorElement')) {
-        rule.reportLint(assignment, errorCode: hrefAttributeCode);
+        rule.reportLint(assignment,
+            arguments: ['href'], errorCode: unsafeAttributeCode);
       }
     } else if (property.name == 'src') {
       final type = target.staticType;
@@ -111,12 +102,14 @@ class _Visitor extends SimpleAstVisitor<void> {
           type.extendsDartHtmlClass('IFrameElement') ||
           type.extendsDartHtmlClass('ImageElement') ||
           type.extendsDartHtmlClass('ScriptElement')) {
-        rule.reportLint(assignment, errorCode: srcAttributeCode);
+        rule.reportLint(assignment,
+            arguments: ['src'], errorCode: unsafeAttributeCode);
       }
     } else if (property.name == 'srcdoc') {
       final type = target.staticType;
       if (type.isDynamic || type.extendsDartHtmlClass('IFrameElement')) {
-        rule.reportLint(assignment, errorCode: srcdocAttributeCode);
+        rule.reportLint(assignment,
+            arguments: ['srcdoc'], errorCode: unsafeAttributeCode);
       }
     }
   }
@@ -129,9 +122,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     var constructorName = node.constructorName;
     if (constructorName?.name?.name == 'html') {
       if (type.extendsDartHtmlClass('DocumentFragment')) {
-        rule.reportLint(node, errorCode: documentFragmentHtmlConstructorCode);
+        rule.reportLint(node,
+            arguments: ['html', 'DocumentFragment'],
+            errorCode: unsafeConstructorCode);
       } else if (type.extendsDartHtmlClass('Element')) {
-        rule.reportLint(node, errorCode: elementHtmlConstructorCode);
+        rule.reportLint(node,
+            arguments: ['html', 'Element'], errorCode: unsafeConstructorCode);
       }
     }
   }
@@ -146,13 +142,17 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     if (methodName == 'createFragment' &&
         (type.isDynamic || type.extendsDartHtmlClass('Element'))) {
-      rule.reportLint(node, errorCode: createFragmentMethodCode);
+      rule.reportLint(node,
+          arguments: ['createFragment', 'Element'],
+          errorCode: unsafeMethodCode);
     } else if (methodName == 'setInnerHtml' &&
         (type.isDynamic || type.extendsDartHtmlClass('Element'))) {
-      rule.reportLint(node, errorCode: setInnerHtmlMethodCode);
+      rule.reportLint(node,
+          arguments: ['setInnerHtml', 'Element'], errorCode: unsafeMethodCode);
     } else if (methodName == 'open' &&
         (type.isDynamic || type.extendsDartHtmlClass('Window'))) {
-      rule.reportLint(node, errorCode: openMethodCode);
+      rule.reportLint(node,
+          arguments: ['open', 'Window'], errorCode: unsafeMethodCode);
     }
   }
 }

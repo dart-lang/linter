@@ -1,0 +1,205 @@
+// Copyright (c) 2016, the Dart project authors. Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/standard_resolution_map.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/type.dart';
+import 'package:linter/src/analyzer.dart';
+import 'package:linter/src/util/dart_type_utilities.dart';
+
+typedef _InterfaceTypePredicate = bool Function(InterfaceType type);
+
+/// Returns a predicate which returns whether some [InterfaceTypeDefinition] is
+/// equal to [definition].
+_InterfaceTypePredicate _buildImplementsDefinitionPredicate(
+        InterfaceTypeDefinition definition) =>
+    (InterfaceType interface) =>
+        interface.name == definition.name &&
+        interface.element.library.name == definition.library;
+
+/// Returns all implemented interfaces of [type].
+///
+/// This basically flattens all of the super-interfaces of [type] into one list.
+List<InterfaceType> _findImplementedInterfaces(InterfaceType type,
+        {List<InterfaceType> acc = const []}) =>
+    acc.contains(type)
+        ? acc
+        : type.interfaces.fold(
+            <InterfaceType>[type],
+            (List<InterfaceType> acc, InterfaceType e) => new List.from(acc)
+              ..addAll(_findImplementedInterfaces(e, acc: acc)));
+
+/// Returns the [n]th type argument (0-indexed) on [definition], as implemented
+/// by [type].
+///
+/// In the simplest case, [type] is the same class as [definition]. For
+/// example, given the definition `List<E>` the type `List<int>`, and `n` is 0,
+/// this function returns the DartType for `int`.
+///
+/// In a more complicated case, we must traverse [type]'s interfaces to find
+/// [definition]. For example, given the definition `Map<K, V>` the type `A`
+/// where `A implements B<List>` and `B<E> implements Map<int, String>, C<E>`,
+/// and `n` is 1, this function returns the DartType for `String`.
+
+/// Returns one InterfaceType from those represented in [definitions] that
+/// [type] implements.
+///
+/// Returns `null` if [type] impmenets none of the [definitions].
+///
+/// It is assumed that either:
+///
+/// * [type] only implements **one** of the types represented in [definitions],
+///   or
+/// * [type] might implement more than one of the types represented in
+///   [definitions], but that they are equivalent as far as
+///   [UnrelatedTypesProcessors] are concerned. For example, [type] might
+///   implement both List and Queue, but the concerned UnrelatedTypesProcessors
+///   only concerns itself with the `contains` and `remove` method of each of
+///   these classes, and would report the same whether this function returned
+///   the InterfaceType for List or Queue.
+InterfaceType _findImplementedInterfaceType(
+    Iterable<InterfaceTypeDefinition> definitions, InterfaceType type,
+    {List<InterfaceType> accumulator = const []}) {
+  if (type == null ||
+      type.isObject ||
+      type.isDynamic ||
+      accumulator.contains(type)) {
+    return null;
+  }
+
+  // As per the doc comment on this method, we will just iterate through
+  // [definitions], returning the first one which [type] implements.
+  for (var definition in definitions) {
+    _InterfaceTypePredicate predicate =
+        _buildImplementsDefinitionPredicate(definition);
+    if (predicate(type)) {
+      //return type.typeArguments.first;
+      return type;
+    }
+
+    List<InterfaceType> implementedInterfaces =
+        _findImplementedInterfaces(type);
+    InterfaceType interface =
+        implementedInterfaces.firstWhere(predicate, orElse: () => null);
+    if (interface != null /*&& interface.typeArguments.isNotEmpty*/) {
+      //return interface.typeArguments.first;
+      return interface;
+    }
+
+    interface = _findImplementedInterfaceType(definition, type.superclass,
+        accumulator: [type]
+          ..addAll(accumulator)
+          ..addAll(implementedInterfaces));
+    if (supertype != null) {
+      return interface;
+    }
+  }
+
+  // [type] implements none of the types represented in [definitions].
+  return null;
+}
+
+List<MethodOnType> _getLaxMethods(
+    Map<String, Set<String>> methods, MethodInvocation node) {
+  var methodName = node.methodName.name;
+  if (methods.containsKey(methodName) &&
+      node.argumentList.arguments.length == 1) {
+    return methods[methodName].firstWhere((methodOnType) => methodOnType.type);
+  } else {
+    return null;
+  }
+}
+
+/// A method on a specific Dart type.
+class MethodOnType {
+  final InterfaceTypeDefinition type;
+  final String methodName;
+
+  /// Whether the single parameter on the method is expected to be the type of
+  /// the elements of [type] (such as `List<E>.contains(Object)`), or is
+  /// expected to be an Iterable of the type of the elements of [type] (such as
+  /// `Set<E>.containsAll(Iterable<Object>)`).
+  final bool parameterIsIterable;
+
+  const MethodOnType(this.type, this.methodName,
+      {this.parameterIsIterable = false});
+}
+
+/// Base class for visitor used in rules where we want to lint about invoking
+/// methods on generic classes where the parameter is unrelated to the parameter
+/// type of the class. Extending this visitor is as simple as knowing the method,
+/// class and library that uniquely define the target, i.e. implement only
+/// [definition] and [methodName].
+abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
+  final LintRule rule;
+
+  UnrelatedTypesProcessors(this.rule);
+
+  //InterfaceTypeDefinition get definition;
+
+  Map<String, Set<MethodOnType>> get methods;
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    final laxMethods = _getLaxMethods(methods, node);
+    if (laxMethods == null) {
+      return;
+    }
+
+    // At this point, we know that there are one ore more types that have a
+    // method with the same name as the method which is invoked in [node]. We
+    // don't yet know whether the method's target implements any of the
+    // relevant types.
+
+    final targetType = _getMethodInvocationTargetType(node);
+
+    Expression argument = node.argumentList.arguments.first;
+    final implementedType =
+        _findImplementedInterfaceType(definitions, targetType);
+    if (implementedType == null) {
+      return;
+    }
+    // At this point, we know that the target of the method invoked in [node]
+    // implements one of the
+    // At this point, we know that [node] represents an invocation of a method
+    // which has a single parameter of type [Object]. We would like to now
+    // report a lint if the argument's static type is "unrelated" to the
+    // method target's static type.
+    if (targetType is InterfaceType &&
+        DartTypeUtilities.unrelatedTypes(
+            argument.staticType, implementedType)) {
+      rule.reportLint(node);
+    }
+  }
+
+  /// Returns the static type of the target of [node].
+  DartType _getMethodInvocationTargetType(MethodInvocation node) {
+    // If the method invocation has a target, get the static type of that
+    // target.
+    if (node.target != null) {
+      return node.target.staticType;
+    }
+
+    // Otherwise, the method is being invoked from within the class/mixin in
+    // which it is declared (or a sub-class); fetch the type of the current
+    // class/mixin delcaration.
+    var classDeclaration = node.thisOrAncestorOfType<ClassOrMixinDeclaration>();
+    if (classDeclaration == null) {
+      return null;
+    }
+
+    if (classDeclaration is ClassDeclaration) {
+      return resolutionMap
+          .elementDeclaredByClassDeclaration(classDeclaration)
+          ?.type;
+    }
+
+    if (classDeclaration is MixinDeclaration) {
+      return resolutionMap
+          .elementDeclaredByMixinDeclaration(classDeclaration)
+          ?.type;
+    }
+  }
+}
