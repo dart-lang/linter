@@ -58,6 +58,10 @@ class UnsafeHtml extends LintRule implements NodeLintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
+  // TODO(srawlins): Reference attributes ('href', 'src', and 'srcdoc') with
+  // single-quotes to match the convention in the analyzer and linter packages.
+  // This requires some coordination within Google, as various allow-lists are
+  // keyed on the exact text of the LintCode message.
   static const hrefAttributeCode =
       LintCode('unsafe_html', '$_descPrefix (assigning "href" attribute).');
   static const srcAttributeCode =
@@ -65,15 +69,15 @@ class _Visitor extends SimpleAstVisitor<void> {
   static const srcdocAttributeCode =
       LintCode('unsafe_html', '$_descPrefix (assigning "srcdoc" attribute).');
   static const createFragmentMethodCode = LintCode('unsafe_html',
-      '$_descPrefix (calling the "createFragment" method of Element).');
+      "$_descPrefix (calling the 'createFragment' method of Element).");
   static const openMethodCode = LintCode(
-      'unsafe_html', '$_descPrefix (calling the "open" method of Window).');
+      'unsafe_html', "$_descPrefix (calling the 'open' method of Window).");
   static const setInnerHtmlMethodCode = LintCode('unsafe_html',
-      '$_descPrefix (calling the "setInnerHtml" method of Element).');
+      "$_descPrefix (calling the 'setInnerHtml' method of Element).");
   static const documentFragmentHtmlConstructorCode = LintCode('unsafe_html',
-      '$_descPrefix (calling the "html" constructor of DocumentFragment).');
+      "$_descPrefix (calling the 'html' constructor of DocumentFragment).");
   static const elementHtmlConstructorCode = LintCode('unsafe_html',
-      '$_descPrefix (calling the "html" constructor of Element).');
+      "$_descPrefix (calling the 'html' constructor of Element).");
 
   final LintRule rule;
 
