@@ -21,7 +21,10 @@ const _details = r'''
   ImageElement, or ScriptElement
 * assigning directly to the `srcdoc` field of an IFrameElement
 * calling the `createFragment` method of Element
+* calling the `open` method of Window
 * calling the `setInnerHtml` method of Element
+* calling the `Element.html` constructor
+* calling the `DocumentFragment.html` constructor
 
 
 **BAD:**
@@ -49,6 +52,7 @@ class UnsafeHtml extends LintRule implements NodeLintRule {
       NodeLintRegistry registry, LinterContext context) {
     final visitor = _Visitor(this);
     registry.addAssignmentExpression(this, visitor);
+    registry.addInstanceCreationExpression(this, visitor);
     registry.addMethodInvocation(this, visitor);
   }
 }
@@ -62,8 +66,14 @@ class _Visitor extends SimpleAstVisitor<void> {
       LintCode('unsafe_html', '$_descPrefix (assigning "srcdoc" attribute).');
   static const createFragmentMethodCode = LintCode('unsafe_html',
       '$_descPrefix (calling the "createFragment" method of Element).');
+  static const openMethodCode = LintCode(
+      'unsafe_html', '$_descPrefix (calling the "open" method of Window).');
   static const setInnerHtmlMethodCode = LintCode('unsafe_html',
       '$_descPrefix (calling the "setInnerHtml" method of Element).');
+  static const documentFragmentHtmlConstructorCode = LintCode('unsafe_html',
+      '$_descPrefix (calling the "html" constructor of DocumentFragment).');
+  static const elementHtmlConstructorCode = LintCode('unsafe_html',
+      '$_descPrefix (calling the "html" constructor of Element).');
 
   final LintRule rule;
 
@@ -108,6 +118,21 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    var type = node.staticType;
+    if (type == null) return;
+
+    var constructorName = node.constructorName;
+    if (constructorName?.name?.name == 'html') {
+      if (type.extendsDartHtmlClass('DocumentFragment')) {
+        rule.reportLint(node, errorCode: documentFragmentHtmlConstructorCode);
+      } else if (type.extendsDartHtmlClass('Element')) {
+        rule.reportLint(node, errorCode: elementHtmlConstructorCode);
+      }
+    }
+  }
+
+  @override
   void visitMethodInvocation(MethodInvocation node) {
     var type = node.target?.staticType;
     if (type == null) return;
@@ -121,6 +146,9 @@ class _Visitor extends SimpleAstVisitor<void> {
     } else if (methodName == 'setInnerHtml' &&
         (type.isDynamic || type.extendsDartHtmlClass('Element'))) {
       rule.reportLint(node, errorCode: setInnerHtmlMethodCode);
+    } else if (methodName == 'open' &&
+        (type.isDynamic || type.extendsDartHtmlClass('Window'))) {
+      rule.reportLint(node, errorCode: openMethodCode);
     }
   }
 }
