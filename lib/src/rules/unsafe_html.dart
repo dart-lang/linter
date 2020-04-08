@@ -79,7 +79,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitAssignmentExpression(AssignmentExpression node) {
     final leftPart = node.leftHandSide.unParenthesized;
     if (leftPart is SimpleIdentifier) {
-      var enclosingElement = leftPart.staticElement.enclosingElement;
+      var leftPartElement = leftPart.staticElement;
+      if (leftPartElement == null) return;
+      var enclosingElement = leftPartElement.enclosingElement;
       if (enclosingElement is ClassElement) {
         _checkAssignment(enclosingElement.thisType, leftPart, node);
       }
@@ -146,7 +148,9 @@ class _Visitor extends SimpleAstVisitor<void> {
     DartType type;
     if (node.realTarget == null) {
       // Implicit `this` target.
-      var enclosingElement = node.methodName.staticElement.enclosingElement;
+      var methodElement = node.methodName.staticElement;
+      if (methodElement == null) return;
+      var enclosingElement = methodElement.enclosingElement;
       if (enclosingElement is ClassElement) {
         type = enclosingElement.thisType;
       } else {
