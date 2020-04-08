@@ -8,7 +8,7 @@ analyzer:
     - .history/**
     - test/_data/**
     - test/mock_packages/**
-    #- test/rules/**
+    - test/rules/**
 linter:
   rules:
 #    - always_put_control_body_on_new_line
@@ -102,7 +102,6 @@ linter:
     - unnecessary_overrides
     - unnecessary_parenthesis
     - unnecessary_statements
-    - unsafe_html
     - use_setters_to_change_properties
     - use_string_buffers
     - use_to_and_as_if_applicable
