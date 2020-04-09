@@ -47,9 +47,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  bool hasTypeName(String name) =>
+  bool isTypeName(String name) =>
       // TODO(a14n) test that parameter name matches a existing type. No api to do
       // that for now.
+      // todo (pq): consider adding a lookup method to LinterContext.
       name != null &&
       (name.startsWith(RegExp('[A-Z]')) ||
           ['num', 'int', 'double', 'bool', 'dynamic'].contains(name));
@@ -57,7 +58,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitCatchClause(CatchClause node) {
     final parameter = node.exceptionParameter;
-    if (parameter != null && hasTypeName(parameter.name)) {
+    if (parameter != null && isTypeName(parameter.name)) {
       rule.reportLint(parameter);
     }
   }
@@ -68,7 +69,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     for (final parameter in node.parameters) {
       if (parameter.declaredElement.hasImplicitType &&
-          hasTypeName(parameter.identifier.name)) {
+          isTypeName(parameter.identifier.name)) {
         rule.reportLint(parameter.identifier);
       }
     }
