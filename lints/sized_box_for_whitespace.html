@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>unsafe_html</title>
+      <title>sized_box_for_whitespace</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>unsafe_html</h1>
-            <p>Group: errors</p>
+            <h1>sized_box_for_whitespace</h1>
+            <p>Group: style</p>
             <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.3.2-dev.0.1 • <small>(Linter v0.1.90)</small></p>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.115)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,20 +28,34 @@
          </header>
          <section>
 
-            <p><strong>AVOID</strong></p>
-<ul>
-<li>assigning directly to the <code>href</code> field of an AnchorElement</li>
-<li>assigning directly to the <code>src</code> field of an EmbedElement, IFrameElement,
-ImageElement, or ScriptElement</li>
-<li>assigning directly to the <code>srcdoc</code> field of an IFrameElement</li>
-<li>calling the <code>createFragment</code> method of Element</li>
-<li>calling the <code>open</code> method of Window</li>
-<li>calling the <code>setInnerHtml</code> method of Element</li>
-<li>calling the <code>Element.html</code> constructor</li>
-<li>calling the <code>DocumentFragment.html</code> constructor</li>
-</ul>
+            <p>Use SizedBox to add whitespace to a layout.</p>
+<p>A <code>Container</code> is a heavier Widget than a <code>SizedBox</code>, and as bonus, <code>SizedBox</code> 
+has a <code>const</code> constructor.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>var script = ScriptElement()..src = 'foo.js';
+<pre><code>Widget buildRow() {
+  return Row(
+    children: &lt;Widget&gt;[
+      const MyLogo(),
+      Container(width: 4),
+      const Expanded(
+        child: Text('...'),
+      ),
+    ],
+  );
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>Widget buildRow() {
+  return Row(
+    children: const &lt;Widget&gt;[
+      MyLogo(),
+      SizedBox(width: 4),
+      Expanded(
+        child: Text('...'),
+      ),
+    ],
+  );
+}
 </code></pre>
 
             
