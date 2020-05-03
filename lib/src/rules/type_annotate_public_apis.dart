@@ -49,6 +49,13 @@ With types, all of this is clarified.
 
 ''';
 
+zz() => null;
+
+class A {
+  final x = '';
+  final z = zz(); //LINT
+}
+
 class TypeAnnotatePublicApis extends LintRule implements NodeLintRule {
   TypeAnnotatePublicApis()
       : super(
@@ -130,6 +137,11 @@ class _VisitorHelper extends RecursiveAstVisitor {
 
   _VisitorHelper(this.rule);
 
+  bool hasInferredType(VariableDeclaration node) {
+    var staticType = node.initializer.staticType;
+    return !staticType.isDynamic && !staticType.isDartCoreNull;
+  }
+
   @override
   void visitSimpleFormalParameter(SimpleFormalParameter param) {
     if (param.type == null && !isJustUnderscores(param.identifier.name)) {
@@ -139,7 +151,9 @@ class _VisitorHelper extends RecursiveAstVisitor {
 
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
-    if (!isPrivate(node.name) && !node.isConst) {
+    if (!isPrivate(node.name) &&
+        !node.isConst &&
+        !(node.isFinal && hasInferredType(node))) {
       rule.reportLint(node.name);
     }
   }
