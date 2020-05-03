@@ -16,91 +16,13 @@ mixin M {}
 
 class C with M {} // OK
 
-class I with IterableMixin //OK
-{
-  @override
-  Iterator get iterator => throw UnimplementedError();
-}
+abstract class I with IterableMixin {} //OK
 
-class L with ListMixin //OK
-{
-  @override
-  int length;
+abstract class L with ListMixin {} //OK
 
-  @override
-  Object operator [](int index) {
-    throw UnimplementedError();
-  }
+abstract class MM with MapMixin {} //OK
 
-  @override
-  void operator []=(int index, value) {}
-}
+abstract class S with SetMixin {} //OK
 
-class MM with MapMixin //OK
-{
-  @override
-  Object operator [](Object key) {
-    throw UnimplementedError();
-  }
+abstract class SCS with StringConversionSinkMixin {} //OK
 
-  @override
-  void operator []=(key, value) {
-  }
-
-  @override
-  void clear() {
-  }
-
-  @override
-  Iterable get keys => throw UnimplementedError();
-
-  @override
-  Object remove(Object key) {
-    throw UnimplementedError();
-  }
-}
-
-class S with SetMixin //OK
-{
-  @override
-  bool add(value) {
-    throw UnimplementedError();
-  }
-
-  @override
-  bool contains(Object valuent) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Iterator get iterator => throw UnimplementedError();
-
-  @override
-  int get length => throw UnimplementedError();
-
-  @override
-  Object lookup(Object valuent) {
-    throw UnimplementedError();
-  }
-
-  @override
-  bool remove(Object value) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Set toSet() {
-    throw UnimplementedError();
-  }
-}
-
-class SCS with StringConversionSinkMixin //OK
-{
-  @override
-  void addSlice(String str, int start, int end, bool isLast) {
-  }
-
-  @override
-  void close() {
-  }
-}
