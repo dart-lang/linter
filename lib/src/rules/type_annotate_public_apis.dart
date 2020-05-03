@@ -49,13 +49,6 @@ With types, all of this is clarified.
 
 ''';
 
-zz() => null;
-
-class A {
-  final x = '';
-  final z = zz(); //LINT
-}
-
 class TypeAnnotatePublicApis extends LintRule implements NodeLintRule {
   TypeAnnotatePublicApis()
       : super(
