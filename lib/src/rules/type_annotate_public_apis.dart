@@ -131,8 +131,10 @@ class _VisitorHelper extends RecursiveAstVisitor {
   _VisitorHelper(this.rule);
 
   bool hasInferredType(VariableDeclaration node) {
-    var staticType = node.initializer.staticType;
-    return !staticType.isDynamic && !staticType.isDartCoreNull;
+    var staticType = node?.initializer?.staticType;
+    return staticType != null &&
+        !staticType.isDynamic &&
+        !staticType.isDartCoreNull;
   }
 
   @override
