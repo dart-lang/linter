@@ -10,7 +10,7 @@ import 'package:analyzer/dart/element/type.dart';
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
 
-const _desc = r'Define case clauses for all constants in enum-like classes';
+const _desc = r'Define case clauses for all constants in enum-like classes.';
 
 const _details = r'''
 Switching on instances of enum-like classes should be exhaustive.
