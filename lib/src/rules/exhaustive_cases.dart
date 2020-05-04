@@ -44,7 +44,6 @@ void bad(EnumLike e) {
       break;
   }
 }
-
 ```
 
 **GOOD:**
