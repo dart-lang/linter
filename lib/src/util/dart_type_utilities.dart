@@ -28,6 +28,8 @@ class DartTypeUtilities {
       }
     }
 
+    var type = classElement.thisType;
+
     // And 2 or more static const fields whose type is the enclosing class.
     var enumConstantNames = <String>[];
     for (var field in classElement.fields) {
@@ -36,7 +38,7 @@ class DartTypeUtilities {
         continue;
       }
       // Check for type equality.
-      if (field.type != classElement.thisType) {
+      if (field.type != type) {
         continue;
       }
       enumConstantNames.add(field.name);
@@ -46,7 +48,6 @@ class DartTypeUtilities {
     }
 
     // And no subclasses in the defining library.
-    var type = classElement.thisType;
     var compilationUnit = classElement.library.definingCompilationUnit;
     for (var cls in compilationUnit.types) {
       var classType = cls.thisType;
@@ -55,7 +56,7 @@ class DartTypeUtilities {
         if (classType == type) {
           return null;
         }
-      } while (classType != null && !classType.isDartCoreObject);
+      } while (!classType.isDartCoreObject);
     }
 
     return EnumLikeClassDescription(enumConstantNames);
