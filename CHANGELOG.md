@@ -1,6 +1,6 @@
 # 0.1.116
 
-* new lint: `no_default_cases`
+* new lint: `no_default_cases` (experimental)
 * new lint: `exhaustive_cases`
 * updated `type_annotate_public_apis` to allow inferred types in final field assignments
 * updated `prefer_mixin` to allow "legacy" SDK abstract class mixins
