@@ -2,7 +2,7 @@
 
 * new lint: `no_default_cases`
 * new lint: `exhaustive_cases`
-* updated `type_annotate_public_apis.dart` to allow inferred types in final field assignments
+* updated `type_annotate_public_apis` to allow inferred types in final field assignments
 * updated `prefer_mixin.dart` to allow "legacy" SDK abstract class mixins
 * new lint: `use_is_even_rather_than_modulo`
 * update `unsafe_html` to use a `SecurityLintCode` (making it un-ignorable)
