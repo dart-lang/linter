@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>sized_box_for_whitespace</title>
+      <title>exhaustive_cases</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>sized_box_for_whitespace</h1>
+            <h1>exhaustive_cases</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.9.0-4.0.dev • <small>(Linter v0.1.115)</small></p>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.116)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,33 +28,59 @@
          </header>
          <section>
 
-            <p>Use SizedBox to add whitespace to a layout.</p>
-<p>A <code>Container</code> is a heavier Widget than a <code>SizedBox</code>, and as bonus, <code>SizedBox</code>
-has a <code>const</code> constructor.</p>
+            <p>Switching on instances of enum-like classes should be exhaustive.</p>
+<p>Enum-like classes are defined as concrete (non-abstract) classes that have:</p>
+<ul>
+<li>only private non-factory constructors</li>
+<li>two or more static const fields whose type is the enclosing class and</li>
+<li>no subclasses of the class in the defining library</li>
+</ul>
+<p><strong>DO</strong> define case clauses for all constants in enum-like classes.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Widget buildRow() {
-  return Row(
-    children: &lt;Widget&gt;[
-      const MyLogo(),
-      Container(width: 4),
-      const Expanded(
-        child: Text('...'),
-      ),
-    ],
-  );
+<pre><code>class EnumLike {
+  final int i;
+  const E._(this.i);
+
+  static const e = E._(1);
+  static const f = E._(2);
+  static const g = E._(3);
+}
+
+void bad(EnumLike e) {
+  // Missing case.
+  switch(e) { // LINT
+    case E.e :
+      print('e');
+      break;
+    case E.f :
+      print('e');
+      break;
+  }
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Widget buildRow() {
-  return Row(
-    children: const &lt;Widget&gt;[
-      MyLogo(),
-      SizedBox(width: 4),
-      Expanded(
-        child: Text('...'),
-      ),
-    ],
-  );
+<pre><code>class EnumLike {
+  final int i;
+  const E._(this.i);
+
+  static const e = E._(1);
+  static const f = E._(2);
+  static const g = E._(3);
+}
+
+void ok(E e) {
+  // All cases covered.
+  switch(e) { // OK
+    case E.e :
+      print('e');
+      break;
+    case E.f :
+      print('e');
+      break;
+    case E.g :
+      print('e');
+      break;
+  }
 }
 </code></pre>
 

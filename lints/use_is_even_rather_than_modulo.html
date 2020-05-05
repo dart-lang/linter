@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>sized_box_for_whitespace</title>
+      <title>use_is_even_rather_than_modulo</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>sized_box_for_whitespace</h1>
+            <h1>use_is_even_rather_than_modulo</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.9.0-4.0.dev • <small>(Linter v0.1.115)</small></p>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.116)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,34 +28,14 @@
          </header>
          <section>
 
-            <p>Use SizedBox to add whitespace to a layout.</p>
-<p>A <code>Container</code> is a heavier Widget than a <code>SizedBox</code>, and as bonus, <code>SizedBox</code>
-has a <code>const</code> constructor.</p>
+            <p><strong>PREFER</strong> the use of intValue.isOdd/isEven to check for evenness.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Widget buildRow() {
-  return Row(
-    children: &lt;Widget&gt;[
-      const MyLogo(),
-      Container(width: 4),
-      const Expanded(
-        child: Text('...'),
-      ),
-    ],
-  );
-}
+<pre><code>bool isEven = 1 % 2 == 0;
+bool isOdd = 13 % 2 == 1;
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Widget buildRow() {
-  return Row(
-    children: const &lt;Widget&gt;[
-      MyLogo(),
-      SizedBox(width: 4),
-      Expanded(
-        child: Text('...'),
-      ),
-    ],
-  );
-}
+<pre><code>bool isEven = 1.isEven;
+bool isOdd = 13.isOdd;
 </code></pre>
 
             
