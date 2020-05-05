@@ -4,10 +4,11 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:linter/src/util/dart_type_utilities.dart';
 
 import '../analyzer.dart';
+import '../util/dart_type_utilities.dart';
 
 const _desc = r'No default cases.';
 
@@ -67,22 +68,20 @@ class _Visitor extends SimpleAstVisitor {
 
   _Visitor(this.rule);
 
+  bool isEnumLikeClass(ClassElement classElement) =>
+      DartTypeUtilities.asEnumLikeClass(classElement) != null;
+
   @override
   void visitSwitchStatement(SwitchStatement statement) {
     var expressionType = statement.expression.staticType;
     if (expressionType is InterfaceType) {
-      // Restrict checks to enums and enum-like classes.
-      var classElement = expressionType.element;
-      if (!classElement.isEnum) {
-        var enumDescription = DartTypeUtilities.asEnumLikeClass(classElement);
-        if (enumDescription == null) {
-          return;
-        }
-      }
-
       for (var member in statement.members) {
         if (member is SwitchDefault) {
-          rule.reportLint(member);
+          var classElement = expressionType.element;
+          if (classElement.isEnum || isEnumLikeClass(classElement)) {
+            rule.reportLint(member);
+          }
+          return;
         }
       }
     }
