@@ -143,9 +143,6 @@ bool _isRelativeDirective(NamespaceDirective node) =>
 String _packageDirectiveBeforeRelative(String type) =>
     "Place 'package:' ${type}s before relative ${type}s.";
 
-String _thirdPartyPackageDirectiveBeforeOwn(String type) =>
-    "Place 'third-party' 'package:' ${type}s before other ${type}s.";
-
 class DirectivesOrdering extends LintRule
     implements ProjectVisitor, NodeLintRule {
   DartProject project;
@@ -194,11 +191,6 @@ class DirectivesOrdering extends LintRule
     _reportLintWithDescription(node, _packageDirectiveBeforeRelative(type));
   }
 
-  void _reportLintWithThirdPartyPackageDirectiveBeforeOwnMessage(
-      AstNode node, String type) {
-    _reportLintWithDescription(
-        node, _thirdPartyPackageDirectiveBeforeOwn(type));
-  }
 }
 
 class _PackageBox {
@@ -225,7 +217,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     final lintedNodes = <AstNode>{};
     _checkDartDirectiveGoFirst(lintedNodes, node);
     _checkPackageDirectiveBeforeRelative(lintedNodes, node);
-    _checkThirdPartyDirectiveBeforeOwn(lintedNodes, node);
     _checkExportDirectiveAfterImportDirective(lintedNodes, node);
     _checkDirectiveSectionOrderedAlphabetically(lintedNodes, node);
   }
@@ -354,40 +345,6 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
       previousDirective = directive;
     }
-  }
-
-  void _checkThirdPartyDirectiveBeforeOwn(
-      Set<AstNode> lintedNodes, CompilationUnit node) {
-    if (project == null) {
-      return;
-    }
-
-    void reportImport(NamespaceDirective directive) {
-      if (lintedNodes.add(directive)) {
-        rule._reportLintWithThirdPartyPackageDirectiveBeforeOwnMessage(
-            directive, _importKeyword);
-      }
-    }
-
-    void reportExport(NamespaceDirective directive) {
-      if (lintedNodes.add(directive)) {
-        rule._reportLintWithThirdPartyPackageDirectiveBeforeOwnMessage(
-            directive, _exportKeyword);
-      }
-    }
-
-    Iterable<NamespaceDirective> getNodesToLint(
-        Iterable<NamespaceDirective> directives) {
-      final box = _PackageBox(project.name);
-      return directives
-          .where(_isPackageDirective)
-          .skipWhile(box._isNotOwnPackageDirective)
-          .where(box._isNotOwnPackageDirective);
-    }
-
-    getNodesToLint(_getImportDirectives(node)).forEach(reportImport);
-
-    getNodesToLint(_getExportDirectives(node)).forEach(reportExport);
   }
 
   Iterable<ExportDirective> _getExportDirectives(CompilationUnit node) =>
