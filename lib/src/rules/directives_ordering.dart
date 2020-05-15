@@ -70,26 +70,6 @@ import 'a.dart';
 import 'b.dart';
 ```
 
-**PREFER** placing “third-party” “package:” imports before other imports.
-
-**BAD:**
-```
-import 'package:myapp/io.dart';
-import 'package:myapp/util.dart';
-
-import 'package:bar/bar.dart';  // LINT
-import 'package:foo/foo.dart';  // LINT
-```
-
-**GOOD:**
-```
-import 'package:bar/bar.dart';  // OK
-import 'package:foo/foo.dart';  // OK
-
-import 'package:myapp/io.dart';
-import 'package:myapp/util.dart';
-```
-
 **DO** specify exports in a separate section after all imports.
 
 **BAD:**
