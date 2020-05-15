@@ -190,7 +190,6 @@ class DirectivesOrdering extends LintRule
       AstNode node, String type) {
     _reportLintWithDescription(node, _packageDirectiveBeforeRelative(type));
   }
-
 }
 
 class _PackageBox {
