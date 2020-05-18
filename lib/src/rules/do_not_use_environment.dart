@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Do not use environment variables.';
+const _desc = r'Do not use environment declared variables.';
 
 const _details = r'''
 Using values derived from the environment at compile-time, creates
@@ -45,7 +45,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    if (!node.staticElement.isFactory) {
+    if (node.staticElement?.isFactory != true) {
       return;
     }
 
