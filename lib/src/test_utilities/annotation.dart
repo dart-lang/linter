@@ -3,8 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/src/generated/source.dart';
-import 'package:linter/src/analyzer.dart';
+import 'package:analyzer/source/line_info.dart';
 
 Annotation extractAnnotation(int lineNumber, String line) {
   final regexp =
@@ -23,11 +22,6 @@ Annotation extractAnnotation(int lineNumber, String line) {
   final message = match[8].toNullIfBlank();
   return Annotation.forLint(message, column, length)
     ..lineNumber = lineNumber + relativeLine;
-}
-
-extension on String {
-  int toInt() => this == null ? null : int.parse(this);
-  String toNullIfBlank() => this == null || trim().isEmpty ? null : this;
 }
 
 /// Information about a 'LINT' annotation/comment.
@@ -63,4 +57,9 @@ class Annotation implements Comparable<Annotation> {
   @override
   String toString() =>
       '[$type]: "$message" (line: $lineNumber) - [$column:$length]';
+}
+
+extension on String {
+  int toInt() => this == null ? null : int.parse(this);
+  String toNullIfBlank() => this == null || trim().isEmpty ? null : this;
 }

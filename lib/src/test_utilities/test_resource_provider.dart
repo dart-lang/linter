@@ -7,9 +7,10 @@ import 'dart:io';
 import 'package:analyzer/file_system/file_system.dart' as file_system;
 import 'package:analyzer/file_system/memory_file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
-import 'package:analyzer/src/lint/linter.dart';
+// ignore: implementation_imports
 import 'package:analyzer/src/test_utilities/mock_sdk.dart';
-import 'package:linter/src/analyzer.dart';
+
+import '../analyzer.dart';
 
 /// Builds the [DartLinter] with appropriate mock SDK, resource providers, and
 /// package config path.
