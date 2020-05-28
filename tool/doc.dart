@@ -184,17 +184,17 @@ String getBadges(String rule) {
   if (flutterRules.contains(rule)) {
     sb.write(
         '<a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml">'
-            '<!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>');
+        '<!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>');
   }
   if (pedanticRules.contains(rule)) {
     sb.write(
         '<a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints">'
-            '<!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a>');
+        '<!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a>');
   }
   if (effectiveDartRules.contains(rule)) {
     sb.write(
         '<a class="style-type" href="https://github.com/tenhobi/effective_dart">'
-            '<!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a>');
+        '<!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a>');
   }
   return sb.toString();
 }
@@ -271,7 +271,8 @@ class Generator {
       sb.writeln('<p>');
       sb.write('Incompatible with: ');
       var rule = incompatibleRules.first;
-      sb.write('<!--suppress HtmlUnknownTarget --><a href = "$rule.html" >$rule</a>');
+      sb.write(
+          '<!--suppress HtmlUnknownTarget --><a href = "$rule.html" >$rule</a>');
       for (var i = 1; i < incompatibleRules.length; ++i) {
         rule = incompatibleRules[i];
         sb.write(', <a href = "$rule.html" >$rule</a>');
