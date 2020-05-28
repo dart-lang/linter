@@ -193,7 +193,7 @@ String getBadges(String rule) {
   }
   if (effectiveDartRules.contains(rule)) {
     sb.write(
-        '<a class="style-type" href="https://github.com/tenhobi/effective_dart"></a>'
+        '<a class="style-type" href="https://github.com/tenhobi/effective_dart">'
             '<!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a>');
   }
   return sb.toString();
