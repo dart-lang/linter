@@ -360,7 +360,6 @@ class Indexer {
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
       <link rel="stylesheet" href="../styles.css">
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
       <title>Linter for Dart</title>
    </head>
    <body>
@@ -455,7 +454,6 @@ linter:
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
       <link rel="stylesheet" href="../../styles.css">
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
       <title>Analysis Options</title>
    </head>
   <body>
