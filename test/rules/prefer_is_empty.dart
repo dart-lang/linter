@@ -27,15 +27,31 @@ class D {
   D(String s) : emptyString = s.length == 0; //LINT
 }
 
+class E {
+  final bool empty;
+  const E(dynamic l) : empty = l.length == 0; // OK
+  const E.a(this.empty);
+  const E.b(dynamic l) : this.a(l.length == 0); // OK
+}
+
+class F {
+  // ignore: avoid_positional_boolean_parameters
+  const F(bool b);
+}
+
+class G extends F {
+  const G(dynamic l) : super(l.length == 0); // OK
+}
+
 const int zero = 0;
 Iterable<int> list = [];
 Map map = {};
 
 Iterable get iterable => [];
 
-typedef F = Iterable Function();
+typedef Fun = Iterable Function();
 
-F a() => () => [];
+Fun a() => () => [];
 
 bool le = list.length > 0; //LINT
 bool le2 = [].length > 0; //LINT
