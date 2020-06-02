@@ -131,11 +131,15 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
     final binaryExpression = search as BinaryExpression;
 
-    // Don't lint if we're in an assert initializer.
-    final assertInitializer =
-        search.parent.thisOrAncestorOfType<AssertInitializer>();
-    if (assertInitializer != null) {
-      return;
+    // Don't lint if we're in a const constructor initializer.
+    final constructorInitializer =
+        search.parent.thisOrAncestorOfType<ConstructorInitializer>();
+    if (constructorInitializer != null) {
+      final constructorDecl =
+          constructorInitializer.parent as ConstructorDeclaration;
+      if (constructorDecl.constKeyword != null) {
+        return;
+      }
     }
 
     // Or in a const context.
