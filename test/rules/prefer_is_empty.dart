@@ -19,7 +19,12 @@ class B {
 
 class C {
   final bool empty;
-  const C(dynamic l) : this.empty = l.length == 0; //OK
+  const C(dynamic l) : empty = l.length == 0; //OK
+}
+
+class D {
+  final bool emptyString;
+  D(String s) : emptyString = s.length == 0; //LINT
 }
 
 const int zero = 0;
