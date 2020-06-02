@@ -22,7 +22,6 @@ class C {
   const C(dynamic l) : this.empty = l.length == 0; //OK
 }
 
-
 const int zero = 0;
 Iterable<int> list = [];
 Map map = {};
