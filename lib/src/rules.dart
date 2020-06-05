@@ -206,7 +206,7 @@ void registerLintRules() {
     ..register(AvoidPrint())
     ..register(AvoidPrivateTypedefFunctions())
     ..register(AvoidRedundantArgumentValues())
-    ..register(new AvoidRelativeImports())
+    ..register(AvoidRelativeImports())
     ..register(AvoidRelativeLibImports())
     ..register(AvoidRenamingMethodParameters())
     ..register(AvoidReturningNull())

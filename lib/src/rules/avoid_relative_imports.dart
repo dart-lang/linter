@@ -4,7 +4,8 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:linter/src/analyzer.dart';
+
+import '../analyzer.dart';
 
 const _desc = r'Avoid relative imports for all files`.';
 
@@ -51,7 +52,7 @@ class AvoidRelativeImports extends LintRule implements NodeLintRule {
   @override
   void registerNodeProcessors(NodeLintRegistry registry,
       [LinterContext context]) {
-    final visitor = new _Visitor(this);
+    final visitor = _Visitor(this);
     registry.addImportDirective(this, visitor);
   }
 }
@@ -63,7 +64,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool isRelativeImport(ImportDirective node) {
     try {
-      Uri uri = Uri.parse(node.uriContent);
+      final uri = Uri.parse(node.uriContent);
       return uri.scheme.isEmpty;
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
