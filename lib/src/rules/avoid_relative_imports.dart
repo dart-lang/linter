@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
+import '../ast.dart';
 
 const _desc = r'Avoid relative imports for all files`.';
 
@@ -52,19 +53,26 @@ class AvoidRelativeImports extends LintRule implements NodeLintRule {
             group: Group.errors);
 
   @override
-  void registerNodeProcessors(NodeLintRegistry registry,
-      [LinterContext context]) {
-    final visitor = _Visitor(this);
+  void registerNodeProcessors(
+      NodeLintRegistry registry, LinterContext context) {
+    final visitor = _Visitor(this, context);
+    registry.addCompilationUnit(this, visitor);
     registry.addImportDirective(this, visitor);
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+  final LinterContext context;
 
-  _Visitor(this.rule);
+  bool isInLibFolder;
+
+  _Visitor(this.rule, this.context);
 
   bool isRelativeImport(ImportDirective node) {
+    // Ignore this compilation unit if it's not in the lib/ folder.
+    if (!isInLibFolder) return false;
+
     try {
       final uri = Uri.parse(node.uriContent);
       return uri.scheme.isEmpty;
@@ -73,6 +81,11 @@ class _Visitor extends SimpleAstVisitor<void> {
       // Ignore.
     }
     return false;
+  }
+
+  @override
+  void visitCompilationUnit(CompilationUnit node) {
+    isInLibFolder = isInLibDir(node, context.package);
   }
 
   @override
