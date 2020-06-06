@@ -11,10 +11,12 @@ const _desc = r'Avoid relative imports for all files`.';
 
 const _details = r'''*DO* avoid relative imports for files in `lib/`.
 
-Mixing relative and absolute imports makes it complicated to refactor across
-multiple packages.
+When mixing relative and absolute imports it's possible to create confusion
+where the same member gets imported in two different ways. One way to avoid
+that is to ensure you consistently use absolute imports for files withing the
+`lib/` directory.
 
-This is a more strict version of 'avoid_relative_lib_imports'.
+This is the opposite of 'prefer_relative_imports'.
 
 **GOOD:**
 
