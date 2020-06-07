@@ -44,10 +44,10 @@ import '../lib/baz.dart';
 
 ''';
 
-class AvoidRelativeImports extends LintRule implements NodeLintRule {
-  AvoidRelativeImports()
+class AlwaysUsePackageImports extends LintRule implements NodeLintRule {
+  AlwaysUsePackageImports()
       : super(
-            name: 'avoid_relative_imports',
+            name: 'always_use_package_imports',
             description: _desc,
             details: _details,
             group: Group.errors);

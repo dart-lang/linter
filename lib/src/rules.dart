@@ -8,6 +8,7 @@ import 'rules/always_put_control_body_on_new_line.dart';
 import 'rules/always_put_required_named_parameters_first.dart';
 import 'rules/always_require_non_null_named_parameters.dart';
 import 'rules/always_specify_types.dart';
+import 'rules/always_use_package_imports.dart';
 import 'rules/annotate_overrides.dart';
 import 'rules/avoid_annotating_with_dynamic.dart';
 import 'rules/avoid_as.dart';
@@ -29,7 +30,6 @@ import 'rules/avoid_positional_boolean_parameters.dart';
 import 'rules/avoid_print.dart';
 import 'rules/avoid_private_typedef_functions.dart';
 import 'rules/avoid_redundant_argument_values.dart';
-import 'rules/avoid_relative_imports.dart';
 import 'rules/avoid_relative_lib_imports.dart';
 import 'rules/avoid_renaming_method_parameters.dart';
 import 'rules/avoid_return_types_on_setters.dart';
@@ -185,6 +185,7 @@ void registerLintRules() {
     ..register(AlwaysPutRequiredNamedParametersFirst())
     ..register(AlwaysRequireNonNullNamedParameters())
     ..register(AlwaysSpecifyTypes())
+    ..register(AlwaysUsePackageImports())
     ..register(AnnotateOverrides())
     ..register(AvoidAnnotatingWithDynamic())
     ..register(AvoidAs())
@@ -206,7 +207,6 @@ void registerLintRules() {
     ..register(AvoidPrint())
     ..register(AvoidPrivateTypedefFunctions())
     ..register(AvoidRedundantArgumentValues())
-    ..register(AvoidRelativeImports())
     ..register(AvoidRelativeLibImports())
     ..register(AvoidRenamingMethodParameters())
     ..register(AvoidReturningNull())
