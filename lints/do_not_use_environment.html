@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
-      <title>use_is_even_rather_than_modulo</title>
+      <title>do_not_use_environment</title>
       <link rel="stylesheet" href="../stylesheets/styles.css">
       <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
       <script src="../javascripts/scale.fix.js"></script>
@@ -15,10 +15,10 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>use_is_even_rather_than_modulo</h1>
+            <h1>do_not_use_environment</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
-            <p style="padding-bottom: 10px;">Dart SDK: >= 2.9.0-12.0.dev • <small>(Linter v0.1.116)</small></p>
+            <p style="padding-bottom: 10px;">Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.117)</small></p>
             
             <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
@@ -28,14 +28,12 @@
          </header>
          <section>
 
-            <p><strong>PREFER</strong> the use of intValue.isOdd/isEven to check for evenness.</p>
+            <p>Using values derived from the environment at compile-time, creates
+hidden global state and makes applications hard to understand and maintain.</p>
+<p><strong>DO NOT</strong> use <code>fromEnvironment</code> or <code>hasEnvironment</code> factory constructors.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>bool isEven = 1 % 2 == 0;
-bool isOdd = 13 % 2 == 1;
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code>bool isEven = 1.isEven;
-bool isOdd = 13.isOdd;
+<pre><code>const loggingLevel =
+  bool.hasEnvironment('logging') ? String.fromEnvironment('logging') : null;
 </code></pre>
 
             
