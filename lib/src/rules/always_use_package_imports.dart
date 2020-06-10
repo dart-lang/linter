@@ -8,7 +8,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 import '../ast.dart';
 
-const _desc = r'Avoid relative imports for all files`.';
+const _desc = r'Avoid relative imports for files in `lib/`.';
 
 const _details = r'''*DO* avoid relative imports for files in `lib/`.
 
@@ -18,6 +18,8 @@ that is to ensure you consistently use absolute imports for files withing the
 `lib/` directory.
 
 This is the opposite of 'prefer_relative_imports'.
+Might be used with 'avoid_relative_lib_imports' to avoid relative imports of
+files within `lib/` directory outside of it. (for example `test/`)
 
 **GOOD:**
 
