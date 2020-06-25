@@ -7,7 +7,7 @@
 String f(Object o) {
   // See: https://github.com/dart-lang/linter/issues/2163
   o as int; // OK
-  return /* o.toRadixString(16); */ null;
+  return null;
 }
 
 notReturned() {
