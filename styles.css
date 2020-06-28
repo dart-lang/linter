@@ -1,0 +1,281 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400&family=Roboto:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+body {
+    background: #12202f;
+    font-family: "Roboto", sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    padding: 50px;
+    transition: padding .5s, margin .5s;
+}
+
+.wrapper {
+    box-shadow:
+            rgba(0, 0, 0, 0.3) 0 1px 2px 4px,
+            rgba(0, 0, 0, 0.8) 0 6px 15px 0;
+    margin: 0 auto;
+    transition: width .5s;
+    width: 640px;
+}
+
+header {
+    background: #075697;
+    color: #f6f6f6;
+    padding: 15px 20px;
+    position: relative;
+}
+
+/* Limit header link to its own size. */
+header a {
+    display: block;
+    width: max-content;
+}
+
+header a.overflow-link {
+    color: white;
+    display: none;
+}
+
+header a.overflow-link:hover {
+    color: #16adca;
+}
+
+header h1 {
+    color: white;
+    font-size: 26px;
+    margin: 0;
+    padding: 0;
+}
+
+header p {
+    color: white;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+    width: 240px;
+}
+
+header .tooltip {
+    position: relative;
+}
+
+header .tooltip .tooltip-content {
+    background-color: #222c37;
+    left: 20%;
+    opacity: 0;
+    padding: 4px;
+    position: absolute;
+    text-align: center;
+    visibility: hidden;
+    width: 140px;
+    z-index: 999;
+}
+
+header .tooltip:hover .tooltip-content {
+    opacity: .95;
+    transition: opacity .4s;
+    visibility: visible;
+}
+
+header ul {
+    height: 38px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: auto;
+}
+
+header ul li {
+    background: #f6f6f6;
+    border-radius: 4px;
+    box-shadow:
+            rgba(0, 0, 0, 0.1) 0 0 1px 2px,
+            rgba(0, 0, 0, 0.2) 0 2px 5px 0;
+    float: left;
+    height: 38px;
+    margin-left: 20px;
+    width: 84px;
+}
+
+header ul li:hover, header ul li:active, header ul li:focus {
+    background: #eaeaea;
+}
+
+header ul a {
+    color: #075697;
+    display: block;
+    font-size: 12px;
+    font-weight: 300;
+    height: 36px;
+    padding-top: 5px;
+    text-align: center;
+    width: 86px;
+}
+
+header ul a:hover, header ul a:active, header ul a:focus {
+    color: #4388d2;
+}
+
+header ul a strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: -2px;
+}
+
+section {
+    background: #f6f6f6;
+    padding: 15px 20px;
+}
+
+section strong {
+    color: #333333;
+}
+
+section h1 {
+    color: #12202f;
+    font-size: 28px;
+    margin-top: 0;
+}
+
+section h2 {
+    color: #12202f;
+    font-size: 22px;
+}
+
+section a {
+    color: #075697;
+}
+
+section a:visited {
+    color: #075697;
+}
+
+section a:active,section a:hover,section a:focus,footer a:active,footer a:hover,footer a:focus {
+    color: #16adca;
+}
+
+footer {
+    color: #bbbbbb;
+    margin: 0 auto;
+    padding: 10px;
+    width: 640px;
+}
+
+footer p:nth-child(1) {
+    float: left;
+}
+
+footer p:nth-child(2) {
+    float: right;
+}
+
+footer a {
+    color: white;
+    font-weight: bold;
+}
+
+p, ul, pre {
+    margin: 0 0 20px;
+}
+
+/* Code item and block styles */
+
+section p code {
+    color: #192532;
+    font-weight: bold;
+}
+
+code, pre {
+    font-family: "Roboto Mono", monospace;
+    font-size: 14px;
+    overflow-x: auto;
+}
+
+pre {
+    background: #222c37;
+    margin: 0 -20px 20px;
+    padding: 20px;
+}
+
+pre code {
+    color: white;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+small {
+    font-size: 12px;
+}
+
+strong {
+    font-weight: 700;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Shield positioning */
+.style-type img {
+    padding-bottom: -3px;
+    padding-right: 10px;
+    padding-top: 2px;
+}
+
+header a.style-type {
+    display: inline;
+}
+
+/* Responsive style changes and corresponding transitions */
+
+@media screen and (max-width: 740px) {
+    body {
+        margin: 0;
+        padding: 0;
+        transition: padding .4s, margin .4s;
+    }
+
+    .wrapper {
+        box-shadow: none;
+        transition: width .4s, height .4s;
+        width: 100%;
+    }
+
+    header {
+        width: auto;
+    }
+
+    footer {
+        width: auto;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    header ul {
+        opacity: 0;
+        visibility: hidden;
+        transition: visibility .4s, opacity 1s linear;
+    }
+
+    header a.overflow-link {
+        display: unset;
+        transition: display ease-in-out;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    footer p:nth-child(1) {
+        float: none;
+        margin: 0;
+    }
+
+    footer p:nth-child(2) {
+        float: none;
+        margin: 0;
+        transition: float .4s ease-in-out;
+    }
+}

@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>unnecessary_raw_strings</title>
+      <title>always_use_package_imports</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>unnecessary_raw_strings</h1>
-            <p>Group: style</p>
+            <h1>always_use_package_imports</h1>
+            <p>Group: errors</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.8.0-dev.11.0 • <small>(Linter v0.1.111)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,14 +29,30 @@
          </header>
          <section>
 
-            <p>Use raw string only when needed.</p>
-<p><strong>BAD:</strong></p>
-<pre><code>var s1 = r'a';
-</code></pre>
+            <p><em>DO</em> avoid relative imports for files in <code>lib/</code>.</p>
+<p>When mixing relative and absolute imports it's possible to create confusion
+where the same member gets imported in two different ways. One way to avoid
+that is to ensure you consistently use absolute imports for files withing the
+<code>lib/</code> directory.</p>
+<p>This is the opposite of 'prefer_relative_imports'.
+Might be used with 'avoid_relative_lib_imports' to avoid relative imports of
+files within <code>lib/</code> directory outside of it. (for example <code>test/</code>)</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>var s1 = 'a';
-var s2 = r'$a';
-var s3 = r'\a';
+<pre><code>import 'package:foo/bar.dart';
+
+import 'package:foo/baz.dart';
+
+import 'package:foo/src/baz.dart';
+...
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>import 'baz.dart';
+
+import 'src/bag.dart'
+
+import '../lib/baz.dart';
+
+...
 </code></pre>
 
             

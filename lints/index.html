@@ -1,51 +1,43 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
    <head>
       <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <link rel="shortcut icon" href="../dart-192.png">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <link rel="stylesheet" href="../styles.css">
       <title>Linter for Dart</title>
-      <link rel="stylesheet" href="../stylesheets/styles.css">
-      <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
-      <script src="javascripts/scale.fix.js"></script>
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-      <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-      <![endif]-->
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <a href="https://dart-lang.github.io/linter/">
+            <a href="../index.html">
                <h1>Linter for Dart</h1>
             </a>
             <p>Lint Rules</p>
-            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dartlang/linter</small></a></p>
             <ul>
-               <li><a href="https://github.com/dart-lang/linter">View On <strong>GitHub</strong></a></li>
+              <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
             </ul>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
          </header>
          <section>
 
-            <h1 id="supported-lints">Supported Lint Rules</h1>
+            <h1>Supported Lint Rules</h1>
             <p>
                This list is auto-generated from our sources.
             </p>
-            <p>
-               <p>Rules are organized into familiar rule groups.</p>
+            <p>Rules are organized into familiar rule groups.</p>
 
-            </p>
             <ul>
-               <p>
-                  <li><strong>errors</strong> - <p>Possible coding errors.</p>
+               <li><strong>errors -</strong> <p>Possible coding errors.</p>
 </li>
-<li><strong>style</strong> - <p>Matters of style, largely derived from the official Dart Style Guide.</p>
+<li><strong>style -</strong> <p>Matters of style, largely derived from the official Dart Style Guide.</p>
 </li>
-<li><strong>pub</strong> - <p>Pub-related rules.</p>
+<li><strong>pub -</strong> <p>Pub-related rules.</p>
 </li>
-               </p>
             </ul>
-            <p>
-               <p>In addition, rules can be further distinguished by <em>maturity</em>.  Unqualified
+            <p>In addition, rules can be further distinguished by <em>maturity</em>.  Unqualified
 rules are considered stable, while others may be marked <strong>experimental</strong>
 to indicate that they are under review.  Lints that are marked as <strong>deprecated</strong>
 should not be used and are subject to removal in future Linter releases.</p>
@@ -58,27 +50,29 @@ or through an
 </ul>
 <p>As some lints may contradict each other, only a subset of these will be
 enabled in practice, but this list should provide a convenient jumping-off point.</p>
-<p>Other rulesets to consider are:</p>
+<p>Many lints are included in various predefined rulesets:</p>
 <ul>
-<li><a href="https://github.com/dart-lang/pedantic">package:pedantic</a> for rules enforced internally at Google, and </li>
-<li><a href="https://github.com/tenhobi/effective_dart">package:effective_dart</a> for rules corresponding to the <a href="https://dart.dev/guides/language/effective-dart">Effective Dart</a> guide</li>
+<li><a href="https://github.com/dart-lang/pedantic">pedantic</a> for rules enforced internally at Google</li>
+<li><a href="https://github.com/tenhobi/effective_dart">effective_dart</a> for rules corresponding to the <a href="https://dart.dev/guides/language/effective-dart">Effective Dart</a> style guide</li>
+<li><a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml">flutter</a> for rules used in <code>flutter analyze</code></li>
 </ul>
-<p>(Rules included in these rulesets are badged in the documentation below;
-rules enforced by the <code>flutter analyze</code> command are badged <strong>Flutter</strong> as well.)</p>
+<p>Rules included in these rulesets are badged in the documentation below.</p>
 <p>These rules are under active development.  Feedback is
 <a href="https://github.com/dart-lang/linter/issues">welcome</a>!</p>
 
-            </p>
 
-            <h2 id="styleguide-rules">Error Rules</h2>
+            <h2>Error Rules</h2>
 
-               <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_empty_else.html">avoid_empty_else</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid empty else statements.</p>
+               <!--suppress HtmlUnknownTarget --><strong><a href = "always_use_package_imports.html">always_use_package_imports</a></strong><br/>  <p>Avoid relative imports for files in <code>lib/</code>.</p>
+
+
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_empty_else.html">avoid_empty_else</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid empty else statements.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_print.html">avoid_print</a></strong><br/>  <p>Avoid <code>print</code> calls in production code.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_relative_lib_imports.html">avoid_relative_lib_imports</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid relative imports for files in <code>lib/</code>.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_relative_lib_imports.html">avoid_relative_lib_imports</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid relative imports for files in <code>lib/</code>.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_returning_null_for_future.html">avoid_returning_null_for_future</a></strong><br/>  <p>Avoid returning null for Future.</p>
@@ -87,31 +81,31 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_slow_async_io.html">avoid_slow_async_io</a></strong><br/>  <p>Avoid slow async <code>dart:io</code> methods.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_types_as_parameter_names.html">avoid_types_as_parameter_names</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid types as parameter names.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_types_as_parameter_names.html">avoid_types_as_parameter_names</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid types as parameter names.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_web_libraries_in_flutter.html">avoid_web_libraries_in_flutter (experimental)</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Avoid using web-only libraries outside Flutter web plugin packages.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_web_libraries_in_flutter.html">avoid_web_libraries_in_flutter (experimental)</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Avoid using web-only libraries outside Flutter web plugin packages.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "cancel_subscriptions.html">cancel_subscriptions</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Cancel instances of dart.async.StreamSubscription.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "cancel_subscriptions.html">cancel_subscriptions</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Cancel instances of dart.async.StreamSubscription.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "close_sinks.html">close_sinks</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Close instances of <code>dart.core.Sink</code>.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "close_sinks.html">close_sinks</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Close instances of <code>dart.core.Sink</code>.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "comment_references.html">comment_references</a></strong><br/>  <p>Only reference in scope identifiers in doc comments.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "control_flow_in_finally.html">control_flow_in_finally</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Avoid control flow in finally blocks.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "control_flow_in_finally.html">control_flow_in_finally</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Avoid control flow in finally blocks.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "diagnostic_describe_all_properties.html">diagnostic_describe_all_properties</a></strong><br/>  <p>DO reference all public properties in debug methods.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "empty_statements.html">empty_statements</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Avoid empty statements.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "empty_statements.html">empty_statements</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Avoid empty statements.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "hash_and_equals.html">hash_and_equals</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Always override <code>hashCode</code> if overriding <code>==</code>.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "hash_and_equals.html">hash_and_equals</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Always override <code>hashCode</code> if overriding <code>==</code>.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "invariant_booleans.html">invariant_booleans (experimental)</a></strong><br/>  <p>Conditions should not unconditionally evaluate to <code>true</code> or to <code>false</code>.</p>
@@ -129,28 +123,28 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "no_adjacent_strings_in_list.html">no_adjacent_strings_in_list</a></strong><br/>  <p>Don't use adjacent strings in list.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "no_duplicate_case_values.html">no_duplicate_case_values</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Don't use more than one case with same value.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "no_duplicate_case_values.html">no_duplicate_case_values</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Don't use more than one case with same value.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "no_logic_in_create_state.html">no_logic_in_create_state</a></strong><br/>  <p>Don't put any logic in createState.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_relative_imports.html">prefer_relative_imports</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Prefer relative imports for files in <code>lib/</code>.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_relative_imports.html">prefer_relative_imports</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Prefer relative imports for files in <code>lib/</code>.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_void_to_null.html">prefer_void_to_null</a></strong><br/>  <p>Don't use the Null type, unless you are positive that you don't want void.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "test_types_in_equals.html">test_types_in_equals</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Test type arguments in operator ==(Object other).</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "test_types_in_equals.html">test_types_in_equals</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Test type arguments in operator ==(Object other).</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "throw_in_finally.html">throw_in_finally</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Avoid <code>throw</code> in finally block.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "throw_in_finally.html">throw_in_finally</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Avoid <code>throw</code> in finally block.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_statements.html">unnecessary_statements</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Avoid using unnecessary statements.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_statements.html">unnecessary_statements</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Avoid using unnecessary statements.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "unrelated_type_equality_checks.html">unrelated_type_equality_checks</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Equality operator <code>==</code> invocation with references of unrelated types.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "unrelated_type_equality_checks.html">unrelated_type_equality_checks</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Equality operator <code>==</code> invocation with references of unrelated types.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "unsafe_html.html">unsafe_html</a></strong><br/>  <p>Avoid unsafe HTML APIs.</p>
@@ -159,12 +153,12 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "use_key_in_widget_constructors.html">use_key_in_widget_constructors</a></strong><br/>  <p>Use key in widget constructors.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "valid_regexps.html">valid_regexps</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use valid regular expression syntax.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "valid_regexps.html">valid_regexps</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use valid regular expression syntax.</p>
 
 
-            <h2 id="styleguide-rules">Style Rules</h2>
+            <h2>Style Rules</h2>
 
-               <!--suppress HtmlUnknownTarget --><strong><a href = "always_declare_return_types.html">always_declare_return_types</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Declare method return types.</p>
+               <!--suppress HtmlUnknownTarget --><strong><a href = "always_declare_return_types.html">always_declare_return_types</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Declare method return types.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "always_put_control_body_on_new_line.html">always_put_control_body_on_new_line</a></strong><br/>  <p>Separate the control structure expression from its statement.</p>
@@ -173,13 +167,13 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "always_put_required_named_parameters_first.html">always_put_required_named_parameters_first</a></strong><br/>  <p>Put @required named parameters first.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "always_require_non_null_named_parameters.html">always_require_non_null_named_parameters</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Specify <code>@required</code> on named parameters without defaults.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "always_require_non_null_named_parameters.html">always_require_non_null_named_parameters</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Specify <code>@required</code> on named parameters without defaults.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "always_specify_types.html">always_specify_types</a></strong><br/>  <p>Specify type annotations.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "annotate_overrides.html">annotate_overrides</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Annotate overridden members.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "annotate_overrides.html">annotate_overrides</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Annotate overridden members.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_annotating_with_dynamic.html">avoid_annotating_with_dynamic</a></strong><br/>  <p>Avoid annotating with dynamic when not required.</p>
@@ -191,19 +185,19 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_bool_literals_in_conditional_expressions.html">avoid_bool_literals_in_conditional_expressions</a></strong><br/>  <p>Avoid bool literals in conditional expressions.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_catches_without_on_clauses.html">avoid_catches_without_on_clauses</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid catches without on clauses.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_catches_without_on_clauses.html">avoid_catches_without_on_clauses</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid catches without on clauses.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_catching_errors.html">avoid_catching_errors</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Don't explicitly catch Error or types that implement it.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_catching_errors.html">avoid_catching_errors</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Don't explicitly catch Error or types that implement it.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_classes_with_only_static_members.html">avoid_classes_with_only_static_members</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid defining a class that contains only static members.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_classes_with_only_static_members.html">avoid_classes_with_only_static_members</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid defining a class that contains only static members.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_double_and_int_checks.html">avoid_double_and_int_checks</a></strong><br/>  <p>Avoid double and int checks.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_equals_and_hash_code_on_mutable_classes.html">avoid_equals_and_hash_code_on_mutable_classes</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>AVOID overloading operator == and hashCode on classes not marked <code>@immutable</code>.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_equals_and_hash_code_on_mutable_classes.html">avoid_equals_and_hash_code_on_mutable_classes</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>AVOID overloading operator == and hashCode on classes not marked <code>@immutable</code>.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_escaping_inner_quotes.html">avoid_escaping_inner_quotes</a></strong><br/>  <p>Avoid escaping inner quotes by converting surrounding quotes.</p>
@@ -212,25 +206,25 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_field_initializers_in_const_classes.html">avoid_field_initializers_in_const_classes</a></strong><br/>  <p>Avoid field initializers in const classes.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_function_literals_in_foreach_calls.html">avoid_function_literals_in_foreach_calls</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid using <code>forEach</code> with a function literal.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_function_literals_in_foreach_calls.html">avoid_function_literals_in_foreach_calls</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid using <code>forEach</code> with a function literal.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_implementing_value_types.html">avoid_implementing_value_types</a></strong><br/>  <p>Don't implement classes that override <code>==</code>.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_init_to_null.html">avoid_init_to_null</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Don't explicitly initialize variables to null.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_init_to_null.html">avoid_init_to_null</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Don't explicitly initialize variables to null.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_js_rounded_ints.html">avoid_js_rounded_ints</a></strong><br/>  <p>Avoid JavaScript rounded ints.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_null_checks_in_equality_operators.html">avoid_null_checks_in_equality_operators</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Don't check for null in custom == operators.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_null_checks_in_equality_operators.html">avoid_null_checks_in_equality_operators</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Don't check for null in custom == operators.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_positional_boolean_parameters.html">avoid_positional_boolean_parameters</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid positional boolean parameters.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_positional_boolean_parameters.html">avoid_positional_boolean_parameters</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid positional boolean parameters.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_private_typedef_functions.html">avoid_private_typedef_functions</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid private typedef functions.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_private_typedef_functions.html">avoid_private_typedef_functions</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid private typedef functions.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_redundant_argument_values.html">avoid_redundant_argument_values</a></strong><br/>  <p>Avoid redundant argument values.</p>
@@ -239,28 +233,28 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_renaming_method_parameters.html">avoid_renaming_method_parameters</a></strong><br/>  <p>Don't rename parameters of overridden methods.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_return_types_on_setters.html">avoid_return_types_on_setters</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid return types on setters.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_return_types_on_setters.html">avoid_return_types_on_setters</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid return types on setters.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_returning_null.html">avoid_returning_null</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid returning null from members whose return type is bool, double, int, or num.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_returning_null.html">avoid_returning_null</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid returning null from members whose return type is bool, double, int, or num.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_returning_null_for_void.html">avoid_returning_null_for_void</a></strong><br/>  <p>Avoid returning null for void.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_returning_this.html">avoid_returning_this</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid returning this from methods just to enable a fluent interface.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_returning_this.html">avoid_returning_this</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid returning this from methods just to enable a fluent interface.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_setters_without_getters.html">avoid_setters_without_getters</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid setters without getters.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_setters_without_getters.html">avoid_setters_without_getters</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid setters without getters.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_shadowing_type_parameters.html">avoid_shadowing_type_parameters</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid shadowing type parameters.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_shadowing_type_parameters.html">avoid_shadowing_type_parameters</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid shadowing type parameters.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_single_cascade_in_expression_statements.html">avoid_single_cascade_in_expression_statements</a></strong><br/>  <p>Avoid single cascade in expression statements.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_types_on_closure_parameters.html">avoid_types_on_closure_parameters</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid annotating types for function expression parameters.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "avoid_types_on_closure_parameters.html">avoid_types_on_closure_parameters</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid annotating types for function expression parameters.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_unnecessary_containers.html">avoid_unnecessary_containers</a></strong><br/>  <p>Avoid unnecessary containers.</p>
@@ -272,46 +266,46 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "avoid_void_async.html">avoid_void_async</a></strong><br/>  <p>Avoid async functions that return void.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "await_only_futures.html">await_only_futures</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Await only futures.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "await_only_futures.html">await_only_futures</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Await only futures.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "camel_case_extensions.html">camel_case_extensions</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Name extensions using UpperCamelCase.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "camel_case_extensions.html">camel_case_extensions</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Name extensions using UpperCamelCase.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "camel_case_types.html">camel_case_types</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Name types using UpperCamelCase.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "camel_case_types.html">camel_case_types</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Name types using UpperCamelCase.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "cascade_invocations.html">cascade_invocations</a></strong><br/>  <p>Cascade consecutive method invocations on the same reference.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "constant_identifier_names.html">constant_identifier_names</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Prefer using lowerCamelCase for constant names.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "constant_identifier_names.html">constant_identifier_names</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Prefer using lowerCamelCase for constant names.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "curly_braces_in_flow_control_structures.html">curly_braces_in_flow_control_structures</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>DO use curly braces for all flow control structures.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "curly_braces_in_flow_control_structures.html">curly_braces_in_flow_control_structures</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>DO use curly braces for all flow control structures.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "directives_ordering.html">directives_ordering</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Adhere to Effective Dart Guide directives sorting conventions.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "directives_ordering.html">directives_ordering</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Adhere to Effective Dart Guide directives sorting conventions.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "do_not_use_environment.html">do_not_use_environment</a></strong><br/>  <p>Do not use environment declared variables.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "empty_catches.html">empty_catches</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid empty catch blocks.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "empty_catches.html">empty_catches</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid empty catch blocks.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "empty_constructor_bodies.html">empty_constructor_bodies</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Use <code>;</code> instead of <code>{}</code> for empty constructor bodies.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "empty_constructor_bodies.html">empty_constructor_bodies</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Use <code>;</code> instead of <code>{}</code> for empty constructor bodies.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "exhaustive_cases.html">exhaustive_cases</a></strong><br/>  <p>Define case clauses for all constants in enum-like classes.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "file_names.html">file_names</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Name source files using <code>lowercase_with_underscores</code>.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "file_names.html">file_names</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Name source files using <code>lowercase_with_underscores</code>.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "flutter_style_todos.html">flutter_style_todos</a></strong><br/>  <p>Use Flutter TODO format: // TODO(username): message, https://URL-to-issue.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "implementation_imports.html">implementation_imports</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Don't import implementation files from another package.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "implementation_imports.html">implementation_imports</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Don't import implementation files from another package.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "join_return_with_assignment.html">join_return_with_assignment</a></strong><br/>  <p>Join return statement with assignment when possible.</p>
@@ -320,13 +314,13 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "leading_newlines_in_multiline_strings.html">leading_newlines_in_multiline_strings</a></strong><br/>  <p>Start multiline strings with a newline.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "library_names.html">library_names</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Name libraries using <code>lowercase_with_underscores</code>.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "library_names.html">library_names</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Name libraries using <code>lowercase_with_underscores</code>.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "library_prefixes.html">library_prefixes</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Use <code>lowercase_with_underscores</code> when specifying a library prefix.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "library_prefixes.html">library_prefixes</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Use <code>lowercase_with_underscores</code> when specifying a library prefix.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "lines_longer_than_80_chars.html">lines_longer_than_80_chars</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>AVOID lines longer than 80 characters.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "lines_longer_than_80_chars.html">lines_longer_than_80_chars</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>AVOID lines longer than 80 characters.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "missing_whitespace_between_adjacent_strings.html">missing_whitespace_between_adjacent_strings</a></strong><br/>  <p>Missing whitespace between adjacent strings.</p>
@@ -338,16 +332,16 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "no_runtimeType_toString.html">no_runtimeType_toString</a></strong><br/>  <p>Avoid calling toString() on runtimeType.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "non_constant_identifier_names.html">non_constant_identifier_names</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Name non-constant identifiers using lowerCamelCase.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "non_constant_identifier_names.html">non_constant_identifier_names</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Name non-constant identifiers using lowerCamelCase.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "null_closures.html">null_closures</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Do not pass <code>null</code> as an argument where a closure is expected.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "null_closures.html">null_closures</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Do not pass <code>null</code> as an argument where a closure is expected.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "omit_local_variable_types.html">omit_local_variable_types</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Omit type annotations for local variables.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "omit_local_variable_types.html">omit_local_variable_types</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Omit type annotations for local variables.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "one_member_abstracts.html">one_member_abstracts</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid defining a one-member abstract class when a simple function will do.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "one_member_abstracts.html">one_member_abstracts</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid defining a one-member abstract class when a simple function will do.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "only_throw_errors.html">only_throw_errors</a></strong><br/>  <p>Only throw instances of classes extending either Exception or Error.</p>
@@ -356,16 +350,16 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "overridden_fields.html">overridden_fields</a></strong><br/>  <p>Don't override fields.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "package_api_docs.html">package_api_docs</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Provide doc comments for all public APIs.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "package_api_docs.html">package_api_docs</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Provide doc comments for all public APIs.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "package_prefixed_library_names.html">package_prefixed_library_names</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Prefix library names with the package name and a dot-separated path.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "package_prefixed_library_names.html">package_prefixed_library_names</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Prefix library names with the package name and a dot-separated path.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "parameter_assignments.html">parameter_assignments</a></strong><br/>  <p>Don't reassign references to parameters of functions or methods.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_adjacent_string_concatenation.html">prefer_adjacent_string_concatenation</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Use adjacent strings to concatenate string literals.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_adjacent_string_concatenation.html">prefer_adjacent_string_concatenation</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Use adjacent strings to concatenate string literals.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_asserts_in_initializer_lists.html">prefer_asserts_in_initializer_lists</a></strong><br/>  <p>Prefer putting asserts in initializer list.</p>
@@ -377,10 +371,10 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_bool_in_asserts.html">prefer_bool_in_asserts (deprecated)</a></strong><br/>  <p>Prefer using a boolean as the assert condition.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_collection_literals.html">prefer_collection_literals</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Use collection literals when possible.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_collection_literals.html">prefer_collection_literals</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Use collection literals when possible.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_conditional_assignment.html">prefer_conditional_assignment</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Prefer using <code>??=</code> over testing for null.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_conditional_assignment.html">prefer_conditional_assignment</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Prefer using <code>??=</code> over testing for null.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_const_constructors.html">prefer_const_constructors</a></strong><br/>  <p>Prefer const with constant constructors.</p>
@@ -398,19 +392,19 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_constructors_over_static_methods.html">prefer_constructors_over_static_methods</a></strong><br/>  <p>Prefer defining constructors instead of static methods to create instances.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_contains.html">prefer_contains</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use contains for <code>List</code> and <code>String</code> instances.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_contains.html">prefer_contains</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use contains for <code>List</code> and <code>String</code> instances.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_double_quotes.html">prefer_double_quotes</a></strong><br/>  <p>Prefer double quotes where they won't require escape sequences.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_equal_for_default_values.html">prefer_equal_for_default_values</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Use <code>=</code> to separate a named parameter from its default value.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_equal_for_default_values.html">prefer_equal_for_default_values</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Use <code>=</code> to separate a named parameter from its default value.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_expression_function_bodies.html">prefer_expression_function_bodies</a></strong><br/>  <p>Use =&gt; for short members whose body is a single return statement.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_final_fields.html">prefer_final_fields</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Private field could be final.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_final_fields.html">prefer_final_fields</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Private field could be final.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_final_in_for_each.html">prefer_final_in_for_each</a></strong><br/>  <p>Prefer final in for-each loop variable if reference is not reassigned.</p>
@@ -419,25 +413,25 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_final_locals.html">prefer_final_locals</a></strong><br/>  <p>Prefer final for variable declarations if they are not reassigned.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_for_elements_to_map_fromIterable.html">prefer_for_elements_to_map_fromIterable</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Prefer for elements when building maps from iterables.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_for_elements_to_map_fromIterable.html">prefer_for_elements_to_map_fromIterable</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Prefer for elements when building maps from iterables.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_foreach.html">prefer_foreach</a></strong><br/>  <p>Use <code>forEach</code> to only apply a function to all the elements.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_function_declarations_over_variables.html">prefer_function_declarations_over_variables</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Use a function declaration to bind a function to a name.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_function_declarations_over_variables.html">prefer_function_declarations_over_variables</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Use a function declaration to bind a function to a name.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_generic_function_type_aliases.html">prefer_generic_function_type_aliases</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Prefer generic function type aliases.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_generic_function_type_aliases.html">prefer_generic_function_type_aliases</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Prefer generic function type aliases.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_if_elements_to_conditional_expressions.html">prefer_if_elements_to_conditional_expressions</a></strong><br/>  <p>Prefer if elements to conditional expressions where possible.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_if_null_operators.html">prefer_if_null_operators</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Prefer using if null operators.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_if_null_operators.html">prefer_if_null_operators</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Prefer using if null operators.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_initializing_formals.html">prefer_initializing_formals</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Use initializing formals when possible.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_initializing_formals.html">prefer_initializing_formals</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Use initializing formals when possible.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_inlined_adds.html">prefer_inlined_adds</a></strong><br/>  <p>Inline list item declarations where possible.</p>
@@ -446,31 +440,31 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_int_literals.html">prefer_int_literals</a></strong><br/>  <p>Prefer int literals over double literals.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_interpolation_to_compose_strings.html">prefer_interpolation_to_compose_strings</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Use interpolation to compose strings and values.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_interpolation_to_compose_strings.html">prefer_interpolation_to_compose_strings</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Use interpolation to compose strings and values.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_is_empty.html">prefer_is_empty</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use <code>isEmpty</code> for Iterables and Maps.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_is_empty.html">prefer_is_empty</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use <code>isEmpty</code> for Iterables and Maps.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_is_not_empty.html">prefer_is_not_empty</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use <code>isNotEmpty</code> for Iterables and Maps.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_is_not_empty.html">prefer_is_not_empty</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use <code>isNotEmpty</code> for Iterables and Maps.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_is_not_operator.html">prefer_is_not_operator</a></strong><br/>  <p>Prefer is! operator.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_iterable_whereType.html">prefer_iterable_whereType</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Prefer to use whereType on iterable.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_iterable_whereType.html">prefer_iterable_whereType</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Prefer to use whereType on iterable.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_mixin.html">prefer_mixin</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Prefer using mixins.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_mixin.html">prefer_mixin</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Prefer using mixins.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_null_aware_operators.html">prefer_null_aware_operators</a></strong><br/>  <p>Prefer using null aware operators.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_single_quotes.html">prefer_single_quotes</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Only use double quotes for strings containing single quotes.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_single_quotes.html">prefer_single_quotes</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Only use double quotes for strings containing single quotes.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_spread_collections.html">prefer_spread_collections</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use spread collections when possible.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "prefer_spread_collections.html">prefer_spread_collections</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use spread collections when possible.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "prefer_typing_uninitialized_variables.html">prefer_typing_uninitialized_variables</a></strong><br/>  <p>Prefer typing uninitialized variables and fields.</p>
@@ -479,16 +473,16 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "provide_deprecation_message.html">provide_deprecation_message</a></strong><br/>  <p>Provide a deprecation message, via @Deprecated("message").</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "public_member_api_docs.html">public_member_api_docs</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Document all public members.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "public_member_api_docs.html">public_member_api_docs</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Document all public members.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "recursive_getters.html">recursive_getters</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Property getter recursively returns itself.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "recursive_getters.html">recursive_getters</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Property getter recursively returns itself.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "sized_box_for_whitespace.html">sized_box_for_whitespace</a></strong><br/>  <p>SizedBox for whitespace.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "slash_for_doc_comments.html">slash_for_doc_comments</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Prefer using /// for doc comments.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "slash_for_doc_comments.html">slash_for_doc_comments</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Prefer using /// for doc comments.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "sort_child_properties_last.html">sort_child_properties_last</a></strong><br/>  <p>Sort child properties last in widget instance creations.</p>
@@ -503,40 +497,40 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "super_goes_last.html">super_goes_last (deprecated)</a></strong><br/>  <p>Place the <code>super</code> call last in a constructor initialization list.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "type_annotate_public_apis.html">type_annotate_public_apis</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Type annotate public APIs.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "type_annotate_public_apis.html">type_annotate_public_apis</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Type annotate public APIs.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "type_init_formals.html">type_init_formals</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Don't type annotate initializing formals.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "type_init_formals.html">type_init_formals</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Don't type annotate initializing formals.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "unawaited_futures.html">unawaited_futures</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p><code>Future</code> results in <code>async</code> function bodies must be <code>await</code>ed or marked <code>unawaited</code> using <code>package:pedantic</code>.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "unawaited_futures.html">unawaited_futures</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p><code>Future</code> results in <code>async</code> function bodies must be <code>await</code>ed or marked <code>unawaited</code> using <code>package:pedantic</code>.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_await_in_return.html">unnecessary_await_in_return</a></strong><br/>  <p>Unnecessary await keyword in return.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_brace_in_string_interps.html">unnecessary_brace_in_string_interps</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid using braces in interpolation when not needed.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_brace_in_string_interps.html">unnecessary_brace_in_string_interps</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid using braces in interpolation when not needed.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_const.html">unnecessary_const</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid const keyword.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_const.html">unnecessary_const</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid const keyword.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_final.html">unnecessary_final</a></strong><br/>  <p>Don't use <code>final</code> for local variables.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_getters_setters.html">unnecessary_getters_setters</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Avoid wrapping fields in getters and setters just to be "safe".</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_getters_setters.html">unnecessary_getters_setters</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Avoid wrapping fields in getters and setters just to be "safe".</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_lambdas.html">unnecessary_lambdas</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Don't create a lambda when a tear-off will do.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_lambdas.html">unnecessary_lambdas</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Don't create a lambda when a tear-off will do.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_new.html">unnecessary_new</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Unnecessary new keyword.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_new.html">unnecessary_new</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Unnecessary new keyword.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_null_aware_assignments.html">unnecessary_null_aware_assignments</a></strong><br/>  <p>Avoid null in null-aware assignment.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_null_in_if_null_operators.html">unnecessary_null_in_if_null_operators</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid using <code>null</code> in <code>if null</code> operators.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_null_in_if_null_operators.html">unnecessary_null_in_if_null_operators</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Avoid using <code>null</code> in <code>if null</code> operators.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_overrides.html">unnecessary_overrides</a></strong><br/>  <p>Don't override a method to do a super method invocation with the same parameters.</p>
@@ -554,13 +548,13 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_string_interpolations.html">unnecessary_string_interpolations</a></strong><br/>  <p>Unnecessary string interpolation.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_this.html">unnecessary_this</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Don't access members with <code>this</code> unless avoiding shadowing.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "unnecessary_this.html">unnecessary_this</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Don't access members with <code>this</code> unless avoiding shadowing.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "use_full_hex_values_for_flutter_colors.html">use_full_hex_values_for_flutter_colors</a></strong><br/>  <p>Prefer an 8-digit hexadecimal integer(0xFFFFFFFF) to instantiate Color.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "use_function_type_syntax_for_parameters.html">use_function_type_syntax_for_parameters</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use generic function type syntax for parameters.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "use_function_type_syntax_for_parameters.html">use_function_type_syntax_for_parameters</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a> <p>Use generic function type syntax for parameters.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "use_is_even_rather_than_modulo.html">use_is_even_rather_than_modulo</a></strong><br/>  <p>Prefer intValue.isOdd/isEven instead of checking the result of % 2.</p>
@@ -569,24 +563,24 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
 <!--suppress HtmlUnknownTarget --><strong><a href = "use_raw_strings.html">use_raw_strings</a></strong><br/>  <p>Use raw string to avoid escapes.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "use_rethrow_when_possible.html">use_rethrow_when_possible</a></strong><br/> <a href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Use rethrow to rethrow a caught exception.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "use_rethrow_when_possible.html">use_rethrow_when_possible</a></strong><br/> <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Use rethrow to rethrow a caught exception.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "use_setters_to_change_properties.html">use_setters_to_change_properties</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Use a setter for operations that conceptually change a property.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "use_setters_to_change_properties.html">use_setters_to_change_properties</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Use a setter for operations that conceptually change a property.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "use_string_buffers.html">use_string_buffers</a></strong><br/>  <p>Use string buffers to compose strings.</p>
 
 
-<!--suppress HtmlUnknownTarget --><strong><a href = "use_to_and_as_if_applicable.html">use_to_and_as_if_applicable</a></strong><br/> <a href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective_dart" src="style-effective_dart.svg"></a> <p>Start the name of the method with to/_to or as/_as if applicable.</p>
+<!--suppress HtmlUnknownTarget --><strong><a href = "use_to_and_as_if_applicable.html">use_to_and_as_if_applicable</a></strong><br/> <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a> <p>Start the name of the method with to/_to or as/_as if applicable.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "void_checks.html">void_checks</a></strong><br/>  <p>Don't assign to void.</p>
 
 
-            <h2 id="styleguide-rules">Pub Rules</h2>
+            <h2>Pub Rules</h2>
 
-               <!--suppress HtmlUnknownTarget --><strong><a href = "package_names.html">package_names</a></strong><br/> <a href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>  <p>Use <code>lowercase_with_underscores</code> for package names.</p>
+               <!--suppress HtmlUnknownTarget --><strong><a href = "package_names.html">package_names</a></strong><br/> <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a> <p>Use <code>lowercase_with_underscores</code> for package names.</p>
 
 
 <!--suppress HtmlUnknownTarget --><strong><a href = "sort_pub_dependencies.html">sort_pub_dependencies</a></strong><br/>  <p>Sort pub dependencies.</p>
@@ -595,19 +589,8 @@ rules enforced by the <code>flutter analyze</code> command are badged <strong>Fl
          </section>
       </div>
       <footer>
-         <p>Project maintained by <a href="https://github.com/google">google</a></p>
-         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">Github</a></p>
       </footer>
-      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-      <script type="text/javascript">
-         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-         document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-      </script>
-      <script type="text/javascript">
-         try {
-           var pageTracker = _gat._getTracker("UA-34425814-2");
-         pageTracker._trackPageview();
-         } catch(err) {}
-      </script>
    </body>
 </html>
