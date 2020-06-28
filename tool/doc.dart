@@ -47,13 +47,13 @@ or through an
 As some lints may contradict each other, only a subset of these will be
 enabled in practice, but this list should provide a convenient jumping-off point.
 
-Other rulesets to consider are:
+Many lints are included in various predefined rulesets:
 
-* [package:pedantic](https://github.com/dart-lang/pedantic) for rules enforced internally at Google, and 
-* [package:effective_dart](https://github.com/tenhobi/effective_dart) for rules corresponding to the [Effective Dart](https://dart.dev/guides/language/effective-dart) guide
+* [pedantic](https://github.com/dart-lang/pedantic) for rules enforced internally at Google
+* [effective_dart](https://github.com/tenhobi/effective_dart) for rules corresponding to the [Effective Dart](https://dart.dev/guides/language/effective-dart) style guide
+* [flutter](https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml) for rules used in <code>flutter analyze</code>
 
-(Rules included in these rulesets are badged in the documentation below;
-rules enforced by the `flutter analyze` command are badged **Flutter** as well.)
+Rules included in these rulesets are badged in the documentation below.
 
 These rules are under active development.  Feedback is
 [welcome](https://github.com/dart-lang/linter/issues)!
@@ -260,7 +260,6 @@ class Generator {
     var version = info.sinceDartSdk != null
         ? '>= ${info.sinceDartSdk}'
         : '<strong>unreleased</strong>';
-    // todo (pq): consider a footnote explaining that since info is static and "unreleased" tags may be stale.
     return 'Dart SDK: $version • <small>(Linter v${info.sinceLinter})</small>';
   }
 
@@ -312,14 +311,17 @@ class Generator {
             <h1>$humanReadableName</h1>
             <p>Group: $group</p>
             <p>Maturity: $maturityString</p>
-            <p style="padding-bottom: 10px;">$since</p>
+            <div class="tooltip">
+               <p>$since</p>
+               <span class="tooltip-content">Since info is static, may be stale</span>
+            </div>
             ${getBadges(name)}
             <ul>
                <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/effective-dart/style/">See the <strong>Style Guide</strong></a></li>
+               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
             </ul>
-            <p><a class="overflow-link" href="lints/index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/effective-dart/style/">See the <strong>Style Guide</strong></a></p>
+            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
          </header>
          <section>
 
@@ -371,9 +373,9 @@ class Indexer {
             </a>
             <p>Lint Rules</p>
             <ul>
-              <li><a href="https://dart.dev/guides/language/effective-dart/style/">See the <strong>Style Guide</strong></a></li>
+              <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
             </ul>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/effective-dart/style/">See the <strong>Style Guide</strong></a></p>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
          </header>
          <section>
 
@@ -466,10 +468,10 @@ linter:
             <p>Analysis Options</p>
             <ul>
               <li><a href="../index.html">View all <strong>Lint Rules</strong></a></li>
-              <li><a href="https://dart.dev/guides/language/effective-dart/style/">See the <strong>Style Guide</strong></a></li>
+              <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
             </ul>
-            <p><a class="overflow-link" href="lints/index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/effective-dart/style/">See the <strong>Style Guide</strong></a></p>
+            <p><a class="overflow-link" href="../index.html">View all <strong>Lint Rules</strong></a></p>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
          </header>
          <section>
 
