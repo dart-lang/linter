@@ -1,29 +1,27 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
    <head>
       <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <link rel="shortcut icon" href="../../dart-192.png">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <link rel="stylesheet" href="../../styles.css">
       <title>Analysis Options</title>
-      <link rel="stylesheet" href="../../stylesheets/styles.css">
-      <link rel="stylesheet" href="../../stylesheets/pygment_trac.css">
-      <script src="../../javascripts/scale.fix.js"></script>
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-      <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-      <![endif]-->
    </head>
   <body>
       <div class="wrapper">
          <header>
-            <a href="https://dart-lang.github.io/linter/">
-               <h1>Dart Lint</h1>
+            <a href="../../index.html">
+               <h1>Linter for Dart</h1>
             </a>
             <p>Analysis Options</p>
-            <p class="view"><a href="https://github.com/dart-lang/linter">View the Project on GitHub <small>dart-lang/linter</small></a></p>
             <ul>
-              <li><a href="https://dart-lang.github.io/linter/lints/">List of <strong>Lint Rules</strong></a></li>
-              <li><a href="https://github.com/dart-lang/linter">View On <strong>GitHub</strong></a></li>
+              <li><a href="../index.html">View all <strong>Lint Rules</strong></a></li>
+              <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
             </ul>
+            <p><a class="overflow-link" href="../index.html">View all <strong>Lint Rules</strong></a></p>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
          </header>
          <section>
 
@@ -35,13 +33,14 @@
                and tailor to fit!
             </p>
 
-<pre><code>linter:
+            <pre><code>linter:
   rules:
     - always_declare_return_types
     - always_put_control_body_on_new_line
     - always_put_required_named_parameters_first
     - always_require_non_null_named_parameters
     - always_specify_types
+    - always_use_package_imports
     - annotate_overrides
     - avoid_annotating_with_dynamic
     - avoid_as
@@ -213,19 +212,8 @@
          </section>
       </div>
       <footer>
-         <p>Project maintained by <a href="https://github.com/google">google</a></p>
-         <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">Github</a></p>
       </footer>
-      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-      <script type="text/javascript">
-         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-         document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-      </script>
-      <script type="text/javascript">
-         try {
-           var pageTracker = _gat._getTracker("UA-34425814-2");
-         pageTracker._trackPageview();
-         } catch(err) {}
-      </script>
    </body>
 </html>
