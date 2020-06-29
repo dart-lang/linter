@@ -29,7 +29,7 @@ void defineTests() {
         collectingOut.buffer.clear();
         outSink = currentOut;
       });
-      test('unnecessary_lambdas', () async {
+      test('deferred import', () async {
         await cli.runLinter([
           'test/_data/unnecessary_lambdas',
           '--rules=unnecessary_lambdas',
