@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/error/error.dart';
-import 'package:test/test.dart';
+import 'package:matcher/matcher.dart';
 
 import 'annotation.dart';
 
