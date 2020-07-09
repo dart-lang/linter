@@ -173,8 +173,10 @@ class _Visitor extends SimpleAstVisitor<void> {
         var element = target.staticElement;
         if (element is PrefixElement) {
           var imports = element.enclosingElement.getImportsWithPrefix(element);
-          if (imports.isNotEmpty && imports[0].isDeferred) {
-            return;
+          for (var import in imports) {
+            if (import.isDeferred) {
+              return;
+            }
           }
         }
       }
