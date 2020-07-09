@@ -169,9 +169,14 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     } else if (node is MethodInvocation) {
       var target = node.target;
-      if (target is SimpleIdentifier &&
-          target?.staticElement is PrefixElement) {
-        return;
+      if (target is SimpleIdentifier) {
+        var element = target.staticElement;
+        if (element is PrefixElement) {
+          var imports = element.enclosingElement.getImportsWithPrefix(element);
+          if (imports.isNotEmpty && imports[0].isDeferred) {
+            return;
+          }
+        }
       }
 
       var parent = nodeToLint.parent;
