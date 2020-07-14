@@ -67,7 +67,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   static const unsafeAttributeCode = SecurityLintCodeWithUniqueName(
       'unsafe_html',
       'LintCode.unsafe_html_attribute',
-      '$_descPrefix (assigning "{0}" attribute).');
+      "$_descPrefix (assigning '{0}' attribute).");
   static const unsafeMethodCode = SecurityLintCodeWithUniqueName(
       'unsafe_html',
       'LintCode.unsafe_html_method',
