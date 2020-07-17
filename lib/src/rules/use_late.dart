@@ -61,14 +61,31 @@ class _Visitor extends UnifyingAstVisitor<void> {
   final LintRule rule;
   final LinterContext context;
 
-  final lateables = <VariableDeclaration>[];
-  final nullableAccess = <Element>{};
+  CompilationUnitElement currentUnit;
+
+  static final lateables =
+      <CompilationUnitElement, List<VariableDeclaration>>{};
+  static final nullableAccess = <CompilationUnitElement, Set<Element>>{};
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
     if (node.featureSet.isEnabled(Feature.non_nullable)) {
+      currentUnit = node.declaredElement;
+      lateables.putIfAbsent(currentUnit, () => []);
+      nullableAccess.putIfAbsent(currentUnit, () => {});
+
       super.visitCompilationUnit(node);
-      _checkAccess();
+
+      final units = node.declaredElement.library.units;
+      if (units.every(lateables.keys.contains)) {
+        _checkAccess(units);
+
+        // clean up
+        units.forEach((unit) {
+          lateables.remove(unit);
+          nullableAccess.remove(unit);
+        });
+      }
     }
   }
 
@@ -91,7 +108,7 @@ class _Visitor extends UnifyingAstVisitor<void> {
           context.typeSystem.isNonNullable(parent.rightHandSide.staticType)) {
         // ok non-null access
       } else {
-        nullableAccess.add(element);
+        nullableAccess[currentUnit].add(element);
       }
     }
     super.visitNode(node);
@@ -128,13 +145,17 @@ class _Visitor extends UnifyingAstVisitor<void> {
     if (context.typeSystem.isNonNullable(variable.declaredElement.type)) {
       return;
     }
-    lateables.add(variable);
+    lateables[currentUnit].add(variable);
   }
 
-  void _checkAccess() {
-    for (var variable in lateables) {
-      if (!nullableAccess.contains(variable.declaredElement)) {
-        rule.reportLint(variable);
+  void _checkAccess(List<CompilationUnitElement> units) {
+    final allNullableAccess =
+        units.expand((unit) => nullableAccess[unit]).toSet();
+    for (final unit in units) {
+      for (var variable in lateables[unit]) {
+        if (!allNullableAccess.contains(variable.declaredElement)) {
+          rule.reportLint(variable);
+        }
       }
     }
   }
