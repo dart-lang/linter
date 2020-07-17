@@ -15,7 +15,9 @@ const _desc = r'Use late for private members with non-nullable type.';
 
 const _details = r'''
 
-Use late for private members with non-nullable type to avoid null checks.
+Use late for private members with non-nullable type that are always expected to
+be non-null. Thus it's clear that the field is not expected to be `null` and it
+avoids null checks.
 
 **BAD:**
 ```
@@ -60,7 +62,7 @@ class _Visitor extends UnifyingAstVisitor<void> {
   final LinterContext context;
 
   final lateables = <VariableDeclaration>[];
-  final nullableAccess = <AstNode, Element>{};
+  final nullableAccess = <Element>{};
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
@@ -78,7 +80,9 @@ class _Visitor extends UnifyingAstVisitor<void> {
       if (parent is Expression) {
         parent = (parent as Expression).unParenthesized;
       }
-      if (parent is PostfixExpression &&
+      if (node is SimpleIdentifier && node.inDeclarationContext()) {
+        // ok
+      } else if (parent is PostfixExpression &&
           parent.operand == node &&
           parent.operator.type == TokenType.BANG) {
         // ok non-null access
@@ -87,7 +91,7 @@ class _Visitor extends UnifyingAstVisitor<void> {
           context.typeSystem.isNonNullable(parent.rightHandSide.staticType)) {
         // ok non-null access
       } else {
-        nullableAccess[node] = element;
+        nullableAccess.add(element);
       }
     }
     super.visitNode(node);
@@ -129,18 +133,17 @@ class _Visitor extends UnifyingAstVisitor<void> {
 
   void _checkAccess() {
     for (var variable in lateables) {
-      final lateable = nullableAccess.entries
-          .where((e) =>
-              e.value == variable.declaredElement &&
-              e.key.offset != variable.offset)
-          .isEmpty;
-      if (lateable) {
+      if (!nullableAccess.contains(variable.declaredElement)) {
         rule.reportLint(variable);
       }
     }
   }
 }
 
+// see https://github.com/dart-lang/linter/pull/2189#issuecomment-660115569
+// Ideally we need to also ensure that there are no instances of either the
+// enclosing class or any subclass of the enclosing class that are ever
+// accessible outside this library.
 bool _isPrivateNamedCompilationUnitMember(AstNode parent) =>
     parent is NamedCompilationUnitMember &&
     Identifier.isPrivateName(parent.name.name);
