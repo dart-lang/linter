@@ -1,4 +1,4 @@
-// Copyright (c) 2016, the Dart project authors. Please see the AUTHORS file
+// Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -46,4 +46,27 @@ m8(int i) {
 int? _i9; // OK
 m9() {
   _i9 == 1;
+}
+
+class A1 {
+  int? i; // OK
+  int? _i; // LINT
+}
+
+class _A2 {
+  int? i; // LINT
+  int? _i; // LINT
+}
+
+extension E1 on A1 {
+  static int? i1; // OK
+  static int? _i1; // LINT
+}
+
+extension _E2 on A1 {
+  static int? i1; // LINT
+}
+
+extension on A1 {
+  static int? i1; // LINT
 }

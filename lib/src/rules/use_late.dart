@@ -6,6 +6,7 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
@@ -52,28 +53,53 @@ class UseLate extends LintRule implements NodeLintRule {
   }
 }
 
-class _Visitor extends RecursiveAstVisitor<void> {
+class _Visitor extends UnifyingAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
   final LintRule rule;
   final LinterContext context;
 
-  CompilationUnit _compilationUnit;
+  final lateables = <VariableDeclaration>[];
+  final nullableAccess = <AstNode, Element>{};
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
     if (node.featureSet.isEnabled(Feature.non_nullable)) {
-      _compilationUnit = node;
       super.visitCompilationUnit(node);
+      _checkAccess();
     }
+  }
+
+  @override
+  void visitNode(AstNode node) {
+    var element = DartTypeUtilities.getCanonicalElementFromIdentifier(node);
+    if (element != null) {
+      var parent = node.parent;
+      if (parent is Expression) {
+        parent = (parent as Expression).unParenthesized;
+      }
+      if (parent is PostfixExpression &&
+          parent.operand == node &&
+          parent.operator.type == TokenType.BANG) {
+        // ok non-null access
+      } else if (parent is AssignmentExpression &&
+          parent.operator.type == TokenType.EQ &&
+          context.typeSystem.isNonNullable(parent.rightHandSide.staticType)) {
+        // ok non-null access
+      } else {
+        nullableAccess[node] = element;
+      }
+    }
+    super.visitNode(node);
   }
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var variable in node.fields.variables) {
-      if (Identifier.isPrivateName(
-              (node.parent as ClassOrMixinDeclaration).name.name) ||
-          Identifier.isPrivateName(variable.name.name)) {
+      final parent = node.parent;
+      if (Identifier.isPrivateName(variable.name.name) ||
+          _isPrivateNamedCompilationUnitMember(parent) ||
+          _isPrivateExtension(parent)) {
         _visit(variable);
       }
     }
@@ -98,45 +124,27 @@ class _Visitor extends RecursiveAstVisitor<void> {
     if (context.typeSystem.isNonNullable(variable.declaredElement.type)) {
       return;
     }
-    final myVisitor = _MyVisitor(context, variable);
-    myVisitor.visitCompilationUnit(_compilationUnit);
-    if (myVisitor.lateable) {
-      rule.reportLint(variable);
+    lateables.add(variable);
+  }
+
+  void _checkAccess() {
+    for (var variable in lateables) {
+      final lateable = nullableAccess.entries
+          .where((e) =>
+              e.value == variable.declaredElement &&
+              e.key.offset != variable.offset)
+          .isEmpty;
+      if (lateable) {
+        rule.reportLint(variable);
+      }
     }
   }
 }
 
-class _MyVisitor extends UnifyingAstVisitor<void> {
-  _MyVisitor(this.context, this.variable);
+bool _isPrivateNamedCompilationUnitMember(AstNode parent) =>
+    parent is NamedCompilationUnitMember &&
+    Identifier.isPrivateName(parent.name.name);
 
-  final LinterContext context;
-  final VariableDeclaration variable;
-  bool lateable = true;
-
-  @override
-  void visitNode(AstNode node) {
-    if (!lateable) {
-      return;
-    }
-    if (node.offset != variable.offset &&
-        DartTypeUtilities.getCanonicalElementFromIdentifier(node) ==
-            variable.declaredElement) {
-      var parent = node.parent;
-      while (parent is ParenthesizedExpression) {
-        parent = parent.parent;
-      }
-      if (parent is PostfixExpression &&
-          parent.operand == node &&
-          parent.operator.type == TokenType.BANG) {
-        // ok non-null access
-      } else if (parent is AssignmentExpression &&
-          parent.operator.type == TokenType.EQ &&
-          context.typeSystem.isNonNullable(parent.rightHandSide.staticType)) {
-        // ok non-null access
-      } else {
-        lateable = false;
-      }
-    }
-    super.visitNode(node);
-  }
-}
+bool _isPrivateExtension(AstNode parent) =>
+    parent is ExtensionDeclaration &&
+    (parent.name == null || Identifier.isPrivateName(parent.name.name));
