@@ -37,10 +37,11 @@ m() {
 
 ''';
 
-class UseLate extends LintRule implements NodeLintRule {
-  UseLate()
+class UseLateForPrivateFieldsAndVariables extends LintRule
+    implements NodeLintRule {
+  UseLateForPrivateFieldsAndVariables()
       : super(
-          name: 'use_late',
+          name: 'use_late_for_private_fields_and_variables',
           description: _desc,
           details: _details,
           maturity: Maturity.experimental,
