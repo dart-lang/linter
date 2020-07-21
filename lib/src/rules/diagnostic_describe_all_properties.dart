@@ -125,7 +125,7 @@ class _Visitor extends SimpleAstVisitor {
     // We only care about Diagnosticables.
     final type = node.declaredElement.thisType;
     if (!DartTypeUtilities.implementsInterface(
-        type, 'DiagnosticableMixin', '')) {
+        type, 'Diagnosticable', '')) {
       return;
     }
 
