@@ -124,8 +124,7 @@ class _Visitor extends SimpleAstVisitor {
   void visitClassDeclaration(ClassDeclaration node) {
     // We only care about Diagnosticables.
     final type = node.declaredElement.thisType;
-    if (!DartTypeUtilities.implementsInterface(
-        type, 'Diagnosticable', '')) {
+    if (!DartTypeUtilities.implementsInterface(type, 'Diagnosticable', '')) {
       return;
     }
 
