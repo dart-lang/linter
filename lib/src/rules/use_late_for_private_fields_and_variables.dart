@@ -7,6 +7,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/error/error.dart';
 
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
@@ -77,12 +78,18 @@ class _Visitor extends UnifyingAstVisitor<void> {
 
       super.visitCompilationUnit(node);
 
-      final units = node.declaredElement.library.units;
-      if (units.every(lateables.keys.contains)) {
-        _checkAccess(units);
+      final unitsInContext =
+          context.allUnits.map((e) => e.unit.declaredElement).toSet();
+      final libraryUnitsInContext = node.declaredElement.library.units
+          .where(unitsInContext.contains)
+          .toSet();
+      final areAllLibraryUnitsVisited =
+          libraryUnitsInContext.every(lateables.containsKey);
+      if (areAllLibraryUnitsVisited) {
+        _checkAccess(libraryUnitsInContext);
 
         // clean up
-        units.forEach((unit) {
+        libraryUnitsInContext.forEach((unit) {
           lateables.remove(unit);
           nullableAccess.remove(unit);
         });
@@ -119,8 +126,12 @@ class _Visitor extends UnifyingAstVisitor<void> {
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var variable in node.fields.variables) {
       final parent = node.parent;
+      // see https://github.com/dart-lang/linter/pull/2189#issuecomment-660115569
+      // We could also include public members in private classes but to do that
+      // we'd need to ensure that there are no instances of either the
+      // enclosing class or any subclass of the enclosing class that are ever
+      // accessible outside this library.
       if (Identifier.isPrivateName(variable.name.name) ||
-          _isPrivateNamedCompilationUnitMember(parent) ||
           _isPrivateExtension(parent)) {
         _visit(variable);
       }
@@ -149,26 +160,19 @@ class _Visitor extends UnifyingAstVisitor<void> {
     lateables[currentUnit].add(variable);
   }
 
-  void _checkAccess(List<CompilationUnitElement> units) {
+  void _checkAccess(Iterable<CompilationUnitElement> units) {
     final allNullableAccess =
         units.expand((unit) => nullableAccess[unit]).toSet();
     for (final unit in units) {
       for (var variable in lateables[unit]) {
         if (!allNullableAccess.contains(variable.declaredElement)) {
-          rule.reportLint(variable);
+          rule.reporter.reportError(AnalysisError(
+              unit.source, variable.offset, variable.length, rule.lintCode));
         }
       }
     }
   }
 }
-
-// see https://github.com/dart-lang/linter/pull/2189#issuecomment-660115569
-// Ideally we need to also ensure that there are no instances of either the
-// enclosing class or any subclass of the enclosing class that are ever
-// accessible outside this library.
-bool _isPrivateNamedCompilationUnitMember(AstNode parent) =>
-    parent is NamedCompilationUnitMember &&
-    Identifier.isPrivateName(parent.name.name);
 
 bool _isPrivateExtension(AstNode parent) =>
     parent is ExtensionDeclaration &&

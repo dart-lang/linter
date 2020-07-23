@@ -30,7 +30,7 @@ m5() {
 
 int? _i6; // OK
 m6() {
-  if (_i6 != null) _i6.abs();
+  if (_i6 != null) _i6.toString();
 }
 
 int? _i7; // OK
@@ -54,7 +54,7 @@ class A1 {
 }
 
 class _A2 {
-  int? i; // LINT
+  int? i; // OK until we detect that _A2 is not returned anywhere
   int? _i; // LINT
 }
 
