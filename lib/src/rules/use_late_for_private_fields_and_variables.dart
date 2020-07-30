@@ -16,7 +16,7 @@ const _desc = r'Use late for private members with non-nullable type.';
 
 const _details = r'''
 
-Use late for private members with non-nullable type that are always expected to
+Use late for private members with non-nullable types that are always expected to
 be non-null. Thus it's clear that the field is not expected to be `null` and it
 avoids null checks.
 
