@@ -136,6 +136,7 @@ class _Visitor extends UnifyingAstVisitor<void> {
         _visit(variable);
       }
     }
+    super.visitFieldDeclaration(node);
   }
 
   @override
@@ -145,6 +146,7 @@ class _Visitor extends UnifyingAstVisitor<void> {
         _visit(variable);
       }
     }
+    super.visitTopLevelVariableDeclaration(node);
   }
 
   void _visit(VariableDeclaration variable) {
