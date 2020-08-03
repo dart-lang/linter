@@ -57,7 +57,7 @@ class AvoidTypeToString extends LintRule implements NodeLintRule {
             name: 'avoid_type_to_string',
             description: _desc,
             details: _details,
-            group: Group.style);
+            group: Group.errors);
 
   @override
   void registerNodeProcessors(NodeLintRegistry registry,
