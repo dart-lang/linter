@@ -4,31 +4,33 @@
 
 // test w/ `pub run test -N avoid_type_to_string`
 
-
 // SHARED
 
 class A {
   String toString() {}
 }
 
+String takesFunction(Function f) {}
+
 class TypeChildWithOverride extends Type {
   @override
   String toString() {}
 }
+
 class TypeGrandChildWithOverride extends TypeChildWithOverride {}
 
 class TypeChildNoOverride extends Type {}
+
 class TypeGrandChildNoOverride extends TypeChildNoOverride {}
 
 mixin ToStringMixin {
   String toString() {}
 }
 
-
 // BAD
 
 class Bad {
-  void doBad() {
+  void doBad(Function f) {
     A().runtimeType.toString(); // LINT
     TypeChildNoOverride().toString(); // LINT
     TypeGrandChildNoOverride().toString(); // LINT
@@ -36,14 +38,42 @@ class Bad {
 }
 
 class BadWithType extends Type {
+  Function passedFunction;
+
+  BadWithType(Function func) : this.withFunc(func);
+  BadWithType.withoutFunc() {}
+  BadWithType.withFunc(this.passedFunction) {}
+  BadWithType.withSelf(BadWithType badWithType)
+      : this.withFunc(badWithType.toString); // LINT
+
   void doBad() {
     toString(); // LINT
     this.toString(); // LINT
 
-    Future.value('hello').whenComplete(toString); // LINT
-    Future.value('hello').whenComplete(this.toString); // LINT
-    Future.value('hello').whenComplete(BadWithType().toString); // LINT
+    print('${toString()}'); // LINT
+    print('${this.toString()}'); // LINT
+    print('${takesFunction(toString)}'); // LINT
+    print('${takesFunction(this.toString)}'); // LINT
+
+    takesFunction(toString); // LINT
+    takesFunction(this.toString); // LINT
+    takesFunction(BadWithType.withoutFunc().toString); // LINT
+    Bad().doBad(toString); // LINT
+    Bad().doBad(this.toString); // LINT
+    Bad().doBad(BadWithType.withoutFunc().toString); // LINT
+
+    BadWithType(toString); // LINT
+    BadWithType.withFunc(this.toString); // LINT
+
+    ((Function internal) => internal())(toString); // LINT
   }
+}
+
+class BadWithTypeChild extends BadWithType {
+  BadWithTypeChild(BadWithType badWithType)
+      : super(badWithType.toString); // LINT
+  BadWithTypeChild.redirect(BadWithType badWithType)
+      : super.withFunc(badWithType.toString); // LINT
 }
 
 mixin callToStringOnBadWithType on BadWithType {
@@ -60,7 +90,6 @@ extension ExtensionOnBadWithType on BadWithType {
   }
 }
 
-
 // GOOD
 
 class Good {
@@ -72,26 +101,32 @@ class Good {
 
     final refToString = toString;
     refToString(); // OK?
-    Future.value('hello').whenComplete(refToString); // OK
+    takesFunction(refToString); // OK
   }
 }
 
-// TODO: this currently throws a false positive.
-// class GoodWithType extends Type {
-//   void good() {
-//     String toString() => null;
-//     toString(); // OK
-//   }
-// }
+class GoodWithType extends Type {
+  Function passedFunction;
+
+  GoodWithType.withFunc(this.passedFunction) {}
+  GoodWithType.withSelf(GoodWithTypeAndMixin goodWithTypeAndMixin)
+      : this.withFunc(goodWithTypeAndMixin.toString); // OK
+  GoodWithType.withOther(Good good) : this.withFunc(good.toString); // OK
+
+  void good() {
+    String toString() => null;
+    toString(); // OK
+  }
+}
 
 class GoodWithTypeAndMixin extends Type with ToStringMixin {
   void doGood() {
     toString(); // OK
     this.toString(); // OK
 
-    Future.value('hello').whenComplete(toString); // OK
-    Future.value('hello').whenComplete(this.toString); // OK
-    Future.value('hello').whenComplete(GoodWithTypeAndMixin().toString); // OK
+    takesFunction(toString); // OK
+    takesFunction(this.toString); // OK
+    takesFunction(GoodWithTypeAndMixin().toString); // OK
   }
 }
 
