@@ -141,7 +141,7 @@ class _Visitor extends SimpleAstVisitor {
     final targetType = (node.realTarget?.staticType is InterfaceType)
         ? node.realTarget.staticType as InterfaceType
         : thisType;
-    _reportIfToStringOnCoreTypeClass(node, targetType, node.methodName);
+    _reportIfToStringOnCoreTypeClass(targetType, node.methodName);
   }
 
   @override
@@ -154,23 +154,21 @@ class _Visitor extends SimpleAstVisitor {
       final targetType = (expression.realTarget?.staticType is InterfaceType)
           ? expression.realTarget?.staticType as InterfaceType
           : thisType;
-      _reportIfToStringOnCoreTypeClass(
-          expression, targetType, expression.propertyName);
+      _reportIfToStringOnCoreTypeClass(targetType, expression.propertyName);
     } else if (expression is PrefixedIdentifier) {
       final prefixType = expression.prefix.staticType;
       if (prefixType is InterfaceType) {
-        _reportIfToStringOnCoreTypeClass(
-            expression, prefixType, expression.identifier);
+        _reportIfToStringOnCoreTypeClass(prefixType, expression.identifier);
       }
     } else if (expression is SimpleIdentifier) {
-      _reportIfToStringOnCoreTypeClass(expression, thisType, expression);
+      _reportIfToStringOnCoreTypeClass(thisType, expression);
     }
   }
 
-  void _reportIfToStringOnCoreTypeClass(AstNode offendingNode,
+  void _reportIfToStringOnCoreTypeClass(
       InterfaceType targetType, SimpleIdentifier methodIdentifier) {
     if (_isToStringOnCoreTypeClass(targetType, methodIdentifier)) {
-      rule.reportLint(offendingNode);
+      rule.reportLint(methodIdentifier);
     }
   }
 
