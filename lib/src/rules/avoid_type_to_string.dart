@@ -74,6 +74,8 @@ class AvoidTypeToString extends LintRule implements NodeLintRule {
 
     // These nodes delegate to general visitArgumentList,
     // since SimpleAstVisitor only calls visits for concrete node subtypes.
+    // TODO: replace these with addArgumentList(...) once it's added to the registry API.
+    // Context: https://github.com/dart-lang/linter/pull/2209#discussion_r465196745
     registry.addFunctionExpressionInvocation(this, visitor);
     registry.addInstanceCreationExpression(this, visitor);
     registry.addRedirectingConstructorInvocation(this, visitor);
