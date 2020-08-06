@@ -83,10 +83,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitThisExpression(ThisExpression node) {
     final parent = node.parent;
 
+    var inExtension =
+        parent.thisOrAncestorOfType<ExtensionDeclaration>() != null;
+
     Element element;
-    if (parent is PropertyAccess && !parent.isNullAware) {
+    if (parent is PropertyAccess && (!inExtension || !parent.isNullAware)) {
       element = parent.propertyName.staticElement;
-    } else if (parent is MethodInvocation && !parent.isNullAware) {
+    } else if (parent is MethodInvocation &&
+        (!inExtension || !parent.isNullAware)) {
       element = parent.methodName.staticElement;
     } else {
       return;

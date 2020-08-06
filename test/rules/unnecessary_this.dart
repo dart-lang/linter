@@ -4,6 +4,22 @@
 
 // test w/ `pub run test -N unnecessary_this`
 
+class AA {
+  int x;
+  void foo() {
+    this?.x = 2; //LINT
+    this?.foo(); //LINT
+  }
+}
+
+mixin M {
+  int x;
+  void foo() {
+    this?.x = 2; //LINT
+    this?.foo(); //LINT
+  }
+}
+
 extension E on int {
   String f() => this?.toString(); //OK
   int get h => this?.hashCode; //OK
