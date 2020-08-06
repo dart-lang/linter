@@ -6,20 +6,20 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>one_member_abstracts</title>
+      <title>use_late_for_private_fields_and_variables</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>one_member_abstracts</h1>
+            <h1>use_late_for_private_fields_and_variables</h1>
             <p>Group: style</p>
-            <p>Maturity: stable</p>
+            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0 • <small>(Linter v0.1.1)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.118)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
-            <a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a>
+            
             <ul>
                <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
                <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
@@ -29,19 +29,19 @@
          </header>
          <section>
 
-            <p>From the <a href="https://dart.dev/guides/language/effective-dart/style/">style guide</a>:</p>
-<p><strong>AVOID</strong> defining a one-member abstract class when a simple function will do.</p>
-<p>Unlike Java, Dart has first-class functions, closures, and a nice light syntax
-for using them.  If all you need is something like a callback, just use a
-function.  If you're defining a class and it only has a single abstract member
-with a meaningless name like <code>call</code> or <code>invoke</code>, there is a good chance
-you just want a function.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code>typedef Predicate = bool Function(item);
-</code></pre>
+            <p>Use late for private members with non-nullable types that are always expected to
+be non-null. Thus it's clear that the field is not expected to be <code>null</code> and it
+avoids null checks.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>abstract class Predicate {
-  bool test(item);
+<pre><code>int? _i;
+m() {
+  _i!.abs();
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>late int _i;
+m() {
+  _i.abs();
 }
 </code></pre>
 
