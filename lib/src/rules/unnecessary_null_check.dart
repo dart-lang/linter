@@ -5,7 +5,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
@@ -64,51 +63,35 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitPostfixExpression(PostfixExpression node) {
     if (node.operator.type != TokenType.BANG) return;
 
-    final parent = node.unParenthesized.parent;
-    DartType expectedType;
+    var realNode = node
+        .thisOrAncestorMatching((e) => e.parent is! ParenthesizedExpression);
+    var parent = realNode.parent;
+
     // in variable declaration
     if (parent is VariableDeclaration) {
-      expectedType = parent.declaredElement.type;
-    }
-    // as named parameter of function
-    if (parent is NamedExpression && parent.parent is ArgumentList) {
-      final target = _lookupFunctionTypedElement(parent.parent.parent);
-      if (target != null) {
-        expectedType = target.parameters
-            .singleWhere((e) => e.isNamed && e.name == parent.name.label.name)
-            .type;
-      }
-    }
-    // as positional parameter of function
-    if (parent is ArgumentList) {
-      final target = _lookupFunctionTypedElement(parent.parent);
-      if (target is FunctionTypedElement) {
-        final index = parent.arguments
-            .where((e) => e is! NamedExpression)
-            .toList()
-            .indexOf(node.unParenthesized);
-        expectedType =
-            target.parameters.where((e) => !e.isNamed).toList()[index].type;
-      }
+      reportIfNullable(node, parent.declaredElement.type);
+      return;
     }
     // as right member of binary operator
-    if (parent is BinaryExpression &&
-        parent.rightOperand == node.unParenthesized) {
-      expectedType = parent.staticElement.parameters.first.type;
+    if (parent is BinaryExpression && parent.rightOperand == realNode) {
+      reportIfNullable(node, parent.staticElement.parameters.first.type);
+      return;
     }
-
-    if (expectedType != null && context.typeSystem.isNullable(expectedType)) {
-      rule.reportLint(node);
+    // as parameter of function
+    if (parent is NamedExpression) {
+      realNode = parent;
+      parent = parent.parent;
+    }
+    if (parent is ArgumentList) {
+      reportIfNullable(
+          node, (realNode as Expression).staticParameterElement.type);
+      return;
     }
   }
 
-  FunctionTypedElement _lookupFunctionTypedElement(AstNode node) {
-    if (node is InvocationExpression) {
-      return node.staticInvokeType.element as FunctionTypedElement;
+  void reportIfNullable(PostfixExpression node, DartType type) {
+    if (type != null && context.typeSystem.isNullable(type)) {
+      rule.reportLintForToken(node.operator);
     }
-    if (node is InstanceCreationExpression) {
-      return node.constructorName.staticElement;
-    }
-    return null;
   }
 }
