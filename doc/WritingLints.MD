@@ -254,10 +254,11 @@ void g() {
 
 **Optional parameters for `// LINT`**
 
-The `// LINT` comment markup supports **optional** parameters which describe
-where the lint warning is expected to be thrown: including , and exactly which
-part of the line of code should elicit the warning (specified by character
-column and length).
+The `// LINT` comment markup supports **optional** parameters that describe
+which line is expected to throw the lint warning, and exactly which part of the
+line of code should elicit the warning (specified by character column and
+length).
+
 ```dart
 // LINT [lineOffset,column:length] message
 ```
