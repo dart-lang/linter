@@ -14,8 +14,8 @@
   - [Testing](#testing)
     - [Utilities](#utilities)
     - [Writing automated tests](#writing-automated-tests)
-      - [Code which triggers the lint](#code-which-triggers-the-lint)
-      - [Code which passes the lint](#code-which-passes-the-lint)
+      - [Code that triggers the lint](#code-that-triggers-the-lint)
+      - [Code that passes the lint](#code-that-passes-the-lint)
       - [Advanced testing markup](#advanced-testing-markup)
       - [Caveat: depending on Dart SDK details](#caveat-depending-on-dart-sdk-details)
     - [Running automated tests](#running-automated-tests)
@@ -123,13 +123,13 @@ generates lint and test stubs in `lib/src/rules` and `test/rules`.
 
 Lint rules traverse an AST (abstract syntax tree) representing the syntactic
 structure of the Dart program being analyzed to determine if (and where)
-warnings should be raised.
+warnings should be reported.
 
 The Dart analyzer package contains documentation for understanding Dart's
 [AST](https://github.com/dart-lang/sdk/blob/master/pkg/analyzer/doc/tutorial/ast.md)
 and associated [element
 model](https://github.com/dart-lang/sdk/blob/master/pkg/analyzer/doc/tutorial/element.md).
-**These documents are an excellent place to start!**
+*These documents are an excellent place to start!*
 
 Further understanding can be gained by studying [existing
 rules](../lib/src/rules/), the [analyzer
@@ -139,7 +139,7 @@ language specification](#dart-language-specification).
 ### Example lints
 
 Take a look at the [existing rules](../lib/src/rules/) for examples of how to
-write lints. Finding an existing rule which tackles similar problems to your
+write lints. Finding an existing rule that tackles similar problems to your
 desired rule is a great way to get started writing a lint.
 
 ### Performance
@@ -174,7 +174,7 @@ draft](https://spec.dart.dev/DartLangSpecDraft.pdf).
 
 ## Testing
 
-It is very important to exhaustively test your lint, as false positives thrown
+It is very important to exhaustively test your lint, as false positives reported
 by your rule may lead to people not using it all.
 
 ### Utilities
@@ -194,16 +194,16 @@ more useful for maintaining overall project health rather than authoring lints.
 
 Generating a rule stub with `rule.dart` will also create a corresponding test
 stub under `test/rules/`. This test file should contain contrasting examples of
-Dart code which both _should_ and should _not_ trigger the lint.
+Dart code that both _should_ and should _not_ trigger the lint.
 
 Take a look at the other test cases under [`test/rules/`](../test/rules) for
 examples.
 
 See [Running automated tests](#running-automated-tests) for how to execute them.
 
-#### Code which triggers the lint
+#### Code that triggers the lint
 
-Code which _should_ trigger the rule is marked as such with `// LINT` at the end
+Code that _should_ trigger the rule is marked as such with `// LINT` at the end
 of the offending line.
 
 Example **triggering** [test cases](../test/rules/avoid_print.dart) from the
@@ -218,12 +218,12 @@ void main() {
 ```
 
 The test runner will perform a set-wise comparison of the reported lint warnings
-vs. the expected locations annotated by `// LINT`, and raise errors for any
+vs. the expected locations annotated by `// LINT`, and report errors for any
 differences.
 
-#### Code which passes the lint
+#### Code that passes the lint
 
-In contrast with `// LINT`, code which should _not_ trigger the rule is marked
+In contrast with `// LINT`, code that should _not_ trigger the rule is marked
 by `// OK` at the end of the line. These `// OK` comments by themselves have no
 mechanical impact on the lint testing process, but are the conventional way of
 notating situations where your rule should not report failures.
@@ -254,8 +254,8 @@ void g() {
 
 **Optional parameters for `// LINT`**
 
-The `// LINT` comment markup supports **optional** parameters that describe
-which line is expected to throw the lint warning, and exactly which part of the
+The `// LINT` comment markup supports optional parameters that describe
+which line is expected to report the lint warning, and exactly which part of the
 line of code should elicit the warning (specified by character column and
 length).
 
@@ -270,8 +270,8 @@ length).
    expected to begin.
 3. `length`: the expected length of the warning highlight. The end position of
    the highlight is `column + length`.
-4. `message`: the warning message expected to be thrown here, must exactly match
-   what the lint rule throws for the test to pass.
+4. `message`: the warning message expected to be reported here, must exactly
+   match what the lint rule reports for the test to pass.
 
 Notes:
 
@@ -299,9 +299,9 @@ f('''this
  is a multiline string''');
 ```
 
-**Lints which operate on comments**
+**Lints that operate on comments**
 
-If a lint rule should throw warnings for text contained in comments or doc
+If a lint rule should report warnings for text contained in comments or doc
 comments, there is the option of appending `# LINT` to the end of the offending
 comment lines in your test cases instead of placing `// LINT [+1]` on the line
 before. The alternative `# LINT` syntax accepts the same optional parameters
@@ -318,15 +318,15 @@ For example, this is useful for the
 **Ignoring other lints in a test case**
 
 The test runner will only check each test case file against its associated lint
-rule, so violating a different lint rule in your test case will not throw an
+rule, so violating a different lint rule in your test case will not report an
 error when running the test. However, violating other lint rules will still
 cause tools like your IDE to show the expected warnings. These can optionally be
 ignored with the standard `// ignore: xyz` syntax, just like anywhere else.
 
-**Complicated lints which require integration tests**
+**Complicated lints that require integration tests**
 
-For any tests which cannot be achieved by writing test cases under `test/rules/`
-as described thusfar, There is the option of writing an [integration
+For any tests that cannot be achieved by writing test cases under `test/rules/`
+as described thusfar, there is the option of writing an [integration
 test](../test/integration_test.dart) instead.  
 
 #### Caveat: depending on Dart SDK details
@@ -395,9 +395,9 @@ Example: test all lint rules against the codebase of the linter itself:
 
 Running the linter will also output Dart language warnings and errors, such as
 `[static type warning]` and `[compile time error]`. When testing a lint rule, it
-can be helpful to filter the output for only lines which contain `[lint]`.
+can be helpful to filter the output for only lines that contain `[lint]`.
 
-For platforms which support it, piping to `grep` can work well for this:
+For platforms that support it, piping to `grep` can work well for this:
 
     $ dart bin/linter.dart --rules avoid_as . | grep ' \[lint\] '
 
