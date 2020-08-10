@@ -9,11 +9,11 @@ import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Unnecessary null check.';
+const _desc = r'Unnecessary null checks.';
 
 const _details = r'''
 
-Don't apply null check when nullable value is accepted.
+Don't apply a null check when a nullable value is accepted.
 
 **BAD:**
 ```
@@ -36,10 +36,10 @@ m() {
 
 ''';
 
-class UnnecessaryNullCheck extends LintRule implements NodeLintRule {
-  UnnecessaryNullCheck()
+class UnnecessaryNullChecks extends LintRule implements NodeLintRule {
+  UnnecessaryNullChecks()
       : super(
-            name: 'unnecessary_null_check',
+            name: 'unnecessary_null_checks',
             description: _desc,
             details: _details,
             maturity: Maturity.experimental,
