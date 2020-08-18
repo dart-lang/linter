@@ -85,8 +85,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (type == null) {
       return;
     }
-    if (type.isDartAsyncFuture ||
-        DartTypeUtilities.implementsInterface(type, 'Future', 'dart.async')) {
+    if (DartTypeUtilities.implementsInterface(type, 'Future', 'dart.async')) {
       // Ignore a couple of special known cases.
       if (_isFutureDelayedInstanceCreationWithComputation(expr) ||
           _isMapPutIfAbsentInvocation(expr)) {
