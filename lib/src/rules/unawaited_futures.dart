@@ -5,6 +5,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:linter/src/util/dart_type_utilities.dart';
 
 import '../analyzer.dart';
 
@@ -81,7 +82,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (expr is AssignmentExpression) return;
 
     var type = expr?.staticType;
-    if (type?.isDartAsyncFuture == true) {
+    if (type == null) {
+      return;
+    }
+    if (type.isDartAsyncFuture ||
+        DartTypeUtilities.implementsInterface(type, 'Future', 'dart.async')) {
       // Ignore a couple of special known cases.
       if (_isFutureDelayedInstanceCreationWithComputation(expr) ||
           _isMapPutIfAbsentInvocation(expr)) {
