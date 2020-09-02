@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>unnecessary_nullable_for_final_variable_declarations</title>
+      <title>unnecessary_null_checks</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>unnecessary_nullable_for_final_variable_declarations</h1>
+            <h1>unnecessary_null_checks</h1>
             <p>Group: style</p>
             <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.10.0-10.0.dev • <small>(Linter v0.1.118)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.119)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,13 +29,21 @@
          </header>
          <section>
 
-            <p>Use a non-nullable type for a final variable initialized with a non-nullable
-value.</p>
+            <p>Don't apply a null check when a nullable value is accepted.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>final int? i = 1;
+<pre><code>f(int? i);
+m() {
+  int? j;
+  f(j!);
+}
+
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>final int i = 1;
+<pre><code>f(int? i);
+m() {
+  int? j;
+  f(j);
+}
 </code></pre>
 
             

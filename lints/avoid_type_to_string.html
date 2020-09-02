@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>unnecessary_nullable_for_final_variable_declarations</title>
+      <title>avoid_type_to_string</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>unnecessary_nullable_for_final_variable_declarations</h1>
-            <p>Group: style</p>
-            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
+            <h1>avoid_type_to_string</h1>
+            <p>Group: errors</p>
+            <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.10.0-10.0.dev • <small>(Linter v0.1.118)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.119)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,13 +29,35 @@
          </header>
          <section>
 
-            <p>Use a non-nullable type for a final variable initialized with a non-nullable
-value.</p>
+            <p><strong>DO</strong> avoid calls to <Type>.toString() in production code, since it does not
+contractually return the user-defined name of the Type (or underlying class).
+Development-mode compilers where code size is not a concern use the full name,
+but release-mode compilers often choose to minify these symbols.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>final int? i = 1;
+<pre><code>void bar(Object other) {
+  if (other.runtimeType.toString() == 'Bar') {
+    doThing();
+  }
+}
+
+Object baz(Thing myThing) {
+  return getThingFromDatabase(key: myThing.runtimeType.toString());
+}
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>final int i = 1;
+<pre><code>void bar(Object other) {
+  if (other is Bar) {
+    doThing();
+  }
+}
+
+class Thing {
+  String get thingTypeKey =&gt; ...
+}
+
+Object baz(Thing myThing) {
+  return getThingFromDatabase(key: myThing.thingTypeKey);
+}
 </code></pre>
 
             
