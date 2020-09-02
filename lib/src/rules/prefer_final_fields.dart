@@ -190,7 +190,8 @@ class _Visitor extends SimpleAstVisitor<void> {
           if (isFieldInAllConstructors) {
             rule.reportLint(variable);
           }
-        } else if (element.initializer != null) {
+        } else if (element is PropertyInducingElement &&
+            element.hasInitializer) {
           rule.reportLint(variable);
         }
       }
