@@ -61,13 +61,30 @@ else
   
   # Install dart_coveralls; gather and send coverage data.
   if [ "$COVERALLS_TOKEN" ]; then
-    pub global activate dart_coveralls
-    pub global run dart_coveralls report \
-      --token $COVERALLS_TOKEN \
-      --retry 10 \
-      --debug \
-      --exclude-test-files \
-      test/all.dart
+
+    OBS_PORT=9292
+    echo "Collecting coverage on port $OBS_PORT..."
+
+    # Run the coverage collector to generate the JSON coverage report.
+    dart bin/collect_coverage.dart \
+      --port=$OBS_PORT \
+      --out=var/coverage.json \
+      --wait-paused \
+      --resume-isolates
+
+    echo "Generating LCOV report..."
+    dart bin/format_coverage.dart \
+      --lcov \
+      --in=var/coverage.json \
+      --out=var/lcov.info \
+      --packages=.packages \
+      --report-on=lib \
+      --check-ignore
+
+    echo "Running coveralls..."
+    gem install coveralls-lcov
+    coveralls-lcov var/lcov.info
+
   fi
 fi
 
