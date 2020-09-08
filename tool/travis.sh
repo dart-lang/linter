@@ -68,14 +68,14 @@ else
     echo "Collecting coverage on port $OBS_PORT..."
 
     # Run the coverage collector to generate the JSON coverage report.
-    dart collect_coverage \
+    collect_coverage \
       --port=$OBS_PORT \
       --out=var/coverage.json \
       --wait-paused \
       --resume-isolates
 
     echo "Generating LCOV report..."
-    dart format_coverage \
+    format_coverage \
       --lcov \
       --in=var/coverage.json \
       --out=var/lcov.info \
