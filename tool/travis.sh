@@ -56,15 +56,19 @@ else
 
   echo ""
 
+  OBS_PORT=9292
+
   # Run the tests.
-  dart --enable-asserts test/all.dart
-  
+  dart --disable-service-auth-codes \
+    --enable-vm-service=$OBS_PORT \
+    --pause-isolates-on-exit \
+    test/all.dart &
+
   # Install dart_coveralls; gather and send coverage data.
   if [ "$COVERALLS_TOKEN" ]; then
 
     pub global activate coverage
 
-    OBS_PORT=9292
     echo "Collecting coverage on port $OBS_PORT..."
 
     # Run the coverage collector to generate the JSON coverage report.
