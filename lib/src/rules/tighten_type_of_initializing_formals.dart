@@ -14,7 +14,8 @@ const _desc = r'Tighten type of initializing formal.';
 
 const _details = r'''
 
-Tighten type of initializing formal if an non null assert exists.
+Tighten type of initializing formal if a non-null assert exists. This allow the
+type system to catch problems rather than have them only be caught at run-time.
 
 **BAD:**
 ```
@@ -76,17 +77,18 @@ class _Visitor extends SimpleAstVisitor<void> {
         .whereType<AssertInitializer>()
         .map((e) => e.condition)
         .whereType<BinaryExpression>()
-        .where((element) => element.operator.type == TokenType.BANG_EQ)
+        .where((e) => e.operator.type == TokenType.BANG_EQ)
         .map((e) => e.rightOperand is NullLiteral
             ? e.leftOperand
             : e.leftOperand is NullLiteral ? e.rightOperand : null)
+        .where((e) => e != null)
         .where((e) => context.typeSystem.isNullable(e.staticType))
         .whereType<Identifier>()
-        .map((element) => element.staticElement)
+        .map((e) => e.staticElement)
         .whereType<FieldFormalParameterElement>()
-        .forEach((element) {
-      rule.reportLint(node.parameters.parameters
-          .firstWhere((p) => p.declaredElement == element));
+        .forEach((e) {
+      rule.reportLint(
+          node.parameters.parameters.firstWhere((p) => p.declaredElement == e));
     });
   }
 }
