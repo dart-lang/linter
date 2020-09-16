@@ -14,7 +14,7 @@ const _desc = r'Tighten type of initializing formal.';
 
 const _details = r'''
 
-Tighten type of initializing formal if a non-null assert exists. This allow the
+Tighten type of initializing formal if a non-null assert exists. This allows the
 type system to catch problems rather than have them only be caught at run-time.
 
 **BAD:**
