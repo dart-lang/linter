@@ -53,6 +53,7 @@ import 'rules/camel_case_extensions.dart';
 import 'rules/camel_case_types.dart';
 import 'rules/cancel_subscriptions.dart';
 import 'rules/cascade_invocations.dart';
+import 'rules/cast_to_non_nullable_child.dart';
 import 'rules/close_sinks.dart';
 import 'rules/comment_references.dart';
 import 'rules/constant_identifier_names.dart';
@@ -235,6 +236,7 @@ void registerLintRules() {
     ..register(CamelCaseTypes())
     ..register(CancelSubscriptions())
     ..register(CascadeInvocations())
+    ..register(CastToNonNullableChild())
     ..register(CloseSinks())
     ..register(CommentReferences())
     ..register(ConstantIdentifierNames())
