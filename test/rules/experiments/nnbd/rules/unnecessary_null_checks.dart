@@ -30,3 +30,6 @@ class A {
   operator +(int? p) => A() + i!; // LINT
   operator -(int? p) => A() + (i!); // LINT
 }
+
+int? f1(int? i) => i!; // LINT
+int? f2(int? i) { return i!; } // LINT
