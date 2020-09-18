@@ -42,6 +42,7 @@ class CastToNonNullableChild extends LintRule implements NodeLintRule {
           name: 'cast_to_non_nullable_child',
           description: _desc,
           details: _details,
+          maturity: Maturity.experimental,
           group: Group.style,
         );
 
