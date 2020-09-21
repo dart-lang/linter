@@ -4,13 +4,16 @@
 
 // test w/ `pub run test -N null_check_on_nullable_type_parameter`
 
-m1<T>(T p) => p!; // LINT
-m2<T>(T? p) => p!; // LINT
-m3<T extends Object>(T p) => p!; // OK
-m4<T extends Object?>(T p) => p!; // LINT
-m5<T extends dynamic>(T p) => p!; // LINT
-m6<T extends dynamic>(T p) => p!.a; // OK
-m7<T extends dynamic>(T p) => p!.m(); // OK
+T m1<T>(T p) => p!; // OK
+T m2a<T>(T? p) => p!; // LINT
+dynamic m2b<T>(T? p) => p!; // OK
+T m3<T extends Object>(T? p) => p!; // OK
+T m4<T extends Object?>(T? p) => p!; // LINT
+T m5<T extends dynamic>(T? p) => p!; // LINT
+T m6<T>(T p) => p!.a; // OK
+T m7<T>(T p) => p!.m(); // OK
 
-m10<T>(T p) { return p!; } // LINT
-m20<T>(T? p) { T t = p!; } // LINT
+T m10<T>(T? p) { return p!; } // LINT
+T m20<T>(T? p) { T t = p!; } // LINT
+
+R m<P, R>(P? p) => p!; // OK

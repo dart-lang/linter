@@ -6,6 +6,7 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 import 'unnecessary_null_checks.dart';
@@ -82,9 +83,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.operator.type != TokenType.BANG) return;
 
     final expectedType = getExpectedType(node);
-    if (context.typeSystem.isPotentiallyNullable(node.operand.staticType) &&
+    if (node.operand.staticType is TypeParameterType &&
+        context.typeSystem.isNullable(node.operand.staticType) &&
         expectedType != null &&
-        context.typeSystem.isPotentiallyNullable(expectedType)) {
+        context.typeSystem.isPotentiallyNullable(expectedType) &&
+        context.typeSystem.promoteToNonNull(node.operand.staticType) ==
+            context.typeSystem.promoteToNonNull(expectedType)) {
       rule.reportLintForToken(node.operator);
     }
   }
