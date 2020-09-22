@@ -83,11 +83,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.operator.type != TokenType.BANG) return;
 
     final expectedType = getExpectedType(node);
-    if (node.operand.staticType is TypeParameterType &&
-        context.typeSystem.isNullable(node.operand.staticType) &&
+    final type = node.operand.staticType;
+    if (type is TypeParameterType &&
+        context.typeSystem.isNullable(type) &&
         expectedType != null &&
         context.typeSystem.isPotentiallyNullable(expectedType) &&
-        context.typeSystem.promoteToNonNull(node.operand.staticType) ==
+        context.typeSystem.promoteToNonNull(type) ==
             context.typeSystem.promoteToNonNull(expectedType)) {
       rule.reportLintForToken(node.operator);
     }

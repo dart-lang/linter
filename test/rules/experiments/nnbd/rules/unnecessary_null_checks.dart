@@ -33,3 +33,8 @@ class A {
 
 int? f1(int? i) => i!; // LINT
 int? f2(int? i) { return i!; } // LINT
+
+f3(int? i) {
+  int? v;
+  v = i!; // LINT
+}
