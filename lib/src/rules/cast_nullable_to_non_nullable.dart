@@ -8,11 +8,11 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r"Don't cast a nullable value to a non nullable subtype.";
+const _desc = r"Don't cast a nullable value to a non nullable type.";
 
 const _details = r'''
 
-Don't cast a nullable value to a non nullable subtype. This hides a null check
+Don't cast a nullable value to a non nullable type. This hides a null check
 and most of the time it is not what is expected.
 
 **BAD:**
@@ -22,6 +22,7 @@ class B extends A {}
 
 A? a;
 var v = a as B;
+var v = a as A;
 ```
 
 **GOOD:**
@@ -31,15 +32,15 @@ class B extends A {}
 
 A? a;
 var v = a! as B;
-var v = a as B?;
+var v = a!;
 ```
 
 ''';
 
-class CastToNonNullableChild extends LintRule implements NodeLintRule {
-  CastToNonNullableChild()
+class CastNullableToNonNullable extends LintRule implements NodeLintRule {
+  CastNullableToNonNullable()
       : super(
-          name: 'cast_to_non_nullable_child',
+          name: 'cast_nullable_to_non_nullable',
           description: _desc,
           details: _details,
           maturity: Maturity.experimental,
@@ -76,9 +77,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     final type = node.type.type;
     if (!expressionType.isDynamic &&
         context.typeSystem.isNullable(expressionType) &&
-        context.typeSystem.isNonNullable(type) &&
-        context.typeSystem.isSubtypeOf(
-            type, context.typeSystem.promoteToNonNull(expressionType))) {
+        context.typeSystem.isNonNullable(type)) {
       rule.reportLint(node);
     }
   }
