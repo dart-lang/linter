@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>unnecessary_null_checks</title>
+      <title>null_check_on_nullable_type_parameter</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>unnecessary_null_checks</h1>
+            <h1>null_check_on_nullable_type_parameter</h1>
             <p>Group: style</p>
             <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.10.0-144.0.dev • <small>(Linter v0.1.119)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.120)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,20 +29,25 @@
          </header>
          <section>
 
-            <p>Don't apply a null check when a nullable value is accepted.</p>
+            <p>Don't use null check on a potentially nullable type parameter.</p>
+<p>Given a generic type parameter <code>T</code> which has a nullable bound (e.g. the default
+bound of <code>Object?</code>), it is very easy to introduce erroneous null checks when
+working with a variable of type <code>T?</code>. Specifically, it is not uncommon to have
+<code>T? x;</code> and want to assert that <code>x</code> has been set to a valid value of type <code>T</code>.
+A common mistake is to do so using <code>x!</code>. This is almost always incorrect, since
+if <code>T</code> is a nullable type, <code>x</code> may validly hold <code>null</code> as a value of type <code>T</code>.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>f(int? i);
-m() {
-  int? j;
-  f(j!);
+<pre><code>T run&lt;T&gt;(T callback()) {
+  T? result;
+   (() { result = callback(); })();
+  return result!;
 }
-
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>f(int? i);
-m() {
-  int? j;
-  f(j);
+<pre><code>T run&lt;T&gt;(T callback()) {
+  T? result;
+   (() { result = callback(); })();
+  return result as T;
 }
 </code></pre>
 

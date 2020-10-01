@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>unnecessary_null_checks</title>
+      <title>cast_nullable_to_non_nullable</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>unnecessary_null_checks</h1>
+            <h1>cast_nullable_to_non_nullable</h1>
             <p>Group: style</p>
             <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.10.0-144.0.dev • <small>(Linter v0.1.119)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.120)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,21 +29,23 @@
          </header>
          <section>
 
-            <p>Don't apply a null check when a nullable value is accepted.</p>
+            <p>Don't cast a nullable value to a non nullable type. This hides a null check
+and most of the time it is not what is expected.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>f(int? i);
-m() {
-  int? j;
-  f(j!);
-}
+<pre><code>class A {}
+class B extends A {}
 
+A? a;
+var v = a as B;
+var v = a as A;
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>f(int? i);
-m() {
-  int? j;
-  f(j);
-}
+<pre><code>class A {}
+class B extends A {}
+
+A? a;
+var v = a! as B;
+var v = a!;
 </code></pre>
 
             
