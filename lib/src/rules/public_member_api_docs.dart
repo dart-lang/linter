@@ -102,7 +102,6 @@ class _Visitor extends SimpleAstVisitor {
   final LintRule rule;
   final LinterContext context;
 
-
   _Visitor(this.rule, this.context);
 
   bool check(Declaration node) {
