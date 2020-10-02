@@ -50,7 +50,7 @@ class CastNullableToNonNullable extends LintRule implements NodeLintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    if (!context.currentUnit.unit.featureSet.isEnabled(Feature.non_nullable)) {
+    if (!context.isEnabled(Feature.non_nullable)) {
       return;
     }
 
