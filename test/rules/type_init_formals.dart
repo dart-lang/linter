@@ -19,3 +19,8 @@ class Good2 {
   Good2.i(int this.a); // OK
   Good2.d(double this.a); // OK
 }
+
+class Good3 {
+  var a;
+  Good3(int this.a); // OK
+}
