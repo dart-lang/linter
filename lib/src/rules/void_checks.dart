@@ -81,7 +81,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    _futureDynamicType = context.typeProvider.futureDynamicType;
+    _futureDynamicType = context.typeSystem.leastUpperBound(
+        context.typeProvider.futureDynamicType,
+        context.typeProvider.nullType) as InterfaceType;
   }
 
   @override
@@ -131,10 +133,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     checkedNode ??= node;
     if (expectedType == null || type == null) {
       return;
-    } else if (expectedType.isVoid &&
-            !isTypeAcceptableWhenExpectingVoid(type) ||
-        expectedType.isDartAsyncFutureOr &&
-            (expectedType as InterfaceType).typeArguments.first.isVoid &&
+    }
+
+    var futureOrVoidType =
+        context.typeProvider.futureOrType2(context.typeProvider.voidType);
+    if (expectedType.isVoid && !isTypeAcceptableWhenExpectingVoid(type) ||
+        expectedType == futureOrVoidType &&
             !typeSystem.isAssignableTo(type, _futureDynamicType)) {
       rule.reportLint(node);
     } else if (checkedNode is FunctionExpression &&
