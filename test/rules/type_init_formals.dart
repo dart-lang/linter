@@ -24,3 +24,7 @@ class Good3 {
   var a;
   Good3(int this.a); // OK
 }
+
+class Invalid {
+  Invalid(int this.x); // OK
+}
