@@ -418,35 +418,36 @@ class DartTypeUtilities {
   /// * Otherwise, the types are related.
   // TODO(srawlins): typedefs and functions in general.
   static bool unrelatedTypes(
-      TypeSystem typeSystem, DartType leftType_, DartType rightType_) {
+      TypeSystem typeSystem, DartType leftType, DartType rightType) {
     // If we don't have enough information, or can't really compare the types,
     // return false as they _might_ be related.
-    if (leftType_ == null ||
-        leftType_.isBottom ||
-        leftType_.isDynamic ||
-        rightType_ == null ||
-        rightType_.isBottom ||
-        rightType_.isDynamic) {
+    if (leftType == null ||
+        leftType.isBottom ||
+        leftType.isDynamic ||
+        rightType == null ||
+        rightType.isBottom ||
+        rightType.isDynamic) {
       return false;
     }
-    var leftType = typeSystem.promoteToNonNull(leftType_);
-    var rightType = typeSystem.promoteToNonNull(rightType_);
-    if (leftType == rightType ||
-        typeSystem.isSubtypeOf(leftType, rightType) ||
-        typeSystem.isSubtypeOf(rightType, leftType)) {
+    var promotedLeftType = typeSystem.promoteToNonNull(leftType);
+    var promotedRightType = typeSystem.promoteToNonNull(rightType);
+    if (promotedLeftType == promotedRightType ||
+        typeSystem.isSubtypeOf(promotedLeftType, promotedRightType) ||
+        typeSystem.isSubtypeOf(promotedRightType, promotedLeftType)) {
       return false;
     }
-    if (leftType is InterfaceType && rightType is InterfaceType) {
+    if (promotedLeftType is InterfaceType &&
+        promotedRightType is InterfaceType) {
       // In this case, [leftElement] and [rightElement] each represent
       // the same class, like `int`, or `Iterable<String>`.
-      var leftElement = leftType.element;
-      var rightElement = rightType.element;
+      var leftElement = promotedLeftType.element;
+      var rightElement = promotedRightType.element;
       if (leftElement == rightElement) {
         // In this case, [leftElement] and [rightElement] represent the same
         // class, modulo generics, e.g. `List<int>` and `List<dynamic>`. Now we
         // need to check type arguments.
-        var leftTypeArguments = leftType.typeArguments;
-        var rightTypeArguments = rightType.typeArguments;
+        var leftTypeArguments = promotedLeftType.typeArguments;
+        var rightTypeArguments = promotedRightType.typeArguments;
         if (leftTypeArguments.length != rightTypeArguments.length) {
           // I cannot think of how we would enter this block, but it guards
           // against RangeError below.
@@ -466,16 +467,16 @@ class DartTypeUtilities {
         return leftElement.supertype?.isDartCoreObject == true ||
             leftElement.supertype != rightElement.supertype;
       }
-    } else if (leftType is TypeParameterType &&
-        rightType is TypeParameterType) {
-      return unrelatedTypes(
-          typeSystem, leftType.element.bound, rightType.element.bound);
-    } else if (leftType is FunctionType) {
-      if (_isFunctionTypeUnrelatedToType(leftType, rightType)) {
+    } else if (promotedLeftType is TypeParameterType &&
+        promotedRightType is TypeParameterType) {
+      return unrelatedTypes(typeSystem, promotedLeftType.element.bound,
+          promotedRightType.element.bound);
+    } else if (promotedLeftType is FunctionType) {
+      if (_isFunctionTypeUnrelatedToType(promotedLeftType, promotedRightType)) {
         return true;
       }
-    } else if (rightType is FunctionType) {
-      if (_isFunctionTypeUnrelatedToType(rightType, leftType)) {
+    } else if (promotedRightType is FunctionType) {
+      if (_isFunctionTypeUnrelatedToType(promotedRightType, promotedLeftType)) {
         return true;
       }
     }
