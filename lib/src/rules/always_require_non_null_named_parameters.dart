@@ -5,6 +5,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:meta/meta.dart';
 
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
@@ -50,7 +51,9 @@ class AlwaysRequireNonNullNamedParameters extends LintRule
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    final visitor = _Visitor(this);
+    final visitor = _Visitor(this,
+        isNullSafety: context
+            .currentUnit.unit.declaredElement.library.isNonNullableByDefault);
     registry.addFormalParameterList(this, visitor);
   }
 }
@@ -58,16 +61,16 @@ class AlwaysRequireNonNullNamedParameters extends LintRule
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
-  _Visitor(this.rule);
+  final bool isNullSafety;
 
-  void checkLiteral(TypedLiteral literal) {
-    if (literal.typeArguments == null) {
-      rule.reportLintForToken(literal.beginToken);
-    }
-  }
+  _Visitor(this.rule, {@required this.isNullSafety});
 
   @override
   void visitFormalParameterList(FormalParameterList node) {
+    // In a Null Safety library, this lint is covered by other formal static
+    // analysis.
+    if (isNullSafety) return;
+
     List<DefaultFormalParameter> getParams() {
       final params = <DefaultFormalParameter>[];
       for (final p in node.parameters) {
