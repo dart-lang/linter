@@ -396,40 +396,41 @@ class DartTypeUtilities {
     return nodes;
   }
 
-  /// Return whether [leftType] and [rightType] are _definitely_ unrelated.
+  /// Returns whether [leftType] and [rightType] are _definitely_ unrelated.
   ///
   /// For the purposes of this function, here are some "relation" rules:
   /// * `dynamic` and `Null` are considered related to any other type.
-  /// * Two equal types are considered related, e.g. classes `int` and `int`,
-  ///   classes `List<String>` and `List<String>`,
-  ///   classes `List<T>` and `List<T>`, and type variables `A` and `A`.
-  /// * Two types such that one is a subtype of the other, such as classes
-  ///   `List<dynamic>` and `Iterable<dynamic>`, and type variables `A` and `B`
-  ///   where `A extends B`.
-  /// * Two types, each representing a class:
+  /// * Two types which are equal modulo nullability are considered related,
+  ///   e.g. `int` and `int`, `String` and `String?`, `List<String>` and
+  ///   `List<String>`, `List<T>` and `List<T>`, and type variables `A` and `A`.
+  /// * Two types such that one is a subtype of the other, modulo nullability,
+  ///   such as `List<dynamic>` and `Iterable<dynamic>`, and type variables `A`
+  ///   and `B` where `A extends B`, are considered related.
+  /// * Two interface types:
   ///   * are related if they represent the same class, modulo type arguments,
-  ///     and each of their pair-wise type arguments are related, e.g.
-  ///     `List<dynamic>` and `List<int>`, and `Future<T>` and `Future<S>` where
-  ///     `S extends T`.
+  ///     modulo nullability, and each of their pair-wise type arguments are
+  ///     related, e.g. `List<dynamic>` and `List<int>`, and `Future<T>` and
+  ///     `Future<S>` where `S extends T`.
   ///   * are unrelated if [leftType]'s supertype is [Object].
   ///   * are related if their supertypes are equal, e.g. `List<dynamic>` and
   ///     `Set<dynamic>`.
-  /// * Two types, each representing a type variable, are related if their
-  ///   bounds are related.
+  /// * Two type variables are related if their bounds are related.
   /// * Otherwise, the types are related.
   // TODO(srawlins): typedefs and functions in general.
   static bool unrelatedTypes(
-      TypeSystem typeSystem, DartType leftType, DartType rightType) {
+      TypeSystem typeSystem, DartType leftType_, DartType rightType_) {
     // If we don't have enough information, or can't really compare the types,
     // return false as they _might_ be related.
-    if (leftType == null ||
-        leftType.isBottom ||
-        leftType.isDynamic ||
-        rightType == null ||
-        rightType.isBottom ||
-        rightType.isDynamic) {
+    if (leftType_ == null ||
+        leftType_.isBottom ||
+        leftType_.isDynamic ||
+        rightType_ == null ||
+        rightType_.isBottom ||
+        rightType_.isDynamic) {
       return false;
     }
+    var leftType = typeSystem.promoteToNonNull(leftType_);
+    var rightType = typeSystem.promoteToNonNull(rightType_);
     if (leftType == rightType ||
         typeSystem.isSubtypeOf(leftType, rightType) ||
         typeSystem.isSubtypeOf(rightType, leftType)) {
