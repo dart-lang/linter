@@ -170,12 +170,26 @@ mixin M on A1 {
   int g; // OK
 }
 
-class BB {
+abstract class BB {
   abstract String s;
 }
 
 class AA extends BB {
   /// Overriding abstracts in NNBD is OK.
+  @override
+  String s; // OK
+}
+
+class AAA with BB {
+  @override
+  String s; // OK
+}
+
+abstract class BBB {
+  abstract final String s;
+}
+
+class AAA extends BBB {
   @override
   String s; // OK
 }
