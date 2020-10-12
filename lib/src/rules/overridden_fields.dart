@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -107,15 +108,17 @@ class OverriddenFields extends LintRule implements NodeLintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    final visitor = _Visitor(this);
+    final visitor = _Visitor(this, context);
     registry.addFieldDeclaration(this, visitor);
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+  bool nnbdEnabled;
 
-  _Visitor(this.rule);
+  _Visitor(this.rule, LinterContext context)
+      : nnbdEnabled = context.isEnabled(Feature.non_nullable);
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
@@ -125,7 +128,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     node.fields.variables.forEach((VariableDeclaration variable) {
       final field = _getOverriddenMember(variable.declaredElement);
-      if (field != null) {
+      if (field != null && (!nnbdEnabled || !field.isAbstract)) {
         rule.reportLint(variable.name);
       }
     });
