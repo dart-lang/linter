@@ -42,7 +42,6 @@ class VoidChecks extends LintRule implements NodeLintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     final visitor = _Visitor(this, context);
-    registry.addCompilationUnit(this, visitor);
     registry.addMethodInvocation(this, visitor);
     registry.addInstanceCreationExpression(this, visitor);
     registry.addAssignmentExpression(this, visitor);
@@ -55,8 +54,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   final LinterContext context;
   final TypeSystem typeSystem;
-
-  InterfaceType _futureDynamicType;
 
   _Visitor(this.rule, this.context) : typeSystem = context.typeSystem;
 
@@ -88,13 +85,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     final type = node.writeType;
     _check(type, node.rightHandSide?.staticType, node,
         checkedNode: node.rightHandSide);
-  }
-
-  @override
-  void visitCompilationUnit(CompilationUnit node) {
-    _futureDynamicType = context.typeSystem.leastUpperBound(
-        context.typeProvider.futureDynamicType,
-        context.typeProvider.nullType) as InterfaceType;
   }
 
   @override
