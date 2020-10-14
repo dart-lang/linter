@@ -78,12 +78,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     final returnType = node.returnType?.type;
     final parent = node.parent;
-    final typeParameters = node.typeParameters?.typeParameters ?? [];
     if (node.isStatic &&
         parent is ClassOrMixinDeclaration &&
         returnType is InterfaceType &&
-        returnType == parent.declaredElement.thisType &&
-        typeParameters.isEmpty &&
+        parent.typeParameters == null &&
+        node.typeParameters == null &&
         _hasNewInvocation(returnType, node.body)) {
       rule.reportLint(node.name);
     }
