@@ -71,6 +71,18 @@ class _Visitor extends SimpleAstVisitor<void> {
     return false;
   }
 
+  bool isTypeAcceptableWhenExpectingFutureOrVoid(DartType type) {
+    if (type.isDynamic) return true;
+    if (isTypeAcceptableWhenExpectingVoid(type)) return true;
+    if (type.isDartAsyncFutureOr &&
+        type is InterfaceType &&
+        isTypeAcceptableWhenExpectingFutureOrVoid(type.typeArguments.first)) {
+      return true;
+    }
+
+    return false;
+  }
+
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
     final type = node.writeType;
@@ -133,10 +145,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (expectedType == null || type == null) {
       return;
     }
-    if (expectedType.isVoid && !isTypeAcceptableWhenExpectingVoid(type) ||
-        expectedType.isDartAsyncFutureOr &&
-            (expectedType as InterfaceType).typeArguments.first.isVoid &&
-            !typeSystem.isAssignableTo(type, _futureDynamicType)) {
+    if (expectedType.isVoid && !isTypeAcceptableWhenExpectingVoid(type)) {
+      rule.reportLint(node);
+    } else if (expectedType.isDartAsyncFutureOr &&
+        (expectedType as InterfaceType).typeArguments.first.isVoid &&
+        !isTypeAcceptableWhenExpectingFutureOrVoid(type)) {
       rule.reportLint(node);
     } else if (checkedNode is FunctionExpression &&
         checkedNode.body is! ExpressionFunctionBody &&
