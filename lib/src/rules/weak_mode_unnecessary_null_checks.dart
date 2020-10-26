@@ -61,7 +61,7 @@ class _Visitor extends RecursiveAstVisitor<void> {
   @override
   void visitPropertyAccess(PropertyAccess node) {
     if (node.operator.type == TokenType.QUESTION_PERIOD &&
-        isNonNullable(node.target)) {
+        context.typeSystem.isNonNullable(node.target.staticType)) {
       rule.reportLintForToken(node.operator);
     }
     super.visitPropertyAccess(node);
@@ -70,7 +70,7 @@ class _Visitor extends RecursiveAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.operator?.type == TokenType.QUESTION_PERIOD &&
-        isNonNullable(node.target)) {
+        context.typeSystem.isNonNullable(node.target.staticType)) {
       rule.reportLintForToken(node.operator);
     }
     super.visitMethodInvocation(node);
@@ -79,7 +79,7 @@ class _Visitor extends RecursiveAstVisitor<void> {
   @override
   void visitPostfixExpression(PostfixExpression node) {
     if (node.operator.type == TokenType.QUESTION &&
-        isNonNullable(node.operand)) {
+        context.typeSystem.isNonNullable(node.operand.staticType)) {
       rule.reportLintForToken(node.operator);
     }
     super.visitPostfixExpression(node);
@@ -95,29 +95,10 @@ class _Visitor extends RecursiveAstVisitor<void> {
             node.operator.type == TokenType.BANG_EQ) &&
         operands.where((e) => e.staticType.isDartCoreNull).length == 1) {
       final operand = operands.firstWhere((e) => !e.staticType.isDartCoreNull);
-      if (isNonNullable(operand)) {
+      if (context.typeSystem.isNonNullable(operand.staticType)) {
         rule.reportLint(node);
       }
     }
     super.visitBinaryExpression(node);
-  }
-
-  bool isNonNullable(Expression expression) {
-    var exp = expression.unParenthesized;
-    if (exp is Identifier &&
-        !exp.staticElement.library.featureSet.isEnabled(Feature.non_nullable)) {
-      return false;
-    }
-    if (exp is MethodInvocation &&
-        !exp.methodName.staticElement.library.featureSet
-            .isEnabled(Feature.non_nullable)) {
-      return false;
-    }
-    if (exp is PropertyAccess &&
-        !exp.propertyName.staticElement.library.featureSet
-            .isEnabled(Feature.non_nullable)) {
-      return false;
-    }
-    return context.typeSystem.isNonNullable(exp.staticType);
   }
 }
