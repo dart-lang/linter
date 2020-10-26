@@ -183,6 +183,7 @@ import 'rules/use_string_buffers.dart';
 import 'rules/use_to_and_as_if_applicable.dart';
 import 'rules/valid_regexps.dart';
 import 'rules/void_checks.dart';
+import 'rules/weak_mode_unnecessary_null_checks.dart';
 
 void registerLintRules() {
   Analyzer.facade.cacheLinterVersion();
@@ -368,5 +369,6 @@ void registerLintRules() {
     ..register(UseStringBuffers())
     ..register(UseToAndAsIfApplicable())
     ..register(ValidRegExps())
-    ..register(VoidChecks());
+    ..register(VoidChecks())
+    ..register(WeakModeUnnecessaryNullChecks());
 }

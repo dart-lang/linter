@@ -43,6 +43,8 @@ import 'integration/sort_pub_dependencies.dart' as sort_pub_dependencies;
 import 'integration/unnecessary_lambdas.dart' as unnecessary_lambdas;
 import 'integration/unnecessary_string_escapes.dart'
     as unnecessary_string_escapes;
+import 'integration/weak_mode_unnecessary_null_checks.dart'
+    as weak_mode_unnecessary_null_checks;
 import 'mocks.dart';
 import 'rules/experiments/experiments.dart';
 
@@ -171,6 +173,7 @@ void ruleTests() {
     avoid_private_typedef_functions.main();
     sort_pub_dependencies.main();
     unnecessary_string_escapes.main();
+    weak_mode_unnecessary_null_checks.main();
   });
 }
 
