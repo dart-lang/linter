@@ -99,6 +99,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool isNonNullable(Expression expression) {
+    if (expression.staticType.isDynamic) {
+      return false;
+    }
     Element element;
     if (expression is SimpleIdentifier) {
       element = expression.staticElement;

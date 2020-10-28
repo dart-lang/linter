@@ -14,3 +14,6 @@ class C1 {
   String m1a() => '';
   String? m1b() => '';
 }
+
+dynamic dynA;
+var dynB;

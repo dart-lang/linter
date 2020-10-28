@@ -7,7 +7,7 @@
 import 'weak_mode_unnecessary_null_checks/opted_in.dart';
 
 main() {
-  // a from opted-out
+  // from opted-out
   v1a?.substring(0); // LINT
   v1b?.substring(0); // OK
   v1a?.length; // LINT
@@ -24,7 +24,7 @@ main() {
   v1a != ''; // OK
   v1a == ''; // OK
 
-  // b from opted-out
+  // from opted-out
   v2?.substring(0); // OK
   v2?.length; // OK
   v2.length; // OK
@@ -46,6 +46,9 @@ main() {
   C1().m1a()?.length; // LINT
   C1().m1b()?.length; // OK
   C2().m2()?.length; // OK
+
+  dynA?.length; // OK
+  dynB?.length; // OK
 }
 
 String v2 = '';
