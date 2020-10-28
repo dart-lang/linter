@@ -39,24 +39,23 @@ class WeakModeUnnecessaryNullChecks extends LintRule implements NodeLintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
+    if (context.isEnabled(Feature.non_nullable)) {
+      return;
+    }
+
     final visitor = _Visitor(this, context);
-    registry.addCompilationUnit(this, visitor);
+    registry.addPropertyAccess(this, visitor);
+    registry.addMethodInvocation(this, visitor);
+    registry.addPostfixExpression(this, visitor);
+    registry.addBinaryExpression(this, visitor);
   }
 }
 
-class _Visitor extends RecursiveAstVisitor<void> {
+class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
   final LintRule rule;
   final LinterContext context;
-
-  @override
-  void visitCompilationUnit(CompilationUnit node) {
-    if (node.featureSet.isEnabled(Feature.non_nullable)) {
-      return;
-    }
-    super.visitCompilationUnit(node);
-  }
 
   @override
   void visitPropertyAccess(PropertyAccess node) {
@@ -64,7 +63,6 @@ class _Visitor extends RecursiveAstVisitor<void> {
         context.typeSystem.isNonNullable(node.target.staticType)) {
       rule.reportLintForToken(node.operator);
     }
-    super.visitPropertyAccess(node);
   }
 
   @override
@@ -73,7 +71,6 @@ class _Visitor extends RecursiveAstVisitor<void> {
         context.typeSystem.isNonNullable(node.target.staticType)) {
       rule.reportLintForToken(node.operator);
     }
-    super.visitMethodInvocation(node);
   }
 
   @override
@@ -82,7 +79,6 @@ class _Visitor extends RecursiveAstVisitor<void> {
         context.typeSystem.isNonNullable(node.operand.staticType)) {
       rule.reportLintForToken(node.operator);
     }
-    super.visitPostfixExpression(node);
   }
 
   @override
@@ -99,6 +95,5 @@ class _Visitor extends RecursiveAstVisitor<void> {
         rule.reportLint(node);
       }
     }
-    super.visitBinaryExpression(node);
   }
 }
