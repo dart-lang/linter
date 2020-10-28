@@ -6,6 +6,7 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 
@@ -60,7 +61,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitPropertyAccess(PropertyAccess node) {
     if (node.operator.type == TokenType.QUESTION_PERIOD &&
-        context.typeSystem.isNonNullable(node.target.staticType)) {
+        isNonNullable(node.target)) {
       rule.reportLintForToken(node.operator);
     }
   }
@@ -68,7 +69,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.operator?.type == TokenType.QUESTION_PERIOD &&
-        context.typeSystem.isNonNullable(node.target.staticType)) {
+        isNonNullable(node.target)) {
       rule.reportLintForToken(node.operator);
     }
   }
@@ -76,7 +77,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitPostfixExpression(PostfixExpression node) {
     if (node.operator.type == TokenType.QUESTION &&
-        context.typeSystem.isNonNullable(node.operand.staticType)) {
+        isNonNullable(node.operand)) {
       rule.reportLintForToken(node.operator);
     }
   }
@@ -91,9 +92,38 @@ class _Visitor extends SimpleAstVisitor<void> {
             node.operator.type == TokenType.BANG_EQ) &&
         operands.where((e) => e.staticType.isDartCoreNull).length == 1) {
       final operand = operands.firstWhere((e) => !e.staticType.isDartCoreNull);
-      if (context.typeSystem.isNonNullable(operand.staticType)) {
+      if (isNonNullable(operand)) {
         rule.reportLint(node);
       }
     }
   }
+
+  bool isNonNullable(Expression expression) {
+    Element element;
+    if (expression is SimpleIdentifier) {
+      element = expression.staticElement;
+    } else if (expression is MethodInvocation) {
+      element = expression.methodName.staticElement;
+    } else if (expression is PropertyAccess) {
+      element = expression.propertyName.staticElement;
+    }
+    if (element == null ||
+        !element.library.featureSet.isEnabled(Feature.non_nullable)) {
+      return false;
+    }
+    final node = getNode(element);
+    TypeAnnotation type;
+    if (node is FunctionDeclaration) type = node.returnType;
+    if (node is MethodDeclaration) type = node.returnType;
+    if (element is PropertyAccessorElement && element.isSynthetic) {
+      type = (getNode(element.variable).parent as VariableDeclarationList).type;
+    }
+
+    return type != null && type.question == null;
+  }
+
+  AstNode getNode(Element element) => element.session
+      .getParsedLibraryByElement(element.library)
+      .getElementDeclaration(element)
+      ?.node;
 }
