@@ -60,7 +60,7 @@ else
 
   # Run the tests.
   dart --disable-service-auth-codes \
-    --disable-dartdev-analytics \
+    --disable-analytics \
     --enable-vm-service=$OBS_PORT \
     --pause-isolates-on-exit \
     test/all.dart &
