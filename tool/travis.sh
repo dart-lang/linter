@@ -7,7 +7,6 @@
 # Fast fail the script on failures.
 set -e
 
-
 if [ "$LINTER_BOT" = "release" ]; then
   echo "Validating release..."
   dart tool/bot/version_check.dart
@@ -60,6 +59,7 @@ else
 
   # Run the tests.
   dart --disable-service-auth-codes \
+    --disable-analytics \
     --enable-vm-service=$OBS_PORT \
     --pause-isolates-on-exit \
     test/all.dart &
@@ -96,4 +96,3 @@ else
     exit $status
   fi
 fi
-

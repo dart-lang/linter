@@ -1,0 +1,33 @@
+name: linter
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: ${{ matrix.linter-bot }}
+    runs-on: ubuntu-latest
+    container:
+      image:  google/dart:beta
+    strategy:
+      fail-fast: false
+      matrix:
+        linter-bot:
+          - main
+          - release
+          - pana_baseline
+          - benchmark
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: pub get
+        run: dart pub get
+
+      - name: tool/travis.sh
+        env:
+          LINTER_BOT: ${{ matrix.linter-bot }}
+        run: ./tool/travis.sh
