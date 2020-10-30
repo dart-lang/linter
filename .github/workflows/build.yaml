@@ -8,10 +8,10 @@ on:
 
 jobs:
   build:
-    name: "linter ${{ matrix.linter-bot }}"
+    name: ${{ matrix.linter-bot }}
     runs-on: ubuntu-latest
     container:
-      image:  google/dart:latest
+      image:  google/dart:beta
     strategy:
       fail-fast: false
       matrix:
