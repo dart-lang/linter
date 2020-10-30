@@ -17,9 +17,9 @@ jobs:
       matrix:
         linter-bot:
           - main
-          - benchmark
-          - pana_baseline
           - release
+          - pana_baseline
+          - benchmark
 
     steps:
       - uses: actions/checkout@v2
