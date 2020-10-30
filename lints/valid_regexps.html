@@ -34,10 +34,10 @@ instances.</p>
 <p>Regular expressions created with invalid syntax will throw a <code>FormatException</code>
 at runtime so should be avoided.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>print(RegExp('(').hasMatch('foo()'));
+<pre><code>print(RegExp(r'(').hasMatch('foo()'));
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>print(RegExp('[(]').hasMatch('foo()'));
+<pre><code>print(RegExp(r'\(').hasMatch('foo()'));
 </code></pre>
 
             
