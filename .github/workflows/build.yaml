@@ -8,8 +8,10 @@ on:
 
 jobs:
   build:
-    name: "linter ${{ matrix.bot }}"
+    name: "linter ${{ matrix.linter-bot }}"
     runs-on: ubuntu-latest
+    container:
+      image:  google/dart:latest
     strategy:
       fail-fast: false
       matrix:
@@ -21,14 +23,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Install Dart
-        env:
-          DART_VERSION: beta/release/latest
-        run: |
-          ./.github/install-dart.sh
-          echo "::add-path::`pwd`/dart-sdk/bin"
-          echo "::add-path::$HOME/.pub-cache/bin"
 
       - name: ./tool/travis.sh
         env:
