@@ -47,7 +47,6 @@ class WeakModeUnnecessaryNullChecks extends LintRule implements NodeLintRule {
     final visitor = _Visitor(this, context);
     registry.addPropertyAccess(this, visitor);
     registry.addMethodInvocation(this, visitor);
-    registry.addPostfixExpression(this, visitor);
     registry.addBinaryExpression(this, visitor);
   }
 }
@@ -70,14 +69,6 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodInvocation(MethodInvocation node) {
     if (node.operator?.type == TokenType.QUESTION_PERIOD &&
         isNonNullable(node.target)) {
-      rule.reportLintForToken(node.operator);
-    }
-  }
-
-  @override
-  void visitPostfixExpression(PostfixExpression node) {
-    if (node.operator.type == TokenType.QUESTION &&
-        isNonNullable(node.operand)) {
       rule.reportLintForToken(node.operator);
     }
   }
@@ -114,12 +105,17 @@ class _Visitor extends SimpleAstVisitor<void> {
         !element.library.featureSet.isEnabled(Feature.non_nullable)) {
       return false;
     }
+    if (element is PropertyAccessorElement && element.isSynthetic) {
+      element = (element as PropertyAccessorElement).variable;
+    }
     final node = getNode(element);
     TypeAnnotation type;
-    if (node is FunctionDeclaration) type = node.returnType;
-    if (node is MethodDeclaration) type = node.returnType;
-    if (element is PropertyAccessorElement && element.isSynthetic) {
-      type = (getNode(element.variable).parent as VariableDeclarationList).type;
+    if (node is FunctionDeclaration) {
+      type = node.returnType;
+    } else if (node is MethodDeclaration) {
+      type = node.returnType;
+    } else if (node is VariableDeclaration) {
+      type = (node.parent as VariableDeclarationList).type;
     }
 
     return type != null && type.question == null;
