@@ -27,7 +27,7 @@ jobs:
       - name: pub get
         run: dart pub get
 
-      - name: ./tool/travis.sh
+      - name: tool/travis.sh
         env:
           LINTER_BOT: ${{ matrix.linter-bot }}
         run: ./tool/travis.sh
