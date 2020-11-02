@@ -96,8 +96,7 @@ else
     exit $status
   else
     # Run the tests w/o coverage
-    dart --disable-service-auth-codes \
-      --disable-analytics \
+    dart --disable-analytics \
       test/all.dart
   fi
 fi
