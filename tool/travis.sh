@@ -7,10 +7,6 @@
 # Fast fail the script on failures.
 set -e
 
-# Work-around https://github.com/dart-lang/sdk/issues/44027
-# TODO: remove when fixed
-mkdir ~/.dart
-
 if [ "$LINTER_BOT" = "release" ]; then
   echo "Validating release..."
   dart tool/bot/version_check.dart
