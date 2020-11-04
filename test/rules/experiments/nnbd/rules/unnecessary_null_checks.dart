@@ -54,3 +54,14 @@ f5(int? p) {
   int? v1;
   v1 ??= p!; // OK
 }
+
+class B {
+  m3a(int? p) => p!; // OK
+  m3b(int? p) {
+    return p!; // OK
+  }
+}
+
+f6(int? p) {
+  return B() + p!; //OK
+}

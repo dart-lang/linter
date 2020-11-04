@@ -77,9 +77,9 @@ DartType getExpectedType(PostfixExpression node) {
 
   // in return value
   if (parent is ReturnStatement || parent is ExpressionFunctionBody) {
-    return (parent.thisOrAncestorOfType<FunctionExpression>().staticType
+    return (parent.thisOrAncestorOfType<FunctionExpression>()?.staticType
             as FunctionType)
-        .returnType;
+        ?.returnType;
   }
   // assignment
   if (parent is AssignmentExpression &&
@@ -96,7 +96,7 @@ DartType getExpectedType(PostfixExpression node) {
   }
   // as right member of binary operator
   if (parent is BinaryExpression && parent.rightOperand == realNode) {
-    return parent.staticElement.parameters.first.type;
+    return parent.staticElement?.parameters?.first?.type;
   }
   // as parameter of function
   if (parent is NamedExpression) {
