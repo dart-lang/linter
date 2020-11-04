@@ -27,6 +27,11 @@ class A {
   m2a({required String s, int? p}) => m2a(p: i!, s: ''); // LINT
   m2b({required String s, int? p}) => m2b(p: (i!), s: ('')); // LINT
 
+  m3a(int? p) => p!; // OK
+  m3b(int? p) {
+    return p!; // OK
+  }
+
   operator +(int? p) => A() + i!; // LINT
   operator -(int? p) => A() + (i!); // LINT
 }
@@ -55,13 +60,7 @@ f5(int? p) {
   v1 ??= p!; // OK
 }
 
-class B {
-  m3a(int? p) => p!; // OK
-  m3b(int? p) {
-    return p!; // OK
-  }
+f6(int? p) {
+  return B() + p!; // OK
 }
 
-f6(int? p) {
-  return B() + p!; //OK
-}

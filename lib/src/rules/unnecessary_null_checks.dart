@@ -36,40 +36,6 @@ m() {
 
 ''';
 
-class UnnecessaryNullChecks extends LintRule implements NodeLintRule {
-  UnnecessaryNullChecks()
-      : super(
-            name: 'unnecessary_null_checks',
-            description: _desc,
-            details: _details,
-            maturity: Maturity.experimental,
-            group: Group.style);
-
-  @override
-  void registerNodeProcessors(
-      NodeLintRegistry registry, LinterContext context) {
-    final visitor = _Visitor(this, context);
-    registry.addPostfixExpression(this, visitor);
-  }
-}
-
-class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
-  final LintRule rule;
-  final LinterContext context;
-
-  @override
-  void visitPostfixExpression(PostfixExpression node) {
-    if (node.operator.type != TokenType.BANG) return;
-
-    final expectedType = getExpectedType(node);
-    if (expectedType != null && context.typeSystem.isNullable(expectedType)) {
-      rule.reportLintForToken(node.operator);
-    }
-  }
-}
-
 DartType getExpectedType(PostfixExpression node) {
   var realNode =
       node.thisOrAncestorMatching((e) => e.parent is! ParenthesizedExpression);
@@ -96,7 +62,11 @@ DartType getExpectedType(PostfixExpression node) {
   }
   // as right member of binary operator
   if (parent is BinaryExpression && parent.rightOperand == realNode) {
-    return parent.staticElement?.parameters?.first?.type;
+    var parentElement = parent.staticElement;
+    if (parentElement == null) {
+      return null;
+    }
+    return parentElement.parameters.first.type;
   }
   // as parameter of function
   if (parent is NamedExpression) {
@@ -107,4 +77,38 @@ DartType getExpectedType(PostfixExpression node) {
     return (realNode as Expression).staticParameterElement?.type;
   }
   return null;
+}
+
+class UnnecessaryNullChecks extends LintRule implements NodeLintRule {
+  UnnecessaryNullChecks()
+      : super(
+            name: 'unnecessary_null_checks',
+            description: _desc,
+            details: _details,
+            maturity: Maturity.experimental,
+            group: Group.style);
+
+  @override
+  void registerNodeProcessors(
+      NodeLintRegistry registry, LinterContext context) {
+    final visitor = _Visitor(this, context);
+    registry.addPostfixExpression(this, visitor);
+  }
+}
+
+class _Visitor extends SimpleAstVisitor<void> {
+  final LintRule rule;
+
+  final LinterContext context;
+  _Visitor(this.rule, this.context);
+
+  @override
+  void visitPostfixExpression(PostfixExpression node) {
+    if (node.operator.type != TokenType.BANG) return;
+
+    final expectedType = getExpectedType(node);
+    if (expectedType != null && context.typeSystem.isNullable(expectedType)) {
+      rule.reportLintForToken(node.operator);
+    }
+  }
 }
