@@ -43,9 +43,11 @@ DartType getExpectedType(PostfixExpression node) {
 
   // in return value
   if (parent is ReturnStatement || parent is ExpressionFunctionBody) {
-    return (parent.thisOrAncestorOfType<FunctionExpression>()?.staticType
-            as FunctionType)
-        ?.returnType;
+    var parentExpression = parent.thisOrAncestorOfType<FunctionExpression>();
+    if (parentExpression == null) {
+      return null;
+    }
+    return (parentExpression.staticType as FunctionType).returnType;
   }
   // assignment
   if (parent is AssignmentExpression &&
