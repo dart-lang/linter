@@ -11,12 +11,12 @@ final _lowerCamelCase = RegExp(
 
 final _lowerCaseUnderScore = RegExp(r'^([a-z]+([_]?[a-z0-9]+)*)+$');
 
-final _lowerCaseUnderScoreWithLeadingUnderscores =
-    RegExp(r'^(_)*([a-z]+([_]?[a-z0-9]+)*)+$');
-
 @Deprecated('Prefer: ascii_utils.isValidFileName')
 final _lowerCaseUnderScoreWithDots =
     RegExp(r'^(_)?[_a-z0-9]*(\.[a-z][_a-z0-9]*)*$');
+
+final _lowerCaseUnderScoreWithLeadingUnderscores =
+    RegExp(r'^(_)*([a-z]+([_]?[a-z0-9]+)*)+$');
 
 final _pubspec = RegExp(r'^[_]?pubspec\.yaml$');
 
