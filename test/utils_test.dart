@@ -29,6 +29,9 @@ void main() {
       'foo_Bar',
       'fooBar',
       'Foo',
+      '_',
+      '__',
+      '1',
     ], isValidPackageName, isFalse);
   });
 
