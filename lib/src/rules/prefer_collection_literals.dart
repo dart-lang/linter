@@ -150,7 +150,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 }
 
 /// Returns the static type which is pushed into an expression by it's parent.
-DartType/*?*/ _enforcedType(AstNode parent) {
+DartType /*?*/ _enforcedType(AstNode parent) {
   if (parent is VariableDeclaration) {
     var parent2 = parent.parent;
     if (parent2 is VariableDeclarationList) {
