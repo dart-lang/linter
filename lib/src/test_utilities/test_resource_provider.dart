@@ -39,9 +39,10 @@ DartLinter buildDriver(LintRule rule, File file, {String analysisOptions}) {
 /// A resource provider that accesses entities in a MemoryResourceProvider,
 /// falling back to the PhysicalResourceProvider when they don't exist.
 class TestResourceProvider extends file_system.ResourceProvider {
-  final MemoryResourceProvider memoryResourceProvider;
-  final PhysicalResourceProvider physicalResourceProvider =
+  static final PhysicalResourceProvider physicalResourceProvider =
       PhysicalResourceProvider.INSTANCE;
+
+  final MemoryResourceProvider memoryResourceProvider;
 
   TestResourceProvider(this.memoryResourceProvider);
 
