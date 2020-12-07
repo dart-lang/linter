@@ -37,7 +37,7 @@ Usually code like this indicates an incomplete thought, and is a bug.
 **GOOD:**
 ```
 some.method();
-new SomeClass();
+SomeClass();
 methodOne();
 methodTwo();
 foo ? bar() : baz();
