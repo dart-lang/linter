@@ -48,7 +48,7 @@ else
   echo "Running main linter bot"
 
   # Verify that the libraries are error free.
-  dart analyze --fatal-warnings .
+  dart analyze --fatal-warnings --fatal-infos .
 
   echo ""
 
