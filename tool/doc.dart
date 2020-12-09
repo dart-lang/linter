@@ -325,6 +325,7 @@ class MachineSummaryGenerator {
   final Iterable<LintRule> rules;
 
   MachineSummaryGenerator(this.rules);
+
   void generate(String filePath) {
     var generated = getMachineListing(rules);
     if (filePath != null) {
