@@ -1,6 +1,6 @@
 # 0.1.127
 
-* fixed crash in `prefer_collection_literals` when there is no static paramater
+* fixed crash in `prefer_collection_literals` when there is no static parameter
   element
 
 # 0.1.126
