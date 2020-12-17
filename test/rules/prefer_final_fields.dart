@@ -189,7 +189,7 @@ class GenericSub extends GenericBase<int> {
 }
 
 class Z {
-  /// Set in [z] library method below.
+  /// Set in the top level [z] function below.
   int _z = 1; //OK
 }
 
