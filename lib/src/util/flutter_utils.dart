@@ -7,7 +7,7 @@ import 'package:analyzer/dart/element/type.dart';
 
 import '../util/dart_type_utilities.dart';
 
-var _collectionInterfaces = <InterfaceTypeDefinition>[
+const _collectionInterfaces = <InterfaceTypeDefinition>[
   InterfaceTypeDefinition('List', 'dart.core'),
   InterfaceTypeDefinition('Map', 'dart.core'),
   InterfaceTypeDefinition('LinkedHashMap', 'dart.collection'),

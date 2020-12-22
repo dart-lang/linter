@@ -54,9 +54,9 @@ class LeadingNewlinesInMultilineStrings extends LintRule
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
-
   final LintRule rule;
+
+  _Visitor(this.rule);
 
   LineInfo lineInfo;
 

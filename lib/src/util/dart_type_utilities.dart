@@ -507,7 +507,7 @@ class DartTypeUtilities {
 }
 
 class EnumLikeClassDescription {
-  List<String> enumConstantNames;
+  final List<String> enumConstantNames;
   EnumLikeClassDescription(this.enumConstantNames);
 }
 
@@ -515,7 +515,7 @@ class InterfaceTypeDefinition {
   final String name;
   final String library;
 
-  InterfaceTypeDefinition(this.name, this.library);
+  const InterfaceTypeDefinition(this.name, this.library);
 
   @override
   int get hashCode => name.hashCode ^ library.hashCode;

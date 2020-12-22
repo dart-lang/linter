@@ -72,7 +72,7 @@ class UseStringBuffers extends LintRule implements NodeLintRule {
 
 class _IdentifierIsPrefixVisitor extends SimpleAstVisitor {
   final LintRule rule;
-  SimpleIdentifier identifier;
+  final SimpleIdentifier identifier;
 
   _IdentifierIsPrefixVisitor(this.rule, this.identifier);
 

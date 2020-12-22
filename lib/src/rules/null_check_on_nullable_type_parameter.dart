@@ -69,10 +69,10 @@ class NullCheckOnNullableTypeParameter extends LintRule
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
   final LintRule rule;
   final LinterContext context;
+
+  _Visitor(this.rule, this.context);
 
   @override
   void visitPostfixExpression(PostfixExpression node) {

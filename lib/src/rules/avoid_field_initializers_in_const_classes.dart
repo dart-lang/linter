@@ -55,7 +55,7 @@ class AvoidFieldInitializersInConstClasses extends LintRule
 }
 
 class HasParameterReferenceVisitor extends RecursiveAstVisitor {
-  Iterable<ParameterElement> parameters;
+  final Iterable<ParameterElement> parameters;
 
   bool useParameter = false;
 

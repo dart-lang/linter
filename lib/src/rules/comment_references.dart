@@ -64,6 +64,8 @@ class CommentReferences extends LintRule implements NodeLintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
+  static const _parserSpecialCases = {'this', 'null', 'true', 'false'};
+
   final LintRule rule;
 
   _Visitor(this.rule);
@@ -102,8 +104,5 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _isParserSpecialCase(String reference) =>
-      reference == 'this' ||
-      reference == 'null' ||
-      reference == 'true' ||
-      reference == 'false';
+      _parserSpecialCases.contains(reference);
 }

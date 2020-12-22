@@ -74,6 +74,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   final _VisitorHelper v;
 
   _Visitor(this.rule) : v = _VisitorHelper(rule);
+
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     if (node.fields.type == null) {

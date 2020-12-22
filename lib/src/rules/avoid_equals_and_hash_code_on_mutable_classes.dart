@@ -65,10 +65,10 @@ class C {
 ''';
 
 /// The name of the top-level variable used to mark a immutable class.
-String _immutableVarName = 'immutable';
+const _immutableVarName = 'immutable';
 
 /// The name of `meta` library, used to define analysis annotations.
-String _metaLibName = 'meta';
+const _metaLibName = 'meta';
 
 bool _isImmutable(Element element) =>
     element is PropertyAccessorElement &&

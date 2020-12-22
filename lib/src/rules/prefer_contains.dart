@@ -102,7 +102,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     if (!DartTypeUtilities.implementsAnyInterface(
-        type, <InterfaceTypeDefinition>[
+        type, const <InterfaceTypeDefinition>[
       InterfaceTypeDefinition('Iterable', 'dart.core'),
       InterfaceTypeDefinition('String', 'dart.core'),
     ])) {

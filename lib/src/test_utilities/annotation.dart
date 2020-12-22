@@ -20,8 +20,7 @@ Annotation extractAnnotation(int lineNumber, String line) {
   final column = match[5].toInt();
   final length = match[6].toInt();
   final message = match[8].toNullIfBlank();
-  return Annotation.forLint(message, column, length)
-    ..lineNumber = lineNumber + relativeLine;
+  return Annotation.forLint(message, column, length, lineNumber + relativeLine);
 }
 
 /// Information about a 'LINT' annotation/comment.
@@ -30,7 +29,7 @@ class Annotation implements Comparable<Annotation> {
   final int length;
   final String message;
   final ErrorType type;
-  int lineNumber;
+  final int lineNumber;
 
   Annotation(this.message, this.type, this.lineNumber,
       {this.column, this.length});
@@ -41,8 +40,9 @@ class Annotation implements Comparable<Annotation> {
             column: lineInfo.getLocation(error.offset).columnNumber,
             length: error.length);
 
-  Annotation.forLint([String message, int column, int length])
-      : this(message, ErrorType.LINT, null, column: column, length: length);
+  Annotation.forLint([String message, int column, int length, int lineNumber])
+      : this(message, ErrorType.LINT, lineNumber,
+            column: column, length: length);
 
   @override
   int compareTo(Annotation other) {

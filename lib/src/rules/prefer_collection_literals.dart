@@ -76,6 +76,7 @@ class PreferCollectionLiterals extends LintRule implements NodeLintRule {
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+
   _Visitor(this.rule);
 
   @override

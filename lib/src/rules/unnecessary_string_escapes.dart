@@ -127,7 +127,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   /// The special escaped chars listed in language specification
-  static const allowedEscapedChars = [
+  static const allowedEscapedChars = {
     '"',
     "'",
     r'$',
@@ -140,5 +140,5 @@ class _Visitor extends SimpleAstVisitor<void> {
     'v',
     'x',
     'u',
-  ];
+  };
 }

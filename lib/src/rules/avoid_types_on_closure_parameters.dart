@@ -46,7 +46,7 @@ class AvoidTypesOnClosureParameters extends LintRule implements NodeLintRule {
 }
 
 class AvoidTypesOnClosureParametersVisitor extends SimpleAstVisitor {
-  LintRule rule;
+  final LintRule rule;
 
   AvoidTypesOnClosureParametersVisitor(this.rule);
 

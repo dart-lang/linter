@@ -23,7 +23,7 @@ List<Expression> _splitConjunctions(Expression rawExpression) {
 }
 
 class BreakScope {
-  var environment = <BreakStatement>[];
+  final environment = <BreakStatement>[];
 
   void add(BreakStatement element) {
     if (element.target != null) {
@@ -32,7 +32,7 @@ class BreakScope {
   }
 
   void deleteBreaksWithTarget(AstNode node) {
-    environment = environment.where((e) => e.target != node).toList();
+    environment.removeWhere((e) => e.target == node);
   }
 
   bool hasBreak(AstNode node) => environment.any((e) => e.target == node);
@@ -388,8 +388,8 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
 }
 
 class _ConditionExpression extends _ExpressionBox {
-  Expression expression;
-  bool value;
+  final Expression expression;
+  final bool value;
 
   _ConditionExpression(this.expression, {this.value = true});
 
@@ -413,7 +413,7 @@ class _UndefinedAllExpression extends _ExpressionBox {
 }
 
 class _UndefinedExpression extends _ExpressionBox {
-  Element element;
+  final Element element;
 
   factory _UndefinedExpression(Element element) {
     final canonicalElement = DartTypeUtilities.getCanonicalElement(element);

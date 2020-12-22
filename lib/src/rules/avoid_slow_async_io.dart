@@ -51,18 +51,18 @@ Future<Null> someFunction() async {
 
 ''';
 
-const List<String> _fileMethodNames = <String>[
+const _fileMethodNames = <String>[
   'lastModified',
   'exists',
   'stat',
 ];
 
-const List<String> _dirMethodNames = <String>[
+const _dirMethodNames = <String>[
   'exists',
   'stat',
 ];
 
-const List<String> _fileSystemEntityMethodNames = <String>[
+const _fileSystemEntityMethodNames = <String>[
   'isDirectory',
   'isFile',
   'isLink',

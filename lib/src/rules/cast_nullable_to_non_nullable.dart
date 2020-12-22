@@ -60,10 +60,10 @@ class CastNullableToNonNullable extends LintRule implements NodeLintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
   final LintRule rule;
   final LinterContext context;
+
+  _Visitor(this.rule, this.context);
 
   @override
   void visitAsExpression(AsExpression node) {
