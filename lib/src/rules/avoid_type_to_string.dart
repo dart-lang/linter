@@ -72,8 +72,6 @@ class AvoidTypeToString extends LintRule implements NodeLintRule {
     registry.addMixinDeclaration(this, visitor);
     registry.addExtensionDeclaration(this, visitor);
 
-    // These nodes delegate to general visitArgumentList,
-    // since SimpleAstVisitor only calls visits for concrete node subtypes.
     registry.addArgumentList(this, visitor);
 
     // Actually checking things at these nodes.
@@ -108,27 +106,6 @@ class _Visitor extends SimpleAstVisitor {
     thisType = (node.declaredElement.extendedType is InterfaceType)
         ? node.declaredElement.extendedType as InterfaceType
         : null;
-  }
-
-  @override
-  void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
-    visitArgumentList(node.argumentList);
-  }
-
-  @override
-  void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    visitArgumentList(node.argumentList);
-  }
-
-  @override
-  void visitRedirectingConstructorInvocation(
-      RedirectingConstructorInvocation node) {
-    visitArgumentList(node.argumentList);
-  }
-
-  @override
-  void visitSuperConstructorInvocation(SuperConstructorInvocation node) {
-    visitArgumentList(node.argumentList);
   }
 
   @override
