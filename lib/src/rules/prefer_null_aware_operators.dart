@@ -82,11 +82,11 @@ class _Visitor extends SimpleAstVisitor {
           exp is MethodInvocation ||
           exp is PropertyAccess) {
         if (exp is PrefixedIdentifier) {
-          exp = (exp as PrefixedIdentifier).prefix;
+          exp = exp.prefix;
         } else if (exp is MethodInvocation) {
-          exp = (exp as MethodInvocation).target;
+          exp = exp.target!;
         } else if (exp is PropertyAccess) {
-          exp = (exp as PropertyAccess).target;
+          exp = exp.target!;
         }
         if (exp.toString() == expression.toString()) {
           rule.reportLint(node);

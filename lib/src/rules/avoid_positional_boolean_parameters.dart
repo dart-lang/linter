@@ -65,10 +65,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    if (!node.declaredElement.isPrivate) {
+    var element = node.declaredElement;
+    if (element == null) {
+      return;
+    }
+    if (!element.isPrivate) {
       final parametersToLint =
-          node.parameters?.parameters?.where(_isFormalParameterToLint);
-      if (parametersToLint?.isNotEmpty == true) {
+          node.parameters.parameters.where(_isFormalParameterToLint);
+      if (parametersToLint.isNotEmpty == true) {
         rule.reportLint(parametersToLint.first);
       }
     }
@@ -76,35 +80,44 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    if (!node.declaredElement.isPrivate) {
+    var element = node.declaredElement;
+    if (element == null) {
+      return;
+    }
+    if (!element.isPrivate) {
       final parametersToLint = node.functionExpression.parameters?.parameters
-          ?.where(_isFormalParameterToLint);
+          .where(_isFormalParameterToLint);
       if (parametersToLint?.isNotEmpty == true) {
-        rule.reportLint(parametersToLint.first);
+        rule.reportLint(parametersToLint!.first);
       }
     }
   }
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
+    var element = node.declaredElement;
+    if (element == null) {
+      return;
+    }
     if (!node.isSetter &&
-        !node.declaredElement.isPrivate &&
+        !element.isPrivate &&
         !node.isOperator &&
         !DartTypeUtilities.hasInheritedMethod(node) &&
-        !_isOverridingMember(node.declaredElement)) {
+        !_isOverridingMember(element)) {
       final parametersToLint =
-          node.parameters?.parameters?.where(_isFormalParameterToLint);
+          node.parameters?.parameters.where(_isFormalParameterToLint);
       if (parametersToLint?.isNotEmpty == true) {
-        rule.reportLint(parametersToLint.first);
+        rule.reportLint(parametersToLint!.first);
       }
     }
   }
 
   bool _isFormalParameterToLint(FormalParameter node) =>
       !node.isNamed &&
-      DartTypeUtilities.isClass(node.declaredElement.type, 'bool', 'dart.core');
+      DartTypeUtilities.isClass(
+          node.declaredElement?.type, 'bool', 'dart.core');
 
-  bool _isOverridingMember(Element member) {
+  bool _isOverridingMember(Element? member) {
     if (member == null) {
       return false;
     }
@@ -113,9 +126,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (classElement == null) {
       return false;
     }
+    var name = member.name;
+    if (name == null) {
+      return false;
+    }
     final libraryUri = classElement.library.source.uri;
-    return context.inheritanceManager.getInherited(
-            classElement.thisType, Name(libraryUri, member.name)) !=
+    return context.inheritanceManager
+            .getInherited(classElement.thisType, Name(libraryUri, name)) !=
         null;
   }
 }

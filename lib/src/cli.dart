@@ -18,13 +18,13 @@ import 'rules.dart';
 const processFileFailedExitCode = 65;
 
 const unableToProcessExitCode = 64;
-String getRoot(List<String> paths) =>
+String? getRoot(List<String> paths) =>
     paths.length == 1 && Directory(paths[0]).existsSync() ? paths[0] : null;
 
 bool isLinterErrorCode(int code) =>
     code == unableToProcessExitCode || code == processFileFailedExitCode;
 
-void printUsage(ArgParser parser, IOSink out, [String error]) {
+void printUsage(ArgParser parser, IOSink out, [String? error]) {
   var message = 'Lints Dart source files and pubspecs.';
   if (error != null) {
     message = error;
@@ -151,7 +151,8 @@ Future runLinter(List<String> args, LinterOptions initialLintOptions) async {
     ReportFormatter(errors, lintOptions.filter, outSink,
         elapsedMs: timer.elapsedMilliseconds,
         fileCount: linter.numSourcesAnalyzed,
-        fileRoot: commonRoot,
+        // todo (pq): this default is goofy
+        fileRoot: commonRoot ?? '',
         showStatistics: stats,
         machineOutput: options['machine'] as bool,
         quiet: options['quiet'] as bool)

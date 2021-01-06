@@ -64,8 +64,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitSimpleIdentifier(SimpleIdentifier node) {
-    AstNode isEmptyAccess;
-    SimpleIdentifier isEmptyIdentifier;
+    AstNode? isEmptyAccess;
+    SimpleIdentifier? isEmptyIdentifier;
 
     final parent = node.parent;
     if (parent is PropertyAccess) {
@@ -93,7 +93,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     // Walk up any parentheses above the isEmpty / isNotEmpty.
-    var isEmptyParent = isEmptyAccess.parent;
+    var isEmptyParent = isEmptyAccess?.parent;
     while (isEmptyParent is ParenthesizedExpression) {
       isEmptyParent = isEmptyParent.parent;
     }

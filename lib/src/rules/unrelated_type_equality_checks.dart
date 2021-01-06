@@ -152,7 +152,7 @@ bool _isFixNumIntX(DartType type) {
   }
   final element = type.element;
   return (element.name == 'Int32' || element.name == 'Int64') &&
-      element.library?.name == 'fixnum';
+      element.library.name == 'fixnum';
 }
 
 class UnrelatedTypeEqualityChecks extends LintRule implements NodeLintRule {

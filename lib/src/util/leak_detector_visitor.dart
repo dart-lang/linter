@@ -38,8 +38,10 @@ _VisitVariableDeclaration _buildVariableReporter(
         LintRule rule,
         Map<DartTypePredicate, String> predicates) =>
     (VariableDeclaration variable) {
-      if (!predicates.keys
-          .any((DartTypePredicate p) => p(variable.declaredElement.type))) {
+      if (!predicates.keys.any((DartTypePredicate p) {
+        var declaredElement = variable.declaredElement;
+        return declaredElement != null && p(declaredElement.type);
+      })) {
         return;
       }
 
@@ -74,7 +76,7 @@ Iterable<AstNode> _findMethodCallbackNodes(Iterable<AstNode> containerNodes,
   final prefixedIdentifiers = containerNodes.whereType<PrefixedIdentifier>();
   return prefixedIdentifiers.where((n) =>
       n.prefix.staticElement == variable.name.staticElement &&
-      _hasMatch(predicates, variable.declaredElement.type,
+      _hasMatch(predicates, variable.declaredElement?.type,
           n.identifier.token.lexeme));
 }
 
@@ -93,7 +95,7 @@ Iterable<AstNode> _findNodesInvokingMethodOnVariable(
         Map<DartTypePredicate, String> predicates) =>
     classNodes.where((AstNode n) =>
         n is MethodInvocation &&
-        ((_hasMatch(predicates, variable.declaredElement.type,
+        ((_hasMatch(predicates, variable.declaredElement?.type,
                     n.methodName.name) &&
                 (_isSimpleIdentifierElementEqualToVariable(
                         n.realTarget, variable) ||
@@ -122,15 +124,15 @@ Iterable<AstNode> _findVariableAssignments(
       n.rightHandSide is SimpleIdentifier);
 }
 
-bool _hasMatch(Map<DartTypePredicate, String> predicates, DartType type,
+bool _hasMatch(Map<DartTypePredicate, String> predicates, DartType? type,
         String methodName) =>
     predicates.keys.fold(
         false,
         (bool previous, DartTypePredicate p) =>
-            previous || p(type) && predicates[p] == methodName);
+            previous || type != null && p(type) && predicates[p] == methodName);
 
 bool _isElementEqualToVariable(
-    Element propertyElement, VariableDeclaration variable) {
+    Element? propertyElement, VariableDeclaration variable) {
   var variableElement = variable.declaredElement;
   return propertyElement == variableElement ||
       propertyElement is PropertyAccessorElement &&
@@ -153,23 +155,23 @@ bool _isInvocationThroughCascadeExpression(
   return false;
 }
 
-bool _isPropertyAccessThroughThis(Expression n, VariableDeclaration variable) {
+bool _isPropertyAccessThroughThis(Expression? n, VariableDeclaration variable) {
   if (n is! PropertyAccess) {
     return false;
   }
 
-  var target = (n as PropertyAccess).realTarget;
+  var target = n.realTarget;
   if (target is! ThisExpression) {
     return false;
   }
 
-  var property = (n as PropertyAccess).propertyName;
+  var property = n.propertyName;
   var propertyElement = property.staticElement;
   return _isElementEqualToVariable(propertyElement, variable);
 }
 
 bool _isSimpleIdentifierElementEqualToVariable(
-        AstNode n, VariableDeclaration variable) =>
+        AstNode? n, VariableDeclaration variable) =>
     n is SimpleIdentifier &&
     _isElementEqualToVariable(n.staticElement, variable);
 
@@ -198,14 +200,18 @@ abstract class LeakDetectorProcessors extends SimpleAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     final unit = getCompilationUnit(node);
-    node.fields.variables.forEach(_buildVariableReporter(
-        unit, _fieldPredicateBuilders, rule, predicates));
+    if (unit != null) {
+      node.fields.variables.forEach(_buildVariableReporter(
+          unit, _fieldPredicateBuilders, rule, predicates));
+    }
   }
 
   @override
   void visitVariableDeclarationStatement(VariableDeclarationStatement node) {
     final function = node.thisOrAncestorOfType<FunctionBody>();
-    node.variables.variables.forEach(_buildVariableReporter(
-        function, _variablePredicateBuilders, rule, predicates));
+    if (function != null) {
+      node.variables.variables.forEach(_buildVariableReporter(
+          function, _variablePredicateBuilders, rule, predicates));
+    }
   }
 }

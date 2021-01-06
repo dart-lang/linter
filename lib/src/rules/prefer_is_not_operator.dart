@@ -60,10 +60,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     // Check whether is expression is inside parenthesis
     if (node.parent is ParenthesizedExpression) {
       final parenthesizedExpression = node.parent;
-      final prefixExpression = parenthesizedExpression.parent;
+      final prefixExpression = parenthesizedExpression?.parent;
       // Check for NOT (!) operator
       if (prefixExpression is PrefixExpression &&
-          prefixExpression.operator.type == TokenType.BANG) {
+          prefixExpression.operator.type == TokenType.BANG &&
+          parenthesizedExpression != null) {
         rule.reportLint(parenthesizedExpression.parent);
       }
     }

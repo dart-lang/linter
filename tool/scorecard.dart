@@ -19,7 +19,7 @@ import 'since.dart';
 const bulb = '💡';
 const checkMark = '✅';
 
-Iterable<LintRule> _registeredLints;
+Iterable<LintRule>? _registeredLints;
 
 Iterable<LintRule> get registeredLints {
   if (_registeredLints == null) {
@@ -27,7 +27,7 @@ Iterable<LintRule> get registeredLints {
     _registeredLints = Registry.ruleRegistry.toList()
       ..sort((l1, l2) => l1.name.compareTo(l2.name));
   }
-  return _registeredLints;
+  return _registeredLints!;
 }
 
 Iterable<String> get registeredLintNames => registeredLints.map((r) => r.name);
@@ -283,7 +283,7 @@ class ScoreCard {
               lintsWithAssists.contains(lint.name),
           maturity: lint.maturity.name,
           ruleSets: ruleSets,
-          since: sinceInfo[lint.name],
+          since: sinceInfo[lint.name]!,
           bugReferences: bugReferences));
     }
 
@@ -307,12 +307,12 @@ class LintScore {
   List<String> bugReferences;
 
   LintScore(
-      {this.name,
-      this.hasFix,
-      this.maturity,
-      this.ruleSets,
-      this.bugReferences,
-      this.since});
+      {required this.name,
+      required this.hasFix,
+      required this.maturity,
+      required this.ruleSets,
+      required this.bugReferences,
+      required this.since});
 
   String get _ruleSets => ruleSets.isNotEmpty ? ' ${ruleSets.toString()}' : '';
 

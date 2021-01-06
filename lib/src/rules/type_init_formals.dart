@@ -62,7 +62,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var nodeType = node.type;
     if (nodeType != null) {
       var cls = node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
-      var field = cls.getField(node.identifier.name);
+      var field = cls?.getField(node.identifier.name);
       // If no such field exists, the code is invalid; do not report lint.
       if (field != null) {
         if (nodeType.type == field.type) {

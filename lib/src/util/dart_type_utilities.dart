@@ -7,7 +7,6 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_system.dart';
 import 'package:analyzer/src/dart/element/member.dart'; // ignore: implementation_imports
-import 'package:meta/meta.dart';
 
 import '../ast.dart';
 
@@ -16,7 +15,7 @@ typedef AstNodePredicate = bool Function(AstNode node);
 class DartTypeUtilities {
   // todo (pq): remove when fixed: https://github.com/dart-lang/linter/issues/2330
   // ignore: prefer_constructors_over_static_methods
-  static EnumLikeClassDescription asEnumLikeClass(ClassElement classElement) {
+  static EnumLikeClassDescription? asEnumLikeClass(ClassElement classElement) {
     // See discussion: https://github.com/dart-lang/linter/issues/2083
     //
 
@@ -54,20 +53,20 @@ class DartTypeUtilities {
     // And no subclasses in the defining library.
     var compilationUnit = classElement.library.definingCompilationUnit;
     for (var cls in compilationUnit.types) {
-      var classType = cls.thisType;
+      InterfaceType? classType = cls.thisType;
       do {
-        classType = classType.superclass;
+        classType = classType?.superclass;
         if (classType == type) {
           return null;
         }
-      } while (!classType.isDartCoreObject);
+      } while (classType != null && !classType.isDartCoreObject);
     }
 
     return EnumLikeClassDescription(enumConstantNames);
   }
 
   /// Return whether the canonical elements of two elements are equal.
-  static bool canonicalElementsAreEqual(Element element1, Element element2) =>
+  static bool canonicalElementsAreEqual(Element? element1, Element? element2) =>
       getCanonicalElement(element1) == getCanonicalElement(element2);
 
   /// Returns whether the canonical elements from two nodes are equal.
@@ -96,7 +95,7 @@ class DartTypeUtilities {
   /// and 3 are considered to be equal, even though `A.b` may have side effects
   /// which alter the returned value.
   static bool canonicalElementsFromIdentifiersAreEqual(
-      Expression rawExpression1, Expression rawExpression2) {
+      Expression? rawExpression1, Expression? rawExpression2) {
     if (rawExpression1 == null || rawExpression2 == null) return false;
 
     final expression1 = rawExpression1.unParenthesized;
@@ -132,7 +131,7 @@ class DartTypeUtilities {
   static bool extendsClass(DartType type, String className, String library) =>
       _extendsClass(type, <ClassElement>{}, className, library);
 
-  static Element getCanonicalElement(Element element) {
+  static Element? getCanonicalElement(Element? element) {
     if (element is PropertyAccessorElement) {
       final variable = element.variable;
       if (variable is FieldMember) {
@@ -152,7 +151,7 @@ class DartTypeUtilities {
     }
   }
 
-  static Element getCanonicalElementFromIdentifier(AstNode rawNode) {
+  static Element? getCanonicalElementFromIdentifier(AstNode? rawNode) {
     if (rawNode is Expression) {
       final node = rawNode.unParenthesized;
       if (node is Identifier) {
@@ -164,8 +163,8 @@ class DartTypeUtilities {
     return null;
   }
 
-  static Iterable<InterfaceType> getImplementedInterfaces(InterfaceType type) {
-    void recursiveCall(InterfaceType type, Set<ClassElement> alreadyVisited,
+  static Iterable<InterfaceType> getImplementedInterfaces(InterfaceType? type) {
+    void recursiveCall(InterfaceType? type, Set<ClassElement> alreadyVisited,
         List<InterfaceType> interfaceTypes) {
       if (type == null || !alreadyVisited.add(type.element)) {
         return;
@@ -185,7 +184,7 @@ class DartTypeUtilities {
     return interfaceTypes;
   }
 
-  static Statement getLastStatementInBlock(Block node) {
+  static Statement? getLastStatementInBlock(Block node) {
     if (node.statements.isEmpty) {
       return null;
     }
@@ -204,42 +203,40 @@ class DartTypeUtilities {
     if (type is! InterfaceType) {
       return false;
     }
-    final interfaceType = type as InterfaceType;
     bool predicate(InterfaceType i) =>
         definitions.any((d) => isInterface(i, d.name, d.library));
-    final element = interfaceType.element;
-    return predicate(interfaceType) ||
+    final element = type.element;
+    return predicate(type) ||
         !element.isSynthetic && element.allSupertypes.any(predicate);
   }
 
   static bool implementsInterface(
-      DartType type, String interface, String library) {
+      DartType? type, String interface, String library) {
     if (type is! InterfaceType) {
       return false;
     }
-    final interfaceType = type as InterfaceType;
     bool predicate(InterfaceType i) => isInterface(i, interface, library);
-    final element = interfaceType.element;
-    return predicate(interfaceType) ||
+    final element = type.element;
+    return predicate(type) ||
         !element.isSynthetic && element.allSupertypes.any(predicate);
   }
 
   /// todo (pq): unify and  `isInterface` into a shared method: `isInterfaceType`
-  static bool isClass(DartType type, String className, String library) =>
+  static bool isClass(DartType? type, String className, String? library) =>
       type is InterfaceType &&
       type.element.name == className &&
-      type.element.library?.name == library;
+      type.element.library.name == library;
 
   static bool isClassElement(
           ClassElement element, String className, String library) =>
-      element.name == className && element.library?.name == library;
+      element.name == className && element.library.name == library;
 
-  static bool isConstructorElement(ConstructorElement element,
-          {@required String uriStr,
-          @required String className,
-          @required String constructorName}) =>
+  static bool isConstructorElement(ConstructorElement? element,
+          {required String uriStr,
+          required String className,
+          required String constructorName}) =>
       element != null &&
-      element.library?.name == uriStr &&
+      element.library.name == uriStr &&
       element.enclosingElement.name == className &&
       element.name == constructorName;
 
@@ -247,64 +244,88 @@ class DartTypeUtilities {
           InterfaceType type, String interface, String library) =>
       type.element.name == interface && type.element.library.name == library;
 
-  static bool isNullLiteral(Expression expression) =>
+  static bool isNullLiteral(Expression? expression) =>
       expression?.unParenthesized is NullLiteral;
 
-  static PropertyAccessorElement lookUpGetter(MethodDeclaration node) {
-    final parent = node.declaredElement.enclosingElement;
-    if (parent is ClassElement) {
-      return parent.lookUpGetter(node.name.name, node.declaredElement.library);
-    }
-    if (parent is ExtensionElement) {
-      return parent.getGetter(node.name.name);
+  static PropertyAccessorElement? lookUpGetter(MethodDeclaration node) {
+    var declaredElement = node.declaredElement;
+    if (declaredElement != null) {
+      final parent = declaredElement.enclosingElement;
+      if (parent is ClassElement) {
+        return parent.lookUpGetter(node.name.name, declaredElement.library);
+      }
+      if (parent is ExtensionElement) {
+        return parent.getGetter(node.name.name);
+      }
     }
     return null;
   }
 
-  static PropertyAccessorElement lookUpInheritedConcreteGetter(
+  static PropertyAccessorElement? lookUpInheritedConcreteGetter(
       MethodDeclaration node) {
-    final parent = node.declaredElement.enclosingElement;
+    var element = node.declaredElement;
+    if (element == null) {
+      return null;
+    }
+    final parent = element.enclosingElement;
     if (parent is ClassElement) {
       return parent.lookUpInheritedConcreteGetter(
-          node.name.name, node.declaredElement.library);
+          node.name.name, element.library);
     }
     // Extensions don't inherit.
     return null;
   }
 
-  static MethodElement lookUpInheritedConcreteMethod(MethodDeclaration node) {
-    final parent = node.declaredElement.enclosingElement;
+  static MethodElement? lookUpInheritedConcreteMethod(MethodDeclaration node) {
+    var element = node.declaredElement;
+    if (element == null) {
+      return null;
+    }
+
+    final parent = element.enclosingElement;
     if (parent is ClassElement) {
       return parent.lookUpInheritedConcreteMethod(
-          node.name.name, node.declaredElement.library);
+          node.name.name, element.library);
     }
     // Extensions don't inherit.
     return null;
   }
 
-  static PropertyAccessorElement lookUpInheritedConcreteSetter(
+  static PropertyAccessorElement? lookUpInheritedConcreteSetter(
       MethodDeclaration node) {
-    final parent = node.declaredElement.enclosingElement;
+    var element = node.declaredElement;
+    if (element == null) {
+      return null;
+    }
+    final parent = element.enclosingElement;
     if (parent is ClassElement) {
       return parent.lookUpInheritedConcreteSetter(
-          node.name.name, node.declaredElement.library);
+          node.name.name, element.library);
     }
     // Extensions don't inherit.
     return null;
   }
 
-  static MethodElement lookUpInheritedMethod(MethodDeclaration node) {
-    final parent = node.declaredElement.enclosingElement;
+  static MethodElement? lookUpInheritedMethod(MethodDeclaration node) {
+    var element = node.declaredElement;
+    if (element == null) {
+      return null;
+    }
+
+    final parent = element.enclosingElement;
     return parent is ClassElement
-        ? parent.lookUpInheritedMethod(
-            node.name.name, node.declaredElement.library)
+        ? parent.lookUpInheritedMethod(node.name.name, element.library)
         : null;
   }
 
-  static PropertyAccessorElement lookUpSetter(MethodDeclaration node) {
-    final parent = node.declaredElement.enclosingElement;
+  static PropertyAccessorElement? lookUpSetter(MethodDeclaration node) {
+    var element = node.declaredElement;
+    if (element == null) {
+      return null;
+    }
+    final parent = element.enclosingElement;
     if (parent is ClassElement) {
-      return parent.lookUpSetter(node.name.name, node.declaredElement.library);
+      return parent.lookUpSetter(node.name.name, element.library);
     }
     if (parent is ExtensionElement) {
       return parent.getSetter(node.name.name);
@@ -319,11 +340,16 @@ class DartTypeUtilities {
     final positionalParameters = <Element>[];
     final positionalArguments = <Element>[];
     for (final parameter in parameters) {
-      if (parameter.isNamed) {
-        namedParameters[parameter.identifier.name] =
-            parameter.identifier.staticElement;
-      } else {
-        positionalParameters.add(parameter.identifier.staticElement);
+      var identifier = parameter.identifier;
+      if (identifier != null) {
+        var staticElement = identifier.staticElement;
+        if (staticElement != null) {
+          if (parameter.isNamed) {
+            namedParameters[identifier.name] = staticElement;
+          } else {
+            positionalParameters.add(staticElement);
+          }
+        }
       }
     }
     for (final argument in arguments) {
@@ -367,9 +393,15 @@ class DartTypeUtilities {
     if (parent is! ClassOrMixinDeclaration) {
       return false;
     }
-    final name = node.declaredElement.name;
-    final clazz = parent as ClassOrMixinDeclaration;
+    final name = node.declaredElement?.name;
+    if (name == null) {
+      return false;
+    }
+    final clazz = parent;
     final classElement = clazz.declaredElement;
+    if (classElement == null) {
+      return false;
+    }
     final library = classElement.library;
     return classElement.allSupertypes
         .map(node.isGetter
@@ -384,7 +416,7 @@ class DartTypeUtilities {
   /// include the node itself, it excludes the nodes for which the exclusion
   /// predicate returns true, if not provided, all is included.
   static Iterable<AstNode> traverseNodesInDFS(AstNode node,
-      {AstNodePredicate excludeCriteria}) {
+      {AstNodePredicate? excludeCriteria}) {
     final nodes = <AstNode>{};
     void recursiveCall(node) {
       if (node is AstNode &&
@@ -420,7 +452,7 @@ class DartTypeUtilities {
   /// * Otherwise, the types are related.
   // TODO(srawlins): typedefs and functions in general.
   static bool unrelatedTypes(
-      TypeSystem typeSystem, DartType leftType, DartType rightType) {
+      TypeSystem typeSystem, DartType? leftType, DartType? rightType) {
     // If we don't have enough information, or can't really compare the types,
     // return false as they _might_ be related.
     if (leftType == null ||
@@ -485,8 +517,8 @@ class DartTypeUtilities {
     return false;
   }
 
-  static bool _extendsClass(DartType type, Set<ClassElement> seenTypes,
-          String className, String library) =>
+  static bool _extendsClass(DartType? type, Set<ClassElement> seenTypes,
+          String className, String? library) =>
       type is InterfaceType &&
       seenTypes.add(type.element) &&
       (isClass(type, className, library) ||

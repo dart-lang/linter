@@ -7,8 +7,10 @@ import 'package:linter/src/test_utilities/annotation.dart';
 import 'package:test/test.dart';
 
 AnnotationMatcher matchesAnnotation(
-        String message, ErrorType type, int lineNumber) =>
-    AnnotationMatcher(Annotation(message, type, lineNumber));
+        String? message, ErrorType type, int lineNumber,
+        {required int column, required int length}) =>
+    AnnotationMatcher(
+        Annotation(message, type, lineNumber, column: column, length: length));
 
 class AnnotationMatcher extends Matcher {
   final Annotation _expected;

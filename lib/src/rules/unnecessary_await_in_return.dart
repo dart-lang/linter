@@ -66,15 +66,16 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitReturnStatement(ReturnStatement node) {
-    if (node.expression != null) {
-      _visit(node, node.expression.unParenthesized);
+    var expression = node.expression;
+    if (expression != null) {
+      _visit(node, expression.unParenthesized);
     }
   }
 
   void _visit(AstNode node, Expression expression) {
     if (expression is! AwaitExpression) return;
 
-    final type = (expression as AwaitExpression).expression.staticType;
+    final type = expression.expression.staticType;
     if (type?.isDartAsyncFuture != true) {
       return;
     }
@@ -85,7 +86,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         e is Block && e.parent is TryStatement);
     if (parent == null) return;
 
-    DartType returnType;
+    DartType? returnType;
     if (parent is FunctionExpression) {
       returnType = parent.declaredElement?.returnType;
     } else if (parent is MethodDeclaration) {
@@ -96,10 +97,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     } else {
       throw StateError('unexpected type');
     }
-    if (returnType != null &&
+    if (type != null &&
+        returnType != null &&
         returnType.isDartAsyncFuture &&
         typeSystem.isSubtypeOf(type, returnType)) {
-      rule.reportLintForToken((expression as AwaitExpression).awaitKeyword);
+      rule.reportLintForToken(expression.awaitKeyword);
     }
   }
 }

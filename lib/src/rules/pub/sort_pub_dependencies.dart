@@ -48,15 +48,29 @@ class Visitor extends PubspecVisitor<void> {
 
   void _visitDeps(PSDependencyList dependencies) {
     final depsByLocation = dependencies.toList()
-      ..sort((d1, d2) => d1.name.span.start.compareTo(d2.name.span.start));
+      ..sort((d1, d2) {
+        // names should really not be null but handling to be safe.
+        // todo (pq): consider pulling out support for nulls
+        var span1 = d1.name?.span.start;
+        var span2 = d2.name?.span.start;
+        if (span1 == null) {
+          return -1;
+        }
+        if (span2 == null) {
+          return 1;
+        }
+        return span1.compareTo(span2);
+      });
     var previousName = '';
     for (final dep in depsByLocation) {
-      final name = dep.name.text;
-      if (name.compareTo(previousName) < 0) {
-        rule.reportPubLint(dep.name);
-        return;
+      final name = dep.name?.text;
+      if (name != null) {
+        if (name.compareTo(previousName) < 0) {
+          rule.reportPubLint(dep.name!);
+          return;
+        }
+        previousName = name;
       }
-      previousName = name;
     }
   }
 }

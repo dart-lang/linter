@@ -91,7 +91,7 @@ class _Visitor extends SimpleAstVisitor {
   _Visitor(this.rule, this.context);
 
   void removeReferences(
-      MethodDeclaration method, List<SimpleIdentifier> properties) {
+      MethodDeclaration? method, List<SimpleIdentifier> properties) {
     if (method == null) {
       return;
     }
@@ -117,13 +117,13 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   bool skipForDiagnostic(
-          {Element element, DartType type, SimpleIdentifier name}) =>
+          {Element? element, DartType? type, SimpleIdentifier? name}) =>
       isPrivate(name) || _isOverridingMember(element) || isWidgetProperty(type);
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     // We only care about Diagnosticables.
-    final type = node.declaredElement.thisType;
+    final type = node.declaredElement?.thisType;
     if (!DartTypeUtilities.implementsInterface(type, 'Diagnosticable', '')) {
       return;
     }
@@ -141,13 +141,16 @@ class _Visitor extends SimpleAstVisitor {
         }
       } else if (member is FieldDeclaration) {
         for (var v in member.fields.variables) {
-          if (!v.declaredElement.isStatic &&
-              !skipForDiagnostic(
-                element: v.declaredElement,
-                name: v.name,
-                type: v.declaredElement.type,
-              )) {
-            properties.add(v.name);
+          var declaredElement = v.declaredElement;
+          if (declaredElement != null) {
+            if (!declaredElement.isStatic &&
+                !skipForDiagnostic(
+                  element: declaredElement,
+                  name: v.name,
+                  type: declaredElement.type,
+                )) {
+              properties.add(v.name);
+            }
           }
         }
       }
@@ -170,18 +173,22 @@ class _Visitor extends SimpleAstVisitor {
     properties.forEach(rule.reportLint);
   }
 
-  bool _isOverridingMember(Element member) {
+  bool _isOverridingMember(Element? member) {
     if (member == null) {
       return false;
     }
-
+    var name = member.name;
+    if (name == null) {
+      return false;
+    }
     final classElement = member.thisOrAncestorOfType<ClassElement>();
     if (classElement == null) {
       return false;
     }
+
     final libraryUri = classElement.library.source.uri;
-    return context.inheritanceManager.getInherited(
-            classElement.thisType, Name(libraryUri, member.name)) !=
+    return context.inheritanceManager
+            .getInherited(classElement.thisType, Name(libraryUri, name)) !=
         null;
   }
 }

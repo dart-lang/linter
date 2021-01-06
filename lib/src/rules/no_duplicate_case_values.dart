@@ -56,7 +56,7 @@ class NoDuplicateCaseValues extends LintRule implements NodeLintRule {
     registry.addSwitchStatement(this, visitor);
   }
 
-  void reportLintWithDescription(AstNode node, String description) {
+  void reportLintWithDescription(AstNode? node, String description) {
     if (node != null) {
       reporter.reportErrorForNode(_LintCode(name, description), node, []);
     }

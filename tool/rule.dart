@@ -8,7 +8,7 @@ import 'package:args/args.dart';
 
 /// Generates rule and rule test stub files (into `src/rules` and `test/rules`
 /// respectively), as well as the rule index (`rules.dart`).
-void main([List<String> args]) {
+void main([List<String>? args]) {
   final parser = ArgParser()
     ..addOption('out', abbr: 'o', help: 'Specifies project root.')
     ..addOption('name',
@@ -47,7 +47,7 @@ String get _thisYear => DateTime.now().year.toString();
 
 String capitalize(String s) => s.substring(0, 1).toUpperCase() + s.substring(1);
 
-void generateRule(String ruleName, {String outDir}) {
+void generateRule(String ruleName, {String? outDir}) {
   // Generate rule stub.
   generateStub(ruleName, 'lib/src/rules', _generateClass, outDir: outDir);
 
@@ -59,7 +59,7 @@ void generateRule(String ruleName, {String outDir}) {
 }
 
 void generateStub(String ruleName, String stubPath, _Generator generator,
-    {String outDir}) {
+    {String? outDir}) {
   final generated = generator(ruleName, toClassName(ruleName));
   if (outDir != null) {
     final outPath = '$outDir/$stubPath/$ruleName.dart';
@@ -75,7 +75,7 @@ void generateStub(String ruleName, String stubPath, _Generator generator,
   }
 }
 
-void printUsage(ArgParser parser, [String error]) {
+void printUsage(ArgParser parser, [String? error]) {
   final message = error ?? 'Generates rule stubs.';
 
   stdout.write('''$message

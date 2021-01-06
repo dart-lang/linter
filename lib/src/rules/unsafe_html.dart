@@ -100,13 +100,13 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     } else if (leftPart is PropertyAccess) {
       _checkAssignment(
-          leftPart.realTarget?.staticType, leftPart.propertyName, node);
+          leftPart.realTarget.staticType, leftPart.propertyName, node);
     } else if (leftPart is PrefixedIdentifier) {
-      _checkAssignment(leftPart.prefix?.staticType, leftPart.identifier, node);
+      _checkAssignment(leftPart.prefix.staticType, leftPart.identifier, node);
     }
   }
 
-  void _checkAssignment(DartType type, SimpleIdentifier property,
+  void _checkAssignment(DartType? type, SimpleIdentifier? property,
       AssignmentExpression assignment) {
     if (property == null || type == null) return;
 
@@ -140,7 +140,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (type == null) return;
 
     var constructorName = node.constructorName;
-    if (constructorName?.name?.name == 'html') {
+    if (constructorName.name?.name == 'html') {
       if (type.extendsDartHtmlClass('DocumentFragment')) {
         rule.reportLint(node,
             arguments: ['html', 'DocumentFragment'],
@@ -154,11 +154,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    var methodName = node.methodName?.name;
-    if (methodName == null) return;
+    var methodName = node.methodName.name;
 
     // The static type of the target.
-    DartType type;
+    DartType? type;
     if (node.realTarget == null) {
       // Implicit `this` target.
       var methodElement = node.methodName.staticElement;
@@ -170,7 +169,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         return;
       }
     } else {
-      type = node.realTarget.staticType;
+      type = node.realTarget?.staticType;
       if (type == null) return;
     }
 

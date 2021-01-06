@@ -55,12 +55,13 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    if (node.target != null &&
+    var target = node.target;
+    if (target != null &&
         node.methodName.token.value() == 'forEach' &&
         node.argumentList.arguments.isNotEmpty &&
         node.argumentList.arguments[0] is FunctionExpression &&
         DartTypeUtilities.implementsInterface(
-            node.target.staticType, 'Iterable', 'dart.core') &&
+            target.staticType, 'Iterable', 'dart.core') &&
         !_hasMethodChaining(node)) {
       rule.reportLint(node.function);
     }
@@ -73,11 +74,11 @@ bool _hasMethodChaining(MethodInvocation node) {
       exp is MethodInvocation ||
       exp is PropertyAccess) {
     if (exp is PrefixedIdentifier) {
-      exp = (exp as PrefixedIdentifier).prefix;
+      exp = exp.prefix;
     } else if (exp is MethodInvocation) {
       return true;
     } else if (exp is PropertyAccess) {
-      exp = (exp as PropertyAccess).target;
+      exp = exp.target;
     }
   }
   return false;

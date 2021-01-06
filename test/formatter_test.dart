@@ -42,9 +42,9 @@ void defineTests() {
 
       var out = CollectingSink();
 
-      var reporter =
-          SimpleFormatter([info], null, out, fileCount: 1, elapsedMs: 13)
-            ..write();
+      var reporter = SimpleFormatter([info], null, out,
+          fileRoot: '', fileCount: 1, elapsedMs: 13)
+        ..write();
 
       test('count', () {
         expect(reporter.errorCount, 1);
@@ -59,7 +59,7 @@ void defineTests() {
       test('stats', () {
         out.buffer.clear();
         SimpleFormatter([info], null, out,
-            fileCount: 1, showStatistics: true, elapsedMs: 13)
+            fileRoot: '', fileCount: 1, showStatistics: true, elapsedMs: 13)
           ..write();
         expect(out.buffer.toString(),
             startsWith('''/foo/bar/baz.dart 3:2 [test] MSG
@@ -94,7 +94,7 @@ mock_code                               1
 
       group('filtered', () {
         var reporter = SimpleFormatter([info], _RejectingFilter(), out,
-            fileCount: 1, elapsedMs: 13)
+            fileRoot: '/', fileCount: 1, elapsedMs: 13)
           ..write();
 
         test('error count', () {
@@ -115,7 +115,7 @@ mock_code                               1
         test('write', () {
           out.buffer.clear();
           SimpleFormatter([info], null, out,
-              fileCount: 1, machineOutput: true, elapsedMs: 13)
+              fileRoot: '/', fileCount: 1, machineOutput: true, elapsedMs: 13)
             ..write();
 
           expect(out.buffer.toString().trim(),

@@ -34,7 +34,8 @@ bool isDartFileName(String fileName) => fileName.endsWith('.dart');
 bool isIdentifier(String name) => _identifier.hasMatch(name);
 
 /// Returns `true` of the given [name] is composed only of `_`s.
-bool isJustUnderscores(String name) => _underscores.hasMatch(name);
+bool isJustUnderscores(String? name) =>
+    name != null && _underscores.hasMatch(name);
 
 /// Returns `true` if this [id] is `lowerCamelCase`.
 bool isLowerCamelCase(String id) =>
@@ -61,7 +62,8 @@ bool isValidLibraryPrefix(String libraryPrefix) =>
     _validLibraryPrefix.hasMatch(libraryPrefix);
 
 /// Returns true if this [id] is a valid package name.
-bool isValidPackageName(String id) =>
+bool isValidPackageName(String? id) =>
+    id != null &&
     _lowerCaseUnderScoreWithLeadingUnderscores.hasMatch(id) &&
     isValidDartIdentifier(id);
 

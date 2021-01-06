@@ -60,8 +60,11 @@ class AvoidTypesOnClosureParametersVisitor extends SimpleAstVisitor {
     if (node.parent is FunctionDeclaration) {
       return;
     }
-    for (final parameter in node.parameters.parameters) {
-      parameter.accept(this);
+    var parameters = node.parameters?.parameters;
+    if (parameters != null) {
+      for (final parameter in parameters) {
+        parameter.accept(this);
+      }
     }
   }
 

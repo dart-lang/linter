@@ -83,8 +83,9 @@ class _Visitor extends SimpleAstVisitor<void> {
         returnType is InterfaceType &&
         parent.typeParameters == null &&
         node.typeParameters == null) {
-      var interfaceType = parent.declaredElement.thisType;
-      if (!context.typeSystem.isAssignableTo(returnType, interfaceType)) {
+      var interfaceType = parent.declaredElement?.thisType;
+      if (interfaceType != null &&
+          !context.typeSystem.isAssignableTo(returnType, interfaceType)) {
         return;
       }
       if (_hasNewInvocation(returnType, node.body)) {

@@ -10,7 +10,7 @@ final _pedanticOptionsRootUrl =
 final _pedanticOptionsUrl =
     _pedanticOptionsRootUrl.resolve('analysis_options.yaml');
 
-List<String> _pedanticRules;
+List<String>? _pedanticRules;
 
 Future<List<String>> get pedanticRules async =>
     _pedanticRules ??= await _fetchPedanticRules();
@@ -23,12 +23,13 @@ Future<List<String>> fetchRules(Uri optionsUrl) async {
   }
   final rules = <String>[];
   for (var ruleConfig in config.ruleConfigs) {
-    rules.add(ruleConfig.name);
+    // todo (pq): `name` should not be nullable.
+    rules.add(ruleConfig.name!);
   }
   return rules;
 }
 
-Future<LintConfig> _fetchConfig(Uri url) async {
+Future<LintConfig?> _fetchConfig(Uri url) async {
   print('loading $url...');
   final req = await http.get(url);
   return processAnalysisOptionsFile(req.body);

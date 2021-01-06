@@ -99,9 +99,12 @@ class _ClassAndSuperClasses {
   Set<ClassElement> get classes {
     if (_classes.isEmpty) {
       void addRecursively(ClassElement element) {
-        if (element != null && _classes.add(element)) {
+        if (_classes.add(element)) {
           element.mixins.forEach((t) => addRecursively(t.element));
-          addRecursively(element.supertype?.element);
+          var superElement = element.supertype?.element;
+          if (superElement != null) {
+            addRecursively(superElement);
+          }
         }
       }
 
@@ -115,18 +118,30 @@ class _ClassAndSuperClasses {
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
-  _ClassAndSuperClasses _classAndSuperClasses;
+  _ClassAndSuperClasses? _classAndSuperClasses;
 
   _Visitor(this.rule);
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    _classAndSuperClasses = _ClassAndSuperClasses(node.declaredElement);
+    var declaredElement = node.declaredElement;
+    if (declaredElement != null) {
+      _classAndSuperClasses = _ClassAndSuperClasses(declaredElement);
+    }
   }
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    if (node.declaredElement.isFactory) return;
+    var classAndSuperClasses = _classAndSuperClasses;
+    if (classAndSuperClasses == null) {
+      return;
+    }
+    var declaredElement = node.declaredElement;
+    if (declaredElement == null) {
+      return;
+    }
+
+    if (declaredElement.isFactory) return;
 
     final body = node.body;
     if (body is BlockFunctionBody) {
@@ -134,7 +149,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         if (statement is! AssertStatement) break;
 
         final assertVisitor =
-            _AssertVisitor(node.declaredElement, _classAndSuperClasses);
+            _AssertVisitor(declaredElement, classAndSuperClasses);
         statement.visitChildren(assertVisitor);
         if (!assertVisitor.needInstance) {
           rule.reportLintForToken(statement.beginToken);

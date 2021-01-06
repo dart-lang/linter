@@ -81,7 +81,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     // Only select getters without setters
     var candidates = getters.keys.where((id) => !setters.keys.contains(id));
-    candidates.map((n) => getters[n]).forEach(_visitGetter);
+    candidates.map((n) => getters[n]!).forEach(_visitGetter);
   }
 
   void _visitGetter(MethodDeclaration getter) {

@@ -59,10 +59,15 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    if (node.declaredElement.interfaces.isNotEmpty) {
+    var element = node.declaredElement;
+    if (element == null) {
       return;
     }
-    if (node.declaredElement.mixins.isNotEmpty) {
+
+    if (element.interfaces.isNotEmpty) {
+      return;
+    }
+    if (element.mixins.isNotEmpty) {
       return;
     }
     if (node.isAbstract &&

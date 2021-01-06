@@ -62,8 +62,8 @@ class PreferForeach extends LintRule implements NodeLintRule {
 
 class _PreferForEachVisitor extends SimpleAstVisitor {
   final LintRule rule;
-  LocalVariableElement element;
-  ForStatement forEachStatement;
+  LocalVariableElement? element;
+  ForStatement? forEachStatement;
 
   _PreferForEachVisitor(this.rule);
 
@@ -83,7 +83,7 @@ class _PreferForEachVisitor extends SimpleAstVisitor {
   void visitForStatement(ForStatement node) {
     final loopParts = node.forLoopParts;
     if (loopParts is ForEachPartsWithDeclaration) {
-      final element = loopParts.loopVariable?.declaredElement;
+      final element = loopParts.loopVariable.declaredElement;
       if (element != null) {
         forEachStatement = node;
         this.element = element;
@@ -105,13 +105,14 @@ class _PreferForEachVisitor extends SimpleAstVisitor {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     final arguments = node.argumentList.arguments;
+    var target = node.target;
     if (arguments.length == 1 &&
         DartTypeUtilities.getCanonicalElementFromIdentifier(arguments.first) ==
             element &&
-        (node.target == null ||
-            (DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) !=
+        (target == null ||
+            (DartTypeUtilities.getCanonicalElementFromIdentifier(target) !=
                     element &&
-                !DartTypeUtilities.traverseNodesInDFS(node.target)
+                !DartTypeUtilities.traverseNodesInDFS(target)
                     .map(DartTypeUtilities.getCanonicalElementFromIdentifier)
                     .contains(element)))) {
       rule.reportLint(forEachStatement);

@@ -66,8 +66,11 @@ class _AllowedCommentVisitor extends SimpleAstVisitor {
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    var token = node.beginToken;
-    while (token != null) {
+    Token? token = node.beginToken;
+    // todo (pq): consider disabling this lint
+    // ignore: literal_only_boolean_expressions
+    while (true) {
+      if (token == null) break;
       _getPrecedingComments(token).forEach(_visitComment);
       if (token == token.next) break;
       token = token.next;
@@ -75,7 +78,7 @@ class _AllowedCommentVisitor extends SimpleAstVisitor {
   }
 
   Iterable<Token> _getPrecedingComments(Token token) sync* {
-    Token comment = token.precedingComments;
+    Token? comment = token.precedingComments;
     while (comment != null) {
       yield comment;
       comment = comment.next;
@@ -162,7 +165,7 @@ class _LineInfo {
   final int index;
   final int offset;
   final int end;
-  _LineInfo({this.index, this.offset, this.end});
+  _LineInfo({required this.index, required this.offset, required this.end});
   int get length => end - offset;
 }
 
@@ -176,6 +179,9 @@ class _Visitor extends SimpleAstVisitor {
   @override
   void visitCompilationUnit(CompilationUnit node) {
     final lineInfo = node.lineInfo;
+    if (lineInfo == null) {
+      return;
+    }
     final lineCount = lineInfo.lineCount;
     final longLines = <_LineInfo>[];
     for (var i = 0; i < lineCount; i++) {

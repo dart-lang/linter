@@ -51,7 +51,7 @@ bool matchesOrIsPrefixedBy(String name, String prefix) =>
 
 class PackagePrefixedLibraryNames extends LintRule
     implements ProjectVisitor, NodeLintRule {
-  DartProject project;
+  DartProject? project;
 
   PackagePrefixedLibraryNames()
       : super(
@@ -81,7 +81,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  DartProject get project => rule.project;
+  DartProject? get project => rule.project;
 
   @override
   void visitLibraryDirective(LibraryDirective node) {
@@ -90,14 +90,17 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (project == null) {
       return;
     }
-    final source = node.element.source;
+    final source = node.element?.source;
+    if (source == null) {
+      return;
+    }
     var prefix = Analyzer.facade.createLibraryNamePrefix(
         libraryPath: source.fullName,
-        projectRoot: project.root.absolute.path,
-        packageName: project.name);
+        projectRoot: project!.root.absolute.path,
+        packageName: project!.name);
 
-    var libraryName = node.element.name;
-    if (!matchesOrIsPrefixedBy(libraryName, prefix)) {
+    var libraryName = node.element?.name;
+    if (libraryName != null && !matchesOrIsPrefixedBy(libraryName, prefix)) {
       rule.reportLint(node.name);
     }
   }

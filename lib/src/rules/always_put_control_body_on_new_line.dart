@@ -83,8 +83,12 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitIfStatement(IfStatement node) {
     _checkNodeOnNextLine(node.thenStatement, node.rightParenthesis.end);
-    if (node.elseKeyword != null && node.elseStatement is! IfStatement) {
-      _checkNodeOnNextLine(node.elseStatement, node.elseKeyword.end);
+    var elseKeyword = node.elseKeyword;
+    if (elseKeyword != null) {
+      var elseStatement = node.elseStatement;
+      if (elseStatement is! IfStatement) {
+        _checkNodeOnNextLine(elseStatement!, elseKeyword.end);
+      }
     }
   }
 
@@ -99,8 +103,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     final unit = node.root as CompilationUnit;
     final offsetFirstStatement =
         node is Block ? node.statements.first.offset : node.offset;
-    if (unit.lineInfo.getLocation(controlEnd).lineNumber ==
-        unit.lineInfo.getLocation(offsetFirstStatement).lineNumber) {
+    if (unit.lineInfo?.getLocation(controlEnd).lineNumber ==
+        unit.lineInfo?.getLocation(offsetFirstStatement).lineNumber) {
       rule.reportLintForToken(node.beginToken);
     }
   }

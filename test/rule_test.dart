@@ -208,13 +208,13 @@ void defineSoloRuleTest(String ruleToTest) {
     if (entry is! File || !isDartFile(entry)) continue;
     var ruleName = p.basenameWithoutExtension(entry.path);
     if (ruleName == ruleToTest) {
-      testRule(ruleName, entry as File);
+      testRule(ruleName, entry);
     }
   }
 }
 
 void testRule(String ruleName, File file,
-    {bool debug = false, String analysisOptions}) {
+    {bool debug = false, String? analysisOptions}) {
   registerLintRules();
 
   test('$ruleName', () async {
@@ -276,7 +276,7 @@ void testRule(String ruleName, File file,
   });
 }
 
-void testRules(String ruleDir, {String analysisOptions}) {
+void testRules(String ruleDir, {String? analysisOptions}) {
   for (var entry in Directory(ruleDir).listSync()) {
     if (entry is! File || !isDartFile(entry)) continue;
     var ruleName = p.basenameWithoutExtension(entry.path);
@@ -284,8 +284,7 @@ void testRules(String ruleDir, {String analysisOptions}) {
       // Disabled pending fix: https://github.com/dart-lang/linter/issues/23
       continue;
     }
-    testRule(ruleName, entry as File,
-        debug: true, analysisOptions: analysisOptions);
+    testRule(ruleName, entry, debug: true, analysisOptions: analysisOptions);
   }
 }
 
@@ -299,5 +298,10 @@ class NoFilter implements LintFilter {
 /// actual lints do not match expectations.
 class ResultReporter extends DetailedReporter {
   ResultReporter(Iterable<AnalysisErrorInfo> errors)
-      : super(errors, NoFilter(), stdout);
+      : super(
+          errors,
+          NoFilter(),
+          stdout,
+          fileCount: 0 /* ignored*/,
+        );
 }

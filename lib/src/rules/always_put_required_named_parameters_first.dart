@@ -52,12 +52,14 @@ class _Visitor extends SimpleAstVisitor<void> {
     var nonRequiredSeen = false;
     for (var param in node.parameters.where((p) => p.isNamed)) {
       var element = param.declaredElement;
-      if (element.hasRequired || element.isRequiredNamed) {
-        if (nonRequiredSeen) {
-          rule.reportLintForToken(param.identifier.token);
+      if (element != null) {
+        if (element.hasRequired || element.isRequiredNamed) {
+          if (nonRequiredSeen) {
+            rule.reportLintForToken(param.identifier?.token);
+          }
+        } else {
+          nonRequiredSeen = true;
         }
-      } else {
-        nonRequiredSeen = true;
       }
     }
   }

@@ -53,7 +53,7 @@ someReference
 
 ''';
 
-Element _getElementFromVariableDeclarationStatement(
+Element? _getElementFromVariableDeclarationStatement(
     VariableDeclarationStatement statement) {
   final variables = statement.variables.variables;
   if (variables.length == 1) {
@@ -71,7 +71,7 @@ Element _getElementFromVariableDeclarationStatement(
   return null;
 }
 
-ExecutableElement _getExecutableElementFromMethodInvocation(
+ExecutableElement? _getExecutableElementFromMethodInvocation(
     MethodInvocation node) {
   if (_isInvokedWithoutNullAwareOperator(node.operator)) {
     final executableElement =
@@ -83,7 +83,7 @@ ExecutableElement _getExecutableElementFromMethodInvocation(
   return null;
 }
 
-Element _getPrefixElementFromExpression(Expression rawExpression) {
+Element? _getPrefixElementFromExpression(Expression rawExpression) {
   final expression = rawExpression.unParenthesized;
   if (expression is PrefixedIdentifier) {
     return DartTypeUtilities.getCanonicalElementFromIdentifier(
@@ -97,13 +97,13 @@ Element _getPrefixElementFromExpression(Expression rawExpression) {
   return null;
 }
 
-Element _getTargetElementFromCascadeExpression(CascadeExpression node) =>
+Element? _getTargetElementFromCascadeExpression(CascadeExpression node) =>
     DartTypeUtilities.getCanonicalElementFromIdentifier(node.target);
 
-Element _getTargetElementFromMethodInvocation(MethodInvocation node) =>
+Element? _getTargetElementFromMethodInvocation(MethodInvocation node) =>
     DartTypeUtilities.getCanonicalElementFromIdentifier(node.target);
 
-bool _isInvokedWithoutNullAwareOperator(Token token) =>
+bool _isInvokedWithoutNullAwareOperator(Token? token) =>
     token?.type == TokenType.PERIOD;
 
 /// Rule to lint consecutive invocations of methods or getters on the same
@@ -148,7 +148,7 @@ class _CascadableExpression {
   /// in the right part of an assignment in a following expression that we would
   /// like to join to this.
   final bool isCritical;
-  final Element element;
+  final Element? element;
   final List<AstNode> criticalNodes;
 
   factory _CascadableExpression.fromExpressionStatement(
@@ -263,9 +263,9 @@ class _CascadableExpression {
   }
 
   _CascadableExpression._internal(this.element, this.criticalNodes,
-      {this.canJoin,
-      this.canReceive,
-      this.canBeCascaded,
+      {required this.canJoin,
+      required this.canReceive,
+      required this.canBeCascaded,
       this.isCritical = false});
 
   /// Whether `this` is compatible to be joined with [expressionBox] with a

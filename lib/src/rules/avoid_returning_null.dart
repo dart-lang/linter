@@ -42,7 +42,7 @@ double getDouble() => -1.0;
 
 bool _isFunctionExpression(AstNode node) => node is FunctionExpression;
 
-bool _isPrimitiveType(DartType type) =>
+bool _isPrimitiveType(DartType? type) =>
     DartTypeUtilities.isClass(type, 'bool', 'dart.core') ||
     DartTypeUtilities.isClass(type, 'num', 'dart.core') ||
     DartTypeUtilities.isClass(type, 'int', 'dart.core') ||
@@ -75,14 +75,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionExpression(FunctionExpression node) {
-    if (_isPrimitiveType(node.declaredElement.returnType)) {
-      _visitFunctionBody(node.body);
+    if (_isPrimitiveType(node.declaredElement?.returnType)) {
+      _visitFunctionBody(node.body!);
     }
   }
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (_isPrimitiveType(node.declaredElement.returnType)) {
+    if (_isPrimitiveType(node.declaredElement?.returnType)) {
       _visitFunctionBody(node.body);
     }
   }

@@ -175,7 +175,7 @@ void ruleTests() {
 }
 
 /// Provide the options found in [optionsSource].
-Map<String, YamlNode> _getOptionsFromString(String optionsSource) {
+Map<String, YamlNode> _getOptionsFromString(String? optionsSource) {
   final options = <String, YamlNode>{};
   if (optionsSource == null) {
     return options;
@@ -187,13 +187,13 @@ Map<String, YamlNode> _getOptionsFromString(String optionsSource) {
   if (doc is YamlScalar && doc.value == null) {
     return options;
   }
-  if ((doc != null) && (doc is! YamlMap)) {
+  if (doc is! YamlMap) {
     throw Exception(
         'Bad options file format (expected map, got ${doc.runtimeType})');
   }
   if (doc is YamlMap) {
     doc.nodes.forEach((k, YamlNode v) {
-      Object key;
+      dynamic key;
       if (k is YamlScalar) {
         key = k.value;
       }
@@ -201,11 +201,11 @@ Map<String, YamlNode> _getOptionsFromString(String optionsSource) {
         throw Exception('Bad options file format (expected String scope key, '
             'got ${k.runtimeType})');
       }
-      if (v != null && v is! YamlNode) {
+      if (v is! YamlNode) {
         throw Exception('Bad options file format (expected Node value, '
             'got ${v.runtimeType}: `${v.toString()}`)');
       }
-      options[key as String] = v;
+      options[key] = v;
     });
   }
   return options;

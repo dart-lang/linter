@@ -7,6 +7,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
@@ -78,7 +79,7 @@ class _Visitor extends SimpleAstVisitor<void> {
                 ? e.rightOperand
                 : null)
         .where((e) => e != null)
-        .where((e) => context.typeSystem.isNullable(e.staticType))
+        .where((e) => isNullable(e!.staticType))
         .whereType<Identifier>()
         .map((e) => e.staticElement)
         .whereType<FieldFormalParameterElement>()
@@ -87,4 +88,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           node.parameters.parameters.firstWhere((p) => p.declaredElement == e));
     });
   }
+
+  bool isNullable(DartType? type) =>
+      type != null && context.typeSystem.isNullable(type);
 }

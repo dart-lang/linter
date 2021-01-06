@@ -76,7 +76,7 @@ class _Visitor extends SimpleAstVisitor {
     final parent = node.parent;
     if (parent is NamedExpression && parent.name.label.name == 'child') {
       final args = parent.thisOrAncestorOfType<ArgumentList>();
-      if (args.arguments.length == 1) {
+      if (args != null && args.arguments.length == 1) {
         final parentCreation =
             parent.thisOrAncestorOfType<InstanceCreationExpression>();
         if (parentCreation != null) {

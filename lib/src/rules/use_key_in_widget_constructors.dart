@@ -58,10 +58,12 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     var classElement = node.declaredElement;
-    if (classElement.isPublic &&
-        hasWidgetAsAscendant(classElement) &&
-        classElement.constructors.where((e) => !e.isSynthetic).isEmpty) {
-      rule.reportLint(node.name);
+    if (classElement != null) {
+      if (classElement.isPublic &&
+          hasWidgetAsAscendant(classElement) &&
+          classElement.constructors.where((e) => !e.isSynthetic).isEmpty) {
+        rule.reportLint(node.name);
+      }
     }
     super.visitClassDeclaration(node);
   }
@@ -69,29 +71,32 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
     var constructorElement = node.declaredElement;
-    var classElement = constructorElement.enclosingElement;
-    if (constructorElement.isPublic &&
-        !constructorElement.isFactory &&
-        classElement.isPublic &&
-        hasWidgetAsAscendant(classElement) &&
-        !isExactWidget(classElement) &&
-        !node.initializers.any((initializer) =>
-            initializer is SuperConstructorInvocation &&
-                (!_defineKeyParameter(initializer.staticElement) ||
-                    _defineKeyArgument(initializer.argumentList)) ||
-            initializer is RedirectingConstructorInvocation &&
-                (!_defineKeyParameter(initializer.staticElement) ||
-                    _defineKeyArgument(initializer.argumentList)))) {
-      rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);
+    if (constructorElement != null) {
+      var classElement = constructorElement.enclosingElement;
+      if (constructorElement.isPublic &&
+          !constructorElement.isFactory &&
+          classElement.isPublic &&
+          hasWidgetAsAscendant(classElement) &&
+          !isExactWidget(classElement) &&
+          !node.initializers.any((initializer) =>
+              initializer is SuperConstructorInvocation &&
+                  (!_defineKeyParameter(initializer.staticElement) ||
+                      _defineKeyArgument(initializer.argumentList)) ||
+              initializer is RedirectingConstructorInvocation &&
+                  (!_defineKeyParameter(initializer.staticElement) ||
+                      _defineKeyArgument(initializer.argumentList)))) {
+        rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);
+      }
     }
     super.visitConstructorDeclaration(node);
   }
 
-  bool _defineKeyParameter(ConstructorElement element) =>
+  bool _defineKeyParameter(ConstructorElement? element) =>
+      element != null &&
       element.parameters.any((e) => e.name == 'key' && _isKeyType(e.type));
 
-  bool _defineKeyArgument(ArgumentList argumentList) =>
-      argumentList.arguments.any((a) => a.staticParameterElement.name == 'key');
+  bool _defineKeyArgument(ArgumentList argumentList) => argumentList.arguments
+      .any((a) => a.staticParameterElement?.name == 'key');
 
   bool _isKeyType(DartType type) =>
       DartTypeUtilities.implementsInterface(type, 'Key', '');

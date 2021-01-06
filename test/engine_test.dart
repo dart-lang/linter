@@ -13,6 +13,7 @@ import 'package:analyzer/src/lint/linter.dart' hide CamelCaseString;
 import 'package:analyzer/src/lint/pub.dart';
 import 'package:analyzer/src/string_source.dart' show StringSource;
 import 'package:cli_util/cli_util.dart' show getSdkPath;
+import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/cli.dart' as cli;
 import 'package:linter/src/utils.dart';
 import 'package:test/test.dart';
@@ -31,7 +32,7 @@ void defineLinterEngineTests() {
       void _test(
           String label, String expected, Function(PrintingReporter r) report) {
         test(label, () {
-          String msg;
+          late String msg;
           final reporter = PrintingReporter((m) => msg = m);
           report(reporter);
           expect(msg, expected);
@@ -83,7 +84,7 @@ void defineLinterEngineTests() {
 
     group('lint driver', () {
       test('pubspec', () {
-        bool visited;
+        late bool visited;
         var options = LinterOptions([MockLinter((n) => visited = true)]);
         SourceLinter(options).lintPubspecSource(contents: 'name: foo_bar');
         expect(visited, isTrue);
@@ -94,9 +95,12 @@ void defineLinterEngineTests() {
         var linter = SourceLinter(LinterOptions([]))..onError(error);
         expect(linter.errors.contains(error), isTrue);
       });
+      // todo (pq): this is failing; fix!
       test('pubspec visitor error handling', () {
         var visitor = MockPubVisitor();
-        var rule = MockRule()..pubspecVisitor = visitor;
+        var rule = MockRule(
+            name: 'mock_rule', group: Group.style, details: '', description: '')
+          ..pubspecVisitor = visitor;
 
         var reporter = MockReporter();
         SourceLinter(LinterOptions([rule]), reporter: reporter)
@@ -183,7 +187,7 @@ void defineLinterEngineTests() {
 typedef NodeVisitor = void Function(Object node);
 
 class MockLinter extends LintRule {
-  final NodeVisitor nodeVisitor;
+  final NodeVisitor? nodeVisitor;
   MockLinter([this.nodeVisitor])
       : super(
             name: 'MockLint',
@@ -199,28 +203,29 @@ class MockLinter extends LintRule {
 }
 
 class MockLintRule extends LintRule {
-  MockLintRule(String name, Group group) : super(name: name, group: group);
+  MockLintRule(String name, Group group)
+      : super(name: name, group: group, description: '', details: '');
 
   @override
   AstVisitor getVisitor() => MockVisitor(null);
 }
 
 class MockVisitor extends GeneralizingAstVisitor with PubspecVisitor {
-  final Function(Object node) nodeVisitor;
+  final Function(Object node)? nodeVisitor;
 
   MockVisitor(this.nodeVisitor);
 
   @override
   void visitNode(AstNode node) {
     if (nodeVisitor != null) {
-      nodeVisitor(node);
+      nodeVisitor!(node);
     }
   }
 
   @override
   void visitPackageName(PSEntry node) {
     if (nodeVisitor != null) {
-      nodeVisitor(node);
+      nodeVisitor!(node);
     }
   }
 }

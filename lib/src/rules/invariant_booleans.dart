@@ -101,7 +101,7 @@ void nestedOk5() {
 Iterable<Element> _getElementsInExpression(Expression node) =>
     DartTypeUtilities.traverseNodesInDFS(node)
         .map(DartTypeUtilities.getCanonicalElementFromIdentifier)
-        .where((e) => e != null);
+        .where((e) => e != null) as Iterable<Element>;
 
 class InvariantBooleans extends LintRule implements NodeLintRule {
   InvariantBooleans()
@@ -139,9 +139,13 @@ class _InvariantBooleansVisitor extends ConditionScopeVisitor {
   _InvariantBooleansVisitor(this.rule);
 
   @override
-  void visitCondition(Expression node) {
+  void visitCondition(Expression? node) {
+    if (node == null) {
+      return;
+    }
+
     // Right part discards reporting a subexpression already reported.
-    if (node?.staticType?.isDartCoreBool != true) {
+    if (node.staticType?.isDartCoreBool != true) {
       return;
     }
 

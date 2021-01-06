@@ -33,20 +33,20 @@ final _stagehandOptionsUrl = Uri.https('raw.githubusercontent.com',
 /// We don't care about SDKs previous to this bottom.
 final Version bottomDartSdk = Version(2, 0, 0);
 
-Map<String, String> _dartSdkToLinterMap = <String, String>{};
+Map<String, String?> _dartSdkToLinterMap = <String, String?>{};
 
-List<String> _effectiveDartRules;
-List<String> _flutterRepoRules;
-List<String> _flutterRules;
-int _latestMinor;
+List<String>? _effectiveDartRules;
+List<String>? _flutterRepoRules;
+List<String>? _flutterRules;
+int? _latestMinor;
 
-Iterable<LintRule> _registeredLints;
+Iterable<LintRule>? _registeredLints;
 
-List<String> _sdkTags;
+List<String>? _sdkTags;
 
 Map<String, List<String>> _sinceMap = <String, List<String>>{};
 
-List<String> _stagehandRules;
+List<String>? _stagehandRules;
 
 Future<List<String>> get effectiveDartRules async =>
     _effectiveDartRules ??= await _fetchEffectiveDartRules();
@@ -67,7 +67,7 @@ Iterable<LintRule> get registeredLints {
     registerLintRules();
     _registeredLints = Registry.ruleRegistry;
   }
-  return _registeredLints;
+  return _registeredLints!;
 }
 
 Future<List<String>> get sdkTags async => _sdkTags ??= await _fetchSdkTags();
@@ -75,7 +75,7 @@ Future<List<String>> get sdkTags async => _sdkTags ??= await _fetchSdkTags();
 Future<List<String>> get stagehandRules async =>
     _stagehandRules ??= await score_utils.fetchRules(_stagehandOptionsUrl);
 
-Future<String> dartSdkForLinter(String version) async {
+Future<String?> dartSdkForLinter(String version) async {
   var sdkVersions = <String>[];
   var sdks = await sdkTags;
   for (var sdk in sdks) {
@@ -92,13 +92,13 @@ Future<String> dartSdkForLinter(String version) async {
 Future<List<String>> fetchRulesForVersion(String version) async =>
     score_utils.fetchRules(_repoPathPrefix.resolve('$version$_allPathSuffix'));
 
-Future<String> findSinceDartSdk(String linterVersion) async =>
+Future<String?> findSinceDartSdk(String linterVersion) async =>
     await dartSdkForLinter(linterVersion);
 
-Future<String> findSinceLinter(String lint) async {
+Future<String?> findSinceLinter(String lint) async {
   // History recorded in `all.yaml` starts in minor 31.
   var rules_31 = await rulesForVersion(31);
-  if (rules_31.contains(lint)) {
+  if (rules_31!.contains(lint)) {
     var version = await _crawlForVersion(lint);
     if (version != null) {
       return version;
@@ -118,10 +118,10 @@ Future<String> findSinceLinter(String lint) async {
   return null;
 }
 
-Future<String> linterForDartSdk(String sdk) async =>
+Future<String?> linterForDartSdk(String sdk) async =>
     _dartSdkToLinterMap[sdk] ??= await _fetchLinterForVersion(sdk);
 
-Future<List<String>> rulesForVersion(int minor) async {
+Future<List<String>?> rulesForVersion(int minor) async {
   var version = '0.1.$minor';
   if (minor >= 31) {
     return _sinceMap[version] ??= await fetchRulesForVersion(version);
@@ -129,7 +129,7 @@ Future<List<String>> rulesForVersion(int minor) async {
   return null;
 }
 
-Future<String> _crawlForVersion(String lint) async {
+Future<String?> _crawlForVersion(String lint) async {
   var client = http.Client();
   for (var minor = 1; minor < 31; ++minor) {
     var version = '0.1.$minor';
@@ -142,7 +142,7 @@ Future<String> _crawlForVersion(String lint) async {
   return null;
 }
 
-Future<String> _fetchDEPSforVersion(String version) async {
+Future<String?> _fetchDEPSforVersion(String version) async {
   var client = http.Client();
   //https://raw.githubusercontent.com/dart-lang/sdk/2.1.0-dev.1.0/DEPS
   var req = await client.get(
@@ -159,7 +159,7 @@ Future<List<String>> _fetchEffectiveDartRules() async {
       .fetchRules(_effectiveDartOptionsRootUrl.resolve(includedOptions));
 }
 
-Future<String> _fetchLinterForVersion(String version) async {
+Future<String?> _fetchLinterForVersion(String version) async {
   var deps = await _fetchDEPSforVersion(version);
   if (deps != null) {
     for (var line in deps.split('\n')) {

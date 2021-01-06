@@ -58,7 +58,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   final LintRule rule;
 
-  LineInfo lineInfo;
+  LineInfo? lineInfo;
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
@@ -77,9 +77,10 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   void _visitSingleStringLiteral(SingleStringLiteral node, String lexeme) {
-    if (node.isMultiline &&
-        lineInfo.getLocation(node.offset).lineNumber !=
-            lineInfo.getLocation(node.end).lineNumber) {
+    if (lineInfo != null &&
+        node.isMultiline &&
+        lineInfo!.getLocation(node.offset).lineNumber !=
+            lineInfo!.getLocation(node.end).lineNumber) {
       bool startWithNewLine(int index) =>
           lexeme.startsWith('\n', index) || lexeme.startsWith('\r', index);
       if (!startWithNewLine(node.isRaw ? 4 : 3)) {

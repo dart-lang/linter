@@ -55,29 +55,33 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFunctionDeclarationStatement(FunctionDeclarationStatement node) {
     var functionExpression = node.functionDeclaration.functionExpression;
-    if (functionExpression.typeParameters == null) {
+    var typeParameters = functionExpression.typeParameters;
+    if (typeParameters == null) {
       return;
     }
-    _checkAncestorParameters(functionExpression.typeParameters, node);
+    _checkAncestorParameters(typeParameters, node);
   }
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    if (node.functionType?.typeParameters == null) {
+    var typeParameters = node.functionType?.typeParameters;
+    if (typeParameters == null) {
       return;
     }
-    _checkForShadowing(node.functionType.typeParameters, node.typeParameters);
+
+    _checkForShadowing(typeParameters, node.typeParameters);
   }
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (node.typeParameters == null) {
+    var typeParameters = node.typeParameters;
+    if (typeParameters == null) {
       return;
     }
 
     // Static methods have nothing above them to shadow.
     if (!node.isStatic) {
-      _checkAncestorParameters(node.typeParameters, node);
+      _checkAncestorParameters(typeParameters, node);
     }
   }
 
@@ -103,7 +107,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   // Check whether any of [typeParameters] shadow [ancestorTypeParameters].
   void _checkForShadowing(TypeParameterList typeParameters,
-      TypeParameterList ancestorTypeParameters) {
+      TypeParameterList? ancestorTypeParameters) {
     if (ancestorTypeParameters == null) {
       return;
     }

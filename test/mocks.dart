@@ -8,7 +8,6 @@ import 'dart:io';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/error/listener.dart';
-import 'package:analyzer/src/generated/engine.dart';
 import 'package:analyzer/src/generated/source.dart';
 import 'package:analyzer/src/lint/linter.dart';
 import 'package:analyzer/src/lint/project.dart';
@@ -29,23 +28,23 @@ class CollectingSink extends MockIOSink {
   }
 
   @override
-  void writeln([Object obj = '']) {
+  void writeln([Object? obj = '']) {
     buffer.writeln(obj);
   }
 }
 
 class MockErrorType implements ErrorType {
   @override
-  String displayName;
+  String displayName = '';
 
   @override
-  String name;
+  String name = '';
 
   @override
-  int ordinal;
+  int ordinal = 0;
 
   @override
-  ErrorSeverity severity;
+  ErrorSeverity severity = ErrorSeverity.NONE;
 
   @override
   int compareTo(ErrorType other) => 0;
@@ -56,7 +55,7 @@ class MockErrorType implements ErrorType {
 
 class MockIOSink implements IOSink {
   @override
-  Encoding encoding;
+  Encoding encoding = utf8;
 
   @override
   Future get done => Future.value();
@@ -65,7 +64,7 @@ class MockIOSink implements IOSink {
   void add(List<int> data) {}
 
   @override
-  void addError(Object error, [StackTrace stackTrace]) {}
+  void addError(Object error, [StackTrace? stackTrace]) {}
 
   @override
   Future addStream(Stream<List<int>> stream) => Future.value();
@@ -77,7 +76,7 @@ class MockIOSink implements IOSink {
   Future flush() => Future.value();
 
   @override
-  void write(Object obj) {}
+  void write(Object? obj) {}
 
   @override
   void writeAll(Iterable objects, [String separator = '']) {}
@@ -86,7 +85,7 @@ class MockIOSink implements IOSink {
   void writeCharCode(int charCode) {}
 
   @override
-  void writeln([Object obj = '']) {}
+  void writeln([Object? obj = '']) {}
 }
 
 class MockPubVisitor implements PubspecVisitor {
@@ -175,8 +174,16 @@ class MockReporter implements Reporter {
 }
 
 class MockRule implements LintRule {
+  MockRule({
+    required this.name,
+    required this.group,
+    required this.description,
+    required this.details,
+    this.maturity = Maturity.stable,
+  });
+
   @override
-  ErrorReporter reporter;
+  late ErrorReporter reporter;
 
   @override
   String description;
@@ -184,16 +191,14 @@ class MockRule implements LintRule {
   @override
   String details;
 
-  ProjectVisitor projectVisitor;
+  ProjectVisitor? projectVisitor;
 
-  PubspecVisitor pubspecVisitor;
-  AstVisitor visitor;
+  PubspecVisitor? pubspecVisitor;
+
+  AstVisitor? visitor;
 
   @override
   Group group;
-
-  @override
-  LintCode lintCode;
 
   @override
   Maturity maturity;
@@ -205,13 +210,13 @@ class MockRule implements LintRule {
   int compareTo(LintRule other) => 0;
 
   @override
-  ProjectVisitor getProjectVisitor() => projectVisitor;
+  ProjectVisitor? getProjectVisitor() => projectVisitor;
 
   @override
-  PubspecVisitor getPubspecVisitor() => pubspecVisitor;
+  PubspecVisitor? getPubspecVisitor() => pubspecVisitor;
 
   @override
-  AstVisitor getVisitor() => visitor;
+  AstVisitor? getVisitor() => visitor;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => null;
@@ -222,46 +227,18 @@ class MockRule implements LintRule {
 
 class MockSource implements Source {
   @override
-  TimestampedData<String> contents;
+  String fullName = '';
 
   @override
-  String encoding;
-
-  @override
-  String fullName;
-
-  @override
-  bool isInSystemLibrary;
-
-  @override
-  Source librarySource;
-
-  @override
-  int modificationStamp;
-
-  @override
-  String shortName;
-
-  @override
-  Source source;
-
-  @override
-  Uri uri;
-
-  @override
-  UriKind uriKind;
-
-  @override
-  // ignore: avoid_returning_null
-  bool exists() => null;
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 class TestErrorCode extends ErrorCode {
   @override
-  ErrorSeverity errorSeverity;
+  ErrorSeverity errorSeverity = ErrorSeverity.NONE;
 
   @override
-  ErrorType type;
+  ErrorType type = ErrorType.LINT;
 
   TestErrorCode(String name, String message)
       : super.temporary2(

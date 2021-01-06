@@ -6,6 +6,7 @@ import 'dart:collection';
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
+
 import '../util/boolean_expression_utilities.dart';
 
 void _addNodeComparisons(Expression node, Set<Expression> comparisons) {
@@ -78,13 +79,13 @@ class TestedExpressions {
   final Expression testingExpression;
   final Set<Expression> truths;
   final Set<Expression> negations;
-  LinkedHashSet<ContradictoryComparisons> _contradictions;
+  LinkedHashSet<ContradictoryComparisons>? _contradictions;
 
   TestedExpressions(this.testingExpression, this.truths, this.negations);
 
   LinkedHashSet<ContradictoryComparisons> evaluateInvariant() {
     if (_contradictions != null) {
-      return _contradictions;
+      return _contradictions!;
     }
 
     final binaryExpression = testingExpression is BinaryExpression
@@ -99,7 +100,7 @@ class TestedExpressions {
             ? binaryExpression.operator.type
             : TokenType.AMPERSAND_AMPERSAND);
 
-    if (_contradictions.isEmpty) {
+    if (_contradictions!.isEmpty) {
       final set = (binaryExpression != null
           ? _extractComparisons(testingExpression as BinaryExpression)
           : {testingExpression})
@@ -108,11 +109,11 @@ class TestedExpressions {
       // Here and in several places we proceed only for
       // TokenType.AMPERSAND_AMPERSAND because we then know that all comparisons
       // must be true.
-      _contradictions.addAll(
+      _contradictions!.addAll(
           _findContradictoryComparisons(set, TokenType.AMPERSAND_AMPERSAND));
     }
 
-    return _contradictions;
+    return _contradictions!;
   }
 
   /// TODO: A truly smart implementation would detect
@@ -148,9 +149,8 @@ class TestedExpressions {
       final eOperatorType = expression.operator.type;
       comparisons
           .where((comparison) =>
-              comparison != null &&
-              comparison.offset < expression.offset &&
-              comparison is BinaryExpression)
+              comparison is BinaryExpression &&
+              comparison.offset < expression.offset)
           .forEach((Expression c) {
         if (contradictions.isNotEmpty) {
           return;
@@ -165,7 +165,7 @@ class TestedExpressions {
 
         final cOperatorType = negations.contains(c)
             ? BooleanExpressionUtilities
-                .NEGATIONS[otherExpression.operator.type]
+                .NEGATIONS[otherExpression.operator.type]!
             : otherExpression.operator.type;
         final isNegationOrComparison =
             _isNegationOrComparison(cOperatorType, eOperatorType, tokenType);
