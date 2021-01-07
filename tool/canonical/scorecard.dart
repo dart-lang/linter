@@ -94,7 +94,7 @@ StringBuffer buildFooter(ScoreCard scorecard, List<Detail> details) {
   if (needsBulkFix.isNotEmpty) {
     footer.writeln('\n\nTODO: add bulk fixes for');
     for (var lint in needsBulkFix) {
-      footer.writeln('  - [ ] $lint');
+      footer.writeln('  - [ ] `$lint`');
     }
   }
 
@@ -111,7 +111,7 @@ int _compareRuleSets(List<String> s1, List<String> s2) {
   return 0;
 }
 
-bool _isBug(Issue issue) => issue.labels.map((l) => l.name).contains('bug');
+//bool _isBug(Issue issue) => issue.labels.map((l) => l.name).contains('bug');
 
 class Detail {
   static const Detail rule = Detail('name', header: Header.left);
@@ -160,7 +160,7 @@ class LintScore {
       switch (detail) {
         case Detail.rule:
           sb.write(
-              ' [$name](https://dart-lang.github.io/linter/lints/$name.html) |');
+              ' [`$name`](https://dart-lang.github.io/linter/lints/$name.html) |');
           break;
         case Detail.fix:
           sb.write('${hasFix ? " $bulb" : ""} |');
@@ -269,17 +269,31 @@ class ScoreCard {
     return scorecard;
   }
 
-  static Future<List<Issue>> _getIssues() async {
-    var github = GitHub();
-    var slug = RepositorySlug('dart-lang', 'linter');
-    try {
-      return github.issues.listByRepo(slug).toList();
-    } on Exception catch (e) {
-      print('exception caught fetching github issues');
-      print(e);
-      print('(defaulting to an empty list)');
-      return Future.value(<Issue>[]);
-    }
+  // static Future<List<Issue>> _getIssues() async {
+  //   var github = GitHub();
+  //   var slug = RepositorySlug('dart-lang', 'linter');
+  //   try {
+  //     return github.issues.listByRepo(slug).toList();
+  //   } on Exception catch (e) {
+  //     print('exception caught fetching github issues');
+  //     print(e);
+  //     print('(defaulting to an empty list)');
+  //     return Future.value(<Issue>[]);
+  //   }
+  // }
+
+  static Future<List<String>> _getLintsWithAssists() async {
+    var client = http.Client();
+    var req = await client.get(
+        'https://raw.githubusercontent.com/dart-lang/sdk/master/pkg/analysis_server/lib/src/services/correction/assist.dart');
+    var parser = CompilationUnitParser();
+    var cu = parser.parse(contents: req.body, name: 'assist.dart');
+    var assistKindClass = cu.declarations.firstWhere(
+        (m) => m is ClassDeclaration && m.name.name == 'DartAssistKind');
+
+    var collector = _AssistCollector();
+    assistKindClass.accept(collector);
+    return collector.lintNames;
   }
 
   static Future<List<String>> _getLintsWithBulkFixes() async {
@@ -294,20 +308,6 @@ class ScoreCard {
 
     var collector = _BulkFixCollector();
     fixProcessor.accept(collector);
-    return collector.lintNames;
-  }
-
-  static Future<List<String>> _getLintsWithAssists() async {
-    var client = http.Client();
-    var req = await client.get(
-        'https://raw.githubusercontent.com/dart-lang/sdk/master/pkg/analysis_server/lib/src/services/correction/assist.dart');
-    var parser = CompilationUnitParser();
-    var cu = parser.parse(contents: req.body, name: 'assist.dart');
-    var assistKindClass = cu.declarations.firstWhere(
-        (m) => m is ClassDeclaration && m.name.name == 'DartAssistKind');
-
-    var collector = _AssistCollector();
-    assistKindClass.accept(collector);
     return collector.lintNames;
   }
 
@@ -362,26 +362,6 @@ class _AssistCollector extends GeneralizingAstVisitor<void> {
   }
 }
 
-class _LintNameCollector extends GeneralizingAstVisitor<void> {
-  final List<String> lintNames = <String>[];
-
-  void addLint(String name) {
-    lintNames.add(name);
-    if (!registeredLintNames.contains(name)) {
-      print('WARNING: unrecognized lint in fixes: $name');
-    }
-  }
-}
-
-class _FixCollector extends _LintNameCollector {
-  @override
-  void visitFieldDeclaration(FieldDeclaration node) {
-    for (var v in node.fields.variables) {
-      addLint(v.name.name);
-    }
-  }
-}
-
 class _BulkFixCollector extends _LintNameCollector {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
@@ -398,6 +378,26 @@ class _BulkFixCollector extends _LintNameCollector {
           }
         }
       }
+    }
+  }
+}
+
+class _FixCollector extends _LintNameCollector {
+  @override
+  void visitFieldDeclaration(FieldDeclaration node) {
+    for (var v in node.fields.variables) {
+      addLint(v.name.name);
+    }
+  }
+}
+
+class _LintNameCollector extends GeneralizingAstVisitor<void> {
+  final List<String> lintNames = <String>[];
+
+  void addLint(String name) {
+    lintNames.add(name);
+    if (!registeredLintNames.contains(name)) {
+      print('WARNING: unrecognized lint in fixes: $name');
     }
   }
 }
