@@ -94,7 +94,7 @@ StringBuffer buildFooter(ScoreCard scorecard, List<Detail> details) {
   if (needsBulkFix.isNotEmpty) {
     footer.writeln('\n\nTODO: add bulk fixes for');
     for (var lint in needsBulkFix) {
-      footer.writeln('  -[ ] $lint');
+      footer.writeln('  - [ ] $lint');
     }
   }
 
