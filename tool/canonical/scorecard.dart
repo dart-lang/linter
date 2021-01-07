@@ -224,8 +224,6 @@ class ScoreCard {
   static Future<ScoreCard> calculate() async {
     var lintsWithFixes = await _getLintsWithFixes();
     var lintsWithBulkFixes = await _getLintsWithBulkFixes();
-    var lintsWithAssists = await _getLintsWithAssists();
-
     // var issues = await _getIssues();
     // var bugs = issues.where(_isBug).toList();
     var bugs = <Issue>[];
@@ -257,8 +255,7 @@ class ScoreCard {
       var lintName = lint.name;
       scorecard.add(LintScore(
         name: lintName,
-        hasFix: lintsWithFixes.contains(lintName) ||
-            lintsWithAssists.contains(lintName),
+        hasFix: lintsWithFixes.contains(lintName),
         hasBulkFix: lintsWithBulkFixes.contains(lintName),
         maturity: lint.maturity.name,
         ruleSets: ruleSets,
@@ -281,20 +278,6 @@ class ScoreCard {
   //     return Future.value(<Issue>[]);
   //   }
   // }
-
-  static Future<List<String>> _getLintsWithAssists() async {
-    var client = http.Client();
-    var req = await client.get(
-        'https://raw.githubusercontent.com/dart-lang/sdk/master/pkg/analysis_server/lib/src/services/correction/assist.dart');
-    var parser = CompilationUnitParser();
-    var cu = parser.parse(contents: req.body, name: 'assist.dart');
-    var assistKindClass = cu.declarations.firstWhere(
-        (m) => m is ClassDeclaration && m.name.name == 'DartAssistKind');
-
-    var collector = _AssistCollector();
-    assistKindClass.accept(collector);
-    return collector.lintNames;
-  }
 
   static Future<List<String>> _getLintsWithBulkFixes() async {
     var client = http.Client();
@@ -341,25 +324,6 @@ class ScoreCard {
 
   static List<String> _readScoreLints() =>
       _readLints(path.join('tool', 'canonical', 'score.yaml'));
-}
-
-class _AssistCollector extends GeneralizingAstVisitor<void> {
-  final List<String> lintNames = <String>[];
-
-  @override
-  void visitNamedExpression(NamedExpression node) {
-    if (node.name.toString() == 'associatedErrorCodes:') {
-      final list = node.expression as ListLiteral;
-      for (var element in list.elements) {
-        var name =
-            element.toString().substring(1, element.toString().length - 1);
-        lintNames.add(name);
-        if (!registeredLintNames.contains(name)) {
-          print('WARNING: unrecognized lint in assists: $name');
-        }
-      }
-    }
-  }
 }
 
 class _BulkFixCollector extends _LintNameCollector {
