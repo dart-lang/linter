@@ -21,10 +21,6 @@
   },
   {
     "lint" : "control_flow_in_finally",
-    "notes" : "TODO"
-  },
-  {
-    "lint" : "exhaustive_cases",
     "notes" : "infeasible"
   },
   {
