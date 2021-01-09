@@ -232,7 +232,7 @@ header a.style-type {
 
 /* Responsive style changes and corresponding transitions */
 
-@media screen and (max-width: 740px) {
+@media screen and (max-width: 1024px) {
     body {
         margin: 0;
         padding: 0;
