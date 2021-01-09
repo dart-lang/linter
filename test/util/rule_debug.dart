@@ -14,8 +14,8 @@ import '../rule_test.dart';
 /// Run, for example, like so:
 ///     dart test/util/rule_debug.dart valid_regexps
 ///
-/// To simply *run* a solo test, consider using `pub run test -N`:
-///     pub run test -N valid_regexps
+/// To simply *run* a solo test, consider using `dart test -N`:
+///     dart test -N valid_regexps
 ///
 void main(List<String> args) {
   final ruleName = args[0];
