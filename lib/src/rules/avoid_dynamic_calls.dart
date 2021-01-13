@@ -148,6 +148,11 @@ class _Visitor extends SimpleAstVisitor<void> {
         }
         break;
     }
+    if (node.operator.type == TokenType.AS ||
+        node.operator.type == TokenType.IS) {
+      // Can't be included in switch statement due to Dart semantics.
+      return;
+    }
     _lintIfDynamic(node.leftOperand);
     // We don't check node.rightOperand, because that is an implicit cast, not a
     // dynamic call (the call itself is based on leftOperand). While it would be

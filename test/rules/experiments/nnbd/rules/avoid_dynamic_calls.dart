@@ -81,6 +81,9 @@ void binaryExpressions(dynamic a, int b) {
   a && b; // LINT
   b + a; // OK; this is an implicit downcast, not a dynamic call
   a ?? b; // OK; this is a null comparison, not a dynamic call.
+  a is int; // OK
+  a is! int; // OK
+  a as int; // OK
 }
 
 void equalityExpressions(dynamic a, dynamic b) {
