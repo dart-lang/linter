@@ -11,18 +11,18 @@ const _desc = r'Avoid method calls and property access on a "dynamic" target.';
 
 const _details = r'''
 
-**DO** avoid method calls or property accessors on an object that is either
+**DO** avoid method calls or accessing properties on an object that is either
 explicitly or implicitly statically typed "dynamic". Dynamic calls are treated
 slightly different in every runtime environment and compiler, but most
 production modes (and even some development modes) have both compile size and
 runtime performance penalties associated with dynamic calls.
 
-Additionally, targets typed "dynamic" disabled most static analysis, meaning it
+Additionally, targets typed "dynamic" disables most static analysis, meaning it
 is easier to lead to a runtime "NoSuchMethodError" or "NullError" than properly
 statically typed Dart code.
 
 Note, that despite "Function" being a type, the semantics are close to identical
-to "dynamic", and calls to an object that are typed "Function" will also trigger
+to "dynamic", and calls to an object that is typed "Function" will also trigger
 this lint.
 
 **BAD:**
@@ -41,7 +41,11 @@ abstract class SomeWrapper {
 
 void inferredDynamicType(SomeWrapper wrapper) {
   var object = wrapper.doSomething();
-  print(field.foo());
+  print(object.foo());
+}
+
+void callDynamic(dynamic function) {
+  function();
 }
 
 void functionType(Function function) {
@@ -67,6 +71,10 @@ void inferredType(SomeWrapper wrapper) {
   var object = wrapper.doSomething<Fooable>();
   object.foo();
 }
+
+void functionTypeWithParameters(Function() function) {
+  function();
+}
 ```
 
 ''';
@@ -78,6 +86,7 @@ class AvoidDynamicCalls extends LintRule implements NodeLintRule {
           description: _desc,
           details: _details,
           group: Group.errors,
+          maturity: Maturity.experimental,
         );
 
   @override
@@ -119,7 +128,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (staticType == null) {
       return;
     }
-    if (staticType.isDynamic || staticType.isDartCoreFunction) {
+    if (staticType.isDynamic) {
+      rule.reportLint(node);
+    }
+    if (staticType.isDartCoreFunction) {
       rule.reportLint(node);
     }
   }
@@ -127,6 +139,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
     if (node.readType?.isDynamic != true) {
+      // An assignment expression can only be a dynamid call if it is a
+      // "compound assignment" (i.e. such as `x += 1`); so if `readType` is not
+      // dynamic, we don't need to check further.
       return;
     }
     if (node.operator.type == TokenType.QUESTION_QUESTION_EQ) {

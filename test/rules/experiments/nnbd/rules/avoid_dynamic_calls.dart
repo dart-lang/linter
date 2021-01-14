@@ -4,6 +4,9 @@
 
 // test w/ `dart test test/rule_test.dart -N avoid_dynamic_calls`
 
+import 'dart:core';
+import 'dart:core' as core_top_level_prefix_as;
+
 void explicitDynamicType(dynamic object) {
   object.foo(); // LINT
   object.bar; // LINT
@@ -29,10 +32,10 @@ class Wrapper<T> {
 }
 
 void fieldDynamicType(Wrapper<dynamic> wrapper) {
-  final field = wrapper.field;
-  field.foo(); // LINT
-  field.bar; // LINT
+  wrapper.field.foo(); // LINT
+  wrapper.field.bar; // LINT
   wrapper.field(); // LINT
+  (wrapper.field)(); // LINT
 }
 
 void cascadeExpressions(dynamic a, Wrapper<dynamic> b) {
@@ -44,27 +47,55 @@ void cascadeExpressions(dynamic a, Wrapper<dynamic> b) {
     ..field.b; // LINT
 }
 
+class TearOffFunction {
+  static int staticDoThing() => 0;
+
+  int doThing() => 0;
+}
+
 void otherPropertyAccessOrCalls(dynamic a) {
   a(); // LINT
   a?.b; // LINT
   a!.b; // LINT
   a?.b(); // LINT
   a!.b(); // LINT
+  (a).b; // LINT
 }
 
-void functionExpressionInvocations(dynamic a(), Function b()) {
+void tearOffFunctions(TearOffFunction a) {
+  var p = core_top_level_prefix_as.print; // OK
+  core_top_level_prefix_as.print('Hello'); // OK
+  p('Hello'); // OK
+  var doThing = a.doThing; // OK
+  doThing(); // OK
+  var staticDoThing = TearOffFunction.staticDoThing; // OK
+  staticDoThing(); // OK
+  identical(true, false); // OK
+  var alsoIdentical = identical;
+  alsoIdentical(true, false); // OK
+}
+
+void functionExpressionInvocations(
+  dynamic a(),
+  Function b(),
+  void Function() c,
+  d(),
+) {
   a(); // OK
   a()(); // LINT
   b(); // OK
   b()(); // LINT
+  c(); // OK
+  d(); // OK
 }
 
 void typedFunctionButBasicallyDynamic(Function a, Wrapper<Function> b) {
   a(); // LINT
   b.field(); // LINT
+  (b.field)(); // LINT
 }
 
-void binaryExpressions(dynamic a, int b) {
+void binaryExpressions(dynamic a, int b, bool c) {
   a + a; // LINT
   a + b; // LINT
   a > b; // LINT
@@ -77,8 +108,8 @@ void binaryExpressions(dynamic a, int b) {
   a ~/ b; // LINT
   a >> b; // LINT
   a << b; // LINT
-  a || b; // LINT
-  a && b; // LINT
+  a || c; // LINT
+  a && c; // LINT
   b + a; // OK; this is an implicit downcast, not a dynamic call
   a ?? b; // OK; this is a null comparison, not a dynamic call.
   a is int; // OK
