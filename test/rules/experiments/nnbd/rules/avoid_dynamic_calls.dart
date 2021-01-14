@@ -126,14 +126,28 @@ void equalityExpressions(dynamic a, dynamic b) {
   a != null; // OK.
 }
 
-void membersThatExistOnObject(dynamic a) {
+void membersThatExistOnObject(dynamic a, Invocation b) {
   a.hashCode; // OK
   a.runtimeType; // OK
-  a.noSuchMethod(null as Invocation); // OK
+  a.noSuchMethod(); // LINT
+  a.noSuchMethod(b); // OK
+  a.noSuchMethod(b, 1); // LINT
+  a.noSuchMethod(b, name: 1); // LINT
   a.toString(); // OK
+  a.toString(1); // LINT
+  a.toString(name: 1); // LINT
+  '$a'; // OK
+  '${a}'; // OK
 }
 
-void assngmentExpressions(dynamic a) {
+void memberTearOffsOnObject(dynamic a, Invocation b) {
+  var tearOffNoSuchMethod = a.noSuchMethod; // OK
+  tearOffNoSuchMethod(b); // OK
+  var tearOffToString = a.toString; // OK
+  tearOffToString(); // OK
+}
+
+void assignmentExpressions(dynamic a) {
   a += 1; // LINT
   a -= 1; // LINT
   a *= 1; // LINT

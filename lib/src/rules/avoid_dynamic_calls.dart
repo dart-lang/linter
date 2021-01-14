@@ -196,12 +196,20 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     final methodName = node.methodName.name;
-    if (methodName == 'noSuchMethod' || methodName == 'toString') {
-      // Special-cased; these exist on every object, even those typed "Object?".
-      return;
+    if (node.target != null) {
+      if (methodName == 'noSuchMethod' &&
+          node.argumentList.arguments.length == 1 &&
+          node.argumentList.arguments.first is! NamedExpression) {
+        // Special-cased; these exist on every object, even those typed "Object?".
+        return;
+      }
+      if (methodName == 'toString' && node.argumentList.arguments.isEmpty) {
+        // Special-cased; these exist on every object, even those typed "Object?".
+        return;
+      }
     }
     final receiverWasDynamic = _lintIfDynamic(node.realTarget);
-    if (!receiverWasDynamic && node.target == null) {
+    if (!receiverWasDynamic) {
       _lintIfDynamicOrFunction(node.function);
     }
   }
@@ -230,7 +238,12 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitPrefixedIdentifier(PrefixedIdentifier node) {
     final property = node.identifier.name;
-    if (property == 'hashCode' || property == 'runtimeType') {
+    if (const {
+      'hashCode',
+      'noSuchMethod',
+      'runtimeType',
+      'toString',
+    }.contains(property)) {
       // Special-cased; these exist on every object, even those typed "Object?".
       return;
     }
