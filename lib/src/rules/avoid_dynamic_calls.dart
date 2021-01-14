@@ -206,31 +206,25 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  @override
-  void visitPrefixExpression(PrefixExpression node) {
-    // Implemented as: node?.staticType?.isDynamic == true
-    if (_lintIfDynamic(node.operand)) {
+  void _lintPrefixOrPostfixExpression(Expression root, Expression operand) {
+    if (_lintIfDynamic(operand)) {
       return;
     }
-    switch (node.operator.type) {
-      case TokenType.PLUS_PLUS:
-      case TokenType.MINUS_MINUS:
-        // The ++ and -- operator expressions don't resolve a static type on
-        // node.operand, which means the above "_lintIfDynamic(...)" check will
-        // never succeed.
-        //
-        // For these operators, we check instead if the result of the expression
-        // has a type of dynamic, or not, as that is an indication whether the
-        // operand was dynamic:
-        //
-        // void example(int a, dynamic b) {
-        //   ++a; // OK
-        //   ++b; // LINT
-        // }
-        if (node.staticType?.isDynamic == true) {
-          rule.reportLint(node.operand);
-        }
+    if (root is CompoundAssignmentExpression) {
+      // Not promoted by "is" since the type would lose capabilities.
+      final rootAsAssignment = root as CompoundAssignmentExpression;
+      if (rootAsAssignment.readType?.isDynamic == true) {
+        // An assignment expression can only be a dynamic call if it is a
+        // "compound assignment" (i.e. such as `x += 1`); so if `readType` is
+        // dynamic we should lint.
+        rule.reportLint(root);
+      }
     }
+  }
+
+  @override
+  void visitPrefixExpression(PrefixExpression node) {
+    _lintPrefixOrPostfixExpression(node, node.operand);
   }
 
   @override
@@ -249,17 +243,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       // x! is not a dynamic call, even if "x" is dynamic.
       return;
     }
-    if (_lintIfDynamic(node.operand)) {
-      return;
-    }
-    switch (node.operator.type) {
-      case TokenType.PLUS_PLUS:
-      case TokenType.MINUS_MINUS:
-        // The ++ and -- operator expressions don't resolve a static type.
-        if (node.staticType?.isDynamic == true) {
-          rule.reportLint(node.operand);
-        }
-    }
+    _lintPrefixOrPostfixExpression(node, node.operand);
   }
 
   @override
