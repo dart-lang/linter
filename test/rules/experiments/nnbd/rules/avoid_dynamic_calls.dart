@@ -100,6 +100,8 @@ void binaryExpressions(dynamic a, int b, bool c) {
   a + b; // LINT
   a > b; // LINT
   a < b; // LINT
+  a >= b; // LINT
+  a <= b; // LINT
   a ^ b; // LINT
   a | b; // LINT
   a & b; // LINT
@@ -108,8 +110,8 @@ void binaryExpressions(dynamic a, int b, bool c) {
   a ~/ b; // LINT
   a >> b; // LINT
   a << b; // LINT
-  a || c; // LINT
-  a && c; // LINT
+  a || c; // OK; this is an implicit downcast, not a dynamic call
+  a && c; // OK; this is an implicit downcast, not a dynamic call
   b + a; // OK; this is an implicit downcast, not a dynamic call
   a ?? b; // OK; this is a null comparison, not a dynamic call.
   a is int; // OK

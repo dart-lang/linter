@@ -153,20 +153,25 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
-    switch (node.operator.type) {
-      case TokenType.QUESTION_QUESTION:
+    if (!node.operator.isUserDefinableOperator) {
+      // As of 2021-01-13, the only non-virtual operator that has impact on
+      // dynamic calls is "!=", as "a != b" is processed something like
+      // !(a == b), invoking operator== on a (virtual-call).
+      if (node.operator.type != TokenType.BANG_EQ) {
         return;
+      }
+    }
+    switch (node.operator.type) {
       case TokenType.EQ_EQ:
       case TokenType.BANG_EQ:
         if (node.rightOperand is NullLiteral) {
+          // == and != are special-cased in the dart language to be guaranteed
+          // non-virtual calls iff the RHS is a "null" literal. This allows fast
+          // comparisons, such as "a == null", without invoking a user-defined
+          // operator.
           return;
         }
         break;
-    }
-    if (node.operator.type == TokenType.AS ||
-        node.operator.type == TokenType.IS) {
-      // Can't be included in switch statement due to Dart semantics.
-      return;
     }
     _lintIfDynamic(node.leftOperand);
     // We don't check node.rightOperand, because that is an implicit cast, not a
