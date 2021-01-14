@@ -139,7 +139,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
     if (node.readType?.isDynamic != true) {
-      // An assignment expression can only be a dynamid call if it is a
+      // An assignment expression can only be a dynamic call if it is a
       // "compound assignment" (i.e. such as `x += 1`); so if `readType` is not
       // dynamic, we don't need to check further.
       return;
