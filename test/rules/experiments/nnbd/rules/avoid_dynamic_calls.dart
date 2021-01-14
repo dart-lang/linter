@@ -120,10 +120,17 @@ void binaryExpressions(dynamic a, int b, bool c) {
 }
 
 void equalityExpressions(dynamic a, dynamic b) {
-  a == b; // LINT
-  a == null; // OK, special cased.
-  a != b; // LINT
+  a == b; // OK, see lint description for details.
+  a == null; // OK.
+  a != b; // OK
   a != null; // OK.
+}
+
+void membersThatExistOnObject(dynamic a) {
+  a.hashCode; // OK
+  a.runtimeType; // OK
+  a.noSuchMethod(null as Invocation); // OK
+  a.toString(); // OK
 }
 
 void assngmentExpressions(dynamic a) {

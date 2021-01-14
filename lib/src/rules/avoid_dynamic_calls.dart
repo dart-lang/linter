@@ -21,6 +21,16 @@ Additionally, targets typed "dynamic" disables most static analysis, meaning it
 is easier to lead to a runtime "NoSuchMethodError" or "NullError" than properly
 statically typed Dart code.
 
+There is an exception to methods and properties that exist on "Object?":
+- a.hashCode
+- a.runtimeType
+- a.noSuchMethod(someInvocation)
+- a.toString()
+
+... these members are dynamically dispatched in the web-based runtimes, but not
+in the VM-based ones. Additionally, they are so common that it would be very
+punishing to disallow `any.toString()` or `any == true`, for example.
+
 Note that despite "Function" being a type, the semantics are close to identical
 to "dynamic", and calls to an object that is typed "Function" will also trigger
 this lint.
@@ -153,24 +163,16 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitBinaryExpression(BinaryExpression node) {
     if (!node.operator.isUserDefinableOperator) {
-      // As of 2021-01-13, the only non-virtual operator that has impact on
-      // dynamic calls is "!=", as "a != b" is processed something like
-      // !(a == b), invoking operator== on a (virtual-call).
-      if (node.operator.type != TokenType.BANG_EQ) {
-        return;
-      }
+      // Operators that can never be provided by the user can't be dynamic.
+      return;
     }
     switch (node.operator.type) {
       case TokenType.EQ_EQ:
       case TokenType.BANG_EQ:
-        if (node.rightOperand is NullLiteral) {
-          // == and != are special-cased in the dart language to be guaranteed
-          // non-virtual calls iff the RHS is a "null" literal. This allows fast
-          // comparisons, such as "a == null", without invoking a user-defined
-          // operator.
-          return;
-        }
-        break;
+        // These operators exist on every type, even "Object?". While they are
+        // virtually dispatched, they are not considered dynamic calls by the
+        // CFE. They would also make landing this lint exponentially harder.
+        return;
     }
     _lintIfDynamic(node.leftOperand);
     // We don't check node.rightOperand, because that is an implicit cast, not a
@@ -193,6 +195,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
+    final methodName = node.methodName.name;
+    if (methodName == 'noSuchMethod' || methodName == 'toString') {
+      // Special-cased; these exist on every object, even those typed "Object?".
+      return;
+    }
     final receiverWasDynamic = _lintIfDynamic(node.realTarget);
     if (!receiverWasDynamic && node.target == null) {
       _lintIfDynamicOrFunction(node.function);
@@ -201,13 +208,25 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitPrefixExpression(PrefixExpression node) {
+    // Implemented as: node?.staticType?.isDynamic == true
     if (_lintIfDynamic(node.operand)) {
       return;
     }
     switch (node.operator.type) {
       case TokenType.PLUS_PLUS:
       case TokenType.MINUS_MINUS:
-        // The ++ and -- operator expressions don't resolve a static type.
+        // The ++ and -- operator expressions don't resolve a static type on
+        // node.operand, which means the above "_lintIfDynamic(...)" check will
+        // never succeed.
+        //
+        // For these operators, we check instead if the result of the expression
+        // has a type of dynamic, or not, as that is an indication whether the
+        // operand was dynamic:
+        //
+        // void example(int a, dynamic b) {
+        //   ++a; // OK
+        //   ++b; // LINT
+        // }
         if (node.staticType?.isDynamic == true) {
           rule.reportLint(node.operand);
         }
@@ -216,6 +235,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitPrefixedIdentifier(PrefixedIdentifier node) {
+    final property = node.identifier.name;
+    if (property == 'hashCode' || property == 'runtimeType') {
+      // Special-cased; these exist on every object, even those typed "Object?".
+      return;
+    }
     _lintIfDynamic(node.prefix);
   }
 
@@ -239,7 +263,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
-  void visitPropertyAccess(PropertyAccess astNode) {
-    _lintIfDynamic(astNode.realTarget);
+  void visitPropertyAccess(PropertyAccess node) {
+    _lintIfDynamic(node.realTarget);
   }
 }
