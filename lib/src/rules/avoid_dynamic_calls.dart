@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 
-const _desc = r'Avoid method calls and property access on a "dynamic" target.';
+const _desc = r'Avoid method calls or property accesses on a "dynamic" target.';
 
 const _details = r'''
 
@@ -21,7 +21,7 @@ Additionally, targets typed "dynamic" disables most static analysis, meaning it
 is easier to lead to a runtime "NoSuchMethodError" or "NullError" than properly
 statically typed Dart code.
 
-Note, that despite "Function" being a type, the semantics are close to identical
+Note that despite "Function" being a type, the semantics are close to identical
 to "dynamic", and calls to an object that is typed "Function" will also trigger
 this lint.
 
@@ -94,7 +94,6 @@ class AvoidDynamicCalls extends LintRule implements NodeLintRule {
     NodeLintRegistry registry,
     LinterContext context,
   ) {
-    assert(context != null);
     final visitor = _Visitor(this);
     registry
       ..addAssignmentExpression(this, visitor)
