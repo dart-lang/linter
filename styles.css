@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400&family=Roboto:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Roboto:ital,wght@0,300;0,400;0,700;1,400&display=swap');
 
 body {
     background: #12202f;
@@ -232,7 +232,7 @@ header a.style-type {
 
 /* Responsive style changes and corresponding transitions */
 
-@media screen and (max-width: 740px) {
+@media screen and (max-width: 1024px) {
     body {
         margin: 0;
         padding: 0;
