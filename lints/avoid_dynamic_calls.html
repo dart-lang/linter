@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <link rel="shortcut icon" href="../dart-192.png">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <title>avoid_dynamic_calls</title>
+      <link rel="stylesheet" href="../styles.css">
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>avoid_dynamic_calls</h1>
+            <p>Group: errors</p>
+            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
+            <div class="tooltip">
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
+               <span class="tooltip-content">Since info is static, may be stale</span>
+            </div>
+            
+            <ul>
+               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
+               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
+            </ul>
+            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+         </header>
+         <section>
+
+            <p><strong>DO</strong> avoid method calls or accessing properties on an object that is either
+explicitly or implicitly statically typed "dynamic". Dynamic calls are treated
+slightly different in every runtime environment and compiler, but most
+production modes (and even some development modes) have both compile size and
+runtime performance penalties associated with dynamic calls.</p>
+<p>Additionally, targets typed "dynamic" disables most static analysis, meaning it
+is easier to lead to a runtime "NoSuchMethodError" or "NullError" than properly
+statically typed Dart code.</p>
+<p>There is an exception to methods and properties that exist on "Object?":</p>
+<ul>
+<li>a.hashCode</li>
+<li>a.runtimeType</li>
+<li>a.noSuchMethod(someInvocation)</li>
+<li>a.toString()</li>
+</ul>
+<p>... these members are dynamically dispatched in the web-based runtimes, but not
+in the VM-based ones. Additionally, they are so common that it would be very
+punishing to disallow <code>any.toString()</code> or <code>any == true</code>, for example.</p>
+<p>Note that despite "Function" being a type, the semantics are close to identical
+to "dynamic", and calls to an object that is typed "Function" will also trigger
+this lint.</p>
+<p><strong>BAD:</strong></p>
+<pre><code>void explicitDynamicType(dynamic object) {
+  print(object.foo());
+}
+
+void implicitDynamicType(object) {
+  print(object.foo());
+}
+
+abstract class SomeWrapper {
+  T doSomething&lt;T&gt;();
+}
+
+void inferredDynamicType(SomeWrapper wrapper) {
+  var object = wrapper.doSomething();
+  print(object.foo());
+}
+
+void callDynamic(dynamic function) {
+  function();
+}
+
+void functionType(Function function) {
+  function();
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code>void explicitType(Fooable object) {
+  object.foo();
+}
+
+void castedType(dynamic object) {
+  (object as Fooable).foo();
+}
+
+abstract class SomeWrapper {
+  T doSomething&lt;T&gt;();
+}
+
+void inferredType(SomeWrapper wrapper) {
+  var object = wrapper.doSomething&lt;Fooable&gt;();
+  object.foo();
+}
+
+void functionTypeWithParameters(Function() function) {
+  function();
+}
+</code></pre>
+
+            
+         </section>
+      </div>
+      <footer>
+         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">Github</a></p>
+      </footer>
+   </body>
+</html>
