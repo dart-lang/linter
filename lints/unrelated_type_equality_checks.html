@@ -48,7 +48,7 @@ the <code>int</code> is on the right hand side. The lint allows this as a specia
 </code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code>void someFunction13(DerivedClass2 instance) {
-  var other = new DerivedClass3();
+  var other = DerivedClass3();
 
   if (other == instance) print('someFunction13'); // LINT
 }
@@ -107,7 +107,7 @@ class DerivedClass3 extends ClassBase implements Mixin {}
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code>void someFunction11(Mixin instance) {
-  var other = new DerivedClass2();
+  var other = DerivedClass2();
 
   if (other == instance) print('someFunction11'); // OK
   if (other != instance) print('!someFunction11'); // OK
