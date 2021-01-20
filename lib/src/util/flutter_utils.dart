@@ -19,6 +19,11 @@ _Flutter _flutterInstance = _Flutter('flutter', 'package:flutter');
 
 _Flutter get _flutter => _flutterInstance;
 
+bool hasWidgetAsAscendant(ClassElement element) =>
+    _flutter.hasWidgetAsAscendant(element);
+
+bool isBuildContext(DartType type) => _flutter.isBuildContext(type);
+
 bool isExactWidget(ClassElement element) => _flutter.isExactWidget(element);
 
 bool isExactWidgetTypeContainer(DartType type) =>
@@ -26,9 +31,6 @@ bool isExactWidgetTypeContainer(DartType type) =>
 
 bool isStatefulWidget(ClassElement element) =>
     _flutter.isStatefulWidget(element);
-
-bool hasWidgetAsAscendant(ClassElement element) =>
-    _flutter.hasWidgetAsAscendant(element);
 
 bool isWidgetProperty(DartType type) {
   if (isWidgetType(type)) {
@@ -46,6 +48,7 @@ bool isWidgetType(DartType type) => _flutter.isWidgetType(type);
 
 /// See: analysis_server/lib/src/utilities/flutter.dart
 class _Flutter {
+  static const _nameBuildContext = 'BuildContext';
   static const _nameStatefulWidget = 'StatefulWidget';
   static const _nameWidget = 'Widget';
   static const _nameContainer = 'Container';
@@ -61,12 +64,31 @@ class _Flutter {
         _uriContainer = Uri.parse('$uriPrefix/src/widgets/container.dart'),
         _uriFramework = Uri.parse('$uriPrefix/src/widgets/framework.dart');
 
-  bool isExactWidgetTypeContainer(DartType type) =>
-      type is InterfaceType &&
-      _isExactWidget(type.element, _nameContainer, _uriContainer);
+  bool hasWidgetAsAscendant(ClassElement element,
+      [Set<ClassElement> alreadySeen]) {
+    alreadySeen ??= {};
+    if (element == null || alreadySeen.contains(element)) {
+      return false;
+    }
+    alreadySeen.add(element);
+    if (_isExactWidget(element, _nameWidget, _uriFramework)) {
+      return true;
+    }
+    return hasWidgetAsAscendant(element.supertype?.element, alreadySeen);
+  }
+
+  bool isBuildContext(DartType type) =>
+      type is InterfaceType && isExactBuildContext(type.element);
+
+  bool isExactBuildContext(ClassElement element) =>
+      _isExactWidget(element, _nameBuildContext, _uriFramework);
 
   bool isExactWidget(ClassElement element) =>
       _isExactWidget(element, _nameWidget, _uriFramework);
+
+  bool isExactWidgetTypeContainer(DartType type) =>
+      type is InterfaceType &&
+      _isExactWidget(type.element, _nameContainer, _uriContainer);
 
   bool isStatefulWidget(ClassElement element) {
     if (element == null) {
@@ -96,19 +118,6 @@ class _Flutter {
       }
     }
     return false;
-  }
-
-  bool hasWidgetAsAscendant(ClassElement element,
-      [Set<ClassElement> alreadySeen]) {
-    alreadySeen ??= {};
-    if (element == null || alreadySeen.contains(element)) {
-      return false;
-    }
-    alreadySeen.add(element);
-    if (_isExactWidget(element, _nameWidget, _uriFramework)) {
-      return true;
-    }
-    return hasWidgetAsAscendant(element.supertype?.element, alreadySeen);
   }
 
   bool isWidgetType(DartType type) =>

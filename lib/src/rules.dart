@@ -172,6 +172,7 @@ import 'rules/unnecessary_string_interpolations.dart';
 import 'rules/unnecessary_this.dart';
 import 'rules/unrelated_type_equality_checks.dart';
 import 'rules/unsafe_html.dart';
+import 'rules/use_build_context_synchronously.dart';
 import 'rules/use_full_hex_values_for_flutter_colors.dart';
 import 'rules/use_function_type_syntax_for_parameters.dart';
 import 'rules/use_is_even_rather_than_modulo.dart';
@@ -359,6 +360,7 @@ void registerLintRules() {
     ..register(UnnecessaryThis())
     ..register(UnrelatedTypeEqualityChecks())
     ..register(UnsafeHtml())
+    ..register(UseBuildContextSynchronously())
     ..register(UseFullHexValuesForFlutterColors())
     ..register(UseFunctionTypeSyntaxForParameters())
     ..register(UseIsEvenRatherThanModuloCheck())
