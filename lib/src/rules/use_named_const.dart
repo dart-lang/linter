@@ -53,6 +53,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (node.isConst) {
+      final library = (node.root as CompilationUnit).declaredElement.library;
       final nodeField =
           node.thisOrAncestorOfType<VariableDeclaration>()?.declaredElement;
 
@@ -61,17 +62,13 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (element is ClassElement) {
         for (final field
             in element.fields.where((e) => e.isStatic && e.isConst)) {
-          if (nodeField is FieldElement &&
-              (nodeField.enclosingElement as ClassElement).name ==
-                  element.name &&
-              nodeField.name == field.name) {
-            continue;
-          }
-          if (field.computeConstantValue() == value) {
+          if (field != nodeField &&
+              field.computeConstantValue() == value &&
+              (field.isPublic || field.library == library)) {
             rule.reportLint(node,
                 arguments: ['${element.name}.${field.name}'],
-                errorCode:
-                    const LintCode(lintName, 'Use predefined const {0}.'));
+                errorCode: const LintCode(
+                    lintName, "Try using the predefined constant '{0}'."));
             return;
           }
         }

@@ -7,6 +7,8 @@ m() {
   A.zero; // OK
   const A(0); // LINT
   const a = A(0); // LINT
+
+  const A(1); // LINT
 }
 
 class A {
@@ -14,4 +16,5 @@ class A {
   final int value;
 
   static const zero = A(0); // OK
+  static const _one = A(1); // OK
 }
