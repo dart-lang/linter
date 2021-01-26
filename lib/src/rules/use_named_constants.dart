@@ -70,8 +70,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
         for (final field
             in element.fields.where((e) => e.isStatic && e.isConst)) {
-          if (field != nodeField &&
-              field.isAccessibleIn(library) &&
+          if (field.isAccessibleIn(library) &&
               field.computeConstantValue() == value) {
             rule.reportLint(node,
                 arguments: ['${element.name}.${field.name}'],
