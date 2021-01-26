@@ -86,10 +86,6 @@ else
       --report-on=lib \
       --check-ignore
 
-    echo "Running coveralls..."
-    gem install coveralls-lcov
-    coveralls-lcov var/lcov.info
-
     exit $status
   #else
   #  # Run the tests w/o coverage
