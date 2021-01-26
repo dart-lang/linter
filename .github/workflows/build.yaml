@@ -37,6 +37,7 @@ jobs:
           LINTER_BOT: ${{ matrix.linter-bot }}
         run: ./tool/travis.sh
       - name: upload coverage
+        if: runner.os == 'Linux' && matrix.job == 'main'
         uses: coverallsapp/github-action@v1.1.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
