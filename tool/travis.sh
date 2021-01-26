@@ -53,7 +53,7 @@ else
   echo ""
 
   # Install dart_coveralls; gather and send coverage data.
-  if [ "$COVERALLS_TOKEN" ]; then
+  #if [ "$COVERALLS_TOKEN" ]; then
 
     OBS_PORT=9292
     
@@ -91,9 +91,9 @@ else
     coveralls-lcov var/lcov.info
 
     exit $status
-  else
-    # Run the tests w/o coverage
-    dart --disable-analytics \
-      test/all.dart
-  fi
+  #else
+  #  # Run the tests w/o coverage
+  #  dart --disable-analytics \
+  #    test/all.dart
+  #fi
 fi
