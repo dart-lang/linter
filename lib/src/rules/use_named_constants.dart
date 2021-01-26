@@ -8,11 +8,11 @@ import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Use predefined const.';
+const _desc = r'Use predefined named constants.';
 
 const _details = r'''
 
-Use already defined const value.
+Where possible, use already defined const values.
 
 **BAD:**
 ```
@@ -25,10 +25,10 @@ Duration.zero;
 ```
 
 ''';
-const lintName = 'use_named_const';
+const lintName = 'use_named_constants';
 
-class UseNamedConst extends LintRule implements NodeLintRule {
-  UseNamedConst()
+class UseNamedConstants extends LintRule implements NodeLintRule {
+  UseNamedConstants()
       : super(
           name: lintName,
           description: _desc,
@@ -63,12 +63,13 @@ class _Visitor extends SimpleAstVisitor<void> {
         for (final field
             in element.fields.where((e) => e.isStatic && e.isConst)) {
           if (field != nodeField &&
-              field.computeConstantValue() == value &&
-              (field.isPublic || field.library == library)) {
+              field.isAccessibleIn(library) &&
+              field.computeConstantValue() == value) {
             rule.reportLint(node,
                 arguments: ['${element.name}.${field.name}'],
-                errorCode: const LintCode(
-                    lintName, "Try using the predefined constant '{0}'."));
+                errorCode: const LintCode(lintName,
+                    'Constants should be referenced instead of duplicating their value.',
+                    correction: "Try using the predefined constant '{0}'."));
             return;
           }
         }
