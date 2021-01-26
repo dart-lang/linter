@@ -34,3 +34,8 @@ jobs:
         env:
           LINTER_BOT: ${{ matrix.linter-bot }}
         run: ./tool/travis.sh
+      - name: upload coverage
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: var/lcov.info
