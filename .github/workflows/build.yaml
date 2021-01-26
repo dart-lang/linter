@@ -16,8 +16,6 @@ jobs:
   build:
     name: ${{ matrix.linter-bot }}
     runs-on: ubuntu-latest
-    container:
-      image:  google/dart:dev
     strategy:
       fail-fast: false
       matrix:
@@ -29,6 +27,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v0.3
 
       - name: pub get
         run: dart pub get
