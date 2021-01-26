@@ -60,6 +60,14 @@ class _Visitor extends SimpleAstVisitor<void> {
       final value = context.evaluateConstant(node).value;
       final element = node.staticType.element;
       if (element is ClassElement) {
+        // avoid diagnostic for fields in the same class having the same value
+        // class A {
+        //   const A();
+        //   static const a = A();
+        //   static const b = A();
+        // }
+        if (nodeField?.enclosingElement == element) return;
+
         for (final field
             in element.fields.where((e) => e.isStatic && e.isConst)) {
           if (field != nodeField &&
@@ -68,7 +76,7 @@ class _Visitor extends SimpleAstVisitor<void> {
             rule.reportLint(node,
                 arguments: ['${element.name}.${field.name}'],
                 errorCode: const LintCode(lintName,
-                    'Constants should be referenced instead of duplicating their value.',
+                    "The constant '{0}' should be referenced instead of duplicating its value.",
                     correction: "Try using the predefined constant '{0}'."));
             return;
           }

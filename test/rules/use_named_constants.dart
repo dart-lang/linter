@@ -17,4 +17,5 @@ class A {
 
   static const zero = A(0); // OK
   static const _one = A(1); // OK
+  static const zeroAgain = A(0); // OK
 }
