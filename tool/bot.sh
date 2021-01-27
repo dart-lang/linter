@@ -53,31 +53,16 @@ else
   echo ""
 
   OBS_PORT=9292
-    
-  # Run the tests setup for coverage reporting.
-  dart --disable-service-auth-codes \
-    --disable-analytics \
-    --enable-vm-service=$OBS_PORT \
-    --pause-isolates-on-exit \
-    test/all.dart &
 
-  status=$?  
+  # Run the tests setup for coverage reporting.
+  pub run test --coverage var
 
   pub global activate coverage
-
-  echo "Collecting coverage on port $OBS_PORT..."
-
-  # Run the coverage collector to generate the JSON coverage report.
-  collect_coverage \
-    --port=$OBS_PORT \
-    --out=var/coverage.json \
-    --wait-paused \
-    --resume-isolates
 
   echo "Generating LCOV report..."
   format_coverage \
     --lcov \
-    --in=var/coverage.json \
+    --in=var \
     --out=var/lcov.info \
     --packages=.packages \
     --report-on=lib \
