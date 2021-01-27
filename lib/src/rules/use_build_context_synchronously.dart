@@ -80,7 +80,6 @@ class _Visitor extends SimpleAstVisitor {
   _Visitor(this.rule);
 
   bool accessesContext(ArgumentList argumentList) {
-    // should this include the target?
     for (var argument in argumentList.arguments) {
       var argType = argument.staticType;
       if (isBuildContext(argType)) {
