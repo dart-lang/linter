@@ -7,9 +7,35 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+void f(BuildContext context) {}
+
+void func(Function f) {}
+
 class MyWidget extends StatefulWidget {
   @override
   State createState() => _MyState();
+}
+
+void directAccess(BuildContext context) async {
+  await Future<void>.delayed(Duration());
+
+  // todo (pq): confirm this is right.
+  var renderObject = context.findRenderObject(); // LINT
+}
+
+bool binaryExpression(BuildContext context) async {
+  bool f2(BuildContext context) => true;
+
+  f2(context);
+
+  await Future<void>.delayed(Duration());
+
+  return true || f2(context); // LINT
+}
+
+class C {
+  BuildContext context;
+  C(this.context);
 }
 
 class _MyState extends State<MyWidget> {
@@ -35,6 +61,32 @@ class _MyState extends State<MyWidget> {
     Navigator.of(context).pushNamed('routeName'); // OK
   }
 
+  void methodUsingStateContext3() async {
+    f(context);
+
+    await Future<void>.delayed(Duration());
+
+    f(context); // LINT
+  }
+
+  void methodUsingStateContext4() async {
+    void f(BuildContext context) {}
+
+    f(context);
+
+    await Future<void>.delayed(Duration());
+
+    f(context); // LINT
+  }
+
+  void methodUsingStateContext5() async {
+    C(context);
+
+    await Future<void>.delayed(Duration());
+
+    C(context); // LINT
+  }
+
   // Method given a build context to use.
   void methodWithBuildContextParameter1(BuildContext context) async {
     Navigator.of(context).pushNamed('routeName'); // OK
@@ -51,7 +103,7 @@ class _MyState extends State<MyWidget> {
     Navigator.of(context).pushNamed('routeName'); // LINT
   }
 
-  // Mounted checks only protect State-provided contexts.
+  // Mounted checks are deliberately naive.
   void methodWithBuildContextParameter3(BuildContext context) async {
     Navigator.of(context).pushNamed('routeName'); // OK
 
@@ -59,10 +111,48 @@ class _MyState extends State<MyWidget> {
 
     if (!mounted) return;
 
-    // Mounted doesn't cover provided context.
-    Navigator.of(context).pushNamed('routeName'); // LINT
+    // Mounted doesn't cover provided context but that's by design.
+    Navigator.of(context).pushNamed('routeName'); // OK
   }
 
   @override
   Widget build(BuildContext context) => const Placeholder();
+}
+
+void topLevel(BuildContext context) async {
+  Navigator.of(context).pushNamed('routeName'); // OK
+
+  await Future<void>.delayed(Duration());
+  Navigator.of(context).pushNamed('routeName'); // LINT
+}
+
+void topLevel2(BuildContext context) async {
+  Navigator.of(context).pushNamed('routeName'); // OK
+
+  await Future<void>.delayed(Duration());
+  if (true) {
+    Navigator.of(context).pushNamed('routeName'); // LINT
+  }
+}
+
+void topLevel3(BuildContext context) async {
+  // todo (pq): seems like this should be disallowed in another lint; or?
+  // check for (; ; ) too
+  // should this kind of control structure be discouraged more generally?
+  while (true) {
+    // OK the first time only!
+    Navigator.of(context).pushNamed('routeName'); // TODO: LINT
+    await Future<void>.delayed(Duration());
+  }
+}
+
+void closure(BuildContext context) async {
+  f(context);
+
+  await Future<void>.delayed(Duration());
+
+  // todo (pq): what about closures?
+  func(() {
+    f(context); // TODO: LINT
+  });
 }

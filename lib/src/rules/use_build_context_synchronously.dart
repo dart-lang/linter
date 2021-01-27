@@ -9,23 +9,65 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 import '../util/flutter_utils.dart';
 
-const _desc = r' ';
+// todo (pq): flesh out storing context gotchas -- codify here or in another lint?
+
+const _desc = r'Do not use BuildContexts across async calls.';
 
 const _details = r'''
+**DO NOT** use BuildContexts across async calls.
 
-**DO** ...
+TODO: add rationale.
+
+TODO: describe mechanics.
+
 
 **BAD:**
 ```
+class MyState extends State<MyWidget> {
+  void m() async {
+    // Uses context from State.
+    Navigator.of(context).pushNamed('routeName');
 
+    await Future<void>.delayed(Duration());
+    // ^--- async gap.
+
+    // Without a mounted check, this is unsafe.
+    Navigator.of(context).pushNamed('routeName'); // LINT
+  }
+}
 ```
 
 **GOOD:**
 ```
+class MyState extends State<MyWidget> {
+  void m() async {
+    // Uses context from State.
+    Navigator.of(context).pushNamed('routeName');
 
+    await Future<void>.delayed(Duration());
+
+    if (!mounted) return;
+
+    // OK. We checked mounted checked first.
+    Navigator.of(context).pushNamed('routeName'); // OK
+  }
+}
 ```
-
 ''';
+
+void closure(Object context) async {
+  f(context);
+
+  await Future<void>.delayed(Duration());
+
+  func(() {
+    f(context);
+  }); // LINT
+}
+
+void f(Object context) {}
+
+void func(Function f) {}
 
 class UseBuildContextSynchronously extends LintRule implements NodeLintRule {
   UseBuildContextSynchronously()
@@ -41,24 +83,50 @@ class UseBuildContextSynchronously extends LintRule implements NodeLintRule {
       NodeLintRegistry registry, LinterContext context) {
     final visitor = _Visitor(this);
     registry.addMethodInvocation(this, visitor);
+    registry.addInstanceCreationExpression(this, visitor);
+    registry.addFunctionExpressionInvocation(this, visitor);
   }
-}
-
-bool accessesContext(MethodInvocation node) {
-  var argumentList = node.argumentList;
-  for (var argument in argumentList.arguments) {
-    var argType = argument.staticType;
-    if (isBuildContext(argType)) {
-      return true;
-    }
-  }
-  return false;
 }
 
 class _Visitor extends SimpleAstVisitor {
   final LintRule rule;
 
   _Visitor(this.rule);
+
+  bool accessesContext(ArgumentList argumentList) {
+    // should this include the target?
+    for (var argument in argumentList.arguments) {
+      var argType = argument.staticType;
+      if (isBuildContext(argType)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void check(AstNode node) {
+    // Walk back and look for an async gap that is not guarded by a mounted
+    // property check.
+    var child = node;
+    while (child != null && child is! FunctionBody) {
+      var parent = child.parent;
+      if (parent is Block) {
+        var statements = parent.statements;
+        var index = statements.indexOf(child as Statement);
+        for (var i = index - 1; i >= 0; i--) {
+          var s = statements.elementAt(i);
+          if (isMountedCheck(s)) {
+            return;
+          } else if (isAsync(s)) {
+            rule.reportLint(node);
+            return;
+          }
+        }
+      }
+
+      child = child.parent;
+    }
+  }
 
   bool isAsync(Statement statement) {
     if (statement is ExpressionStatement) {
@@ -79,9 +147,11 @@ class _Visitor extends SimpleAstVisitor {
     return false;
   }
 
-  /// Naive check for mounted.
-  /// todo (pq): update to use element model (and check target)
   bool isMountedCheck(Statement statement) {
+    // This is intentionally naive.  Using a simple 'mounted' property check
+    // as a signal plays nicely w/ unanticipated framework classes that provide
+    // their own mounted checks.  The cost of this generality is the possibility
+    // of false negatives.
     if (statement is IfStatement) {
       var condition = statement.condition;
       if (condition is PrefixExpression) {
@@ -99,29 +169,24 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   @override
-  void visitMethodInvocation(MethodInvocation node) {
-    if (!accessesContext(node)) {
-      return;
+  void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
+    if (accessesContext(node.argumentList)) {
+      check(node);
     }
+  }
 
-    // todo (pq): consider field declarations.
-    var parent = node.parent;
-    while (parent != null && node is! MethodDeclaration) {
-      if (parent is Block) {
-        var statements = parent.statements;
-        var statement = node.thisOrAncestorOfType<Statement>();
-        var index = statements.indexOf(statement);
-        for (var i = index - 1; i >= 0; i--) {
-          var s = statements.elementAt(i);
-          if (isMountedCheck(s)) {
-            return;
-          } else if (isAsync(s)) {
-            rule.reportLint(node);
-            return;
-          }
-        }
-      }
-      parent = parent.parent;
+  @override
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    if (accessesContext(node.argumentList)) {
+      check(node);
+    }
+  }
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (isBuildContext(node.target?.staticType) ||
+        accessesContext(node.argumentList)) {
+      check(node);
     }
   }
 }
