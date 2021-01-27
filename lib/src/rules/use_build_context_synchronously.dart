@@ -55,20 +55,6 @@ class MyState extends State<MyWidget> {
 ```
 ''';
 
-void closure(Object context) async {
-  f(context);
-
-  await Future<void>.delayed(Duration());
-
-  func(() {
-    f(context);
-  }); // LINT
-}
-
-void f(Object context) {}
-
-void func(Function f) {}
-
 class UseBuildContextSynchronously extends LintRule implements NodeLintRule {
   UseBuildContextSynchronously()
       : super(
@@ -143,7 +129,14 @@ class _Visitor extends SimpleAstVisitor {
           return true;
         }
       }
+    } else if (statement is WhileStatement) {
+      return isAsync(statement.body);
+    } else if (statement is ForStatement) {
+      return isAsync(statement.body);
+    } else if (statement is DoStatement) {
+      return isAsync(statement.body);
     }
+
     return false;
   }
 

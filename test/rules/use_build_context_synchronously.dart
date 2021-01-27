@@ -103,6 +103,40 @@ class _MyState extends State<MyWidget> {
     Navigator.of(context).pushNamed('routeName'); // LINT
   }
 
+  // Another conditional path.
+  void methodWithBuildContextParameter2a(BuildContext context) async {
+    bool f() => true;
+    while (f()) {
+      await Future<void>.delayed(Duration());
+    }
+    Navigator.of(context).pushNamed('routeName'); // LINT
+  }
+
+  // And another.
+  void methodWithBuildContextParameter2b(BuildContext context) async {
+    for (var i = 0; i < 1; ++i) {
+      await Future<void>.delayed(Duration());
+    }
+    Navigator.of(context).pushNamed('routeName'); // LINT
+  }
+
+  // And another.
+  void methodWithBuildContextParameter2c(BuildContext context) async {
+    for (var i in [1]) {
+      await Future<void>.delayed(Duration());
+    }
+    Navigator.of(context).pushNamed('routeName'); // LINT
+  }
+
+  // And another.
+  void methodWithBuildContextParameter2d(BuildContext context) async {
+    bool f() => true;
+    do {
+      await Future<void>.delayed(Duration());
+    } while (f());
+    Navigator.of(context).pushNamed('routeName'); // LINT
+  }
+
   // Mounted checks are deliberately naive.
   void methodWithBuildContextParameter3(BuildContext context) async {
     Navigator.of(context).pushNamed('routeName'); // OK
@@ -130,6 +164,8 @@ void topLevel2(BuildContext context) async {
   Navigator.of(context).pushNamed('routeName'); // OK
 
   await Future<void>.delayed(Duration());
+  // todo (pq): validate other conditionals (for, while, do, ...)
+  // OR: should that be disallowed in another lint?
   if (true) {
     Navigator.of(context).pushNamed('routeName'); // LINT
   }
