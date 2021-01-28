@@ -5,9 +5,9 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/flutter_utils.dart';
 
 // todo (pq): flesh out storing context gotchas -- codify here or in another lint?
 
@@ -75,9 +75,14 @@ class UseBuildContextSynchronously extends LintRule implements NodeLintRule {
 }
 
 class _Visitor extends SimpleAstVisitor {
+  static const _nameBuildContext = 'BuildContext';
+  final Uri _uriFramework;
+
+  // todo (pq): replace in favor of flutter_utils.isBuildContext
   final LintRule rule;
 
-  _Visitor(this.rule);
+  _Visitor(this.rule)
+      : _uriFramework = Uri.parse('package:flutter/src/widgets/framework.dart');
 
   bool accessesContext(ArgumentList argumentList) {
     for (var argument in argumentList.arguments) {
@@ -137,6 +142,16 @@ class _Visitor extends SimpleAstVisitor {
     }
 
     return false;
+  }
+
+  bool isBuildContext(DartType type) {
+    if (type is! InterfaceType) {
+      return false;
+    }
+    var element = type.element;
+    return element != null &&
+        element.name == _nameBuildContext &&
+        element.source.uri == _uriFramework;
   }
 
   bool isMountedCheck(Statement statement) {
