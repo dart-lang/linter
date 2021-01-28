@@ -19,7 +19,6 @@ class MyWidget extends StatefulWidget {
 void directAccess(BuildContext context) async {
   await Future<void>.delayed(Duration());
 
-  // todo (pq): confirm this is right.
   var renderObject = context.findRenderObject(); // LINT
 }
 
@@ -172,9 +171,6 @@ void topLevel2(BuildContext context) async {
 }
 
 void topLevel3(BuildContext context) async {
-  // todo (pq): seems like this should be disallowed in another lint; or?
-  // check for (; ; ) too
-  // should this kind of control structure be discouraged more generally?
   while (true) {
     // OK the first time only!
     Navigator.of(context).pushNamed('routeName'); // TODO: LINT
@@ -183,8 +179,6 @@ void topLevel3(BuildContext context) async {
 }
 
 void closure(BuildContext context) async {
-  f(context);
-
   await Future<void>.delayed(Duration());
 
   // todo (pq): what about closures?
