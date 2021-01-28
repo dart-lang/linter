@@ -48,7 +48,7 @@ class MyState extends State<MyWidget> {
 
     if (!mounted) return;
 
-    // OK. We checked mounted checked first.
+    // OK. We checked mounted first.
     Navigator.of(context).pushNamed('routeName'); // OK
   }
 }
@@ -74,11 +74,19 @@ class UseBuildContextSynchronously extends LintRule implements NodeLintRule {
   }
 }
 
+class _AwaitVisitor extends RecursiveAstVisitor {
+  bool hasAwait = false;
+
+  @override
+  void visitAwaitExpression(AwaitExpression node) {
+    hasAwait = true;
+  }
+}
+
 class _Visitor extends SimpleAstVisitor {
   static const _nameBuildContext = 'BuildContext';
   final Uri _uriFramework;
 
-  // todo (pq): replace in favor of flutter_utils.isBuildContext
   final LintRule rule;
 
   _Visitor(this.rule)
@@ -119,31 +127,12 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   bool isAsync(Statement statement) {
-    if (statement is ExpressionStatement) {
-      var expression = statement.expression;
-      if (expression is AwaitExpression) {
-        return true;
-      }
-    } else if (statement is IfStatement) {
-      return isAsync(statement.thenStatement) ||
-          isAsync(statement.elseStatement);
-    } else if (statement is Block) {
-      for (var s in statement.statements) {
-        if (isAsync(s)) {
-          return true;
-        }
-      }
-    } else if (statement is WhileStatement) {
-      return isAsync(statement.body);
-    } else if (statement is ForStatement) {
-      return isAsync(statement.body);
-    } else if (statement is DoStatement) {
-      return isAsync(statement.body);
-    }
-
-    return false;
+    var visitor = _AwaitVisitor();
+    statement.accept(visitor);
+    return visitor.hasAwait;
   }
 
+  /// todo (pq): replace in favor of flutter_utils.isBuildContext
   bool isBuildContext(DartType type) {
     if (type is! InterfaceType) {
       return false;
@@ -166,7 +155,13 @@ class _Visitor extends SimpleAstVisitor {
           var operand = condition.operand;
           if (operand is SimpleIdentifier) {
             if (operand.name == 'mounted') {
-              return true;
+              var then = statement.thenStatement;
+              if (then is ReturnStatement) {
+                return true;
+              }
+              if (then is Block) {
+                return then.statements.last is ReturnStatement;
+              }
             }
           }
         }
