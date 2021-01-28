@@ -22,7 +22,7 @@ void directAccess(BuildContext context) async {
   var renderObject = context.findRenderObject(); // LINT
 }
 
-bool binaryExpression(BuildContext context) async {
+Future<bool> binaryExpression(BuildContext context) async {
   bool f2(BuildContext context) => true;
 
   f2(context);
@@ -60,6 +60,25 @@ class _MyState extends State<MyWidget> {
     Navigator.of(context).pushNamed('routeName'); // OK
   }
 
+  void methodUsingStateContext2a() async {
+    await Future<void>.delayed(Duration());
+    if (!mounted) print('oops');
+
+    // Need a return after the mounted check.
+    Navigator.of(context).pushNamed('routeName'); // LINT
+  }
+
+  void methodUsingStateContext2b() async {
+    await Future<void>.delayed(Duration());
+    if (!mounted) {
+      print('ok');
+      return;
+    }
+
+    // Mounted check does return.
+    Navigator.of(context).pushNamed('routeName'); //OK
+  }
+
   void methodUsingStateContext3() async {
     f(context);
 
@@ -82,6 +101,14 @@ class _MyState extends State<MyWidget> {
     C(context);
 
     await Future<void>.delayed(Duration());
+
+    C(context); // LINT
+  }
+
+  void methodUsingStateContext6() async {
+    Future<int> f() async => Future.value(10);
+
+    print(await f());
 
     C(context); // LINT
   }
