@@ -9,8 +9,6 @@ import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
-// todo (pq): flesh out storing context gotchas -- codify here or in another lint?
-
 const _desc = r'Do not use BuildContexts across async calls.';
 
 const _details = r'''
