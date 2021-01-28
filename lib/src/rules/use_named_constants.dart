@@ -53,13 +53,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (node.isConst) {
-      final library = (node.root as CompilationUnit).declaredElement.library;
-      final nodeField =
-          node.thisOrAncestorOfType<VariableDeclaration>()?.declaredElement;
-
-      final value = context.evaluateConstant(node).value;
       final element = node.staticType.element;
       if (element is ClassElement) {
+        final nodeField =
+            node.thisOrAncestorOfType<VariableDeclaration>()?.declaredElement;
+
         // avoid diagnostic for fields in the same class having the same value
         // class A {
         //   const A();
@@ -68,6 +66,8 @@ class _Visitor extends SimpleAstVisitor<void> {
         // }
         if (nodeField?.enclosingElement == element) return;
 
+        final library = (node.root as CompilationUnit).declaredElement.library;
+        final value = context.evaluateConstant(node).value;
         for (final field
             in element.fields.where((e) => e.isStatic && e.isConst)) {
           if (field.isAccessibleIn(library) &&
