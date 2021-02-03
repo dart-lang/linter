@@ -7,6 +7,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+void unawaited(Future<void> future) {}
+
+void methodWithBuildContextParameter2f(BuildContext context) async {
+  try {
+    await Future<void>.delayed(Duration());
+    f(context); // LINT
+  } on Exception {
+    f(context); // TODO: LINT
+  }
+}
+
+class WidgetStateContext {
+  bool get mounted => false;
+}
+
 void f(BuildContext context) {}
 
 void func(Function f) {}
@@ -163,6 +178,12 @@ class _MyState extends State<MyWidget> {
     Navigator.of(context).pushNamed('routeName'); // LINT
   }
 
+  void methodWithBuildContextParameter2e(BuildContext context) async {
+    await Future<void>.delayed(Duration());
+    if (!mounted) return;
+    unawaited(methodWithBuildContextParameter2e(context)); //OK
+  }
+
   // Mounted checks are deliberately naive.
   void methodWithBuildContextParameter3(BuildContext context) async {
     Navigator.of(context).pushNamed('routeName'); // OK
@@ -173,6 +194,13 @@ class _MyState extends State<MyWidget> {
 
     // Mounted doesn't cover provided context but that's by design.
     Navigator.of(context).pushNamed('routeName'); // OK
+  }
+
+  void methodWithMountedFieldCheck(
+      BuildContext context, WidgetStateContext stateContext) async {
+    await Future<void>.delayed(Duration());
+    if (!stateContext.mounted) return;
+    f(context); // OK
   }
 
   @override

@@ -151,6 +151,10 @@ class _Visitor extends SimpleAstVisitor {
       if (condition is PrefixExpression) {
         if (condition.operator.type == TokenType.BANG) {
           var operand = condition.operand;
+          // stateContext.mounted => mounted
+          while (operand is PrefixedIdentifier) {
+            operand = (operand as PrefixedIdentifier).identifier;
+          }
           if (operand is SimpleIdentifier) {
             if (operand.name == 'mounted') {
               var then = statement.thenStatement;
