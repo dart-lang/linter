@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:path/path.dart' as path;
 
 import '../analyzer.dart';
 
@@ -54,7 +55,18 @@ class MyState extends State<MyWidget> {
 ''';
 
 class UseBuildContextSynchronously extends LintRule implements NodeLintRule {
-  UseBuildContextSynchronously()
+  // todo (pq): use LinterContext.inTestDir() when available
+  static final _testDirectories = [
+    '${path.separator}test${path.separator}',
+    '${path.separator}integration_test${path.separator}',
+    '${path.separator}test_driver${path.separator}',
+    '${path.separator}testing${path.separator}',
+  ];
+
+  /// Flag to short-circuit `inTestDir` checking when running tests.
+  final bool inTestMode;
+
+  UseBuildContextSynchronously({this.inTestMode = false})
       : super(
             name: 'use_build_context_synchronously',
             description: _desc,
@@ -65,10 +77,18 @@ class UseBuildContextSynchronously extends LintRule implements NodeLintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    final visitor = _Visitor(this);
-    registry.addMethodInvocation(this, visitor);
-    registry.addInstanceCreationExpression(this, visitor);
-    registry.addFunctionExpressionInvocation(this, visitor);
+    var unit = context.currentUnit.unit;
+    if (inTestMode || !inTestDir(unit)) {
+      final visitor = _Visitor(this);
+      registry.addMethodInvocation(this, visitor);
+      registry.addInstanceCreationExpression(this, visitor);
+      registry.addFunctionExpressionInvocation(this, visitor);
+    }
+  }
+
+  static bool inTestDir(CompilationUnit unit) {
+    var path = unit.declaredElement?.source?.fullName;
+    return path != null && _testDirectories.any(path.contains);
   }
 }
 
