@@ -30,7 +30,7 @@ elif [ "$LINTER_BOT" = "benchmark" ]; then
   set +e
 
   # Benchmark linter with all lints enabled.
-  dart bin/linter.dart --benchmark -q -c example/all.yaml .
+  dart --no-sound-null-safety bin/linter.dart --benchmark -q -c example/all.yaml .
 
   # Check for errors encountered during analysis / benchmarking and fail as appropriate.
   if [ $? -eq 63 ];  then
@@ -59,6 +59,7 @@ else
     --disable-analytics \
     --enable-vm-service=$OBS_PORT \
     --pause-isolates-on-exit \
+    --no-sound-null-safety \
     test/all.dart &
 
   status=$?  
