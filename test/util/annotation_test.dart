@@ -16,10 +16,12 @@ void main() {
     expect(extractAnnotation(1, 'int x;'), isNull);
     expect(extractAnnotation(1, 'dynamic x; // LINT dynamic is bad')!.message,
         'dynamic is bad');
-    expect(extractAnnotation(1, 'dynamic x; // LINT dynamic is bad')!.lineNumber,
+    expect(
+        extractAnnotation(1, 'dynamic x; // LINT dynamic is bad')!.lineNumber,
         1);
     expect(
-        extractAnnotation(1, 'dynamic x; // LINT [1:3] dynamic is bad')!.message,
+        extractAnnotation(1, 'dynamic x; // LINT [1:3] dynamic is bad')!
+            .message,
         'dynamic is bad');
     expect(
         extractAnnotation(1, 'dynamic x; // LINT [1:3] dynamic is bad')!.column,

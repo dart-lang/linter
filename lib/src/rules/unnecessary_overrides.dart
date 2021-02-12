@@ -137,7 +137,8 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
   }
 
   bool _haveSameDeclaration() {
-    if (declaration.declaredElement!.returnType != inheritedMethod!.returnType) {
+    if (declaration.declaredElement!.returnType !=
+        inheritedMethod!.returnType) {
       return false;
     }
     if (declaration.declaredElement!.parameters.length !=

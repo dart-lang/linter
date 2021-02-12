@@ -284,8 +284,7 @@ void testRules(String ruleDir, {String? analysisOptions}) {
       // Disabled pending fix: https://github.com/dart-lang/linter/issues/23
       continue;
     }
-    testRule(ruleName, entry,
-        debug: true, analysisOptions: analysisOptions);
+    testRule(ruleName, entry, debug: true, analysisOptions: analysisOptions);
   }
 }
 

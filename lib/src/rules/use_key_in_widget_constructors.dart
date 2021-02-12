@@ -90,8 +90,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   bool _defineKeyParameter(ConstructorElement element) =>
       element.parameters.any((e) => e.name == 'key' && _isKeyType(e.type));
 
-  bool _defineKeyArgument(ArgumentList argumentList) =>
-      argumentList.arguments.any((a) => a.staticParameterElement!.name == 'key');
+  bool _defineKeyArgument(ArgumentList argumentList) => argumentList.arguments
+      .any((a) => a.staticParameterElement!.name == 'key');
 
   bool _isKeyType(DartType type) =>
       DartTypeUtilities.implementsInterface(type, 'Key', '');

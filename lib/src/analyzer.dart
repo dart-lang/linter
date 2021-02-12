@@ -98,7 +98,9 @@ class Analyzer {
   /// Create a library name prefix based on [libraryPath], [projectRoot] and
   /// current [packageName].
   String createLibraryNamePrefix(
-          {required String libraryPath, String? projectRoot, String? packageName}) =>
+          {required String libraryPath,
+          String? projectRoot,
+          String? packageName}) =>
       util.createLibraryNamePrefix(
           libraryPath: libraryPath,
           projectRoot: projectRoot,
