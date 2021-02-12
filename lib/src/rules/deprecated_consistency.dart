@@ -84,12 +84,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFieldFormalParameter(FieldFormalParameter node) {
     var declaredElement = node.declaredElement as FieldFormalParameterElement;
-    if (declaredElement.field.hasDeprecated && !declaredElement.hasDeprecated) {
+    var field = declaredElement.field;
+    if (field == null) return;
+
+    if (field.hasDeprecated && !declaredElement.hasDeprecated) {
       rule.reportLint(node);
     }
-    if (!declaredElement.field.hasDeprecated && declaredElement.hasDeprecated) {
-      rule.reportLintForOffset(
-          declaredElement.field.nameOffset, declaredElement.field.nameLength);
+    if (!field.hasDeprecated && declaredElement.hasDeprecated) {
+      rule.reportLintForOffset(field.nameOffset, field.nameLength);
     }
   }
 }
