@@ -6,6 +6,7 @@ import 'dart:collection';
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
+
 import '../util/boolean_expression_utilities.dart';
 
 void _addNodeComparisons(Expression node, Set<Expression> comparisons) {
@@ -148,7 +149,6 @@ class TestedExpressions {
       final eOperatorType = expression.operator.type;
       comparisons
           .where((comparison) =>
-              comparison != null &&
               comparison.offset < expression.offset &&
               comparison is BinaryExpression)
           .forEach((Expression c) {

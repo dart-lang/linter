@@ -54,7 +54,7 @@ class PreferContainsOverIndexOf extends LintRule implements NodeLintRule {
     registry.addSimpleIdentifier(this, visitor);
   }
 
-  void reportLintWithDescription(AstNode node, String description) {
+  void reportLintWithDescription(AstNode? node, String description) {
     if (node != null) {
       reporter.reportErrorForNode(_LintCode(name, description), node, []);
     }

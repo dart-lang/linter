@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'dart:async';
 import 'dart:io';
 
@@ -164,15 +166,13 @@ Future<List<String?>> _fetchEffectiveDartRules() async {
 
 Future<String?> _fetchLinterForVersion(String version) async {
   var deps = await _fetchDEPSforVersion(version);
-  if (deps != null) {
-    for (var line in deps.split('\n')) {
-      if (line.trim().startsWith('"lint')) {
-        // "linter_tag": "0.1.59",
-        var split = line.trim().split('"linter_tag":');
-        if (split.length == 2) {
-          //  "0.1.59",
-          return split[1].split('"')[1];
-        }
+  for (var line in deps.split('\n')) {
+    if (line.trim().startsWith('"lint')) {
+      // "linter_tag": "0.1.59",
+      var split = line.trim().split('"linter_tag":');
+      if (split.length == 2) {
+        //  "0.1.59",
+        return split[1].split('"')[1];
       }
     }
   }

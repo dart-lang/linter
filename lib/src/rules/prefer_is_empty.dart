@@ -3,11 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
-// ignore: implementation_imports
-import 'package:analyzer/src/dart/ast/ast.dart' show ExpressionImpl;
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
+// ignore: implementation_imports
+import 'package:analyzer/src/dart/ast/ast.dart' show ExpressionImpl;
 
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
@@ -59,7 +59,7 @@ class PreferIsEmpty extends LintRule implements NodeLintRule {
     registry.addSimpleIdentifier(this, visitor);
   }
 
-  void reportLintWithDescription(AstNode node, String description) {
+  void reportLintWithDescription(AstNode? node, String description) {
     if (node != null) {
       reporter.reportErrorForNode(_LintCode(name, description), node, []);
     }

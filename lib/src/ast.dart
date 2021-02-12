@@ -122,7 +122,6 @@ bool isHashCode(ClassMember element) =>
 bool isInLibDir(CompilationUnit node, WorkspacePackage? package) {
   if (package == null) return false;
   final cuPath = node.declaredElement!.library.source.fullName;
-  if (cuPath == null) return false;
   final libDir = path.join(package.root, 'lib');
   return path.isWithin(libDir, cuPath);
 }

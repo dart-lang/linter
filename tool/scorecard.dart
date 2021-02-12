@@ -7,7 +7,9 @@ import 'dart:async';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/src/lint/registry.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:github/github.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';

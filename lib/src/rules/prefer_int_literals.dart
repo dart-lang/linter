@@ -112,7 +112,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     // Check if the double can be represented as an int
     try {
       final value = node.value;
-      if (value == null || value != value.truncate()) {
+      if (value != value.truncate()) {
         return;
       }
       // ignore: avoid_catching_errors

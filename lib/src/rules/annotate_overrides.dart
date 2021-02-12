@@ -70,10 +70,6 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
   Element? getOverriddenMember(Element member) {
-    if (member == null) {
-      return null;
-    }
-
     final classElement = member.thisOrAncestorOfType<ClassElement>();
     if (classElement == null) {
       return null;

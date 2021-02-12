@@ -70,7 +70,7 @@ class QuoteVisitor extends SimpleAstVisitor<void> {
   QuoteVisitor(
     this.rule, {
     required this.useSingle,
-  }) : assert(useSingle != null);
+  });
 
   /// Strings interpolations can contain other string nodes. Check like this.
   bool containsString(StringInterpolation string) {

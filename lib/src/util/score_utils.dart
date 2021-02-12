@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/src/lint/config.dart'; // ignore: implementation_imports
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
 
 final _pedanticOptionsRootUrl =

@@ -247,9 +247,6 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodInvocation(MethodInvocation node) {
     final target = node.target;
     final methodName = node.methodName.name;
-    if (methodName == null) {
-      return;
-    }
     final element = target is Identifier ? target.staticElement : null;
     if (element is ClassElement) {
       // Static function called, "target" is the class.

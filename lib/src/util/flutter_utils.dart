@@ -84,9 +84,6 @@ class _Flutter {
   }
 
   bool isWidget(ClassElement element) {
-    if (element == null) {
-      return false;
-    }
     if (_isExactWidget(element, _nameWidget, _uriFramework)) {
       return true;
     }
@@ -115,5 +112,5 @@ class _Flutter {
       type is InterfaceType && isWidget(type.element);
 
   bool _isExactWidget(ClassElement element, String type, Uri uri) =>
-      element != null && element.name == type && element.source.uri == uri;
+      element.name == type && element.source.uri == uri;
 }

@@ -59,7 +59,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     final args = node.argumentList.arguments;
-    if (args == null || args.length != 1) return;
+    if (args.length != 1) return;
 
     final arg = args.first;
     if (arg is FunctionExpression) {

@@ -263,7 +263,7 @@ class TestErrorCode extends ErrorCode {
   late ErrorType type;
 
   TestErrorCode(String name, String message)
-      : super.temporary2(
+      : super(
           message: message,
           name: name,
           uniqueName: 'TestErrorCode.$name',

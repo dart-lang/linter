@@ -71,14 +71,17 @@ class _Visitor extends SimpleAstVisitor<void> {
   // single-quotes to match the convention in the analyzer and linter packages.
   // This requires some coordination within Google, as various allow-lists are
   // keyed on the exact text of the LintCode message.
+  // ignore: deprecated_member_use
   static const unsafeAttributeCode = SecurityLintCodeWithUniqueName(
       'unsafe_html',
       'LintCode.unsafe_html_attribute',
       '$_descPrefix (assigning "{0}" attribute).');
+  // ignore: deprecated_member_use
   static const unsafeMethodCode = SecurityLintCodeWithUniqueName(
       'unsafe_html',
       'LintCode.unsafe_html_method',
       "$_descPrefix (calling the '{0}' method of {1}).");
+  // ignore: deprecated_member_use
   static const unsafeConstructorCode = SecurityLintCodeWithUniqueName(
       'unsafe_html',
       'LintCode.unsafe_html_constructor',
@@ -155,7 +158,6 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     var methodName = node.methodName.name;
-    if (methodName == null) return;
 
     // The static type of the target.
     DartType? type;

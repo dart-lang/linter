@@ -185,9 +185,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
-    if (node.function != null) {
-      _lintIfDynamicOrFunction(node.function);
-    }
+    _lintIfDynamicOrFunction(node.function);
   }
 
   @override

@@ -62,7 +62,6 @@ class AvoidTypeToString extends LintRule implements NodeLintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    assert(context != null);
     final visitor =
         _Visitor(this, context.typeSystem, context.typeProvider.typeType);
     // Gathering meta information at these nodes.
