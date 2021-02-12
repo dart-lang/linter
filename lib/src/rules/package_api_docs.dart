@@ -98,15 +98,15 @@ class _Visitor extends GeneralizingAstVisitor {
 
   _Visitor(this.rule);
 
-  DartProject? get project => rule.project;
-
   void check(Declaration node) {
     // If no project info is set, bail early.
     // https://github.com/dart-lang/linter/issues/154
-    if (project == null) {
+    var currentProject = rule.project;
+    if (currentProject == null) {
       return;
     }
-    if (project!.isApi(node.declaredElement!)) {
+
+    if (currentProject.isApi(node.declaredElement!)) {
       if (node.documentationComment == null) {
         rule.reportLint(getNodeToAnnotate(node));
       }
