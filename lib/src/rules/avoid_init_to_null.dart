@@ -88,7 +88,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitDefaultFormalParameter(DefaultFormalParameter node) {
     if (DartTypeUtilities.isNullLiteral(node.defaultValue) &&
-        isNullable(node.declaredElement.type)) {
+        isNullable(node.declaredElement!.type)) {
       rule.reportLint(node);
     }
   }
@@ -98,7 +98,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (!node.isConst &&
         !node.isFinal &&
         DartTypeUtilities.isNullLiteral(node.initializer) &&
-        isNullable(node.declaredElement.type)) {
+        isNullable(node.declaredElement!.type)) {
       rule.reportLint(node);
     }
   }

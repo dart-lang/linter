@@ -124,7 +124,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  bool _lintIfDynamic(Expression node) {
+  bool _lintIfDynamic(Expression? node) {
     if (node?.staticType?.isDynamic == true) {
       rule.reportLint(node);
       return true;
@@ -133,7 +133,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  void _lintIfDynamicOrFunction(Expression node, {DartType staticType}) {
+  void _lintIfDynamicOrFunction(Expression node, {DartType? staticType}) {
     staticType ??= node?.staticType;
     if (staticType == null) {
       return;
@@ -216,9 +216,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       // If the method is "call", and the receiver is a function, we assume then
       // we are really checking the static type of the receiver, not the static
       // type of the "call" method itself.
-      DartType staticType;
+      DartType? staticType;
       if (methodName == 'call' && node.target?.staticType is FunctionType) {
-        staticType = node.target.staticType;
+        staticType = node.target!.staticType;
       }
       _lintIfDynamicOrFunction(node.function, staticType: staticType);
     }

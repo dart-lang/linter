@@ -49,7 +49,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitReturnStatement(ReturnStatement node) {
     if (node.expression != null) {
-      _visit(node, node.expression);
+      _visit(node, node.expression!);
     }
   }
 
@@ -62,8 +62,8 @@ class _Visitor extends SimpleAstVisitor<void> {
         (e) => e is FunctionExpression || e is MethodDeclaration);
     if (parent == null) return;
 
-    DartType returnType;
-    bool isAsync;
+    DartType? returnType;
+    bool? isAsync;
     if (parent is FunctionExpression) {
       returnType = parent.declaredElement?.returnType;
       isAsync = parent.body?.isAsynchronous;
@@ -73,7 +73,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     } else {
       throw StateError('unexpected type');
     }
-    if (returnType != null && returnType.isDartAsyncFuture && !isAsync) {
+    if (returnType != null && returnType.isDartAsyncFuture && !isAsync!) {
       rule.reportLint(expression);
     }
   }

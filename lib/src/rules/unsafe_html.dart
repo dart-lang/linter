@@ -34,7 +34,7 @@ var script = ScriptElement()..src = 'foo.js';
 ```
 ''';
 
-extension on DartType {
+extension on DartType? {
   /// Returns whether this type extends [className] from the dart:html library.
   bool extendsDartHtmlClass(String className) =>
       DartTypeUtilities.extendsClass(this, className, 'dart.dom.html');
@@ -106,7 +106,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  void _checkAssignment(DartType type, SimpleIdentifier property,
+  void _checkAssignment(DartType? type, SimpleIdentifier property,
       AssignmentExpression assignment) {
     if (property == null || type == null) return;
 
@@ -158,7 +158,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (methodName == null) return;
 
     // The static type of the target.
-    DartType type;
+    DartType? type;
     if (node.realTarget == null) {
       // Implicit `this` target.
       var methodElement = node.methodName.staticElement;
@@ -170,7 +170,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         return;
       }
     } else {
-      type = node.realTarget.staticType;
+      type = node.realTarget!.staticType;
       if (type == null) return;
     }
 

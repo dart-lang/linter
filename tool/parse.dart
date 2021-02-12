@@ -7,6 +7,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:meta/meta.dart';
 
 class CompilationUnitParser {
-  CompilationUnit parse({@required String contents, @required String name}) =>
+  CompilationUnit parse({required String contents, required String name}) =>
       parseString(content: contents, path: name).unit;
 }

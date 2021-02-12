@@ -41,10 +41,10 @@ bool _isComparison(Expression expression) =>
     BooleanExpressionUtilities.COMPARISONS.contains(expression.operator.type);
 
 bool _isNegationOrComparison(
-    TokenType cOperatorType, TokenType eOperatorType, TokenType tokenType) {
+    TokenType? cOperatorType, TokenType eOperatorType, TokenType tokenType) {
   final isNegationOperation =
       cOperatorType == BooleanExpressionUtilities.NEGATIONS[eOperatorType] ||
-          BooleanExpressionUtilities.IMPLICATIONS[cOperatorType] ==
+          BooleanExpressionUtilities.IMPLICATIONS[cOperatorType!] ==
               BooleanExpressionUtilities.NEGATIONS[eOperatorType];
 
   final isTrichotomyConjunction = BooleanExpressionUtilities
@@ -68,7 +68,7 @@ bool _sameOperands(String eLeftOperand, String bcLeftOperand,
 typedef _RecurseCallback = void Function(Expression expression);
 
 class ContradictoryComparisons {
-  final Expression first;
+  final Expression? first;
   final Expression second;
 
   ContradictoryComparisons(this.first, this.second);
@@ -76,13 +76,13 @@ class ContradictoryComparisons {
 
 class TestedExpressions {
   final Expression testingExpression;
-  final Set<Expression> truths;
-  final Set<Expression> negations;
-  LinkedHashSet<ContradictoryComparisons> _contradictions;
+  final Set<Expression?> truths;
+  final Set<Expression?> negations;
+  LinkedHashSet<ContradictoryComparisons>? _contradictions;
 
   TestedExpressions(this.testingExpression, this.truths, this.negations);
 
-  LinkedHashSet<ContradictoryComparisons> evaluateInvariant() {
+  LinkedHashSet<ContradictoryComparisons>? evaluateInvariant() {
     if (_contradictions != null) {
       return _contradictions;
     }
@@ -99,16 +99,16 @@ class TestedExpressions {
             ? binaryExpression.operator.type
             : TokenType.AMPERSAND_AMPERSAND);
 
-    if (_contradictions.isEmpty) {
+    if (_contradictions!.isEmpty) {
       final set = (binaryExpression != null
           ? _extractComparisons(testingExpression as BinaryExpression)
           : {testingExpression})
-        ..addAll(truths)
-        ..addAll(negations);
+        ..addAll(truths as Iterable<Expression>)
+        ..addAll(negations as Iterable<Expression>);
       // Here and in several places we proceed only for
       // TokenType.AMPERSAND_AMPERSAND because we then know that all comparisons
       // must be true.
-      _contradictions.addAll(
+      _contradictions!.addAll(
           _findContradictoryComparisons(set, TokenType.AMPERSAND_AMPERSAND));
     }
 
@@ -131,7 +131,7 @@ class TestedExpressions {
           n is SimpleIdentifier && identifier.staticElement == n.staticElement;
       if (negations.any(sameIdentifier)) {
         final otherIdentifier =
-            negations.firstWhere(sameIdentifier) as SimpleIdentifier;
+            negations.firstWhere(sameIdentifier) as SimpleIdentifier?;
         contradictions
             .add(ContradictoryComparisons(otherIdentifier, identifier));
       }

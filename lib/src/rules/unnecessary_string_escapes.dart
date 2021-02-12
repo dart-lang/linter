@@ -79,10 +79,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void visitLexeme(
     Token token, {
-    @required bool isSingleQuoted,
-    @required bool isMultiline,
-    @required int contentsOffset,
-    @required int contentsEnd,
+    required bool isSingleQuoted,
+    required bool isMultiline,
+    required int contentsOffset,
+    required int contentsEnd,
   }) {
     // For multiline string we keep the list on pending quotes.
     // Starting from 3 consecutive quotes, we allow escaping.

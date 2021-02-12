@@ -76,7 +76,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  void _visit(AstNode node, Expression expression) {
+  void _visit(AstNode node, Expression? expression) {
     if (expression is! NullLiteral) {
       return;
     }
@@ -85,8 +85,8 @@ class _Visitor extends SimpleAstVisitor<void> {
         (e) => e is FunctionExpression || e is MethodDeclaration);
     if (parent == null) return;
 
-    DartType type;
-    bool isAsync;
+    DartType? type;
+    bool? isAsync;
     if (parent is FunctionExpression) {
       type = parent.declaredElement?.returnType;
       isAsync = parent.body?.isAsynchronous;

@@ -69,7 +69,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule, this.context);
 
-  Element getOverriddenMember(Element member) {
+  Element? getOverriddenMember(Element member) {
     if (member == null) {
       return null;
     }
@@ -82,7 +82,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     final libraryUri = classElement.library.source.uri;
     return context.inheritanceManager.getInherited(
       classElement.thisType,
-      Name(libraryUri, member.name),
+      Name(libraryUri, member.name!),
     );
   }
 

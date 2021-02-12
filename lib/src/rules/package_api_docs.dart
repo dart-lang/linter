@@ -60,7 +60,7 @@ Advice for writing good doc comments can be found in the
 ''';
 
 class PackageApiDocs extends LintRule implements ProjectVisitor, NodeLintRule {
-  DartProject project;
+  DartProject? project;
 
   PackageApiDocs()
       : super(
@@ -98,7 +98,7 @@ class _Visitor extends GeneralizingAstVisitor {
 
   _Visitor(this.rule);
 
-  DartProject get project => rule.project;
+  DartProject? get project => rule.project;
 
   void check(Declaration node) {
     // If no project info is set, bail early.
@@ -106,7 +106,7 @@ class _Visitor extends GeneralizingAstVisitor {
     if (project == null) {
       return;
     }
-    if (project.isApi(node.declaredElement)) {
+    if (project!.isApi(node.declaredElement!)) {
       if (node.documentationComment == null) {
         rule.reportLint(getNodeToAnnotate(node));
       }

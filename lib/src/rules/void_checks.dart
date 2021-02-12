@@ -120,17 +120,17 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     } else if (parent is MethodDeclaration) {
       _check(
-          parent.declaredElement.returnType, node.expression?.staticType, node,
+          parent.declaredElement!.returnType, node.expression?.staticType, node,
           checkedNode: node.expression);
     } else if (parent is FunctionDeclaration) {
       _check(
-          parent.declaredElement.returnType, node.expression?.staticType, node,
+          parent.declaredElement!.returnType, node.expression?.staticType, node,
           checkedNode: node.expression);
     }
   }
 
-  void _check(DartType expectedType, DartType type, AstNode node,
-      {AstNode checkedNode}) {
+  void _check(DartType? expectedType, DartType? type, AstNode node,
+      {AstNode? checkedNode}) {
     checkedNode ??= node;
     if (expectedType == null || type == null) {
       return;

@@ -10,31 +10,31 @@ final _pedanticOptionsRootUrl =
 final _pedanticOptionsUrl =
     _pedanticOptionsRootUrl.resolve('analysis_options.yaml');
 
-List<String> _pedanticRules;
+List<String?>? _pedanticRules;
 
-Future<List<String>> get pedanticRules async =>
+Future<List<String?>> get pedanticRules async =>
     _pedanticRules ??= await _fetchPedanticRules();
 
-Future<List<String>> fetchRules(Uri optionsUrl) async {
+Future<List<String?>> fetchRules(Uri optionsUrl) async {
   final config = await _fetchConfig(optionsUrl);
   if (config == null) {
     print('no config found for: $optionsUrl (SKIPPED)');
     return <String>[];
   }
-  final rules = <String>[];
+  final rules = <String?>[];
   for (var ruleConfig in config.ruleConfigs) {
     rules.add(ruleConfig.name);
   }
   return rules;
 }
 
-Future<LintConfig> _fetchConfig(Uri url) async {
+Future<LintConfig?> _fetchConfig(Uri url) async {
   print('loading $url...');
   final req = await http.get(url);
   return processAnalysisOptionsFile(req.body);
 }
 
-Future<List<String>> _fetchPedanticRules() async {
+Future<List<String?>> _fetchPedanticRules() async {
   print('loading $_pedanticOptionsUrl...');
   final req = await http.get(_pedanticOptionsUrl);
   final includedOptions =

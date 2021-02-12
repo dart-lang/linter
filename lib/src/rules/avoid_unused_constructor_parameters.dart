@@ -58,7 +58,7 @@ class _ConstructorVisitor extends RecursiveAstVisitor {
       : unusedParameters = element.parameters.parameters.where((p) {
           final element = p.declaredElement;
           return element is! FieldFormalParameterElement &&
-              !element.hasDeprecated &&
+              !element!.hasDeprecated &&
               !isJustUnderscores(element.name);
         }).toSet();
 

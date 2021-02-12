@@ -193,7 +193,7 @@ Map<String, YamlNode> _getOptionsFromString(String optionsSource) {
   }
   if (doc is YamlMap) {
     doc.nodes.forEach((k, YamlNode v) {
-      Object key;
+      Object? key;
       if (k is YamlScalar) {
         key = k.value;
       }
@@ -205,7 +205,7 @@ Map<String, YamlNode> _getOptionsFromString(String optionsSource) {
         throw Exception('Bad options file format (expected Node value, '
             'got ${v.runtimeType}: `${v.toString()}`)');
       }
-      options[key as String] = v;
+      options[key] = v;
     });
   }
   return options;

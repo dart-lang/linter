@@ -103,7 +103,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  void _checkFileMethods(MethodInvocation node, DartType type) {
+  void _checkFileMethods(MethodInvocation node, DartType? type) {
     if (DartTypeUtilities.extendsClass(type, 'File', 'dart.io')) {
       if (_fileMethodNames.contains(node.methodName?.name)) {
         rule.reportLint(node);
@@ -111,7 +111,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  void _checkDirectoryMethods(MethodInvocation node, DartType type) {
+  void _checkDirectoryMethods(MethodInvocation node, DartType? type) {
     if (DartTypeUtilities.extendsClass(type, 'Directory', 'dart.io')) {
       if (_dirMethodNames.contains(node.methodName?.name)) {
         rule.reportLint(node);

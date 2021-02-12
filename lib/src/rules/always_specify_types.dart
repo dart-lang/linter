@@ -75,7 +75,7 @@ bool _isOptionallyParameterized(InterfaceType type) {
   return false;
 }
 
-bool _isOptionalTypeArgs(Element element) =>
+bool _isOptionalTypeArgs(Element? element) =>
     element is PropertyAccessorElement &&
     element.name == _optionalTypeArgsVarName &&
     element.library?.name == _metaLibName;
@@ -149,7 +149,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitSimpleFormalParameter(SimpleFormalParameter param) {
     if (param.type == null &&
         param.identifier != null &&
-        !isJustUnderscores(param.identifier.name)) {
+        !isJustUnderscores(param.identifier!.name)) {
       if (param.keyword != null) {
         rule.reportLintForToken(param.keyword);
       } else {

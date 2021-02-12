@@ -150,7 +150,7 @@ bool _isFixNumIntX(DartType type) {
   if (type is! InterfaceType) {
     return false;
   }
-  final element = type.element;
+  final Element element = type.element;
   return (element.name == 'Int32' || element.name == 'Int64') &&
       element.library?.name == 'fixnum';
 }

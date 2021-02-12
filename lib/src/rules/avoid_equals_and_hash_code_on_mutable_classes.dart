@@ -70,7 +70,7 @@ String _immutableVarName = 'immutable';
 /// The name of `meta` library, used to define analysis annotations.
 String _metaLibName = 'meta';
 
-bool _isImmutable(Element element) =>
+bool _isImmutable(Element? element) =>
     element is PropertyAccessorElement &&
     element.name == _immutableVarName &&
     element.library?.name == _metaLibName;
@@ -109,8 +109,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  ClassElement _getClassForMethod(MethodDeclaration node) =>
-      node.parent.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
+  ClassElement? _getClassForMethod(MethodDeclaration node) =>
+      node.parent!.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
 
   bool _hasImmutableAnnotation(ClassElement clazz) {
     final inheritedAndSelfElements = <ClassElement>[

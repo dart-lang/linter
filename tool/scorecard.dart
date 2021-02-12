@@ -19,9 +19,9 @@ import 'since.dart';
 const bulb = '💡';
 const checkMark = '✅';
 
-Iterable<LintRule> _registeredLints;
+Iterable<LintRule>? _registeredLints;
 
-Iterable<LintRule> get registeredLints {
+Iterable<LintRule>? get registeredLints {
   if (_registeredLints == null) {
     registerLintRules();
     _registeredLints = Registry.ruleRegistry.toList()
@@ -30,7 +30,7 @@ Iterable<LintRule> get registeredLints {
   return _registeredLints;
 }
 
-Iterable<String> get registeredLintNames => registeredLints.map((r) => r.name);
+Iterable<String> get registeredLintNames => registeredLints!.map((r) => r.name);
 
 void main() async {
   var scorecard = await ScoreCard.calculate();
@@ -60,10 +60,10 @@ StringBuffer buildFooter(ScoreCard scorecard, List<Detail> details) {
   var pedanticFixCount = 0;
 
   for (var score in scorecard.scores) {
-    for (var ruleSet in score.ruleSets) {
+    for (var ruleSet in score.ruleSets!) {
       if (ruleSet == 'pedantic') {
         ++pedanticLintCount;
-        if (score.hasFix) {
+        if (score.hasFix!) {
           ++pedanticFixCount;
         }
       }
@@ -74,7 +74,7 @@ StringBuffer buildFooter(ScoreCard scorecard, List<Detail> details) {
         ++flutterRepoLintCount;
       }
     }
-    if (score.hasFix) {
+    if (score.hasFix!) {
       ++fixCount;
     }
   }
@@ -256,7 +256,7 @@ class ScoreCard {
     var sinceInfo = await sinceMap;
 
     var scorecard = ScoreCard();
-    for (var lint in registeredLints) {
+    for (var lint in registeredLints!) {
       var ruleSets = <String>[];
       if (flutterRuleset.contains(lint.name)) {
         ruleSets.add('flutter');
@@ -298,13 +298,13 @@ class ScoreCard {
 bool _isBug(Issue issue) => issue.labels.map((l) => l.name).contains('bug');
 
 class LintScore {
-  String name;
-  bool hasFix;
-  String maturity;
-  SinceInfo since;
+  String? name;
+  bool? hasFix;
+  String? maturity;
+  SinceInfo? since;
 
-  List<String> ruleSets;
-  List<String> bugReferences;
+  List<String>? ruleSets;
+  List<String>? bugReferences;
 
   LintScore(
       {this.name,
@@ -314,10 +314,10 @@ class LintScore {
       this.bugReferences,
       this.since});
 
-  String get _ruleSets => ruleSets.isNotEmpty ? ' ${ruleSets.toString()}' : '';
+  String get _ruleSets => ruleSets!.isNotEmpty ? ' ${ruleSets.toString()}' : '';
 
   @override
-  String toString() => '$name$_ruleSets${hasFix ? " $bulb" : ""}';
+  String toString() => '$name$_ruleSets${hasFix! ? " $bulb" : ""}';
 
   String toMarkdown(List<Detail> details) {
     var sb = StringBuffer('| ');
@@ -328,33 +328,33 @@ class LintScore {
               ' [$name](https://dart-lang.github.io/linter/lints/$name.html) |');
           break;
         case Detail.linter:
-          sb.write(' ${since.sinceLinter} |');
+          sb.write(' ${since!.sinceLinter} |');
           break;
         case Detail.sdk:
-          sb.write(' ${since.sinceDartSdk} |');
+          sb.write(' ${since!.sinceDartSdk} |');
           break;
         case Detail.fix:
-          sb.write('${hasFix ? " $bulb" : ""} |');
+          sb.write('${hasFix! ? " $bulb" : ""} |');
           break;
         case Detail.pedantic:
-          sb.write('${ruleSets.contains('pedantic') ? " $checkMark" : ""} |');
+          sb.write('${ruleSets!.contains('pedantic') ? " $checkMark" : ""} |');
           break;
         case Detail.effectiveDart:
           sb.write(
-              '${ruleSets.contains('effective_dart') ? " $checkMark" : ""} |');
+              '${ruleSets!.contains('effective_dart') ? " $checkMark" : ""} |');
           break;
         case Detail.flutterUser:
-          sb.write('${ruleSets.contains('flutter') ? " $checkMark" : ""} |');
+          sb.write('${ruleSets!.contains('flutter') ? " $checkMark" : ""} |');
           break;
         case Detail.flutterRepo:
           sb.write(
-              '${ruleSets.contains('flutter_repo') ? " $checkMark" : ""} |');
+              '${ruleSets!.contains('flutter_repo') ? " $checkMark" : ""} |');
           break;
         case Detail.status:
           sb.write('${maturity != 'stable' ? ' **$maturity** ' : ""} |');
           break;
         case Detail.bugs:
-          sb.write(' ${bugReferences.join(", ")} |');
+          sb.write(' ${bugReferences!.join(", ")} |');
           break;
       }
     }

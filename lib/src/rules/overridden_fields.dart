@@ -8,6 +8,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 
 const _desc = r"Don't override fields.";
 
@@ -67,7 +68,7 @@ class LogPrintHandler implements BaseLoggingHandler {
 ''';
 
 Iterable<InterfaceType> _findAllSupertypesAndMixins(
-    InterfaceType interface, List<InterfaceType> accumulator) {
+    InterfaceType? interface, List<InterfaceType> accumulator) {
   if (interface == null ||
       interface.isDartCoreObject ||
       accumulator.contains(interface)) {
@@ -124,20 +125,20 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     node.fields.variables.forEach((VariableDeclaration variable) {
-      final field = _getOverriddenMember(variable.declaredElement);
+      final field = _getOverriddenMember(variable.declaredElement!);
       if (field != null && !field.isAbstract) {
         rule.reportLint(variable.name);
       }
     });
   }
 
-  PropertyAccessorElement _getOverriddenMember(Element member) {
+  PropertyAccessorElement? _getOverriddenMember(Element member) {
     final memberName = member.name;
     final library = member.library;
     bool isOverriddenMember(PropertyAccessorElement a) {
       if (a.isSynthetic && a.name == memberName) {
         // Ensure that private members are overriding a member of the same library.
-        if (Identifier.isPrivateName(memberName)) {
+        if (Identifier.isPrivateName(memberName!)) {
           return library == a.library;
         }
         return true;
@@ -151,7 +152,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (enclosingElement is! ClassElement) {
       return null;
     }
-    final classElement = enclosingElement as ClassElement;
+    final classElement = enclosingElement;
 
     Iterable<InterfaceType> interfaces;
     if (classElement.isMixin) {
@@ -161,7 +162,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           _findAllSupertypesAndMixins(classElement.thisType, <InterfaceType>[]);
     }
     final interface =
-        interfaces.firstWhere(containsOverriddenMember, orElse: () => null);
+        interfaces.firstWhereOrNull(containsOverriddenMember);
     return interface?.accessors?.firstWhere(isOverriddenMember);
   }
 }

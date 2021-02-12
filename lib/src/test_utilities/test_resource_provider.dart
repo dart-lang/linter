@@ -16,7 +16,7 @@ import '../analyzer.dart';
 
 /// Builds the [DartLinter] with appropriate mock SDK, resource providers, and
 /// package config path.
-DartLinter buildDriver(LintRule rule, File file, {String analysisOptions}) {
+DartLinter buildDriver(LintRule? rule, File file, {String? analysisOptions}) {
   final memoryResourceProvider = MemoryResourceProvider(
       context: PhysicalResourceProvider.INSTANCE.pathContext);
   final resourceProvider = TestResourceProvider(memoryResourceProvider);
@@ -28,7 +28,7 @@ DartLinter buildDriver(LintRule rule, File file, {String analysisOptions}) {
     packageConfigPath = null;
   }
 
-  final options = LinterOptions([rule], analysisOptions)
+  final options = LinterOptions([rule!], analysisOptions)
     ..mockSdk = MockSdk(resourceProvider: memoryResourceProvider)
     ..resourceProvider = resourceProvider
     ..packageConfigPath = packageConfigPath;
@@ -67,11 +67,11 @@ class TestResourceProvider extends file_system.ResourceProvider {
   }
 
   @override
-  Future<List<int>> getModificationTimes(List<Source> sources) =>
+  Future<List<int?>> getModificationTimes(List<Source> sources) =>
       physicalResourceProvider.getModificationTimes(sources);
 
   @override
-  file_system.Folder getStateLocation(String pluginId) =>
+  file_system.Folder? getStateLocation(String pluginId) =>
       physicalResourceProvider.getStateLocation(pluginId);
 
   @override

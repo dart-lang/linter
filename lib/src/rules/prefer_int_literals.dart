@@ -68,7 +68,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     return hasTypeDouble(literal);
   }
 
-  bool hasReturnTypeDouble(AstNode node) {
+  bool hasReturnTypeDouble(AstNode? node) {
     if (node is FunctionExpression) {
       final functionDeclaration = node.parent;
       if (functionDeclaration is FunctionDeclaration) {
@@ -87,7 +87,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     } else if (parent is ListLiteral) {
       final typeArguments = parent.typeArguments?.arguments;
       return typeArguments?.length == 1 &&
-          _isDartCoreDoubleTypeAnnotation(typeArguments[0]);
+          _isDartCoreDoubleTypeAnnotation(typeArguments![0]);
     } else if (parent is NamedExpression) {
       final argList = parent.parent;
       if (argList is ArgumentList) {
@@ -96,7 +96,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     } else if (parent is ExpressionFunctionBody) {
       return hasReturnTypeDouble(parent.parent);
     } else if (parent is ReturnStatement) {
-      final body = parent.thisOrAncestorOfType<BlockFunctionBody>();
+      final body = parent.thisOrAncestorOfType<BlockFunctionBody>()!;
       return hasReturnTypeDouble(body.parent);
     } else if (parent is VariableDeclaration) {
       final varList = parent.parent;
@@ -127,8 +127,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  bool _isDartCoreDouble(DartType type) => type?.isDartCoreDouble == true;
+  bool _isDartCoreDouble(DartType? type) => type?.isDartCoreDouble == true;
 
-  bool _isDartCoreDoubleTypeAnnotation(TypeAnnotation annotation) =>
+  bool _isDartCoreDoubleTypeAnnotation(TypeAnnotation? annotation) =>
       _isDartCoreDouble(annotation?.type);
 }

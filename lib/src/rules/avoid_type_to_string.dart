@@ -86,25 +86,25 @@ class _Visitor extends SimpleAstVisitor {
   final InterfaceType typeType;
 
   // Null if there is no logical `this` in the given context.
-  InterfaceType thisType;
+  InterfaceType? thisType;
 
   _Visitor(this.rule, this.typeSystem, this.typeType);
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    thisType = node.declaredElement.thisType;
+    thisType = node.declaredElement!.thisType;
   }
 
   @override
   void visitMixinDeclaration(MixinDeclaration node) {
-    thisType = node.declaredElement.thisType;
+    thisType = node.declaredElement!.thisType;
   }
 
   @override
   void visitExtensionDeclaration(ExtensionDeclaration node) {
     // Might not be InterfaceType. Ex: visiting an extension on a dynamic type.
-    thisType = (node.declaredElement.extendedType is InterfaceType)
-        ? node.declaredElement.extendedType as InterfaceType
+    thisType = (node.declaredElement!.extendedType is InterfaceType)
+        ? node.declaredElement!.extendedType as InterfaceType
         : null;
   }
 
@@ -113,7 +113,7 @@ class _Visitor extends SimpleAstVisitor {
     visitArgumentList(node.argumentList);
 
     final targetType = (node.realTarget?.staticType is InterfaceType)
-        ? node.realTarget.staticType as InterfaceType
+        ? node.realTarget!.staticType as InterfaceType?
         : thisType;
     _reportIfToStringOnCoreTypeClass(targetType, node.methodName);
   }
@@ -126,7 +126,7 @@ class _Visitor extends SimpleAstVisitor {
   void _validateArgument(Expression expression) {
     if (expression is PropertyAccess) {
       final targetType = (expression.realTarget?.staticType is InterfaceType)
-          ? expression.realTarget?.staticType as InterfaceType
+          ? expression.realTarget?.staticType as InterfaceType?
           : thisType;
       _reportIfToStringOnCoreTypeClass(targetType, expression.propertyName);
     } else if (expression is PrefixedIdentifier) {
@@ -140,14 +140,14 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   void _reportIfToStringOnCoreTypeClass(
-      InterfaceType targetType, SimpleIdentifier methodIdentifier) {
+      InterfaceType? targetType, SimpleIdentifier methodIdentifier) {
     if (_isToStringOnCoreTypeClass(targetType, methodIdentifier)) {
       rule.reportLint(methodIdentifier);
     }
   }
 
   bool _isToStringOnCoreTypeClass(
-          InterfaceType targetType, SimpleIdentifier methodIdentifier) =>
+          InterfaceType? targetType, SimpleIdentifier methodIdentifier) =>
       targetType != null &&
       methodIdentifier.name == 'toString' &&
       _isSimpleIdDeclByCoreObj(methodIdentifier) &&

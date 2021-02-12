@@ -35,7 +35,7 @@ import 'package:acme/lib/src/internals.dart;
 
 ''';
 
-bool isImplementation(Uri uri) {
+bool isImplementation(Uri? uri) {
   final segments = uri?.pathSegments ?? const <String>[];
   if (segments.length > 2) {
     if (segments[1] == 'src') {
@@ -45,7 +45,7 @@ bool isImplementation(Uri uri) {
   return false;
 }
 
-bool isPackage(Uri uri) => uri?.scheme == 'package';
+bool isPackage(Uri? uri) => uri?.scheme == 'package';
 
 bool samePackage(Uri uri1, Uri uri2) {
   var segments1 = uri1.pathSegments;
@@ -92,7 +92,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    if (!samePackage(importUri, sourceUri)) {
+    if (!samePackage(importUri!, sourceUri!)) {
       rule.reportLint(node.uri);
     }
   }
