@@ -59,7 +59,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     // TODO(danrubel): Consider moving this into analyzer
     final parent = literal.parent;
     if (parent is PrefixExpression) {
-      if (parent.operator?.lexeme == '-') {
+      if (parent.operator.lexeme == '-') {
         return hasTypeDouble(parent);
       } else {
         return false;

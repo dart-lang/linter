@@ -58,7 +58,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    final args = node.argumentList?.arguments;
+    final args = node.argumentList.arguments;
     if (args == null || args.length != 1) return;
 
     final arg = args.first;

@@ -99,7 +99,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     final identifier = node.expression as SimpleIdentifier;
     var parameters = declaration!.parameters;
-    final parameterName = parameters?.parameterElements?.first?.name;
+    final parameterName = parameters?.parameterElements.first?.name;
     if (identifier.name == parameterName) {
       rule.reportLint(node);
     }
@@ -109,5 +109,5 @@ class _Visitor extends SimpleAstVisitor<void> {
       declaration != null &&
       declaration.isOperator &&
       declaration.name.name == '==' &&
-      declaration.parameters?.parameterElements?.length == 1;
+      declaration.parameters?.parameterElements.length == 1;
 }

@@ -69,7 +69,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       isAsync = parent.body?.isAsynchronous;
     } else if (parent is MethodDeclaration) {
       returnType = parent.declaredElement?.returnType;
-      isAsync = parent.body?.isAsynchronous;
+      isAsync = parent.body.isAsynchronous;
     } else {
       throw StateError('unexpected type');
     }

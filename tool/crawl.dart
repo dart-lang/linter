@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:analyzer/src/lint/registry.dart';
@@ -119,12 +120,14 @@ Future<String?> findSinceLinter(String lint) async {
 }
 
 Future<String> linterForDartSdk(String sdk) async =>
-    _dartSdkToLinterMap[sdk] ??= await (_fetchLinterForVersion(sdk) as FutureOr<String>);
+    _dartSdkToLinterMap[sdk] ??=
+        await (_fetchLinterForVersion(sdk) as FutureOr<String>);
 
 Future<List<String>?> rulesForVersion(int minor) async {
   var version = '0.1.$minor';
   if (minor >= 31) {
-    return _sinceMap[version] ??= await (fetchRulesForVersion(version) as FutureOr<List<String>>);
+    return _sinceMap[version] ??=
+        await (fetchRulesForVersion(version) as FutureOr<List<String>>);
   }
   return null;
 }

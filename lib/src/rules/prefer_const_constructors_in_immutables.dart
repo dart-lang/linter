@@ -5,9 +5,9 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 
 import '../analyzer.dart';
-import 'package:collection/collection.dart' show IterableExtension;
 
 const _desc = r'Prefer declaring const constructors on `@immutable` classes.';
 
@@ -47,7 +47,7 @@ String _metaLibName = 'meta';
 bool _isImmutable(Element? element) =>
     element is PropertyAccessorElement &&
     element.name == _immutableVarName &&
-    element.library?.name == _metaLibName;
+    element.library.name == _metaLibName;
 
 class PreferConstConstructorsInImmutables extends LintRule
     implements NodeLintRule {
@@ -93,12 +93,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   bool _hasConstConstructorInvocation(ConstructorDeclaration node) {
     final clazz = node.declaredElement!.enclosingElement;
     // construct with super
-    final superInvocation = node.initializers.firstWhereOrNull(
-        (e) => e is SuperConstructorInvocation) as SuperConstructorInvocation?;
+    final superInvocation = node.initializers
+            .firstWhereOrNull((e) => e is SuperConstructorInvocation)
+        as SuperConstructorInvocation?;
     if (superInvocation != null) return superInvocation.staticElement!.isConst;
     // construct with this
-    final redirectInvocation = node.initializers.firstWhereOrNull(
-        (e) => e is RedirectingConstructorInvocation) as RedirectingConstructorInvocation?;
+    final redirectInvocation = node.initializers
+            .firstWhereOrNull((e) => e is RedirectingConstructorInvocation)
+        as RedirectingConstructorInvocation?;
     if (redirectInvocation != null) {
       return redirectInvocation.staticElement!.isConst;
     }

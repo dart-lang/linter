@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
 
@@ -136,7 +137,8 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
 
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
-    _addElementToEnvironment(_UndefinedExpression(_getLeftElement(node)));
+    _addElementToEnvironment(
+        _UndefinedExpression.forElement(_getLeftElement(node)));
     node.visitChildren(this);
   }
 
@@ -186,7 +188,7 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
       _addTrueCondition(loopParts.condition);
 
       if (loopParts is ForPartsWithDeclarations) {
-        loopParts.variables?.accept(this);
+        loopParts.variables.accept(this);
       } else if (loopParts is ForPartsWithExpression) {
         loopParts.initialization?.accept(this);
       }
@@ -195,7 +197,7 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
       loopParts.condition?.accept(this);
       _addTrueCondition(loopParts.condition);
       loopParts.updaters.accept(this);
-      node.body?.accept(this);
+      node.body.accept(this);
       _propagateUndefinedExpressions(_removeLastScope()!);
       if (_isRelevantOutsideOfForStatement(node)) {
         _addFalseCondition(loopParts.condition);
@@ -236,7 +238,8 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
   void visitPostfixExpression(PostfixExpression node) {
     final operand = node.operand;
     if (operand is SimpleIdentifier) {
-      _addElementToEnvironment(_UndefinedExpression(operand.staticElement));
+      _addElementToEnvironment(
+          _UndefinedExpression.forElement(operand.staticElement));
     }
     node.visitChildren(this);
   }
@@ -245,7 +248,8 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
   void visitPrefixExpression(PrefixExpression node) {
     final operand = node.operand;
     if (operand is SimpleIdentifier) {
-      _addElementToEnvironment(_UndefinedExpression(operand.staticElement));
+      _addElementToEnvironment(
+          _UndefinedExpression.forElement(operand.staticElement));
     }
     node.visitChildren(this);
   }
@@ -270,7 +274,8 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
 
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
-    _addElementToEnvironment(_UndefinedExpression(node.declaredElement));
+    _addElementToEnvironment(
+        _UndefinedExpression.forElement(node.declaredElement));
     node.visitChildren(this);
   }
 
@@ -278,9 +283,9 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
   void visitWhileStatement(WhileStatement node) {
     _addScope();
     visitCondition(node.condition);
-    node.condition?.accept(this);
+    node.condition.accept(this);
     _addTrueCondition(node.condition);
-    node.body?.accept(this);
+    node.body.accept(this);
     _propagateUndefinedExpressions(_removeLastScope()!);
     // If a while statement do not have breaks inside, that means the condition
     // after the loop is false.
@@ -290,8 +295,10 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
     breakScope.deleteBreaksWithTarget(node);
   }
 
-  void _addElementToEnvironment(_ExpressionBox e) {
-    outerScope?.add(e);
+  void _addElementToEnvironment(_ExpressionBox? e) {
+    if (e != null) {
+      outerScope?.add(e);
+    }
   }
 
   void _addFalseCondition(Expression? expression) {
@@ -379,10 +386,10 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
 
   void _visitIfStatement(IfStatement node) {
     _addScope();
-    node.condition?.accept(this);
+    node.condition.accept(this);
     visitCondition(node.condition);
     _addTrueCondition(node.condition);
-    node.thenStatement?.accept(this);
+    node.thenStatement.accept(this);
     _propagateUndefinedExpressions(_removeLastScope()!);
   }
 }
@@ -415,7 +422,7 @@ class _UndefinedAllExpression extends _ExpressionBox {
 class _UndefinedExpression extends _ExpressionBox {
   Element element;
 
-  factory _UndefinedExpression(Element? element) {
+  static _UndefinedExpression? forElement(Element? element) {
     final canonicalElement = DartTypeUtilities.getCanonicalElement(element);
     if (canonicalElement == null) return null;
     return _UndefinedExpression._internal(canonicalElement);

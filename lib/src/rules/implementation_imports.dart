@@ -47,7 +47,10 @@ bool isImplementation(Uri? uri) {
 
 bool isPackage(Uri? uri) => uri?.scheme == 'package';
 
-bool samePackage(Uri uri1, Uri uri2) {
+bool samePackage(Uri? uri1, Uri? uri2) {
+  if (uri1 == null || uri2 == null) {
+    return false;
+  }
   var segments1 = uri1.pathSegments;
   var segments2 = uri2.pathSegments;
   if (segments1.isEmpty || segments2.isEmpty) {
@@ -79,8 +82,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitImportDirective(ImportDirective node) {
-    final importUri = node?.uriSource?.uri;
-    final sourceUri = node?.element?.source?.uri;
+    final importUri = node.uriSource?.uri;
+    final sourceUri = node.element?.source.uri;
 
     // Test for 'package:*/src/'.
     if (!isImplementation(importUri)) {

@@ -80,8 +80,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.externalKeyword != null) return;
 
     final _constructorVisitor = _ConstructorVisitor(rule, node);
-    node?.body?.visitChildren(_constructorVisitor);
-    node?.initializers?.forEach((i) => i.visitChildren(_constructorVisitor));
+    node.body?.visitChildren(_constructorVisitor);
+    node.initializers.forEach((i) => i.visitChildren(_constructorVisitor));
 
     _constructorVisitor.unusedParameters.forEach(rule.reportLint);
   }

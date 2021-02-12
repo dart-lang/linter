@@ -83,7 +83,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
     final type = node.writeType;
-    _check(type, node.rightHandSide?.staticType, node,
+    _check(type, node.rightHandSide.staticType, node,
         checkedNode: node.rightHandSide);
   }
 
@@ -157,7 +157,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (parameterElement != null) {
         final type = parameterElement.type;
         final expression = arg is NamedExpression ? arg.expression : arg;
-        _check(type, expression?.staticType, expression);
+        _check(type, expression.staticType, expression);
       }
     }
   }

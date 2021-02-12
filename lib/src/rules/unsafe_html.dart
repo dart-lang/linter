@@ -100,15 +100,15 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     } else if (leftPart is PropertyAccess) {
       _checkAssignment(
-          leftPart.realTarget?.staticType, leftPart.propertyName, node);
+          leftPart.realTarget.staticType, leftPart.propertyName, node);
     } else if (leftPart is PrefixedIdentifier) {
-      _checkAssignment(leftPart.prefix?.staticType, leftPart.identifier, node);
+      _checkAssignment(leftPart.prefix.staticType, leftPart.identifier, node);
     }
   }
 
   void _checkAssignment(DartType? type, SimpleIdentifier property,
       AssignmentExpression assignment) {
-    if (property == null || type == null) return;
+    if (type == null) return;
 
     // It is more efficient to check the setter's name before checking whether
     // the target is an interesting type.
@@ -140,7 +140,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (type == null) return;
 
     var constructorName = node.constructorName;
-    if (constructorName?.name?.name == 'html') {
+    if (constructorName.name?.name == 'html') {
       if (type.extendsDartHtmlClass('DocumentFragment')) {
         rule.reportLint(node,
             arguments: ['html', 'DocumentFragment'],
@@ -154,7 +154,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    var methodName = node.methodName?.name;
+    var methodName = node.methodName.name;
     if (methodName == null) return;
 
     // The static type of the target.

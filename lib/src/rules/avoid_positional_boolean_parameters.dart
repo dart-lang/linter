@@ -67,8 +67,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitConstructorDeclaration(ConstructorDeclaration node) {
     if (!node.declaredElement!.isPrivate) {
       final parametersToLint =
-          node.parameters?.parameters?.where(_isFormalParameterToLint);
-      if (parametersToLint?.isNotEmpty == true) {
+          node.parameters.parameters.where(_isFormalParameterToLint);
+      if (parametersToLint.isNotEmpty == true) {
         rule.reportLint(parametersToLint.first);
       }
     }
@@ -78,7 +78,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitFunctionDeclaration(FunctionDeclaration node) {
     if (!node.declaredElement!.isPrivate) {
       final parametersToLint = node.functionExpression.parameters?.parameters
-          ?.where(_isFormalParameterToLint);
+          .where(_isFormalParameterToLint);
       if (parametersToLint?.isNotEmpty == true) {
         rule.reportLint(parametersToLint!.first);
       }
@@ -93,7 +93,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         !DartTypeUtilities.hasInheritedMethod(node) &&
         !_isOverridingMember(node.declaredElement)) {
       final parametersToLint =
-          node.parameters?.parameters?.where(_isFormalParameterToLint);
+          node.parameters?.parameters.where(_isFormalParameterToLint);
       if (parametersToLint?.isNotEmpty == true) {
         rule.reportLint(parametersToLint!.first);
       }
@@ -102,7 +102,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool _isFormalParameterToLint(FormalParameter node) =>
       !node.isNamed &&
-      DartTypeUtilities.isClass(node.declaredElement!.type, 'bool', 'dart.core');
+      DartTypeUtilities.isClass(
+          node.declaredElement!.type, 'bool', 'dart.core');
 
   bool _isOverridingMember(Element? member) {
     if (member == null) {

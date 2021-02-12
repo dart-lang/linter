@@ -7,7 +7,6 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_system.dart';
 import 'package:analyzer/src/dart/element/member.dart'; // ignore: implementation_imports
-import 'package:meta/meta.dart';
 
 import '../ast.dart';
 
@@ -127,7 +126,8 @@ class DartTypeUtilities {
     return false;
   }
 
-  static bool extendsClass(DartType? type, String? className, String? library) =>
+  static bool extendsClass(
+          DartType? type, String? className, String? library) =>
       _extendsClass(type, <ClassElement>{}, className, library);
 
   static Element? getCanonicalElement(Element? element) {
@@ -226,18 +226,18 @@ class DartTypeUtilities {
   static bool isClass(DartType? type, String? className, String? library) =>
       type is InterfaceType &&
       type.element.name == className &&
-      type.element.library?.name == library;
+      type.element.library.name == library;
 
   static bool isClassElement(
           ClassElement element, String className, String library) =>
-      element.name == className && element.library?.name == library;
+      element.name == className && element.library.name == library;
 
   static bool isConstructorElement(ConstructorElement? element,
           {required String uriStr,
           required String className,
           required String constructorName}) =>
       element != null &&
-      element.library?.name == uriStr &&
+      element.library.name == uriStr &&
       element.enclosingElement.name == className &&
       element.name == constructorName;
 

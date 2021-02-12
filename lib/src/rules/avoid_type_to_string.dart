@@ -125,8 +125,8 @@ class _Visitor extends SimpleAstVisitor {
 
   void _validateArgument(Expression expression) {
     if (expression is PropertyAccess) {
-      final targetType = (expression.realTarget?.staticType is InterfaceType)
-          ? expression.realTarget?.staticType as InterfaceType?
+      final targetType = (expression.realTarget.staticType is InterfaceType)
+          ? expression.realTarget.staticType as InterfaceType?
           : thisType;
       _reportIfToStringOnCoreTypeClass(targetType, expression.propertyName);
     } else if (expression is PrefixedIdentifier) {
@@ -154,7 +154,7 @@ class _Visitor extends SimpleAstVisitor {
       typeSystem.isSubtypeOf(targetType, typeType);
 
   bool _isSimpleIdDeclByCoreObj(SimpleIdentifier simpleIdentifier) {
-    final encloser = simpleIdentifier?.staticElement?.enclosingElement;
+    final encloser = simpleIdentifier.staticElement?.enclosingElement;
     return encloser is ClassElement && encloser.isDartCoreObject;
   }
 }

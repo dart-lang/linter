@@ -34,7 +34,7 @@ CompilationUnit? getCompilationUnit(AstNode node) =>
 /// variable declaration list or `null` if none is found.
 SimpleIdentifier? getFieldIdentifier(FieldDeclaration decl, String name) {
   for (var v in decl.fields.variables) {
-    if (v.name?.name == name) {
+    if (v.name.name == name) {
       return v.name;
     }
   }
@@ -104,7 +104,7 @@ bool isDeprecated(Declaration declaration) =>
 
 /// Returns `true` if this element is the `==` method declaration.
 bool isEquals(ClassMember element) =>
-    element is MethodDeclaration && element.name?.name == '==';
+    element is MethodDeclaration && element.name.name == '==';
 
 /// Returns `true` if the keyword associated with this token is `final` or
 /// `const`.
@@ -113,7 +113,7 @@ bool isFinalOrConst(Token token) =>
 
 /// Returns `true` if this element is a `hashCode` method or field declaration.
 bool isHashCode(ClassMember element) =>
-    (element is MethodDeclaration && element.name?.name == 'hashCode') ||
+    (element is MethodDeclaration && element.name.name == 'hashCode') ||
     (element is FieldDeclaration &&
         getFieldIdentifier(element, 'hashCode') != null);
 
@@ -121,7 +121,7 @@ bool isHashCode(ClassMember element) =>
 /// [package]'s `lib/` directory tree.
 bool isInLibDir(CompilationUnit node, WorkspacePackage? package) {
   if (package == null) return false;
-  final cuPath = node.declaredElement!.library?.source?.fullName;
+  final cuPath = node.declaredElement!.library.source.fullName;
   if (cuPath == null) return false;
   final libDir = path.join(package.root, 'lib');
   return path.isWithin(libDir, cuPath);
@@ -147,7 +147,8 @@ bool isProtected(Declaration declaration) =>
     declaration.metadata.any((Annotation a) => a.name.name == 'protected');
 
 /// Returns `true` if the given [ClassMember] is a public method.
-bool isPublicMethod(ClassMember m) => isMethod(m) && m.declaredElement!.isPublic;
+bool isPublicMethod(ClassMember m) =>
+    isMethod(m) && m.declaredElement!.isPublic;
 
 /// Returns `true` if the given method [declaration] is a "simple getter".
 ///
@@ -216,13 +217,13 @@ bool isVar(Token token) => isKeyword(token, Keyword.VAR);
 
 /// Return the nearest enclosing pubspec file.
 File? locatePubspecFile(CompilationUnit compilationUnit) {
-  final fullName = compilationUnit?.declaredElement?.source?.fullName;
+  final fullName = compilationUnit.declaredElement?.source.fullName;
   if (fullName == null) {
     return null;
   }
 
   final resourceProvider =
-      compilationUnit?.declaredElement?.session?.resourceProvider;
+      compilationUnit.declaredElement?.session.resourceProvider;
   if (resourceProvider == null) {
     return null;
   }
@@ -255,8 +256,7 @@ bool _checkForSimpleGetter(MethodDeclaration getter, Expression? expression) {
       Element? getterElement = getter.declaredElement;
       // Skipping library level getters, test that the enclosing element is
       // the same
-      if (staticElement.enclosingElement != null &&
-          (staticElement.enclosingElement == getterElement!.enclosingElement)) {
+      if (staticElement.enclosingElement == getterElement!.enclosingElement) {
         return staticElement.isSynthetic && staticElement.variable.isPrivate;
       }
     }

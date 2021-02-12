@@ -307,7 +307,7 @@ class SimpleFormatter implements ReportFormatter {
   void _recordStats(AnalysisError error) {
     var codeName = error.errorCode.name;
     stats.putIfAbsent(codeName, () => 0);
-    stats[codeName]++;
+    stats[codeName] = stats[codeName]! + 1;
   }
 
   void _writeLint(AnalysisError error, LineInfo lineInfo) {

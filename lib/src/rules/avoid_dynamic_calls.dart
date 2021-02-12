@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
+
 import '../analyzer.dart';
 
 const _desc = r'Avoid method calls or property accesses on a "dynamic" target.';
@@ -134,7 +135,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   void _lintIfDynamicOrFunction(Expression node, {DartType? staticType}) {
-    staticType ??= node?.staticType;
+    staticType ??= node.staticType;
     if (staticType == null) {
       return;
     }

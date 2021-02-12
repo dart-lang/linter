@@ -5,9 +5,10 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:collection/collection.dart' show IterableExtension;
+
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
-import 'package:collection/collection.dart' show IterableExtension;
 
 typedef _InterfaceTypePredicate = bool Function(InterfaceType type);
 
@@ -57,8 +58,7 @@ DartType? _findIterableTypeArgument(
   }
 
   final implementedInterfaces = _findImplementedInterfaces(type);
-  final interface =
-      implementedInterfaces.firstWhereOrNull(predicate);
+  final interface = implementedInterfaces.firstWhereOrNull(predicate);
   if (interface != null && interface.typeArguments.isNotEmpty) {
     return interface.typeArguments.first;
   }

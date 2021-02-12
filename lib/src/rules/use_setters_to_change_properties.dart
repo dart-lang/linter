@@ -57,7 +57,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.isSetter ||
         node.isGetter ||
         DartTypeUtilities.overridesMethod(node) ||
-        node.parameters?.parameters?.length != 1 ||
+        node.parameters?.parameters.length != 1 ||
         node.returnType?.type?.isVoid != true) {
       return;
     }

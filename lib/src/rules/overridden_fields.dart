@@ -6,9 +6,9 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 
 import '../analyzer.dart';
-import 'package:collection/collection.dart' show IterableExtension;
 
 const _desc = r"Don't override fields.";
 
@@ -161,8 +161,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       interfaces =
           _findAllSupertypesAndMixins(classElement.thisType, <InterfaceType>[]);
     }
-    final interface =
-        interfaces.firstWhereOrNull(containsOverriddenMember);
-    return interface?.accessors?.firstWhere(isOverriddenMember);
+    final interface = interfaces.firstWhereOrNull(containsOverriddenMember);
+    return interface?.accessors.firstWhere(isOverriddenMember);
   }
 }

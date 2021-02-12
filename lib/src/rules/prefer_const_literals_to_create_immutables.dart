@@ -48,7 +48,7 @@ String _metaLibName = 'meta';
 bool _isImmutable(Element? element) =>
     element is PropertyAccessorElement &&
     element.name == _immutableVarName &&
-    element.library?.name == _metaLibName;
+    element.library.name == _metaLibName;
 
 class PreferConstLiteralsToCreateImmutables extends LintRule
     implements NodeLintRule {
@@ -99,8 +99,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       // that cannot be resolved.
       return false;
     }
-    final inheritedAndSelfTypes =
-        _getSelfAndInheritedTypes(type);
+    final inheritedAndSelfTypes = _getSelfAndInheritedTypes(type);
     final inheritedAndSelfAnnotations = inheritedAndSelfTypes
         .map((type) => type.element)
         .expand((c) => c.metadata)

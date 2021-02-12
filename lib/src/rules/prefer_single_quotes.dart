@@ -4,7 +4,6 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:meta/meta.dart';
 
 import '../analyzer.dart';
 
@@ -148,8 +147,8 @@ class _IsOrContainsStringVisitor extends UnifyingAstVisitor<bool> {
   /// all leaf nodes, they will either have a method defined here and return
   /// true, or they will return false because leaves have no children.
   @override
-  bool visitNode(AstNode node) =>
-      _ImmediateChildrenVisitor.childrenOf(node).any(isOrContainsString as bool Function(AstNode));
+  bool visitNode(AstNode node) => _ImmediateChildrenVisitor.childrenOf(node)
+      .any(isOrContainsString as bool Function(AstNode));
 
   @override
   bool visitSimpleStringLiteral(SimpleStringLiteral string) => true;

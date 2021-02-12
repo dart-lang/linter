@@ -73,7 +73,7 @@ String _metaLibName = 'meta';
 bool _isImmutable(Element? element) =>
     element is PropertyAccessorElement &&
     element.name == _immutableVarName &&
-    element.library?.name == _metaLibName;
+    element.library.name == _metaLibName;
 
 class AvoidOperatorEqualsOnMutableClasses extends LintRule
     implements NodeLintRule {
@@ -101,7 +101,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (node.name.token?.type == TokenType.EQ_EQ || isHashCode(node)) {
+    if (node.name.token.type == TokenType.EQ_EQ || isHashCode(node)) {
       final classElement = _getClassForMethod(node);
       if (classElement != null && !_hasImmutableAnnotation(classElement)) {
         rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);

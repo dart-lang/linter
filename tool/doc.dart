@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:analyzer/src/lint/config.dart';
@@ -16,7 +17,7 @@ import 'machine.dart';
 import 'since.dart';
 
 /// Generates lint rule docs for publishing to https://dart-lang.github.io/
-void main([List<String> args]) async {
+void main(List<String> args) async {
   var parser = ArgParser()
     ..addOption('out', abbr: 'o', help: 'Specifies output directory.');
 
@@ -120,19 +121,22 @@ Future<void> fetchBadgeInfo() async {
   var latestEffectiveDart = await effectiveDartLatestVersion;
 
   var pedantic = await (fetchConfig(
-      'https://raw.githubusercontent.com/dart-lang/pedantic/master/lib/analysis_options.$latestPedantic.yaml') as FutureOr<LintConfig>);
+          'https://raw.githubusercontent.com/dart-lang/pedantic/master/lib/analysis_options.$latestPedantic.yaml')
+      as FutureOr<LintConfig>);
   for (var ruleConfig in pedantic.ruleConfigs) {
     pedanticRules.add(ruleConfig.name);
   }
 
   var effectiveDart = await (fetchConfig(
-      'https://raw.githubusercontent.com/tenhobi/effective_dart/master/lib/analysis_options.$latestEffectiveDart.yaml') as FutureOr<LintConfig>);
+          'https://raw.githubusercontent.com/tenhobi/effective_dart/master/lib/analysis_options.$latestEffectiveDart.yaml')
+      as FutureOr<LintConfig>);
   for (var ruleConfig in effectiveDart.ruleConfigs) {
     effectiveDartRules.add(ruleConfig.name);
   }
 
   var flutter = await (fetchConfig(
-      'https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/analysis_options_user.yaml') as FutureOr<LintConfig>);
+          'https://raw.githubusercontent.com/flutter/flutter/master/packages/flutter/lib/analysis_options_user.yaml')
+      as FutureOr<LintConfig>);
   for (var ruleConfig in flutter.ruleConfigs) {
     flutterRules.add(ruleConfig.name);
   }
@@ -506,7 +510,7 @@ class RuleHtmlGenerator {
 
   RuleHtmlGenerator(this.rule);
 
-  String get details => rule.details ?? '';
+  String get details => rule.details;
 
   String get group => rule.group.name;
 
@@ -615,7 +619,7 @@ class RuleMarkdownGenerator {
 
   RuleMarkdownGenerator(this.rule);
 
-  String get details => rule.details ?? '';
+  String get details => rule.details;
 
   String get group => rule.group.name;
 

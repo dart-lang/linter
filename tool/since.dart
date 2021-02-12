@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:pub_semver/pub_semver.dart';
@@ -109,7 +110,7 @@ Future<String?> _sinceSdkForLinter(String? linterVersionString) async {
 }
 
 Future<String?> _nextLinterVersion(Version linterVersion) async {
-  for (final version in await (linterVersions as FutureOr<Iterable<_>>)) {
+  for (final version in await (linterVersions as FutureOr<Iterable<String>>)) {
     if (Version.parse(version).compareTo(linterVersion) > 0) {
       return version;
     }

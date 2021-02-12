@@ -58,7 +58,7 @@ bool _isParameter(Expression expression, Element? parameter) =>
 
 bool _isParameterWithQuestion(AstNode node, Element? parameter) =>
     (node is PropertyAccess &&
-        node.operator?.type == TokenType.QUESTION_PERIOD &&
+        node.operator.type == TokenType.QUESTION_PERIOD &&
         DartTypeUtilities.getCanonicalElementFromIdentifier(node.target) ==
             parameter) ||
     (node is MethodInvocation &&
@@ -96,7 +96,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
     final parameters = node.parameters?.parameters;
-    if (node.name.token?.type == TokenType.EQ_EQ && parameters?.length == 1) {
+    if (node.name.token.type == TokenType.EQ_EQ && parameters?.length == 1) {
       final parameter = DartTypeUtilities.getCanonicalElementFromIdentifier(
           parameters!.first.identifier);
       bool checkIfParameterIsNull(AstNode node) =>

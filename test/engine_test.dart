@@ -199,7 +199,8 @@ class MockLinter extends LintRule {
 }
 
 class MockLintRule extends LintRule {
-  MockLintRule(String name, Group group) : super(name: name, group: group);
+  MockLintRule(String name, Group group)
+      : super(name: name, group: group, description: '', details: '');
 
   @override
   AstVisitor getVisitor() => MockVisitor(null);

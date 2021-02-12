@@ -233,7 +233,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var constructorName = node.constructorName;
     var type = node.staticType;
     for (var constructor in _constructorsWithNonNullableArguments) {
-      if (constructorName?.name?.name == constructor.name) {
+      if (constructorName.name?.name == constructor.name) {
         if (DartTypeUtilities.extendsClass(
             type, constructor.type, constructor.library)) {
           _checkNullArgForClosure(
@@ -246,8 +246,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     final target = node.target;
-    final methodName = node.methodName?.name;
-    final element = target is Identifier ? target?.staticElement : null;
+    final methodName = node.methodName.name;
+    if (methodName == null) {
+      return;
+    }
+    final element = target is Identifier ? target.staticElement : null;
     if (element is ClassElement) {
       // Static function called, "target" is the class.
       for (var function in _staticFunctionsWithNonNullableArguments) {

@@ -252,8 +252,7 @@ class MockSource implements Source {
   late UriKind uriKind;
 
   @override
-  // ignore: avoid_returning_null
-  bool exists() => null;
+  bool exists() => false;
 }
 
 class TestErrorCode extends ErrorCode {

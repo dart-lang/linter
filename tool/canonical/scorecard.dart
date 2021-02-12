@@ -13,7 +13,6 @@ import 'package:github/github.dart';
 import 'package:http/http.dart' as http;
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';
-import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 
 import '../parse.dart';
