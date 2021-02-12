@@ -14,9 +14,9 @@ const _details = r'''
 
 Do apply `@Deprecated()` consistently:
 
-- if a class is deprecated, its contructors should also be deprecated.
-- if a field is deprecated, the contructor parameter pointing to it should also be deprecated.
-- if a contructor parameter pointing to a field is deprecated, the field should also be deprecated.
+- if a class is deprecated, its constructors should also be deprecated.
+- if a field is deprecated, the constructor parameter pointing to it should also be deprecated.
+- if a constructor parameter pointing to a field is deprecated, the field should also be deprecated.
 
 **BAD:**
 ```
