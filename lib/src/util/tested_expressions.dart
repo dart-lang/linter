@@ -42,10 +42,10 @@ bool _isComparison(Expression expression) =>
     BooleanExpressionUtilities.COMPARISONS.contains(expression.operator.type);
 
 bool _isNegationOrComparison(
-    TokenType? cOperatorType, TokenType eOperatorType, TokenType tokenType) {
+    TokenType cOperatorType, TokenType eOperatorType, TokenType tokenType) {
   final isNegationOperation =
       cOperatorType == BooleanExpressionUtilities.NEGATIONS[eOperatorType] ||
-          BooleanExpressionUtilities.IMPLICATIONS[cOperatorType!] ==
+          BooleanExpressionUtilities.IMPLICATIONS[cOperatorType] ==
               BooleanExpressionUtilities.NEGATIONS[eOperatorType];
 
   final isTrichotomyConjunction = BooleanExpressionUtilities
@@ -167,12 +167,13 @@ class TestedExpressions {
             ? BooleanExpressionUtilities
                 .NEGATIONS[otherExpression.operator.type]
             : otherExpression.operator.type;
-        final isNegationOrComparison =
-            _isNegationOrComparison(cOperatorType, eOperatorType, tokenType);
-
-        if (isNegationOrComparison && sameOperands) {
-          contradictions
-              .add(ContradictoryComparisons(otherExpression, expression));
+        if (cOperatorType != null) {
+          final isNegationOrComparison =
+              _isNegationOrComparison(cOperatorType, eOperatorType, tokenType);
+          if (isNegationOrComparison && sameOperands) {
+            contradictions
+                .add(ContradictoryComparisons(otherExpression, expression));
+          }
         }
       });
     });
