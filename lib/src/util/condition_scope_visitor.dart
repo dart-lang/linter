@@ -331,7 +331,7 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
       } else if (statement is ReturnStatement) {
         return true;
       }
-      return ExitDetector.exits(statement!);
+      return statement != null && ExitDetector.exits(statement);
     }
   }
 
