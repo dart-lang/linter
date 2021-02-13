@@ -86,7 +86,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     var declaredElement = node.declaredElement;
     if (declaredElement != null &&
-        _isPrimitiveType(node.declaredElement!.returnType)) {
+        _isPrimitiveType(declaredElement.returnType)) {
       _visitFunctionBody(node.body);
     }
   }
