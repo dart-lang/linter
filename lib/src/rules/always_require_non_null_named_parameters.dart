@@ -73,12 +73,10 @@ class _Visitor extends SimpleAstVisitor<void> {
         // Only named parameters
         if (p.isNamed) {
           final parameter = p as DefaultFormalParameter;
-          var declaredElement = parameter.declaredElement;
-          if (declaredElement != null) {
-            // Without a default value or marked @required
-            if (parameter.defaultValue == null && declaredElement.hasRequired) {
-              params.add(parameter);
-            }
+          // Without a default value or marked @required
+          if (parameter.defaultValue == null &&
+              !parameter.declaredElement!.hasRequired) {
+            params.add(parameter);
           }
         }
       }
@@ -99,10 +97,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   void _checkAssert(
       Expression assertExpression, List<DefaultFormalParameter> params) {
     for (final param in params) {
-      var identifier = param.identifier;
-      if (identifier != null &&
-          _hasAssertNotNull(assertExpression, identifier.name)) {
-        rule.reportLintForToken(identifier.beginToken);
+      if (_hasAssertNotNull(assertExpression, param.identifier!.name)) {
+        rule.reportLintForToken(param.identifier!.beginToken);
         params.remove(param);
         return;
       }

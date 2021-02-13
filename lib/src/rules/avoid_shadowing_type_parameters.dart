@@ -63,10 +63,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    if (node.functionType?.typeParameters == null) {
+    var typeParameters = node.functionType?.typeParameters;
+    if (typeParameters == null) {
       return;
     }
-    _checkForShadowing(node.functionType!.typeParameters, node.typeParameters);
+    _checkForShadowing(typeParameters, node.typeParameters);
   }
 
   @override
@@ -104,11 +105,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   // Check whether any of [typeParameters] shadow [ancestorTypeParameters].
   void _checkForShadowing(TypeParameterList? typeParameters,
       TypeParameterList? ancestorTypeParameters) {
-    if (ancestorTypeParameters == null) {
+    if (typeParameters == null || ancestorTypeParameters == null) {
       return;
     }
 
-    var typeParameterIds = typeParameters!.typeParameters.map((tp) => tp.name);
+    var typeParameterIds = typeParameters.typeParameters.map((tp) => tp.name);
     var ancestorTypeParameterNames =
         ancestorTypeParameters.typeParameters.map((tp) => tp.name.name);
     var shadowingTypeParameters = typeParameterIds

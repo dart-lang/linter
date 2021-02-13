@@ -110,7 +110,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   ClassElement? _getClassForMethod(MethodDeclaration node) =>
-      node.parent!.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
+      node.parent?.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
 
   bool _hasImmutableAnnotation(ClassElement clazz) {
     final inheritedAndSelfElements = <ClassElement>[
