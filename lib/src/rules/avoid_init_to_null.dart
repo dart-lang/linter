@@ -87,18 +87,26 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitDefaultFormalParameter(DefaultFormalParameter node) {
+    var declaredElement = node.declaredElement;
+    if (declaredElement == null) {
+      return;
+    }
     if (DartTypeUtilities.isNullLiteral(node.defaultValue) &&
-        isNullable(node.declaredElement!.type)) {
+        isNullable(declaredElement.type)) {
       rule.reportLint(node);
     }
   }
 
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
+    var declaredElement = node.declaredElement;
+    if (declaredElement == null) {
+      return;
+    }
     if (!node.isConst &&
         !node.isFinal &&
         DartTypeUtilities.isNullLiteral(node.initializer) &&
-        isNullable(node.declaredElement!.type)) {
+        isNullable(declaredElement.type)) {
       rule.reportLint(node);
     }
   }

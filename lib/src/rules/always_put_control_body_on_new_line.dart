@@ -94,13 +94,17 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   void _checkNodeOnNextLine(AstNode? node, int controlEnd) {
-    if (node is Block && node.statements.isEmpty) return;
+    if (node == null || node is Block && node.statements.isEmpty) return;
 
-    final unit = node!.root as CompilationUnit;
+    final unit = node.root as CompilationUnit;
     final offsetFirstStatement =
         node is Block ? node.statements.first.offset : node.offset;
-    if (unit.lineInfo!.getLocation(controlEnd).lineNumber ==
-        unit.lineInfo!.getLocation(offsetFirstStatement).lineNumber) {
+    var lineInfo = unit.lineInfo;
+    if (lineInfo == null) {
+      return;
+    }
+    if (lineInfo.getLocation(controlEnd).lineNumber ==
+        lineInfo.getLocation(offsetFirstStatement).lineNumber) {
       rule.reportLintForToken(node.beginToken);
     }
   }
