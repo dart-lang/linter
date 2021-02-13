@@ -122,7 +122,7 @@ String _dartDirectiveGoFirst(String type) =>
 
 bool _isAbsoluteDirective(NamespaceDirective node) {
   var uriContent = node.uriContent;
-  return uriContent != null && uriContent!.contains(':');
+  return uriContent != null && uriContent.contains(':');
 }
 
 bool _isDartDirective(NamespaceDirective node) {
