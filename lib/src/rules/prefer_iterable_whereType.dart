@@ -80,8 +80,10 @@ class _Visitor extends SimpleAstVisitor<void> {
       expression = expression?.unParenthesized;
       if (expression is IsExpression && expression.notOperator == null) {
         final target = expression.expression;
+        var identifier = arg.parameters?.parameters.first.identifier;
         if (target is SimpleIdentifier &&
-            target.name == arg.parameters?.parameters.first.identifier!.name) {
+            identifier != null &&
+            target.name == identifier.name) {
           rule.reportLint(node.methodName);
         }
       }

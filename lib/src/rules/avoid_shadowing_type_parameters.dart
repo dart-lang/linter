@@ -55,19 +55,17 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFunctionDeclarationStatement(FunctionDeclarationStatement node) {
     var functionExpression = node.functionDeclaration.functionExpression;
-    if (functionExpression.typeParameters == null) {
-      return;
+    if (functionExpression.typeParameters != null) {
+      _checkAncestorParameters(functionExpression.typeParameters, node);
     }
-    _checkAncestorParameters(functionExpression.typeParameters, node);
   }
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
     var typeParameters = node.functionType?.typeParameters;
-    if (typeParameters == null) {
-      return;
+    if (typeParameters != null) {
+      _checkForShadowing(typeParameters, node.typeParameters);
     }
-    _checkForShadowing(typeParameters, node.typeParameters);
   }
 
   @override
