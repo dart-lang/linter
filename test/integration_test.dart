@@ -128,7 +128,7 @@ void coreTests() {
 
         final options = _getOptionsFromString(src);
         var configuredLints =
-            (options['linter'] as YamlMap)['rules'] as YamlList;
+            (options['linter']! as YamlMap)['rules'] as YamlList;
 
         // rules are sorted
         expect(

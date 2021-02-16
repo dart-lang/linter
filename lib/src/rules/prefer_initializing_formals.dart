@@ -150,7 +150,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           expression is SimpleIdentifier &&
           parameters.contains(expression.staticElement) &&
           (!parametersUsedMoreThanOnce.contains(expression.staticElement) &&
-                  !(expression.staticElement as ParameterElement).isNamed ||
+                  !(expression.staticElement! as ParameterElement).isNamed ||
               (constructorFieldInitializer.fieldName.staticElement?.name ==
                   expression.staticElement!.name));
     }

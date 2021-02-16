@@ -170,7 +170,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     for (var variable in fields.variables) {
-      final element = variable.declaredElement as PropertyInducingElement;
+      final element = variable.declaredElement! as PropertyInducingElement;
 
       if (element.isPrivate && !_mutatedFields.contains(element)) {
         bool fieldInConstructor(ConstructorDeclaration constructor) =>

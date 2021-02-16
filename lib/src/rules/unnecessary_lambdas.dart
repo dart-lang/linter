@@ -131,7 +131,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       } else if (statement is ReturnStatement &&
           statement.expression is InvocationExpression) {
         _visitInvocationExpression(
-            statement.expression as InvocationExpression, node);
+            statement.expression! as InvocationExpression, node);
       }
     } else if (body is ExpressionFunctionBody) {
       if (body.expression is InvocationExpression) {
@@ -188,7 +188,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           return;
         }
       } else if (parent is VariableDeclaration) {
-        var variableDeclarationList = parent.parent as VariableDeclarationList;
+        var variableDeclarationList = parent.parent! as VariableDeclarationList;
         var variableType = variableDeclarationList.type?.type;
         if (!isTearoffAssignable(variableType)) {
           return;

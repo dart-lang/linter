@@ -42,6 +42,7 @@ linter:
     - camel_case_types
     - cancel_subscriptions
 #    - cascade_invocations
+    - cast_nullable_to_non_nullable
 #    - close_sinks # https://github.com/dart-lang/linter/issues/268
     - comment_references
 #    - constant_identifier_names
@@ -59,6 +60,7 @@ linter:
     - literal_only_boolean_expressions
     - no_adjacent_strings_in_list
     - non_constant_identifier_names
+    - null_check_on_nullable_type_parameter
 #    - one_member_abstracts
     - only_throw_errors
     - overridden_fields
@@ -100,9 +102,12 @@ linter:
     - unnecessary_getters_setters
     - unnecessary_lambdas
     - unnecessary_null_aware_assignments
+    - unnecessary_null_checks
+    - unnecessary_nullable_for_final_variable_declarations
     - unnecessary_overrides
     - unnecessary_parenthesis
     - unnecessary_statements
+    - use_late_for_private_fields_and_variables
     - use_setters_to_change_properties
     - use_string_buffers
     - use_to_and_as_if_applicable
