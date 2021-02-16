@@ -129,10 +129,10 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
   ConditionScope? outerScope;
   final breakScope = BreakScope();
 
-  Iterable<Expression?> getFalseExpressions(Iterable<Element?> elements) =>
+  Iterable<Expression?>? getFalseExpressions(Iterable<Element?> elements) =>
       _getExpressions(elements, value: false);
 
-  Iterable<Expression?> getTrueExpressions(Iterable<Element?> elements) =>
+  Iterable<Expression?>? getTrueExpressions(Iterable<Element?> elements) =>
       _getExpressions(elements);
 
   @override
@@ -213,9 +213,11 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
 
   @override
   void visitIfStatement(IfStatement node) {
-    final elseScope = _visitElseStatement(node.elseStatement, node.condition)!;
+    final elseScope = _visitElseStatement(node.elseStatement, node.condition);
     _visitIfStatement(node);
-    _propagateUndefinedExpressions(elseScope);
+    if (elseScope != null) {
+      _propagateUndefinedExpressions(elseScope);
+    }
     final addFalseCondition =
         _isLastStatementAnExitStatement(node.thenStatement);
     final addTrueCondition =
@@ -315,9 +317,9 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
     });
   }
 
-  Iterable<Expression?> _getExpressions(Iterable<Element?> elements,
+  Iterable<Expression?>? _getExpressions(Iterable<Element?> elements,
           {bool value = true}) =>
-      outerScope!.getExpressions(elements, value: value);
+      outerScope?.getExpressions(elements, value: value);
 
   bool _isLastStatementAnExitStatement(Statement? statement) {
     if (statement is Block) {
@@ -372,7 +374,7 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
 
   ConditionScope? _removeLastScope() {
     final deletedScope = outerScope;
-    outerScope = outerScope!.outer;
+    outerScope = outerScope?.outer;
     return deletedScope;
   }
 

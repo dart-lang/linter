@@ -77,8 +77,7 @@ class _Visitor extends SimpleAstVisitor<void> {
             : e.leftOperand is NullLiteral
                 ? e.rightOperand
                 : null)
-        .where((e) => e != null)
-        .where((e) => context.typeSystem.isNullable(e!.staticType!))
+        .where((e) => e != null && context.typeSystem.isNullable(e.staticType!))
         .whereType<Identifier>()
         .map((e) => e.staticElement)
         .whereType<FieldFormalParameterElement>()
