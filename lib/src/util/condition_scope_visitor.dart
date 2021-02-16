@@ -129,6 +129,7 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
   ConditionScope? outerScope;
   final breakScope = BreakScope();
 
+  /// todo (pq): here and w/ getTrueExpressions, consider an empty iterable
   Iterable<Expression?>? getFalseExpressions(Iterable<Element?> elements) =>
       _getExpressions(elements, value: false);
 

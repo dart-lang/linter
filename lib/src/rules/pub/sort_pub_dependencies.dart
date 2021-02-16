@@ -59,13 +59,16 @@ class Visitor extends PubspecVisitor<void> {
       ..sort((d1, d2) => compare(d1.name?.span.start, d2.name?.span.start));
     var previousName = '';
     for (final dep in depsByLocation) {
-      final name = dep.name?.text;
+      final name = dep.name;
       if (name != null) {
-        if (name.compareTo(previousName) < 0) {
-          rule.reportPubLint(dep.name!);
-          return;
+        final text = name.text;
+        if (text != null) {
+          if (text.compareTo(previousName) < 0) {
+            rule.reportPubLint(name);
+            return;
+          }
+          previousName = text;
         }
-        previousName = name;
       }
     }
   }
