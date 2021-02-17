@@ -191,7 +191,6 @@ Future<List<String?>> _fetchSdkTags() {
   return github.repositories
       .listTags(slug)
       .map((t) => t.name)
-      .where((t) => t != null)
       .where((t) {
         if (t == null) {
           return false;
