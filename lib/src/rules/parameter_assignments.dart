@@ -92,20 +92,22 @@ bool _isDefaultFormalParameterWithoutDefaultValueReassigned(
     _isFormalParameterReassigned(parameter, assignment);
 
 bool _isFormalParameterReassigned(
-        FormalParameter parameter, AssignmentExpression assignment) =>
-    assignment.leftHandSide is SimpleIdentifier &&
-    (assignment.leftHandSide as SimpleIdentifier).staticElement ==
-        parameter.declaredElement;
+    FormalParameter parameter, AssignmentExpression assignment) {
+  var leftHandSide = assignment.leftHandSide;
+  return leftHandSide is SimpleIdentifier &&
+      leftHandSide.staticElement == parameter.declaredElement;
+}
 
-bool _preOrPostFixExpressionMutation(FormalParameter parameter, AstNode n) =>
-    n is PrefixExpression &&
-        n.operand is SimpleIdentifier &&
-        (n.operand as SimpleIdentifier).staticElement ==
-            parameter.declaredElement ||
-    n is PostfixExpression &&
-        n.operand is SimpleIdentifier &&
-        (n.operand as SimpleIdentifier).staticElement ==
-            parameter.declaredElement;
+bool _preOrPostFixExpressionMutation(FormalParameter parameter, AstNode n) {
+  return n is PrefixExpression &&
+          n.operand is SimpleIdentifier &&
+          (n.operand as SimpleIdentifier).staticElement ==
+              parameter.declaredElement ||
+      n is PostfixExpression &&
+          n.operand is SimpleIdentifier &&
+          (n.operand as SimpleIdentifier).staticElement ==
+              parameter.declaredElement;
+}
 
 class ParameterAssignments extends LintRule implements NodeLintRule {
   ParameterAssignments()
