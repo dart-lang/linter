@@ -92,9 +92,14 @@ class TestedExpressions {
 
     final binaryExpression =
         testingExpression is BinaryExpression ? testingExpression : null;
-    var facts = binaryExpression != null
-        ? [binaryExpression.leftOperand, binaryExpression.rightOperand]
-        : [testingExpression];
+
+    Iterable<Expression> facts;
+    if (testingExpression is BinaryExpression) {
+      facts = [testingExpression.leftOperand, testingExpression.rightOperand];
+    } else {
+      facts = [testingExpression];
+    }
+
     _contradictions = _findContradictoryComparisons(
         LinkedHashSet.from(facts),
         binaryExpression != null
