@@ -61,8 +61,6 @@ else
     --pause-isolates-on-exit \
     test/all.dart &
 
-  status=$?  
-
   pub global activate coverage
 
   echo "Collecting coverage on port $OBS_PORT..."
@@ -83,5 +81,4 @@ else
     --report-on=lib \
     --check-ignore
 
-  exit $status
 fi
