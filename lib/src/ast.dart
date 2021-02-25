@@ -233,15 +233,15 @@ File? locatePubspecFile(CompilationUnit compilationUnit) {
   }
 
   final file = resourceProvider.getFile(fullName);
-  var folder = file.parent;
+  var folder = file.parent2;
 
   // Look for a pubspec.yaml file.
-  while (folder != null) {
+  while (!folder.isRoot) {
     final pubspecFile = folder.getChildAssumingFile('pubspec.yaml');
     if (pubspecFile.exists) {
       return pubspecFile;
     }
-    folder = folder.parent;
+    folder = folder.parent2;
   }
 
   return null;
