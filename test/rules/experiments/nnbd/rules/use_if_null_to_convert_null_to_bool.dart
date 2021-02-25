@@ -10,4 +10,7 @@ m() {
   r = e == true; // LINT
   r = e == false; // OK
   r = e ?? false; // OK
+  r = e != false; // LINT
+  r = e != true; // OK
+  r = e ?? true; // OK
 }

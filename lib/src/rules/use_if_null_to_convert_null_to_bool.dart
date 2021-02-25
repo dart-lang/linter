@@ -6,6 +6,7 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
@@ -19,11 +20,15 @@ Use if-null operator to convert null to bool.
 ```
 if (nullableBool == true) {
 }
+if (nullableBool != false) {
+}
 ```
 
 **GOOD:**
 ```
 if (nullableBool ?? false) {
+}
+if (nullableBool ?? true) {
 }
 ```
 
@@ -59,12 +64,21 @@ class _Visitor extends SimpleAstVisitor<void> {
     var type = node.leftOperand.staticType;
     var right = node.rightOperand;
     if (node.operator.type == TokenType.EQ_EQ &&
-        type != null &&
-        type.isDartCoreBool &&
-        context.typeSystem.isNullable(type) &&
+        isNullableBool(type) &&
         right is BooleanLiteral &&
         right.value) {
       rule.reportLint(node);
     }
+    if (node.operator.type == TokenType.BANG_EQ &&
+        isNullableBool(type) &&
+        right is BooleanLiteral &&
+        !right.value) {
+      rule.reportLint(node);
+    }
   }
+
+  bool isNullableBool(DartType? type) =>
+      type != null &&
+      type.isDartCoreBool &&
+      context.typeSystem.isNullable(type);
 }
