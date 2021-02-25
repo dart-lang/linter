@@ -7,6 +7,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/error.dart';
 
 import '../analyzer.dart';
@@ -66,8 +67,8 @@ class _Visitor extends UnifyingAstVisitor<void> {
   CompilationUnitElement? currentUnit;
 
   static final lateables =
-      <CompilationUnitElement?, List<VariableDeclaration>>{};
-  static final nullableAccess = <CompilationUnitElement?, Set<Element>>{};
+      <CompilationUnitElement, List<VariableDeclaration>>{};
+  static final nullableAccess = <CompilationUnitElement, Set<Element>>{};
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
@@ -76,9 +77,9 @@ class _Visitor extends UnifyingAstVisitor<void> {
       if (declaredElement == null) {
         return;
       }
+      lateables.putIfAbsent(declaredElement, () => []);
+      nullableAccess.putIfAbsent(declaredElement, () => {});
       currentUnit = declaredElement;
-      lateables.putIfAbsent(currentUnit, () => []);
-      nullableAccess.putIfAbsent(currentUnit, () => {});
 
       super.visitCompilationUnit(node);
 
@@ -111,6 +112,9 @@ class _Visitor extends UnifyingAstVisitor<void> {
       element = DartTypeUtilities.getCanonicalElementFromIdentifier(node);
     }
 
+    bool isNonNullable(DartType? type) =>
+        type != null && context.typeSystem.isNonNullable(type);
+
     if (element != null) {
       if (parent is Expression) {
         parent = parent.unParenthesized;
@@ -123,7 +127,7 @@ class _Visitor extends UnifyingAstVisitor<void> {
         // ok non-null access
       } else if (parent is AssignmentExpression &&
           parent.operator.type == TokenType.EQ &&
-          context.typeSystem.isNonNullable(parent.rightHandSide.staticType!)) {
+          isNonNullable(parent.rightHandSide.staticType)) {
         // ok non-null access
       } else {
         nullableAccess[currentUnit]?.add(element);
@@ -177,9 +181,9 @@ class _Visitor extends UnifyingAstVisitor<void> {
 
   void _checkAccess(Iterable<CompilationUnitElement> units) {
     final allNullableAccess =
-        units.expand((unit) => nullableAccess[unit]!).toSet();
+        units.expand((unit) => nullableAccess[unit] ?? {}).toSet();
     for (final unit in units) {
-      for (var variable in lateables[unit]!) {
+      for (var variable in lateables[unit] ?? <VariableDeclaration>[]) {
         if (!allNullableAccess.contains(variable.declaredElement)) {
           rule.reporter.reportError(AnalysisError(
               unit.source, variable.offset, variable.length, rule.lintCode));
