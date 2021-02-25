@@ -181,9 +181,9 @@ class _Visitor extends UnifyingAstVisitor<void> {
 
   void _checkAccess(Iterable<CompilationUnitElement> units) {
     final allNullableAccess =
-        units.expand((unit) => nullableAccess[unit] ?? {}).toSet();
+        units.expand((unit) => nullableAccess[unit] ?? const {}).toSet();
     for (final unit in units) {
-      for (var variable in lateables[unit] ?? <VariableDeclaration>[]) {
+      for (var variable in lateables[unit] ?? const <VariableDeclaration>[]) {
         if (!allNullableAccess.contains(variable.declaredElement)) {
           rule.reporter.reportError(AnalysisError(
               unit.source, variable.offset, variable.length, rule.lintCode));
