@@ -129,7 +129,7 @@ class CascadeInvocations extends LintRule implements NodeLintRule {
 /// knows if it is able to join to another CascadableExpression.
 class _CascadableExpression {
   static final nullCascadableExpression =
-      _CascadableExpression._internal(null, [], canReceive: false);
+      _CascadableExpression._internal(null, []);
 
   /// Whether this expression can be joined with a previous expression via a
   /// cascade operation.
@@ -139,7 +139,7 @@ class _CascadableExpression {
   /// cascade operation.
   ///
   /// For example, `a.b = 1` can receive, but `a = 1` cannot receive.
-  final bool? canReceive;
+  final bool canReceive;
   final bool canBeCascaded;
 
   /// This is necessary when you have a variable declaration so that element
@@ -258,7 +258,7 @@ class _CascadableExpression {
 
   _CascadableExpression._internal(this.element, this.criticalNodes,
       {this.canJoin = false,
-      this.canReceive,
+      this.canReceive = false,
       this.canBeCascaded = false,
       this.isCritical = false});
 
@@ -266,7 +266,7 @@ class _CascadableExpression {
   /// cascade operation.
   bool compatibleWith(_CascadableExpression expressionBox) =>
       element != null &&
-      expressionBox.canReceive! &&
+      expressionBox.canReceive &&
       canJoin &&
       (canBeCascaded || expressionBox.canBeCascaded) &&
       element == expressionBox.element &&
