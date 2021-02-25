@@ -7,7 +7,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/error.dart';
 
 import '../analyzer.dart';
@@ -39,6 +38,14 @@ m() {
 
 ''';
 
+bool _isPrivateExtension(AstNode parent) {
+  if (parent is! ExtensionDeclaration) {
+    return false;
+  }
+  var parentName = parent.name?.name;
+  return parentName == null || Identifier.isPrivateName(parentName);
+}
+
 class UseLateForPrivateFieldsAndVariables extends LintRule
     implements NodeLintRule {
   UseLateForPrivateFieldsAndVariables()
@@ -59,16 +66,16 @@ class UseLateForPrivateFieldsAndVariables extends LintRule
 }
 
 class _Visitor extends UnifyingAstVisitor<void> {
-  _Visitor(this.rule, this.context);
+  static final lateables =
+      <CompilationUnitElement, List<VariableDeclaration>>{};
 
+  static final nullableAccess = <CompilationUnitElement, Set<Element>>{};
   final LintRule rule;
+
   final LinterContext context;
 
   CompilationUnitElement? currentUnit;
-
-  static final lateables =
-      <CompilationUnitElement, List<VariableDeclaration>>{};
-  static final nullableAccess = <CompilationUnitElement, Set<Element>>{};
+  _Visitor(this.rule, this.context);
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
@@ -102,41 +109,6 @@ class _Visitor extends UnifyingAstVisitor<void> {
   }
 
   @override
-  void visitNode(AstNode node) {
-    var parent = node.parent;
-
-    Element? element;
-    if (parent is AssignmentExpression && parent.leftHandSide == node) {
-      element = DartTypeUtilities.getCanonicalElement(parent.writeElement);
-    } else {
-      element = DartTypeUtilities.getCanonicalElementFromIdentifier(node);
-    }
-
-    bool isNonNullable(DartType? type) =>
-        type != null && context.typeSystem.isNonNullable(type);
-
-    if (element != null) {
-      if (parent is Expression) {
-        parent = parent.unParenthesized;
-      }
-      if (node is SimpleIdentifier && node.inDeclarationContext()) {
-        // ok
-      } else if (parent is PostfixExpression &&
-          parent.operand == node &&
-          parent.operator.type == TokenType.BANG) {
-        // ok non-null access
-      } else if (parent is AssignmentExpression &&
-          parent.operator.type == TokenType.EQ &&
-          isNonNullable(parent.rightHandSide.staticType)) {
-        // ok non-null access
-      } else {
-        nullableAccess[currentUnit]?.add(element);
-      }
-    }
-    super.visitNode(node);
-  }
-
-  @override
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var variable in node.fields.variables) {
       final parent = node.parent;
@@ -155,6 +127,39 @@ class _Visitor extends UnifyingAstVisitor<void> {
   }
 
   @override
+  void visitNode(AstNode node) {
+    var parent = node.parent;
+
+    Element? element;
+    if (parent is AssignmentExpression && parent.leftHandSide == node) {
+      element = DartTypeUtilities.getCanonicalElement(parent.writeElement);
+    } else {
+      element = DartTypeUtilities.getCanonicalElementFromIdentifier(node);
+    }
+
+    if (element != null) {
+      if (parent is Expression) {
+        parent = parent.unParenthesized;
+      }
+      if (node is SimpleIdentifier && node.inDeclarationContext()) {
+        // ok
+      } else if (parent is PostfixExpression &&
+          parent.operand == node &&
+          parent.operator.type == TokenType.BANG) {
+        // ok non-null access
+      } else if (parent is AssignmentExpression &&
+          parent.operator.type == TokenType.EQ &&
+          DartTypeUtilities.isNonNullable(
+              context, parent.rightHandSide.staticType)) {
+        // ok non-null access
+      } else {
+        nullableAccess[currentUnit]?.add(element);
+      }
+    }
+    super.visitNode(node);
+  }
+
+  @override
   void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
     for (var variable in node.variables.variables) {
       if (Identifier.isPrivateName(variable.name.name)) {
@@ -162,6 +167,19 @@ class _Visitor extends UnifyingAstVisitor<void> {
       }
     }
     super.visitTopLevelVariableDeclaration(node);
+  }
+
+  void _checkAccess(Iterable<CompilationUnitElement> units) {
+    final allNullableAccess =
+        units.expand((unit) => nullableAccess[unit] ?? const {}).toSet();
+    for (final unit in units) {
+      for (var variable in lateables[unit] ?? const <VariableDeclaration>[]) {
+        if (!allNullableAccess.contains(variable.declaredElement)) {
+          rule.reporter.reportError(AnalysisError(
+              unit.source, variable.offset, variable.length, rule.lintCode));
+        }
+      }
+    }
   }
 
   void _visit(VariableDeclaration variable) {
@@ -178,25 +196,4 @@ class _Visitor extends UnifyingAstVisitor<void> {
     }
     lateables[currentUnit]?.add(variable);
   }
-
-  void _checkAccess(Iterable<CompilationUnitElement> units) {
-    final allNullableAccess =
-        units.expand((unit) => nullableAccess[unit] ?? const {}).toSet();
-    for (final unit in units) {
-      for (var variable in lateables[unit] ?? const <VariableDeclaration>[]) {
-        if (!allNullableAccess.contains(variable.declaredElement)) {
-          rule.reporter.reportError(AnalysisError(
-              unit.source, variable.offset, variable.length, rule.lintCode));
-        }
-      }
-    }
-  }
-}
-
-bool _isPrivateExtension(AstNode parent) {
-  if (parent is! ExtensionDeclaration) {
-    return false;
-  }
-  var parentName = parent.name?.name;
-  return parentName == null || Identifier.isPrivateName(parentName);
 }
