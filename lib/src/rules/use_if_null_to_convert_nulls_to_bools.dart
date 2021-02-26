@@ -10,11 +10,11 @@ import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Use if-null operator to convert null to bool.';
+const _desc = r'Use if-null operators to convert nulls to bools.';
 
 const _details = r'''
 
-Use if-null operator to convert null to bool.
+Use if-null operators to convert nulls to bools.
 
 **BAD:**
 ```
@@ -34,10 +34,10 @@ if (nullableBool ?? true) {
 
 ''';
 
-class UseIfNullToConvertNullToBool extends LintRule implements NodeLintRule {
-  UseIfNullToConvertNullToBool()
+class UseIfNullToConvertNullsToBools extends LintRule implements NodeLintRule {
+  UseIfNullToConvertNullsToBools()
       : super(
-          name: 'use_if_null_to_convert_null_to_bool',
+          name: 'use_if_null_to_convert_nulls_to_bools',
           description: _desc,
           details: _details,
           group: Group.style,
