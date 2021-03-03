@@ -1,2 +1,4 @@
 /.DS_Store
 .idea
+*.md
+/lints/machine/.DS_Store

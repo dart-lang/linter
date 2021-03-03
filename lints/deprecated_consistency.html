@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>avoid_unnecessary_containers</title>
+      <title>deprecated_consistency</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_unnecessary_containers</h1>
+            <h1>deprecated_consistency</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter v0.1.102)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,33 +29,35 @@
          </header>
          <section>
 
-            <p>Avoid wrapping widgets in unnecessary containers.</p>
-<p>Wrapping a widget in <code>Container</code> with no other parameters set has no effect 
-and makes code needlessly more complex.</p>
+            <p>Do apply <code>@Deprecated()</code> consistently:</p>
+<ul>
+<li>if a class is deprecated, its constructors should also be deprecated.</li>
+<li>if a field is deprecated, the constructor parameter pointing to it should also be deprecated.</li>
+<li>if a constructor parameter pointing to a field is deprecated, the field should also be deprecated.</li>
+</ul>
 <p><strong>BAD:</strong></p>
-<pre><code>Widget buildRow() {
-  return Container(
-      child: Row(
-        children: &lt;Widget&gt;[
-          const MyLogo(),
-          const Expanded(
-            child: Text('...'),
-          ),
-        ],
-      )
-  );
+<pre><code>@deprecated
+class A {
+  A();
+}
+
+class B {
+  B({this.field});
+  @deprecated
+  Object field;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Widget buildRow() {
-  return Row(
-    children: &lt;Widget&gt;[
-      const MyLogo(),
-      const Expanded(
-        child: Text('...'),
-      ),
-    ],
-  );
+<pre><code>@deprecated
+class A {
+  @deprecated
+  A();
+}
+
+class B {
+  B({@deprecated this.field});
+  @deprecated
+  Object field;
 }
 </code></pre>
 

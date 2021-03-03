@@ -21,8 +21,7 @@
     "group": "errors",
     "maturity": "stable",
     "sets": [
-      "flutter",
-      "pedantic"
+      "flutter"
     ],
     "details": "\n**AVOID** empty else statements.\n\n**BAD:**\n```\nif (x > y)\n  print(\"1\");\nelse ;\n  print(\"2\");\n```\n\n"
   },
@@ -274,7 +273,9 @@
     "description": "Avoid unsafe HTML APIs.",
     "group": "errors",
     "maturity": "stable",
-    "sets": [],
+    "sets": [
+      "pedantic"
+    ],
     "details": "\n**AVOID**\n\n* assigning directly to the `href` field of an AnchorElement\n* assigning directly to the `src` field of an EmbedElement, IFrameElement,\n  ImageElement, or ScriptElement\n* assigning directly to the `srcdoc` field of an IFrameElement\n* calling the `createFragment` method of Element\n* calling the `open` method of Window\n* calling the `setInnerHtml` method of Element\n* calling the `Element.html` constructor\n* calling the `DocumentFragment.html` constructor\n\n\n**BAD:**\n```\nvar script = ScriptElement()..src = 'foo.js';\n```\n"
   },
   {
@@ -334,11 +335,11 @@
   },
   {
     "name": "always_put_required_named_parameters_first",
-    "description": "Put @required named parameters first.",
+    "description": "Put required named parameters first.",
     "group": "style",
     "maturity": "stable",
     "sets": [],
-    "details": "\n**DO** specify `@required` on named parameter before other named parameters.\n\n**GOOD:**\n```\nm({@required a, b, c}) ;\n```\n\n**BAD:**\n```\nm({b, c, @required a}) ;\n```\n\n"
+    "details": "\n**DO** specify `required` on named parameter before other named parameters.\n\n**GOOD:**\n```\nm({required a, b, c}) ;\n```\n\n**BAD:**\n```\nm({b, c, required a}) ;\n```\n\n**GOOD:**\n```\nm({@required a, b, c}) ;\n```\n\n**BAD:**\n```\nm({b, c, @required a}) ;\n```\n\n"
   },
   {
     "name": "always_require_non_null_named_parameters",
@@ -380,9 +381,9 @@
     "name": "avoid_as",
     "description": "Avoid using `as`.",
     "group": "style",
-    "maturity": "stable",
+    "maturity": "deprecated",
     "sets": [],
-    "details": "\n**AVOID** using `as`.\n\nIf you know the type is correct, use an assertion or assign to a more\nnarrowly-typed variable (this avoids the type check in release mode; `as` is not\ncompiled out in release mode).  If you don't know whether the type is\ncorrect, check using `is` (this avoids the exception that `as` raises).\n\n**BAD:**\n```\n(pm as Person).firstName = 'Seth';\n```\n\n**GOOD:**\n```\nif (pm is Person)\n  pm.firstName = 'Seth';\n```\n\nbut certainly not\n\n**BAD:**\n```\ntry {\n   (pm as Person).firstName = 'Seth';\n} on CastError { }\n```\n\nNote that an exception is made in the case of `dynamic` since the cast has no\nperformance impact.\n\n**OK:**\n```\nHasScrollDirection scrollable = renderObject as dynamic;\n```\n\n"
+    "details": "\n**AVOID** using `as`.\n\nIf you know the type is correct, use an assertion or assign to a more\nnarrowly-typed variable (this avoids the type check in release mode; `as` is not\ncompiled out in release mode).  If you don't know whether the type is\ncorrect, check using `is` (this avoids the exception that `as` raises).\n\n**BAD:**\n```\n(pm as Person).firstName = 'Seth';\n```\n\n**GOOD:**\n```\nif (pm is Person)\n  pm.firstName = 'Seth';\n```\n\nbut certainly not\n\n**BAD:**\n```\ntry {\n   (pm as Person).firstName = 'Seth';\n} on CastError { }\n```\n\nNote that an exception is made in the case of `dynamic` since the cast has no\nperformance impact.\n\n**OK:**\n```\nHasScrollDirection scrollable = renderObject as dynamic;\n```\n\n\n**DEPRECATED:** This advice is no longer recommended.\n \nThe rule will be removed in a future Linter release.\n"
   },
   {
     "name": "avoid_bool_literals_in_conditional_expressions",
@@ -583,7 +584,9 @@
     "description": "Avoid single cascade in expression statements.",
     "group": "style",
     "maturity": "stable",
-    "sets": [],
+    "sets": [
+      "pedantic"
+    ],
     "details": "\n**AVOID** single cascade in expression statements.\n\n**BAD:**\n```\no..m();\n```\n\n**GOOD:**\n```\no.m();\n```\n\n"
   },
   {
@@ -624,7 +627,8 @@
     "group": "style",
     "maturity": "stable",
     "sets": [
-      "flutter"
+      "flutter",
+      "pedantic"
     ],
     "details": "\n**AVOID** using await on anything other than a future.\n\n**BAD:**\n```\nmain() async {\n  print(await 23);\n}\n```\n\n**GOOD:**\n```\nmain() async {\n  print(await Future.value(23));\n}\n```\n\n"
   },
@@ -681,6 +685,14 @@
       "pedantic"
     ],
     "details": "\n**DO** use curly braces for all flow control structures.\n\nDoing so avoids the [dangling else](http://en.wikipedia.org/wiki/Dangling_else)\nproblem.\n\n**GOOD:**\n```\nif (isWeekDay) {\n  print('Bike to work!');\n} else {\n  print('Go dancing or read a book!');\n}\n```\n\nThere is one exception to this: an `if` statement with no `else` clause where\nthe entire `if` statement and the then body all fit in one line. In that case,\nyou may leave off the braces if you prefer:\n\n**GOOD:**\n```\nif (arg == null) return defaultValue;\n```\n\nIf the body wraps to the next line, though, use braces:\n\n**GOOD:**\n```\nif (overflowChars != other.overflowChars) {\n  return overflowChars < other.overflowChars;\n}\n```\n\n**BAD:**\n```dart\nif (overflowChars != other.overflowChars)\n  return overflowChars < other.overflowChars;\n```\n"
+  },
+  {
+    "name": "deprecated_consistency",
+    "description": "Missing deprecated annotation.",
+    "group": "style",
+    "maturity": "stable",
+    "sets": [],
+    "details": "\nDo apply `@Deprecated()` consistently:\n\n- if a class is deprecated, its constructors should also be deprecated.\n- if a field is deprecated, the constructor parameter pointing to it should also be deprecated.\n- if a constructor parameter pointing to a field is deprecated, the field should also be deprecated.\n\n**BAD:**\n```\n@deprecated\nclass A {\n  A();\n}\n\nclass B {\n  B({this.field});\n  @deprecated\n  Object field;\n}\n```\n\n**GOOD:**\n```\n@deprecated\nclass A {\n  @deprecated\n  A();\n}\n\nclass B {\n  B({@deprecated this.field});\n  @deprecated\n  Object field;\n}\n```\n\n"
   },
   {
     "name": "directives_ordering",
@@ -1135,7 +1147,9 @@
     "description": "Inline list item declarations where possible.",
     "group": "style",
     "maturity": "stable",
-    "sets": [],
+    "sets": [
+      "pedantic"
+    ],
     "details": "Declare elements in list literals inline, rather than using `add` and \n`addAll` methods where possible.\n\n\n**BAD:**\n```\nvar l = ['a']..add('b')..add('c');\nvar l2 = ['a']..addAll(['b', 'c'])\n```\n\n**GOOD:**\n```\nvar l = ['a', 'b', 'c'];\nvar 2 = ['a', 'b', 'c'];\n```\n"
   },
   {
@@ -1287,7 +1301,9 @@
     "description": "Sort child properties last in widget instance creations.",
     "group": "style",
     "maturity": "stable",
-    "sets": [],
+    "sets": [
+      "pedantic"
+    ],
     "details": "Sort child properties last in widget instance creations.  This improves\nreadability and plays nicest with UI as Code visualization in IDEs with UI as\nCode Guides in editors (such as IntelliJ) where Properties in the correct order \nappear clearly associated with the constructor call and separated from the \nchildren.\n\n**BAD:**\n```\nreturn Scaffold(\n  appBar: AppBar(\n    title: Text(widget.title),\n  ),\n  body: Center(\n    child: Column(\n      children: <Widget>[\n        Text(\n          'You have pushed the button this many times:',\n         ),\n        Text(\n          '$_counter',\n          style: Theme.of(context).textTheme.display1,\n         ),\n      ],\n      mainAxisAlignment: MainAxisAlignment.center,\n    ),\n    widthFactor: 0.5,\n  ),\n  floatingActionButton: FloatingActionButton(\n    child: Icon(Icons.add),\n    onPressed: _incrementCounter,\n    tooltip: 'Increment',\n  ),\n);\n```\n\n**GOOD:**\n```\nreturn Scaffold(\n  appBar: AppBar(\n    title: Text(widget.title),\n  ),\n  body: Center(\n    widthFactor: 0.5,\n    child: Column(\n      mainAxisAlignment: MainAxisAlignment.center,\n      children: <Widget>[\n        Text(\n          'You have pushed the button this many times:',\n         ),\n        Text(\n          '$_counter',\n          style: Theme.of(context).textTheme.display1,\n         ),\n      ],\n    ),\n  ),\n  floatingActionButton: FloatingActionButton(\n    onPressed: _incrementCounter,\n    tooltip: 'Increment',\n    child: Icon(Icons.add),\n  ),\n);\n```\n"
   },
   {
@@ -1365,7 +1381,8 @@
     "group": "style",
     "maturity": "stable",
     "sets": [
-      "flutter"
+      "flutter",
+      "pedantic"
     ],
     "details": "\n**AVOID** using braces in interpolation when not needed.\n\nIf you're just interpolating a simple identifier, and it's not immediately\nfollowed by more alphanumeric text, the `{}` can and should be omitted.\n\n**GOOD:**\n```\nprint(\"Hi, $name!\");\n```\n\n**BAD:**\n```\nprint(\"Hi, ${name}!\");\n```\n\n"
   },
@@ -1393,7 +1410,8 @@
     "group": "style",
     "maturity": "stable",
     "sets": [
-      "flutter"
+      "flutter",
+      "pedantic"
     ],
     "details": "\nFrom the [style guide](https://dart.dev/guides/language/effective-dart/style/):\n\n**AVOID** wrapping fields in getters and setters just to be \"safe\".\n\nIn Java and C#, it's common to hide all fields behind getters and setters (or\nproperties in C#), even if the implementation just forwards to the field.  That\nway, if you ever need to do more work in those members, you can without needing\nto touch the callsites.  This is because calling a getter method is different\nthan accessing a field in Java, and accessing a property isn't binary-compatible\nwith accessing a raw field in C#.\n\nDart doesn't have this limitation.  Fields and getters/setters are completely\nindistinguishable.  You can expose a field in a class and later wrap it in a\ngetter and setter without having to touch any code that uses that field.\n\n**GOOD:**\n\n```\nclass Box {\n  var contents;\n}\n```\n\n**BAD:**\n\n```\nclass Box {\n  var _contents;\n  get contents => _contents;\n  set contents(value) {\n    _contents = value;\n  }\n}\n```\n\n"
   },
@@ -1504,7 +1522,9 @@
     "description": "Prefer an 8-digit hexadecimal integer(0xFFFFFFFF) to instantiate Color.",
     "group": "style",
     "maturity": "stable",
-    "sets": [],
+    "sets": [
+      "pedantic"
+    ],
     "details": "\nPrefer an 8-digit hexadecimal integer(0xFFFFFFFF) to instantiate Color. Colors\nhave four 8-bit channels, which adds up to 32 bits, so Colors are described\nusing a 32 bit integer.\n\n**BAD:**\n```\nColor(1);\nColor(0x000001);\n```\n\n**GOOD:**\n```\nColor(0x00000001);\n```\n\n"
   },
   {
@@ -1516,6 +1536,14 @@
       "pedantic"
     ],
     "details": "\nUse generic function type syntax for parameters.\n\n**BAD:**\n```\nIterable<T> where(bool predicate(T element)) {}\n```\n\n**GOOD:**\n```\nIterable<T> where(bool Function(T) predicate) {}\n```\n\n"
+  },
+  {
+    "name": "use_if_null_to_convert_nulls_to_bools",
+    "description": "Use if-null operators to convert nulls to bools.",
+    "group": "style",
+    "maturity": "stable",
+    "sets": [],
+    "details": "\nUse if-null operators to convert nulls to bools.\n\n**BAD:**\n```\nif (nullableBool == true) {\n}\nif (nullableBool != false) {\n}\n```\n\n**GOOD:**\n```\nif (nullableBool ?? false) {\n}\nif (nullableBool ?? true) {\n}\n```\n\n"
   },
   {
     "name": "use_is_even_rather_than_modulo",
@@ -1532,6 +1560,14 @@
     "maturity": "experimental",
     "sets": [],
     "details": "\nUse late for private members with non-nullable types that are always expected to\nbe non-null. Thus it's clear that the field is not expected to be `null` and it\navoids null checks.\n\n**BAD:**\n```\nint? _i;\nm() {\n  _i!.abs();\n}\n```\n\n**GOOD:**\n```\nlate int _i;\nm() {\n  _i.abs();\n}\n```\n\n"
+  },
+  {
+    "name": "use_named_constants",
+    "description": "Use predefined named constants.",
+    "group": "style",
+    "maturity": "stable",
+    "sets": [],
+    "details": "\nWhere possible, use already defined const values.\n\n**BAD:**\n```\nconst Duration(seconds: 0);\n```\n\n**GOOD:**\n```\nDuration.zero;\n```\n\n"
   },
   {
     "name": "use_raw_strings",
