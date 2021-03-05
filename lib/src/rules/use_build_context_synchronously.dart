@@ -13,42 +13,40 @@ import '../analyzer.dart';
 const _desc = r'Do not use BuildContexts across async calls.';
 
 const _details = r'''
-**DO NOT** use BuildContexts across async calls.
+**DO NOT** use BuildContext across asynchronous gaps.
 
-TODO: add rationale.
+Storing `BuildContext` for later usage can easily lead to difficult to diagnose
+crashes. Asynchronous gaps are implicitly storing `BuildContext` and are some of
+the easiest to overlook when writing code.
 
-TODO: describe mechanics.
+When a `BuildContext` is used from a `StatefulWidget`, the `mounted` property
+must be checked after an asynchronous gap.
 
+**GOOD:**
+```
+void onButtonTapped(BuildContext context) {
+  Navigator.of(context).pop();
+}
+```
 
 **BAD:**
 ```
-class MyState extends State<MyWidget> {
-  void m() async {
-    // Uses context from State.
-    Navigator.of(context).pushNamed('routeName');
-
-    await Future<void>.delayed(Duration());
-    // ^--- async gap.
-
-    // Without a mounted check, this is unsafe.
-    Navigator.of(context).pushNamed('routeName'); // LINT
-  }
+void onButtonTapped(BuildContext context) async {
+  await Future.delayed(const Duration(seconds: 1));
+  Navigator.of(context).pop();
 }
 ```
 
 **GOOD:**
 ```
-class MyState extends State<MyWidget> {
-  void m() async {
-    // Uses context from State.
-    Navigator.of(context).pushNamed('routeName');
+class _MyWidgetState extends State<MyWidget> {
+  ...
 
-    await Future<void>.delayed(Duration());
+  void onButtonTapped() async {
+    await Future.delayed(const Duration(seconds: 1));
 
     if (!mounted) return;
-
-    // OK. We checked mounted first.
-    Navigator.of(context).pushNamed('routeName'); // OK
+    Navigator.of(context).pop();
   }
 }
 ```
@@ -87,7 +85,7 @@ class UseBuildContextSynchronously extends LintRule implements NodeLintRule {
   }
 
   static bool inTestDir(CompilationUnit unit) {
-    var path = unit.declaredElement?.source?.fullName;
+    var path = unit.declaredElement?.source.fullName;
     return path != null && _testDirectories.any(path.contains);
   }
 }
@@ -123,7 +121,7 @@ class _Visitor extends SimpleAstVisitor {
   void check(AstNode node) {
     // Walk back and look for an async gap that is not guarded by a mounted
     // property check.
-    var child = node;
+    AstNode? child = node;
     while (child != null && child is! FunctionBody) {
       var parent = child.parent;
       if (parent is Block) {
@@ -151,13 +149,12 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   /// todo (pq): replace in favor of flutter_utils.isBuildContext
-  bool isBuildContext(DartType type) {
+  bool isBuildContext(DartType? type) {
     if (type is! InterfaceType) {
       return false;
     }
     var element = type.element;
-    return element != null &&
-        element.name == _nameBuildContext &&
+    return element.name == _nameBuildContext &&
         element.source.uri == _uriFramework;
   }
 
@@ -173,7 +170,7 @@ class _Visitor extends SimpleAstVisitor {
           var operand = condition.operand;
           // stateContext.mounted => mounted
           while (operand is PrefixedIdentifier) {
-            operand = (operand as PrefixedIdentifier).identifier;
+            operand = operand.identifier;
           }
           if (operand is SimpleIdentifier) {
             if (operand.name == 'mounted') {
