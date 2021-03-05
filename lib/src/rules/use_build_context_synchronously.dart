@@ -10,7 +10,7 @@ import 'package:path/path.dart' as path;
 
 import '../analyzer.dart';
 
-const _desc = r'Do not use BuildContexts across async calls.';
+const _desc = r'Do not use BuildContexts across async gaps.';
 
 const _details = r'''
 **DO NOT** use BuildContext across asynchronous gaps.
