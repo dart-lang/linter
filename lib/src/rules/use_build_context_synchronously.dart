@@ -5,6 +5,8 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:path/path.dart' as path;
 
@@ -111,7 +113,9 @@ class _Visitor extends SimpleAstVisitor {
   bool accessesContext(ArgumentList argumentList) {
     for (var argument in argumentList.arguments) {
       var argType = argument.staticType;
-      if (isBuildContext(argType)) {
+      var isGetter = argument is Identifier &&
+          argument.staticElement is PropertyAccessorElement;
+      if (isBuildContext(argType, skipNullable: isGetter)) {
         return true;
       }
     }
@@ -149,8 +153,11 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   /// todo (pq): replace in favor of flutter_utils.isBuildContext
-  bool isBuildContext(DartType? type) {
+  bool isBuildContext(DartType? type, {bool skipNullable = false}) {
     if (type is! InterfaceType) {
+      return false;
+    }
+    if (skipNullable && type.nullabilitySuffix == NullabilitySuffix.question) {
       return false;
     }
     var element = type.element;
@@ -205,7 +212,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    if (isBuildContext(node.target?.staticType) ||
+    if (isBuildContext(node.target?.staticType, skipNullable: true) ||
         accessesContext(node.argumentList)) {
       check(node);
     }

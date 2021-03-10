@@ -7,6 +7,32 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+BuildContext? get contextOrNull => null;
+
+class ContextHolder {
+  BuildContext? get contextOrNull => null;
+}
+
+void f2(BuildContext? contextOrNull) {}
+
+void nullableContext() async {
+  f2(contextOrNull);
+  await Future<void>.delayed(Duration());
+  f2(contextOrNull); // OK
+}
+
+void nullableContext2(ContextHolder holder) async {
+  f2(holder.contextOrNull);
+  await Future<void>.delayed(Duration());
+  f2(holder.contextOrNull); // OK
+}
+
+void nullableContext3() async {
+  f2(contextOrNull);
+  await Future<void>.delayed(Duration());
+  var renderObject = contextOrNull?.findRenderObject(); // OK
+}
+
 void unawaited(Future<void> future) {}
 
 void methodWithBuildContextParameter2f(BuildContext context) async {
@@ -178,7 +204,7 @@ class _MyState extends State<MyWidget> {
     Navigator.of(context).pushNamed('routeName'); // LINT
   }
 
-  void methodWithBuildContextParameter2e(BuildContext context) async {
+  Future<void> methodWithBuildContextParameter2e(BuildContext context) async {
     await Future<void>.delayed(Duration());
     if (!mounted) return;
     unawaited(methodWithBuildContextParameter2e(context)); //OK
