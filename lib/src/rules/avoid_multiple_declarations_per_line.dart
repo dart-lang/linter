@@ -54,7 +54,8 @@ class _Visitor extends SimpleAstVisitor {
     final variables = node.variables;
 
     if (variables.length > 1) {
-      rule.reportLint(node);
+      final secondVariable = variables[1];
+      rule.reportLint(secondVariable);
     }
   }
 }
