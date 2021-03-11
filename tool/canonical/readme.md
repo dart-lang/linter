@@ -1,1 +1,1 @@
-WIP canonical "score" and "recommend" lint sets.
+WIP canonical "core" and "recommend" lint sets.
