@@ -140,6 +140,11 @@ class _Visitor extends SimpleAstVisitor {
             return;
           }
         }
+      } else if (parent is IfStatement) {
+        // if (mounted) { ... do ... }
+        if (isMountedCheck(parent, positiveCheck: true)) {
+          return;
+        }
       }
 
       child = parent;
@@ -165,30 +170,44 @@ class _Visitor extends SimpleAstVisitor {
         element.source.uri == _uriFramework;
   }
 
-  bool isMountedCheck(Statement statement) {
+  bool isMountedCheck(Statement statement, {bool positiveCheck = false}) {
     // This is intentionally naive.  Using a simple 'mounted' property check
     // as a signal plays nicely w/ unanticipated framework classes that provide
     // their own mounted checks.  The cost of this generality is the possibility
     // of false negatives.
     if (statement is IfStatement) {
       var condition = statement.condition;
+
+      Expression check;
       if (condition is PrefixExpression) {
-        if (condition.operator.type == TokenType.BANG) {
-          var operand = condition.operand;
-          // stateContext.mounted => mounted
-          if (operand is PrefixedIdentifier) {
-            operand = operand.identifier;
+        if (positiveCheck && condition.operator.type == TokenType.BANG) {
+          return false;
+        }
+        check = condition.operand;
+      } else {
+        check = condition;
+      }
+
+      // stateContext.mounted => mounted
+      if (check is PrefixedIdentifier) {
+        check = check.identifier;
+      }
+      if (check is SimpleIdentifier) {
+        if (check.name == 'mounted') {
+          // In the positive case it's sufficient to know we're in a positively
+          // guarded block.
+          if (positiveCheck) {
+            return true;
           }
-          if (operand is SimpleIdentifier) {
-            if (operand.name == 'mounted') {
-              var then = statement.thenStatement;
-              if (then is ReturnStatement) {
-                return true;
-              }
-              if (then is Block) {
-                return then.statements.last is ReturnStatement;
-              }
-            }
+          var then = statement.thenStatement;
+          if (then is ReturnStatement) {
+            return true;
+          }
+          if (then is BreakStatement) {
+            return true;
+          }
+          if (then is Block) {
+            return then.statements.last is ReturnStatement;
           }
         }
       }

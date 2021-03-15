@@ -7,6 +7,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+bool get mounted => true;
+
 BuildContext? get contextOrNull => null;
 
 class ContextHolder {
@@ -244,8 +246,7 @@ void topLevel2(BuildContext context) async {
   Navigator.of(context).pushNamed('routeName'); // OK
 
   await Future<void>.delayed(Duration());
-  // todo (pq): validate other conditionals (for, while, do, ...)
-  // OR: should that be disallowed in another lint?
+  // todo (pq): consider other conditionals (for, while, do, ...)
   if (true) {
     Navigator.of(context).pushNamed('routeName'); // LINT
   }
@@ -256,6 +257,30 @@ void topLevel3(BuildContext context) async {
     // OK the first time only!
     Navigator.of(context).pushNamed('routeName'); // TODO: LINT
     await Future<void>.delayed(Duration());
+  }
+}
+
+void topLevel4(BuildContext context) async {
+  Navigator.of(context).pushNamed('routeName');
+  await Future<void>.delayed(Duration());
+  if (mounted) {
+    Navigator.of(context).pushNamed('routeName'); // OK
+  }
+}
+
+void topLevel5(BuildContext context) async {
+  Navigator.of(context).pushNamed('routeName');
+  await Future<void>.delayed(Duration());
+
+  switch ('') {
+    case 'a':
+      if (!mounted) {
+        break;
+      }
+      //TODO: should be OK.
+      Navigator.of(context).pushNamed('routeName2'); // LINT
+      break;
+    default: //nothing.
   }
 }
 
