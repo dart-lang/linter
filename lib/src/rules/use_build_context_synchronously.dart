@@ -128,6 +128,7 @@ class _Visitor extends SimpleAstVisitor {
     AstNode? child = node;
     while (child != null && child is! FunctionBody) {
       var parent = child.parent;
+      // todo (pq): refactor to handle SwitchCase's
       if (parent is Block) {
         var statements = parent.statements;
         var index = statements.indexOf(child as Statement);
@@ -207,13 +208,17 @@ class _Visitor extends SimpleAstVisitor {
             return true;
           }
           if (then is Block) {
-            return then.statements.last is ReturnStatement;
+            return terminatesControl(then.statements.last);
           }
         }
       }
     }
     return false;
   }
+
+  bool terminatesControl(Statement statement) =>
+      // todo (pq): add support (and tests) for `break` and `continue`
+      statement is ReturnStatement;
 
   @override
   void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
