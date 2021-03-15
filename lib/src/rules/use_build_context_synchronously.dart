@@ -142,7 +142,7 @@ class _Visitor extends SimpleAstVisitor {
         }
       }
 
-      child = child.parent;
+      child = parent;
     }
   }
 
@@ -176,7 +176,7 @@ class _Visitor extends SimpleAstVisitor {
         if (condition.operator.type == TokenType.BANG) {
           var operand = condition.operand;
           // stateContext.mounted => mounted
-          while (operand is PrefixedIdentifier) {
+          if (operand is PrefixedIdentifier) {
             operand = operand.identifier;
           }
           if (operand is SimpleIdentifier) {
