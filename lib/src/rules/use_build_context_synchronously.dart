@@ -6,10 +6,10 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:linter/src/util/flutter_utils.dart';
 import 'package:path/path.dart' as path;
 
 import '../analyzer.dart';
+import '../util/flutter_utils.dart';
 
 const _desc = r'Do not use BuildContexts across async gaps.';
 
