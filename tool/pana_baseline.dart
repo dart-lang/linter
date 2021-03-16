@@ -24,8 +24,8 @@ void main() async {
     'run',
     'pana',
     '-s',
-    'path',
-    Directory.current.path,
+//     'path',
+//     Directory.current.path,
     '-j',
   ]);
   expectOk(output);
