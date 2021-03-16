@@ -77,7 +77,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   /// (See: https://github.com/dart-lang/linter/issues/2082)
   static bool isAllowed(ClassElement element) =>
       // todo (pq): remove allowlist once legacy mixins are otherwise annotated.
-      // see: https://github.com/dart-lang/linter/issues/2514
+      // see: https://github.com/dart-lang/sdk/issues/45343
       DartTypeUtilities.isClassElement(
           element, _iterableMixinName, _dartCollectionUri) ||
       DartTypeUtilities.isClassElement(
