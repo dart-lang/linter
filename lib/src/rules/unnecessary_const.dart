@@ -60,11 +60,10 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    if (node.keyword == null) return;
+    if (node.keyword?.type != Keyword.CONST) return;
 
-    // todo (pq): remove cast when `inConstantContext` is public on Element
-    var inConstContext = (node as ExpressionImpl).inConstantContext;
-    if (inConstContext && node.keyword?.type == Keyword.CONST) {
+    // todo (pq): remove cast when `inConstantContext` is public on Expression
+    if ((node as ExpressionImpl).inConstantContext) {
       rule.reportLint(node);
     }
   }
@@ -78,11 +77,10 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   void _visitTypedLiteral(TypedLiteral node) {
-    if (node.constKeyword == null) return;
+    if (node.constKeyword?.type != Keyword.CONST) return;
 
-    // todo (pq): remove cast when `inConstantContext` is public on Element
-    var inConstContext = (node as ExpressionImpl).inConstantContext;
-    if (inConstContext && node.constKeyword?.type == Keyword.CONST) {
+    // todo (pq): remove cast when `inConstantContext` is public on Expression
+    if ((node as ExpressionImpl).inConstantContext) {
       rule.reportLint(node);
     }
   }
