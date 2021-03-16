@@ -82,6 +82,8 @@ class _Visitor extends SimpleAstVisitor {
   void _visitTypedLiteral(TypedLiteral node) {
     if (node.constKeyword == null) return;
 
+    // todo (pq): update to use linter context API
+
     // remove keyword and check if there's const error
     final oldKeyword = node.constKeyword;
     node.constKeyword = null;
