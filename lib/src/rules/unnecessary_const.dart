@@ -5,6 +5,8 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+// ignore: implementation_imports
+import 'package:analyzer/src/dart/ast/ast.dart';
 
 import '../analyzer.dart';
 
@@ -60,13 +62,9 @@ class _Visitor extends SimpleAstVisitor {
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (node.keyword == null) return;
 
-    // remove keyword and check if there's const error
-    final oldKeyword = node.keyword;
-    node.keyword = null;
-    final isConstWithoutKeyword = node.isConst;
-    node.keyword = oldKeyword;
-
-    if (isConstWithoutKeyword && node.keyword?.type == Keyword.CONST) {
+    // todo (pq): move to a new LinterContext API
+    var inConstContext = (node as ExpressionImpl).inConstantContext;
+    if (inConstContext && node.keyword?.type == Keyword.CONST) {
       rule.reportLint(node);
     }
   }
@@ -82,16 +80,12 @@ class _Visitor extends SimpleAstVisitor {
   void _visitTypedLiteral(TypedLiteral node) {
     if (node.constKeyword == null) return;
 
-    // todo (pq): update to use linter context API
-
-    // remove keyword and check if there's const error
-    final oldKeyword = node.constKeyword;
-    node.constKeyword = null;
-    final isConstWithoutKeyword = node.isConst;
-    node.constKeyword = oldKeyword;
-
-    if (isConstWithoutKeyword && node.constKeyword?.type == Keyword.CONST) {
+    // todo (pq): move to a new LinterContext API
+    var inConstContext = (node as ExpressionImpl).inConstantContext;
+    if (inConstContext && node.constKeyword?.type == Keyword.CONST) {
       rule.reportLint(node);
     }
   }
+
+  void check(Expression expression) {}
 }
