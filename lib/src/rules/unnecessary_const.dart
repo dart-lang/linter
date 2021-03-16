@@ -62,7 +62,7 @@ class _Visitor extends SimpleAstVisitor {
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (node.keyword == null) return;
 
-    // todo (pq): move to a new LinterContext API
+    // todo (pq): remove cast when `inConstantContext` is public on Element
     var inConstContext = (node as ExpressionImpl).inConstantContext;
     if (inConstContext && node.keyword?.type == Keyword.CONST) {
       rule.reportLint(node);
@@ -80,7 +80,7 @@ class _Visitor extends SimpleAstVisitor {
   void _visitTypedLiteral(TypedLiteral node) {
     if (node.constKeyword == null) return;
 
-    // todo (pq): move to a new LinterContext API
+    // todo (pq): remove cast when `inConstantContext` is public on Element
     var inConstContext = (node as ExpressionImpl).inConstantContext;
     if (inConstContext && node.constKeyword?.type == Keyword.CONST) {
       rule.reportLint(node);
