@@ -86,6 +86,4 @@ class _Visitor extends SimpleAstVisitor {
       rule.reportLint(node);
     }
   }
-
-  void check(Expression expression) {}
 }
