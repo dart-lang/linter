@@ -23,7 +23,7 @@ void main() async {
     'global',
     'run',
     'pana',
-    '-s',
+//     '-s',
 //     'path',
 //     Directory.current.path,
     '-j',
