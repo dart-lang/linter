@@ -69,10 +69,9 @@ class _Flutter {
   bool hasWidgetAsAscendant(ClassElement? element,
       [Set<ClassElement>? alreadySeen]) {
     alreadySeen ??= {};
-    if (element == null || alreadySeen.contains(element)) {
+    if (element == null || !alreadySeen.add(element)) {
       return false;
     }
-    alreadySeen.add(element);
     if (_isExactWidget(element, _nameWidget, _uriFramework)) {
       return true;
     }
@@ -86,9 +85,7 @@ class _Flutter {
     if (skipNullable && type.nullabilitySuffix == NullabilitySuffix.question) {
       return false;
     }
-    var element = type.element;
-    return element.name == _nameBuildContext &&
-        element.source.uri == _uriFramework;
+    return _isExactWidget(type.element, _nameBuildContext, _uriFramework);
   }
 
   bool isExactWidget(ClassElement element) =>
