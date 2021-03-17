@@ -21,6 +21,7 @@ jobs:
       matrix:
         linter-bot:
           - main
+          - coverage
           - release
           # re-enable when pana CI issues are resolved: https://github.com/dart-lang/linter/issues/2504
           # - pana_baseline
