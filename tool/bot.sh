@@ -90,5 +90,5 @@ else
 
   # Run tests.
   dart --disable-analytics \
-    test/all.dart &
+    test/all.dart
 fi
