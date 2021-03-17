@@ -44,7 +44,7 @@ For the purposes of diagnostics, a property <code>foo</code> and a prefixed prop
 <code>debugFoo</code> are treated as effectively describing the same property and it is
 sufficient to refer to one or the other.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class Absorber extends Widget {
+<pre><code class="language-dart">class Absorber extends Widget {
   bool get absorbing =&gt; _absorbing;
   bool _absorbing;
   bool get ignoringSemantics =&gt; _ignoringSemantics;
@@ -58,7 +58,7 @@ sufficient to refer to one or the other.</p>
 }  
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Absorber extends Widget {
+<pre><code class="language-dart">class Absorber extends Widget {
   bool get absorbing =&gt; _absorbing;
   bool _absorbing;
   bool get ignoringSemantics =&gt; _ignoringSemantics;

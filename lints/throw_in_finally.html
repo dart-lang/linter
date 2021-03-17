@@ -33,7 +33,7 @@
 <p>Throwing exceptions in finally blocks will inevitably cause unexpected behavior
 that is hard to debug.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Ok {
+<pre><code class="language-dart">class Ok {
   double compliantMethod() {
     var i = 5;
     try {
@@ -46,7 +46,7 @@ that is hard to debug.</p>
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class BadThrow {
+<pre><code class="language-dart">class BadThrow {
   double nonCompliantMethod() {
     try {
       print('hello world! ${1 / 0}');

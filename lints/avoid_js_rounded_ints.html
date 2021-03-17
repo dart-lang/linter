@@ -37,10 +37,10 @@ Numbers. Too large integers (<code>value &lt; Number.MIN_SAFE_INTEGER</code> or
 <p>For instance <code>1000000000000000001</code> cannot be represented exactly as a JavaScript
 Number, so <code>1000000000000000000</code> will be used instead.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>int value = 9007199254740995;
+<pre><code class="language-dart">int value = 9007199254740995;
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>BigInt value = BigInt.parse('9007199254740995');
+<pre><code class="language-dart">BigInt value = BigInt.parse('9007199254740995');
 </code></pre>
 
             

@@ -36,13 +36,11 @@ in that form. Using underscores as the separator ensures that the name is still
 a valid Dart identifier, which may be helpful if the language later supports
 symbolic imports.</p>
 <p><strong>GOOD:</strong></p>
-<ul>
-<li><code>library peg_parser;</code></li>
-</ul>
+<pre><code class="language-dart">library peg_parser;
+</code></pre>
 <p><strong>BAD:</strong></p>
-<ul>
-<li><code>library peg-parser;</code></li>
-</ul>
+<pre><code class="language-dart">library peg-parser;
+</code></pre>
 <p>The lint <code>file_names</code> can be used to enforce the same kind of naming on the
 file.</p>
 

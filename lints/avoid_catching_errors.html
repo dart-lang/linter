@@ -33,14 +33,14 @@
 <p>Errors differ from Exceptions in that Errors can be analyzed and prevented prior
 to runtime.  It should almost never be necessary to catch an error at runtime.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>try {
+<pre><code class="language-dart">try {
   somethingRisky();
 } on Error catch(e) {
   doSomething(e);
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>try {
+<pre><code class="language-dart">try {
   somethingRisky();
 } on Exception catch(e) {
   doSomething(e);

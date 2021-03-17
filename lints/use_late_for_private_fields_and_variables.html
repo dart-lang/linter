@@ -33,13 +33,13 @@
 be non-null. Thus it's clear that the field is not expected to be <code>null</code> and it
 avoids null checks.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>int? _i;
+<pre><code class="language-dart">int? _i;
 m() {
   _i!.abs();
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>late int _i;
+<pre><code class="language-dart">late int _i;
 m() {
   _i.abs();
 }

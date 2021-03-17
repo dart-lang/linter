@@ -33,21 +33,21 @@
 <a href="https://dart.dev/guides/language/effective-dart/style#ordering">Effective Dart Guide</a></p>
 <p><strong>DO</strong> place “dart:” imports before other imports.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>import 'package:bar/bar.dart';
+<pre><code class="language-dart">import 'package:bar/bar.dart';
 import 'package:foo/foo.dart';
 
 import 'dart:async';  // LINT
 import 'dart:html';  // LINT
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>import 'dart:html';  // OK
+<pre><code class="language-dart">import 'dart:html';  // OK
 import 'package:bar/bar.dart';
 
 import 'dart:async';  // LINT
 import 'package:foo/foo.dart';
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>import 'dart:async';  // OK
+<pre><code class="language-dart">import 'dart:async';  // OK
 import 'dart:html';  // OK
 
 import 'package:bar/bar.dart';
@@ -55,21 +55,21 @@ import 'package:foo/foo.dart';
 </code></pre>
 <p><strong>DO</strong> place “package:” imports before relative imports.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>import 'a.dart';
+<pre><code class="language-dart">import 'a.dart';
 import 'b.dart';
 
 import 'package:bar/bar.dart';  // LINT
 import 'package:foo/foo.dart';  // LINT
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>import 'package:bar/bar.dart';  // OK
+<pre><code class="language-dart">import 'package:bar/bar.dart';  // OK
 import 'a.dart';
 
 import 'package:foo/foo.dart';  // LINT
 import 'b.dart';
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>import 'package:bar/bar.dart';  // OK
+<pre><code class="language-dart">import 'package:bar/bar.dart';  // OK
 import 'package:foo/foo.dart';  // OK
 
 import 'a.dart';
@@ -77,26 +77,26 @@ import 'b.dart';
 </code></pre>
 <p><strong>DO</strong> specify exports in a separate section after all imports.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>import 'src/error.dart';
+<pre><code class="language-dart">import 'src/error.dart';
 export 'src/error.dart'; // LINT
 import 'src/string_source.dart';
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>import 'src/error.dart';
+<pre><code class="language-dart">import 'src/error.dart';
 import 'src/string_source.dart';
 
 export 'src/error.dart'; // OK
 </code></pre>
 <p><strong>DO</strong> sort sections alphabetically.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>import 'package:foo/bar.dart'; // OK
+<pre><code class="language-dart">import 'package:foo/bar.dart'; // OK
 import 'package:bar/bar.dart'; // LINT
 
 import 'a/b.dart'; // OK
 import 'a.dart'; // LINT
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>import 'package:bar/bar.dart'; // OK
+<pre><code class="language-dart">import 'package:bar/bar.dart'; // OK
 import 'package:foo/bar.dart'; // OK
 
 import 'a.dart'; // OK

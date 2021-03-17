@@ -38,7 +38,7 @@
 </ul>
 <p><strong>DO</strong> define case clauses for all constants in enum-like classes.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class EnumLike {
+<pre><code class="language-dart">class EnumLike {
   final int i;
   const E._(this.i);
 
@@ -60,7 +60,7 @@ void bad(EnumLike e) {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class EnumLike {
+<pre><code class="language-dart">class EnumLike {
   final int i;
   const E._(this.i);
 

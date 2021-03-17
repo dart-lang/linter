@@ -34,13 +34,13 @@
 not allocate a useless field. As of April 2018 this is true for the VM, but not
 for code that will be compiled to JS.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   final a = const [];
   const A();
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   get a =&gt; const [];
   const A();
 }

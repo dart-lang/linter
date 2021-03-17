@@ -33,17 +33,17 @@
 <p>Empty statements almost always indicate a bug.</p>
 <p>For example,</p>
 <p><strong>BAD:</strong></p>
-<pre><code>if (complicated.expression.foo());
+<pre><code class="language-dart">if (complicated.expression.foo());
   bar();
 </code></pre>
 <p>Formatted with <code>dart format</code> the bug becomes obvious:</p>
-<pre><code>if (complicated.expression.foo()) ;
+<pre><code class="language-dart">if (complicated.expression.foo()) ;
 bar();
 
 </code></pre>
 <p>Better to avoid the empty statement altogether.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>if (complicated.expression.foo())
+<pre><code class="language-dart">if (complicated.expression.foo())
   bar();
 </code></pre>
 

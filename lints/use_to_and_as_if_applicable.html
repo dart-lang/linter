@@ -33,21 +33,21 @@
 <p><strong>PREFER</strong> naming a method to___() if it copies the object's state to a new object.</p>
 <p><strong>PREFER</strong> naming a method as___() if it returns a different representation backed by the original object.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class Bar {
+<pre><code class="language-dart">class Bar {
   Foo myMethod() {
     return Foo.from(this);
   }
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Bar {
+<pre><code class="language-dart">class Bar {
   Foo toFoo() {
     return Foo.from(this);
   }
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Bar {
+<pre><code class="language-dart">class Bar {
   Foo asFoo() {
     return Foo.from(this);
   }

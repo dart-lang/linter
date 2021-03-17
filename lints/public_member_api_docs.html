@@ -33,7 +33,7 @@
 <p>All non-overriding public members should be documented with <code>///</code> doc-style
 comments.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>/// A good thing.
+<pre><code class="language-dart">/// A good thing.
 abstract class Good {
   /// Start doing your thing.
   void start() =&gt; _start();
@@ -42,7 +42,7 @@ abstract class Good {
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class Bad {
+<pre><code class="language-dart">class Bad {
   void meh() { }
 }
 </code></pre>
@@ -50,7 +50,7 @@ abstract class Good {
 to provide documentation.  For example, in the following, <code>Sub</code> needn't
 document <code>init</code> (though it certainly may, if there's need).</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>/// Base of all things.
+<pre><code class="language-dart">/// Base of all things.
 abstract class Base {
   /// Initialize the base.
   void init();

@@ -98,10 +98,10 @@ parameter <code>orElse</code></li>
 </li>
 </ul>
 <p><strong>BAD:</strong></p>
-<pre><code>[1, 3, 5].firstWhere((e) =&gt; e.isOdd, orElse: null);
+<pre><code class="language-dart">[1, 3, 5].firstWhere((e) =&gt; e.isOdd, orElse: null);
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>[1, 3, 5].firstWhere((e) =&gt; e.isOdd, orElse: () =&gt; null);
+<pre><code class="language-dart">[1, 3, 5].firstWhere((e) =&gt; e.isOdd, orElse: () =&gt; null);
 </code></pre>
 
             

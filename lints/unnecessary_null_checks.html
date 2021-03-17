@@ -31,7 +31,7 @@
 
             <p>Don't apply a null check when a nullable value is accepted.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>f(int? i);
+<pre><code class="language-dart">f(int? i);
 m() {
   int? j;
   f(j!);
@@ -39,7 +39,7 @@ m() {
 
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>f(int? i);
+<pre><code class="language-dart">f(int? i);
 m() {
   int? j;
   f(j);

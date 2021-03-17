@@ -40,11 +40,11 @@ Either the condition should be removed or it should be updated so that it does
 not always evaluate to <code>true</code> or <code>false</code> and does not perform redundant tests.
 This rule will hint to the test conflicting with the linted one.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>// foo can't be both equal and not equal to bar in the same expression
+<pre><code class="language-dart">// foo can't be both equal and not equal to bar in the same expression
 if(foo == bar &amp;&amp; something &amp;&amp; foo != bar) {...}
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void compute(int foo) {
+<pre><code class="language-dart">void compute(int foo) {
   if (foo == 4) {
     doSomething();
     // we know foo is equal to 4 at this point, so the next condition is always false
@@ -55,7 +55,7 @@ if(foo == bar &amp;&amp; something &amp;&amp; foo != bar) {...}
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void compute(bool foo) {
+<pre><code class="language-dart">void compute(bool foo) {
   if (foo) {
     return;
   }
@@ -66,7 +66,7 @@ if(foo == bar &amp;&amp; something &amp;&amp; foo != bar) {...}
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void nestedOK() {
+<pre><code class="language-dart">void nestedOK() {
   if (foo == bar) {
     foo = baz;
     if (foo != bar) {...}
@@ -74,7 +74,7 @@ if(foo == bar &amp;&amp; something &amp;&amp; foo != bar) {...}
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void nestedOk2() {
+<pre><code class="language-dart">void nestedOk2() {
   if (foo == bar) {
     return;
   }
@@ -84,7 +84,7 @@ if(foo == bar &amp;&amp; something &amp;&amp; foo != bar) {...}
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void nestedOk5() {
+<pre><code class="language-dart">void nestedOk5() {
   if (foo != null) {
     if (bar != null) {
       return;

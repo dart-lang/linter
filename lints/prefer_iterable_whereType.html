@@ -31,10 +31,10 @@
 
             <p><strong>PREFER</strong> <code>iterable.whereType&lt;T&gt;()</code> over <code>iterable.where((e) =&gt; e is T)</code>.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>iterable.where((e) =&gt; e is MyClass)
+<pre><code class="language-dart">iterable.where((e) =&gt; e is MyClass)
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>iterable.whereType&lt;MyClass&gt;()
+<pre><code class="language-dart">iterable.whereType&lt;MyClass&gt;()
 </code></pre>
 
             

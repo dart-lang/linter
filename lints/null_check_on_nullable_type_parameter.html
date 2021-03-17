@@ -37,14 +37,14 @@ working with a variable of type <code>T?</code>. Specifically, it is not uncommo
 A common mistake is to do so using <code>x!</code>. This is almost always incorrect, since
 if <code>T</code> is a nullable type, <code>x</code> may validly hold <code>null</code> as a value of type <code>T</code>.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>T run&lt;T&gt;(T callback()) {
+<pre><code class="language-dart">T run&lt;T&gt;(T callback()) {
   T? result;
    (() { result = callback(); })();
   return result!;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>T run&lt;T&gt;(T callback()) {
+<pre><code class="language-dart">T run&lt;T&gt;(T callback()) {
   T? result;
    (() { result = callback(); })();
   return result as T;

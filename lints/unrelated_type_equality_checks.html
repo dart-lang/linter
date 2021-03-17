@@ -35,19 +35,19 @@ likely will return <code>false</code> and might not reflect programmer's intent.
 <p><code>Int64</code> and <code>Int32</code> from <code>package:fixnum</code> allow comparing to <code>int</code> provided
 the <code>int</code> is on the right hand side. The lint allows this as a special case.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void someFunction() {
+<pre><code class="language-dart">void someFunction() {
   var x = '1';
   if (x == 1) print('someFunction'); // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void someFunction1() {
+<pre><code class="language-dart">void someFunction1() {
   String x = '1';
   if (x == 1) print('someFunction1'); // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void someFunction13(DerivedClass2 instance) {
+<pre><code class="language-dart">void someFunction13(DerivedClass2 instance) {
   var other = DerivedClass3();
 
   if (other == instance) print('someFunction13'); // LINT
@@ -64,41 +64,41 @@ class DerivedClass2 extends ClassBase with Mixin {}
 class DerivedClass3 extends ClassBase implements Mixin {}
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction2() {
+<pre><code class="language-dart">void someFunction2() {
   var x = '1';
   var y = '2';
   if (x == y) print(someFunction2); // OK
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction3() {
+<pre><code class="language-dart">void someFunction3() {
   for (var i = 0; i &lt; 10; i++) {
     if (i == 0) print(someFunction3); // OK
   }
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction4() {
+<pre><code class="language-dart">void someFunction4() {
   var x = '1';
   if (x == null) print(someFunction4); // OK
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction7() {
+<pre><code class="language-dart">void someFunction7() {
   List someList;
 
   if (someList.length == 0) print('someFunction7'); // OK
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction8(ClassBase instance) {
+<pre><code class="language-dart">void someFunction8(ClassBase instance) {
   DerivedClass1 other;
 
   if (other == instance) print('someFunction8'); // OK
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction10(unknown) {
+<pre><code class="language-dart">void someFunction10(unknown) {
   var what = unknown - 1;
   for (var index = 0; index &lt; unknown; index++) {
     if (what == index) print('someFunction10'); // OK
@@ -106,7 +106,7 @@ class DerivedClass3 extends ClassBase implements Mixin {}
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction11(Mixin instance) {
+<pre><code class="language-dart">void someFunction11(Mixin instance) {
   var other = DerivedClass2();
 
   if (other == instance) print('someFunction11'); // OK

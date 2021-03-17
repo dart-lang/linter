@@ -32,25 +32,25 @@
             <p><strong>DO</strong> Use the cascading style when succesively invoking methods on the same
 reference.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>SomeClass someReference = SomeClass();
+<pre><code class="language-dart">SomeClass someReference = SomeClass();
 someReference.firstMethod();
 someReference.secondMethod();
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>SomeClass someReference = SomeClass();
+<pre><code class="language-dart">SomeClass someReference = SomeClass();
 ...
 someReference.firstMethod();
 someReference.aProperty = value;
 someReference.secondMethod();
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>SomeClass someReference = SomeClass()
+<pre><code class="language-dart">SomeClass someReference = SomeClass()
     ..firstMethod()
     ..aProperty = value
     ..secondMethod();
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>SomeClass someReference = SomeClass();
+<pre><code class="language-dart">SomeClass someReference = SomeClass();
 ...
 someReference
     ..firstMethod()

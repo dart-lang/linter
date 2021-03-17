@@ -31,10 +31,10 @@
 
             <p>Use generic function type syntax for parameters.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Iterable&lt;T&gt; where(bool predicate(T element)) {}
+<pre><code class="language-dart">Iterable&lt;T&gt; where(bool predicate(T element)) {}
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Iterable&lt;T&gt; where(bool Function(T) predicate) {}
+<pre><code class="language-dart">Iterable&lt;T&gt; where(bool Function(T) predicate) {}
 </code></pre>
 
             

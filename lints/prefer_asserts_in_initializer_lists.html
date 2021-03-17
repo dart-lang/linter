@@ -32,12 +32,12 @@
             <p><strong>DO</strong> put asserts in initializer list for constructors with only asserts in
 their body.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   A(int a) : assert(a != null);
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   A(int a) {
     assert(a != null);
   }

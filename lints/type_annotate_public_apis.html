@@ -40,14 +40,14 @@ implicit <code>dynamic</code> is the correct type for the API.</p>
 <p>For code internal to a library (either private, or things like nested functions)
 annotate where you feel it helps, but don't feel that you <em>must</em> provide them.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>install(id, destination) {
+<pre><code class="language-dart">install(id, destination) {
   // ...
 }
 </code></pre>
 <p>Here, it's unclear what <code>id</code> is.  A string? And what is <code>destination</code>? A string
 or a <code>File</code> object? Is this method synchronous or asynchronous?</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>Future&lt;bool&gt; install(PackageId id, String destination) {
+<pre><code class="language-dart">Future&lt;bool&gt; install(PackageId id, String destination) {
   // ...
 }
 </code></pre>

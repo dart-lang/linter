@@ -31,16 +31,16 @@
 
             <p><strong>DO</strong> specify <code>required</code> on named parameter before other named parameters.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>m({required a, b, c}) ;
+<pre><code class="language-dart">m({required a, b, c}) ;
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>m({b, c, required a}) ;
+<pre><code class="language-dart">m({b, c, required a}) ;
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>m({@required a, b, c}) ;
+<pre><code class="language-dart">m({@required a, b, c}) ;
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>m({b, c, @required a}) ;
+<pre><code class="language-dart">m({b, c, @required a}) ;
 </code></pre>
 
             

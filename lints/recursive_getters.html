@@ -33,15 +33,15 @@
 <p>Recursive getters are getters which return themselves as a value.  This is
 usually a typo.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>int get field =&gt; field; // LINT
+<pre><code class="language-dart">int get field =&gt; field; // LINT
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>int get otherField {
+<pre><code class="language-dart">int get otherField {
   return otherField; // LINT
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>int get field =&gt; _field;
+<pre><code class="language-dart">int get field =&gt; _field;
 </code></pre>
 
             

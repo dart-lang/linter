@@ -32,14 +32,14 @@
             <p>Avoid returning an awaited expression when the expression type is assignable to
 the function's return type.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Future&lt;int&gt; future;
+<pre><code class="language-dart">Future&lt;int&gt; future;
 Future&lt;int&gt; f1() async =&gt; await future;
 Future&lt;int&gt; f2() async {
   return await future;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Future&lt;int&gt; future;
+<pre><code class="language-dart">Future&lt;int&gt; future;
 Future&lt;int&gt; f1() =&gt; future;
 Future&lt;int&gt; f2() {
   return future;

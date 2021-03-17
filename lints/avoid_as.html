@@ -35,22 +35,22 @@ narrowly-typed variable (this avoids the type check in release mode; <code>as</c
 compiled out in release mode).  If you don't know whether the type is
 correct, check using <code>is</code> (this avoids the exception that <code>as</code> raises).</p>
 <p><strong>BAD:</strong></p>
-<pre><code>(pm as Person).firstName = 'Seth';
+<pre><code class="language-dart">(pm as Person).firstName = 'Seth';
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>if (pm is Person)
+<pre><code class="language-dart">if (pm is Person)
   pm.firstName = 'Seth';
 </code></pre>
 <p>but certainly not</p>
 <p><strong>BAD:</strong></p>
-<pre><code>try {
+<pre><code class="language-dart">try {
    (pm as Person).firstName = 'Seth';
 } on CastError { }
 </code></pre>
 <p>Note that an exception is made in the case of <code>dynamic</code> since the cast has no
 performance impact.</p>
 <p><strong>OK:</strong></p>
-<pre><code>HasScrollDirection scrollable = renderObject as dynamic;
+<pre><code class="language-dart">HasScrollDirection scrollable = renderObject as dynamic;
 </code></pre>
 <p><strong>DEPRECATED:</strong> This advice is no longer recommended.</p>
 <p>The rule will be removed in a future Linter release.</p>

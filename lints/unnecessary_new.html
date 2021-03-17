@@ -31,13 +31,13 @@
 
             <p><strong>AVOID</strong> new keyword to create instances.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A { A(); }
+<pre><code class="language-dart">class A { A(); }
 m(){
   final a = new A();
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A { A(); }
+<pre><code class="language-dart">class A { A(); }
 m(){
   final a = A();
 }

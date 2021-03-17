@@ -32,12 +32,12 @@
             <p>Calling <code>toString</code> on a runtime type is a non-trivial operation that can
 negatively impact performance. It's better to avoid it.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   String toString() =&gt; '$runtimeType()';
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   String toString() =&gt; 'A()';
 }
 </code></pre>

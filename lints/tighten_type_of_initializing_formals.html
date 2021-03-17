@@ -32,14 +32,14 @@
             <p>Tighten type of initializing formal if a non-null assert exists. This allows the
 type system to catch problems rather than have them only be caught at run-time.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   A.c1(this.p) : assert(p != null);
   A.c2(this.p);
   final String? p;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   A.c1(String this.p) : assert(p != null);
   A.c2(this.p);
   final String? p;

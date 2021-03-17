@@ -31,28 +31,28 @@
 
             <p><strong>CONSIDER</strong> using =&gt; for short members whose body is a single return statement.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>get width {
+<pre><code class="language-dart">get width {
   return right - left;
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>bool ready(num time) {
+<pre><code class="language-dart">bool ready(num time) {
   return minTime == null || minTime &lt;= time;
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>containsValue(String value) {
+<pre><code class="language-dart">containsValue(String value) {
   return getValues().contains(value);
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>get width =&gt; right - left;
+<pre><code class="language-dart">get width =&gt; right - left;
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>bool ready(num time) =&gt; minTime == null || minTime &lt;= time;
+<pre><code class="language-dart">bool ready(num time) =&gt; minTime == null || minTime &lt;= time;
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>containsValue(String value) =&gt; getValues().contains(value);
+<pre><code class="language-dart">containsValue(String value) =&gt; getValues().contains(value);
 </code></pre>
 
             

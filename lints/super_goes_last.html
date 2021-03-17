@@ -43,12 +43,12 @@ so the placement of <code>super</code> in the list almost never matters either.<
 reinforces when the superclass's constructor body is run, and may help
 performance.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>View(Style style, List children)
+<pre><code class="language-dart">View(Style style, List children)
     : _children = children,
       super(style) {
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>View(Style style, List children)
+<pre><code class="language-dart">View(Style style, List children)
     : super(style),
       _children = children {
 </code></pre>

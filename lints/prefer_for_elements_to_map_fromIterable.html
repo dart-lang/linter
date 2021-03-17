@@ -31,7 +31,7 @@
 
             <p>When building maps from iterables, it is preferable to use for elements.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Map&lt;String, WidgetBuilder&gt;.fromIterable(
+<pre><code class="language-dart">Map&lt;String, WidgetBuilder&gt;.fromIterable(
   kAllGalleryDemos,
   key: (demo) =&gt; '${demo.routeName}',
   value: (demo) =&gt; demo.buildRoute,
@@ -39,7 +39,7 @@
 
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>return {
+<pre><code class="language-dart">return {
   for (var demo in kAllGalleryDemos)
     '${demo.routeName}': demo.buildRoute,
 };

@@ -6,20 +6,20 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>no_duplicate_case_values</title>
+      <title>use_build_context_synchronously</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>no_duplicate_case_values</h1>
+            <h1>use_build_context_synchronously</h1>
             <p>Group: errors</p>
-            <p>Maturity: stable</p>
+            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0 • <small>(Linter v0.1.30)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
-            <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a>
+            
             <ul>
                <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
                <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
@@ -29,22 +29,33 @@
          </header>
          <section>
 
-            <p><strong>DON'T</strong> use more than one case with same value.</p>
-<p>This is usually a typo or changed value of constant.</p>
+            <p><strong>DO NOT</strong> use BuildContext across asynchronous gaps.</p>
+<p>Storing <code>BuildContext</code> for later usage can easily lead to difficult to diagnose
+crashes. Asynchronous gaps are implicitly storing <code>BuildContext</code> and are some of
+the easiest to overlook when writing code.</p>
+<p>When a <code>BuildContext</code> is used from a <code>StatefulWidget</code>, the <code>mounted</code> property
+must be checked after an asynchronous gap.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">const int A = 1;
-switch (v) {
-  case A:
-  case 2:
+<pre><code class="language-dart">void onButtonTapped(BuildContext context) {
+  Navigator.of(context).pop();
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">const int A = 1;
-switch (v) {
-  case 1:
-  case 2:
-  case A:
-  case 2:
+<pre><code class="language-dart">void onButtonTapped(BuildContext context) async {
+  await Future.delayed(const Duration(seconds: 1));
+  Navigator.of(context).pop();
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">class _MyWidgetState extends State&lt;MyWidget&gt; {
+  ...
+
+  void onButtonTapped() async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (!mounted) return;
+    Navigator.of(context).pop();
+  }
 }
 </code></pre>
 

@@ -32,7 +32,7 @@
             <p><strong>PREFER</strong> using <code>const</code> for instantiating constant constructors.</p>
 <p>If a const constructor is available, it is preferable to use it.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   const A();
 }
 
@@ -41,7 +41,7 @@ void accessA() {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   final int x;
 
   const A(this.x);
@@ -50,7 +50,7 @@ void accessA() {
 A foo(int x) =&gt; new A(x);
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   const A();
 }
 

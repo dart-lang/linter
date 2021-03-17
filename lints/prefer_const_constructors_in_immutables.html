@@ -33,14 +33,14 @@
 <p>If a class is immutable, it is usually a good idea to make its constructor a
 const constructor.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>@immutable
+<pre><code class="language-dart">@immutable
 class A {
   final a;
   const A(this.a);
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>@immutable
+<pre><code class="language-dart">@immutable
 class A {
   final a;
   A(this.a);

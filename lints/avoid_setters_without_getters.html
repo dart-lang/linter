@@ -34,7 +34,7 @@
 inconsistencies.  Doing this could allow you to set a property to some value,
 but then upon observing the property's value, it could easily be different.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class Bad {
+<pre><code class="language-dart">class Bad {
   int l, r;
 
   set length(int newLength) {
@@ -43,7 +43,7 @@ but then upon observing the property's value, it could easily be different.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Good {
+<pre><code class="language-dart">class Good {
   int l, r;
 
   int get length =&gt; r - l;

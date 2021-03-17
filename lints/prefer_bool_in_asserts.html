@@ -33,13 +33,13 @@
 <p>Not using booleans in assert conditions can lead to code where it isn't clear
 what the intention of the assert statement is.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>assert(() {
+<pre><code class="language-dart">assert(() {
   f();
   return true;
 });
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>assert(() {
+<pre><code class="language-dart">assert(() {
   f();
   return true;
 }());

@@ -34,7 +34,7 @@
 some unexpected behavior when using either <code>is</code> or <code>is!</code> where the type is
 either <code>int</code> or <code>double</code>.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>f(num x) {
+<pre><code class="language-dart">f(num x) {
   if (x is double) {
     ...
   } else if (x is int) {
@@ -43,7 +43,7 @@ either <code>int</code> or <code>double</code>.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>f(dynamic x) {
+<pre><code class="language-dart">f(dynamic x) {
   if (x is num) {
     ...
   } else {

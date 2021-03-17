@@ -40,13 +40,13 @@ allows method chaining universally.</p>
 <li>methods defined in extensions</li>
 </ul>
 <p><strong>BAD:</strong></p>
-<pre><code>var buffer = StringBuffer()
+<pre><code class="language-dart">var buffer = StringBuffer()
   .write('one')
   .write('two')
   .write('three');
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>var buffer = StringBuffer()
+<pre><code class="language-dart">var buffer = StringBuffer()
   ..write('one')
   ..write('two')
   ..write('three');

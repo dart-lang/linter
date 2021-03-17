@@ -34,51 +34,51 @@ the parameter type.</p>
 <p>Doing this will invoke <code>==</code> on its elements and most likely will
 return <code>false</code>.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void someFunction() {
+<pre><code class="language-dart">void someFunction() {
   var list = &lt;int&gt;[];
   if (list.remove('1')) print('someFunction'); // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void someFunction3() {
+<pre><code class="language-dart">void someFunction3() {
   List&lt;int&gt; list = &lt;int&gt;[];
   if (list.remove('1')) print('someFunction3'); // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void someFunction8() {
+<pre><code class="language-dart">void someFunction8() {
   List&lt;DerivedClass2&gt; list = &lt;DerivedClass2&gt;[];
   DerivedClass3 instance;
   if (list.remove(instance)) print('someFunction8'); // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>abstract class SomeList&lt;E&gt; implements List&lt;E&gt; {}
+<pre><code class="language-dart">abstract class SomeList&lt;E&gt; implements List&lt;E&gt; {}
 
 abstract class MyClass implements SomeList&lt;int&gt; {
   bool badMethod(String thing) =&gt; this.remove(thing); // LINT
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction10() {
+<pre><code class="language-dart">void someFunction10() {
   var list = [];
   if (list.remove(1)) print('someFunction10'); // OK
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction1() {
+<pre><code class="language-dart">void someFunction1() {
   var list = &lt;int&gt;[];
   if (list.remove(1)) print('someFunction1'); // OK
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction4() {
+<pre><code class="language-dart">void someFunction4() {
   List&lt;int&gt; list = &lt;int&gt;[];
   if (list.remove(1)) print('someFunction4'); // OK
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction5() {
+<pre><code class="language-dart">void someFunction5() {
   List&lt;ClassBase&gt; list = &lt;ClassBase&gt;[];
   DerivedClass1 instance;
   if (list.remove(instance)) print('someFunction5'); // OK
@@ -89,7 +89,7 @@ abstract class ClassBase {}
 class DerivedClass1 extends ClassBase {}
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction6() {
+<pre><code class="language-dart">void someFunction6() {
   List&lt;Mixin&gt; list = &lt;Mixin&gt;[];
   DerivedClass2 instance;
   if (list.remove(instance)) print('someFunction6'); // OK
@@ -102,7 +102,7 @@ abstract class Mixin {}
 class DerivedClass2 extends ClassBase with Mixin {}
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunction7() {
+<pre><code class="language-dart">void someFunction7() {
   List&lt;Mixin&gt; list = &lt;Mixin&gt;[];
   DerivedClass3 instance;
   if (list.remove(instance)) print('someFunction7'); // OK

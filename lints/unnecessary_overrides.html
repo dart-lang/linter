@@ -31,7 +31,7 @@
 
             <p><strong>DON'T</strong> override a method to do a super method invocation with same parameters.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A extends B {
+<pre><code class="language-dart">class A extends B {
   @override
   void foo() {
     super.foo();
@@ -39,7 +39,7 @@
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A extends B {
+<pre><code class="language-dart">class A extends B {
   @override
   void foo() {
     doSomethingElse();

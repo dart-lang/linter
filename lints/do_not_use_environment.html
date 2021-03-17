@@ -33,7 +33,7 @@
 hidden global state and makes applications hard to understand and maintain.</p>
 <p><strong>DO NOT</strong> use <code>fromEnvironment</code> or <code>hasEnvironment</code> factory constructors.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>const loggingLevel =
+<pre><code class="language-dart">const loggingLevel =
   bool.hasEnvironment('logging') ? String.fromEnvironment('logging') : null;
 </code></pre>
 

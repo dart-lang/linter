@@ -35,17 +35,17 @@ reassigned later in the code.</p>
 because it helps avoid accidental reassignments and allows the compiler to do
 optimizations.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>for (var element in elements) { // LINT
+<pre><code class="language-dart">for (var element in elements) { // LINT
   print('Element: $element');
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>for (final element in elements) {
+<pre><code class="language-dart">for (final element in elements) {
   print('Element: $element');
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>for (var element in elements) {
+<pre><code class="language-dart">for (var element in elements) {
   element = element + element;
   print('Element: $element');
 }

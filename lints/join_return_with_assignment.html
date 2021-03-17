@@ -31,7 +31,7 @@
 
             <p><strong>DO</strong> join return statement with assignment when possible.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   B _lazyInstance;
   static B get instance {
     _lazyInstance ??= B(); // LINT
@@ -40,7 +40,7 @@
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   B _lazyInstance;
   static B get instance =&gt; _lazyInstance ??= B();
 }

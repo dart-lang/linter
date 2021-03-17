@@ -35,7 +35,7 @@ Declaring return types for functions helps improve your codebase by allowing the
 analyzer to more adequately check your code for errors that could occur during
 runtime.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>main() { }
+<pre><code class="language-dart">main() { }
 
 _bar() =&gt; _Foo();
 
@@ -44,7 +44,7 @@ class _Foo {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void main() { }
+<pre><code class="language-dart">void main() { }
 
 _Foo _bar() =&gt; _Foo();
 

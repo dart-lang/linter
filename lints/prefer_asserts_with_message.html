@@ -32,7 +32,7 @@
             <p>When assertions fail it's not always simple to understand why. Adding a message
 to the <code>assert</code> helps the developer to understand why the AssertionError occurs.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>f(a) {
+<pre><code class="language-dart">f(a) {
   assert(a != null);
 }
 
@@ -41,7 +41,7 @@ class A {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>f(a) {
+<pre><code class="language-dart">f(a) {
   assert(a != null, 'a must not be null');
 }
 

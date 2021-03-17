@@ -33,7 +33,7 @@
 <p>Wrapping a widget in <code>Container</code> with no other parameters set has no effect 
 and makes code needlessly more complex.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Widget buildRow() {
+<pre><code class="language-dart">Widget buildRow() {
   return Container(
       child: Row(
         children: &lt;Widget&gt;[
@@ -47,7 +47,7 @@ and makes code needlessly more complex.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Widget buildRow() {
+<pre><code class="language-dart">Widget buildRow() {
   return Row(
     children: &lt;Widget&gt;[
       const MyLogo(),

@@ -31,14 +31,14 @@
 
             <p><strong>DO</strong> use int literals rather than the corresponding double literal.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>const double myDouble = 8.0;
+<pre><code class="language-dart">const double myDouble = 8.0;
 final anotherDouble = myDouble + 7.0e2;
 main() {
   someMethod(6.0);
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>const double myDouble = 8;
+<pre><code class="language-dart">const double myDouble = 8;
 final anotherDouble = myDouble + 700;
 main() {
   someMethod(6);

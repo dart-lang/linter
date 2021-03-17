@@ -35,12 +35,12 @@ intended, a comment should be provided to explain why exceptions are being
 caught and suppressed.  Alternatively, the exception identifier can be named with
 underscores (e.g., <code>_</code>) to indicate that we intend to skip it.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>try {
+<pre><code class="language-dart">try {
   ...
 } catch(exception) { }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>try {
+<pre><code class="language-dart">try {
   ...
 } catch(e) {
   // ignored, really.

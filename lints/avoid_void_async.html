@@ -33,11 +33,11 @@
 <p>When declaring an async method or function which does not return a value,
 declare that it returns Future<void> and not just void.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void f() async {}
+<pre><code class="language-dart">void f() async {}
 void f2() async =&gt; null;
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Future&lt;void&gt; f() async {}
+<pre><code class="language-dart">Future&lt;void&gt; f() async {}
 Future&lt;void&gt; f2() async =&gt; null;
 </code></pre>
 

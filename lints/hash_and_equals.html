@@ -37,7 +37,7 @@ map implementation to function properly.  Thus, when overriding <code>==</code>,
 <code>hashCode</code> should also be overridden to maintain consistency. Similarly, if
 <code>hashCode</code> is overridden, <code>==</code> should be also.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class Bad {
+<pre><code class="language-dart">class Bad {
   final int value;
   Bad(this.value);
 
@@ -46,7 +46,7 @@ map implementation to function properly.  Thus, when overriding <code>==</code>,
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Better {
+<pre><code class="language-dart">class Better {
   final int value;
   Better(this.value);
 

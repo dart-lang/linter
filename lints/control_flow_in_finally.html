@@ -33,7 +33,7 @@
 <p>Using control flow in finally blocks will inevitably cause unexpected behavior
 that is hard to debug.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Ok {
+<pre><code class="language-dart">class Ok {
   double compliantMethod() {
     var i = 5;
     try {
@@ -46,7 +46,7 @@ that is hard to debug.</p>
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class BadReturn {
+<pre><code class="language-dart">class BadReturn {
   double nonCompliantMethod() {
     try {
       return 1 / 0;
@@ -59,7 +59,7 @@ that is hard to debug.</p>
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class BadContinue {
+<pre><code class="language-dart">class BadContinue {
   double nonCompliantMethod() {
     for (var o in [1, 2]) {
       try {
@@ -75,7 +75,7 @@ that is hard to debug.</p>
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class BadBreak {
+<pre><code class="language-dart">class BadBreak {
   double nonCompliantMethod() {
     for (var o in [1, 2]) {
       try {

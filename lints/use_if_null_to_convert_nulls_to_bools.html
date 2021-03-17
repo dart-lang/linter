@@ -31,13 +31,13 @@
 
             <p>Use if-null operators to convert nulls to bools.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>if (nullableBool == true) {
+<pre><code class="language-dart">if (nullableBool == true) {
 }
 if (nullableBool != false) {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>if (nullableBool ?? false) {
+<pre><code class="language-dart">if (nullableBool ?? false) {
 }
 if (nullableBool ?? true) {
 }

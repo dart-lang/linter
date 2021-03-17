@@ -33,14 +33,14 @@
 <p>Const declarations are more hot-reload friendly and allow to use const
 constructors if an instantiation references this declaration.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>const o = &lt;int&gt;[];
+<pre><code class="language-dart">const o = &lt;int&gt;[];
 
 class A {
   static const o = &lt;int&gt;[];
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>final o = const &lt;int&gt;[];
+<pre><code class="language-dart">final o = const &lt;int&gt;[];
 
 class A {
   static final o = const &lt;int&gt;[];

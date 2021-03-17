@@ -33,7 +33,7 @@
 <p>Usually, the types of local variables can be easily inferred, so it isn't
 necessary to annotate them.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Map&lt;int, List&lt;Person&gt;&gt; groupByZip(Iterable&lt;Person&gt; people) {
+<pre><code class="language-dart">Map&lt;int, List&lt;Person&gt;&gt; groupByZip(Iterable&lt;Person&gt; people) {
   Map&lt;int, List&lt;Person&gt;&gt; peopleByZip = &lt;int, List&lt;Person&gt;&gt;{};
   for (Person person in people) {
     peopleByZip.putIfAbsent(person.zip, () =&gt; &lt;Person&gt;[]);
@@ -43,7 +43,7 @@ necessary to annotate them.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Map&lt;int, List&lt;Person&gt;&gt; groupByZip(Iterable&lt;Person&gt; people) {
+<pre><code class="language-dart">Map&lt;int, List&lt;Person&gt;&gt; groupByZip(Iterable&lt;Person&gt; people) {
   var peopleByZip = &lt;int, List&lt;Person&gt;&gt;{};
   for (var person in people) {
     peopleByZip.putIfAbsent(person.zip, () =&gt; &lt;Person&gt;[]);

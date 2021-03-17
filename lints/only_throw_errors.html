@@ -35,12 +35,12 @@
 doing this is usually a hack for something that should be implemented more
 thoroughly.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void throwString() {
+<pre><code class="language-dart">void throwString() {
   throw 'hello world!'; // LINT
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void throwArgumentError() {
+<pre><code class="language-dart">void throwArgumentError() {
   Error error = ArgumentError('oh!');
   throw error; // OK
 }

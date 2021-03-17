@@ -31,12 +31,12 @@
 
             <p><strong>AVOID</strong> shadowing type parameters.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A&lt;T&gt; {
+<pre><code class="language-dart">class A&lt;T&gt; {
   void fn&lt;T&gt;() {}
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A&lt;T&gt; {
+<pre><code class="language-dart">class A&lt;T&gt; {
   void fn&lt;U&gt;() {}
 }
 </code></pre>

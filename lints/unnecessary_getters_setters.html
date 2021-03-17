@@ -41,12 +41,12 @@ with accessing a raw field in C#.</p>
 indistinguishable.  You can expose a field in a class and later wrap it in a
 getter and setter without having to touch any code that uses that field.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Box {
+<pre><code class="language-dart">class Box {
   var contents;
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class Box {
+<pre><code class="language-dart">class Box {
   var _contents;
   get contents =&gt; _contents;
   set contents(value) {

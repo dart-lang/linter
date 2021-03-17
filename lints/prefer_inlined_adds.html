@@ -32,11 +32,11 @@
             <p>Declare elements in list literals inline, rather than using <code>add</code> and 
 <code>addAll</code> methods where possible.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>var l = ['a']..add('b')..add('c');
+<pre><code class="language-dart">var l = ['a']..add('b')..add('c');
 var l2 = ['a']..addAll(['b', 'c'])
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>var l = ['a', 'b', 'c'];
+<pre><code class="language-dart">var l = ['a', 'b', 'c'];
 var 2 = ['a', 'b', 'c'];
 </code></pre>
 

@@ -32,11 +32,11 @@
             <p><strong>AVOID</strong> private typedef functions used only once. Prefer inline function
 syntax.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>typedef void _F();
+<pre><code class="language-dart">typedef void _F();
 m(_F f);
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>m(void Function() f);
+<pre><code class="language-dart">m(void Function() f);
 </code></pre>
 
             

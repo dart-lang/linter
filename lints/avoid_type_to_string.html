@@ -34,7 +34,7 @@ contractually return the user-defined name of the Type (or underlying class).
 Development-mode compilers where code size is not a concern use the full name,
 but release-mode compilers often choose to minify these symbols.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void bar(Object other) {
+<pre><code class="language-dart">void bar(Object other) {
   if (other.runtimeType.toString() == 'Bar') {
     doThing();
   }
@@ -45,7 +45,7 @@ Object baz(Thing myThing) {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void bar(Object other) {
+<pre><code class="language-dart">void bar(Object other) {
   if (other is Bar) {
     doThing();
   }

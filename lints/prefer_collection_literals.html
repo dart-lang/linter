@@ -31,14 +31,14 @@
 
             <p><strong>DO</strong> use collection literals when possible.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>var points = List();
+<pre><code class="language-dart">var points = List();
 var addresses = Map();
 var uniqueNames = Set();
 var ids = LinkedHashSet();
 var coordinates = LinkedHashMap();
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>var points = [];
+<pre><code class="language-dart">var points = [];
 var addresses = &lt;String,String&gt;{};
 var uniqueNames = &lt;String&gt;{};
 var ids = &lt;int&gt;{};
@@ -47,7 +47,7 @@ var coordinates = &lt;int,int&gt;{};
 <p><strong>EXCEPTIONS:</strong></p>
 <p>There are cases with <code>LinkedHashSet</code> or <code>LinkedHashMap</code> where a literal constructor
 will trigger a type error so those will be excluded from the lint.</p>
-<pre><code>void main() {
+<pre><code class="language-dart">void main() {
   LinkedHashSet&lt;int&gt; linkedHashSet =  LinkedHashSet.from([1, 2, 3]); // OK
   LinkedHashMap linkedHashMap = LinkedHashMap(); // OK
   

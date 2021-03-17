@@ -34,44 +34,44 @@
 operator such as <code>??=</code> is used.  Otherwise, arbitrarily reassigning parameters
 is usually a mistake.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void badFunction(int parameter) { // LINT
+<pre><code class="language-dart">void badFunction(int parameter) { // LINT
   parameter = 4;
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void badFunction(int required, {int optional: 42}) { // LINT
+<pre><code class="language-dart">void badFunction(int required, {int optional: 42}) { // LINT
   optional ??= 8;
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void badFunctionPositional(int required, [int optional = 42]) { // LINT
+<pre><code class="language-dart">void badFunctionPositional(int required, [int optional = 42]) { // LINT
   optional ??= 8;
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
     void badMethod(int parameter) { // LINT
     parameter = 4;
   }
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void ok(String parameter) {
+<pre><code class="language-dart">void ok(String parameter) {
   print(parameter);
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void actuallyGood(int required, {int optional}) { // OK
+<pre><code class="language-dart">void actuallyGood(int required, {int optional}) { // OK
   optional ??= ...;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void actuallyGoodPositional(int required, [int optional]) { // OK
+<pre><code class="language-dart">void actuallyGoodPositional(int required, [int optional]) { // OK
   optional ??= ...;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   void ok(String parameter) {
     print(parameter);
   }

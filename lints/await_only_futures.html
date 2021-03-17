@@ -31,12 +31,12 @@
 
             <p><strong>AVOID</strong> using await on anything other than a future.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>main() async {
+<pre><code class="language-dart">main() async {
   print(await 23);
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>main() async {
+<pre><code class="language-dart">main() async {
   print(await Future.value(23));
 }
 </code></pre>

@@ -33,14 +33,14 @@
 <p>As Dart allows local function declarations, it is a good practice to use them in
 the place of function literals.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void main() {
+<pre><code class="language-dart">void main() {
   var localFunction = () {
     ...
   };
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void main() {
+<pre><code class="language-dart">void main() {
   localFunction() {
     ...
   }

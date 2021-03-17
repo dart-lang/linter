@@ -33,7 +33,7 @@
 <p>In most cases, using a string buffer is preferred for composing strings due to
 its improved performance.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>String foo() {
+<pre><code class="language-dart">String foo() {
   final buffer = '';
   for (int i = 0; i &lt; 10; i++) {
     buffer += 'a'; // LINT
@@ -42,7 +42,7 @@ its improved performance.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>String foo() {
+<pre><code class="language-dart">String foo() {
   final buffer = StringBuffer();
   for (int i = 0; i &lt; 10; i++) {
     buffer.write('a');

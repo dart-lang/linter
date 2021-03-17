@@ -41,7 +41,7 @@ that implements <code>==</code>  as a <em>proxy</em> for identifying value types
 nearly impossible to follow the contract of <code>==</code>. Classes that override <code>==</code>
 typically are usable directly in tests <em>without</em> creating mocks or fakes as
 well. For example, for a given class <code>Size</code>:</p>
-<pre><code>class Size {
+<pre><code class="language-dart">class Size {
   final int inBytes;
   const Size(this.inBytes);
 
@@ -53,7 +53,7 @@ well. For example, for a given class <code>Size</code>:</p>
 }
 </code></pre>
 <p><strong>BAD</strong>:</p>
-<pre><code>class CustomSize implements Size {
+<pre><code class="language-dart">class CustomSize implements Size {
   final int inBytes;
   const CustomSize(this.inBytes);
 
@@ -61,7 +61,7 @@ well. For example, for a given class <code>Size</code>:</p>
 }
 </code></pre>
 <p><strong>BAD</strong>:</p>
-<pre><code>import 'package:test/test.dart';
+<pre><code class="language-dart">import 'package:test/test.dart';
 import 'size.dart';
 
 class FakeSize implements Size {
@@ -75,14 +75,14 @@ void main() {
 }
 </code></pre>
 <p><strong>GOOD</strong>:</p>
-<pre><code>class ExtendedSize extends Size {
+<pre><code class="language-dart">class ExtendedSize extends Size {
   ExtendedSize(int inBytes) : super(inBytes);
 
   int get inKilobytes =&gt; inBytes ~/ 1000;
 }
 </code></pre>
 <p><strong>GOOD</strong>:</p>
-<pre><code>import 'package:test/test.dart';
+<pre><code class="language-dart">import 'package:test/test.dart';
 import 'size.dart';
 
 void main() {

@@ -35,7 +35,7 @@ public APIs consist in everything in your package's <code>lib</code> folder, min
 implementation files in <code>lib/src</code>, adding elements explicitly exported with an
 <code>export</code> directive.</p>
 <p>For example, given <code>lib/foo.dart</code>:</p>
-<pre><code>export 'src/bar.dart' show Bar;
+<pre><code class="language-dart">export 'src/bar.dart' show Bar;
 export 'src/baz.dart';
 
 class Foo { }
@@ -50,7 +50,7 @@ class _Foo { }
 </ul>
 <p>All public API members should be documented with <code>///</code> doc-style comments.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>/// A Foo.
+<pre><code class="language-dart">/// A Foo.
 abstract class Foo {
   /// Start foo-ing.
   void start() =&gt; _start();
@@ -59,7 +59,7 @@ abstract class Foo {
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class Bar {
+<pre><code class="language-dart">class Bar {
   void bar();
 }
 </code></pre>

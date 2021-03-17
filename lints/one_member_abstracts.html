@@ -37,10 +37,10 @@ function.  If you're defining a class and it only has a single abstract member
 with a meaningless name like <code>call</code> or <code>invoke</code>, there is a good chance
 you just want a function.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>typedef Predicate = bool Function(item);
+<pre><code class="language-dart">typedef Predicate = bool Function(item);
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>abstract class Predicate {
+<pre><code class="language-dart">abstract class Predicate {
   bool test(item);
 }
 </code></pre>

@@ -6,20 +6,20 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>no_duplicate_case_values</title>
+      <title>avoid_multiple_declarations_per_line</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>no_duplicate_case_values</h1>
-            <p>Group: errors</p>
+            <h1>avoid_multiple_declarations_per_line</h1>
+            <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0 • <small>(Linter v0.1.30)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
-            <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a>
+            
             <ul>
                <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
                <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
@@ -29,23 +29,14 @@
          </header>
          <section>
 
-            <p><strong>DON'T</strong> use more than one case with same value.</p>
-<p>This is usually a typo or changed value of constant.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">const int A = 1;
-switch (v) {
-  case A:
-  case 2:
-}
-</code></pre>
+            <p><strong>DON'T</strong> declare multiple variables on a single line.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">const int A = 1;
-switch (v) {
-  case 1:
-  case 2:
-  case A:
-  case 2:
-}
+<pre><code class="language-dart">String? foo, bar, baz;
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">String? foo;
+String? bar;
+String? baz;
 </code></pre>
 
             

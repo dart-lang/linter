@@ -32,7 +32,7 @@
             <p>From the <a href="https://dart.dev/guides/language/effective-dart/style/">style guide</a>:</p>
 <p><strong>DON'T</strong> use <code>this</code> when not needed to avoid shadowing.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class Box {
+<pre><code class="language-dart">class Box {
   var value;
   void update(new_value) {
     this.value = new_value;
@@ -40,7 +40,7 @@
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Box {
+<pre><code class="language-dart">class Box {
   var value;
   void update(new_value) {
     value = new_value;
@@ -48,7 +48,7 @@
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Box {
+<pre><code class="language-dart">class Box {
   var value;
   void update(value) {
     this.value = value;

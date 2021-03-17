@@ -33,7 +33,7 @@
 <p>As Dart has the <code>??=</code> operator, it is advisable to use it where applicable to
 improve the brevity of your code.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>String get fullName {
+<pre><code class="language-dart">String get fullName {
   if (_fullName == null) {
     _fullName = getFullUserName(this);
   }
@@ -41,7 +41,7 @@ improve the brevity of your code.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>String get fullName {
+<pre><code class="language-dart">String get fullName {
   return _fullName ??= getFullUserName(this);
 }
 </code></pre>

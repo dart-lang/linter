@@ -34,13 +34,13 @@
 <p>If a constructor parameter is using <code>this.x</code> to initialize a field, then the
 type of the parameter is understood to be the same type as the field.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Point {
+<pre><code class="language-dart">class Point {
   int x, y;
   Point(this.x, this.y);
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class Point {
+<pre><code class="language-dart">class Point {
   int x, y;
   Point(int this.x, int this.y);
 }

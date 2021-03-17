@@ -33,11 +33,11 @@
 <p>It's a good practice to expose the ability to provide a key when creating public
 widgets.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class MyPublicWidget extends StatelessWidget {
+<pre><code class="language-dart">class MyPublicWidget extends StatelessWidget {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class MyPublicWidget extends StatelessWidget {
+<pre><code class="language-dart">class MyPublicWidget extends StatelessWidget {
   MyPublicWidget({Key key}) : super(key: key);
 }
 </code></pre>

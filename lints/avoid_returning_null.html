@@ -35,13 +35,13 @@ or num.</p>
 generally expected to return non-nullable values.  Thus, returning null where a
 primitive type was expected can lead to runtime exceptions.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>bool getBool() =&gt; null;
+<pre><code class="language-dart">bool getBool() =&gt; null;
 num getNum() =&gt; null;
 int getInt() =&gt; null;
 double getDouble() =&gt; null;
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>bool getBool() =&gt; false;
+<pre><code class="language-dart">bool getBool() =&gt; false;
 num getNum() =&gt; -1;
 int getInt() =&gt; -1;
 double getDouble() =&gt; -1.0;

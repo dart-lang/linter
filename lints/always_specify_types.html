@@ -36,13 +36,13 @@ type annotations.  Use <code>dynamic</code> if you are being explicit that the t
 unknown.  Use <code>Object</code> if you are being explicit that you want an object that
 implements <code>==</code> and <code>hashCode</code>.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>int foo = 10;
+<pre><code class="language-dart">int foo = 10;
 final Bar bar = Bar();
 String baz = 'hello';
 const int quux = 20;
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>var foo = 10;
+<pre><code class="language-dart">var foo = 10;
 final bar = Bar();
 const quux = 20;
 </code></pre>
@@ -51,7 +51,7 @@ authors can special-case type variables whose type needs to by dynamic but whose
 declaration should be treated as optional.  For example, suppose you have a
 <code>Key</code> object whose type parameter you'd like to treat as optional.  Using the
 <code>@optionalTypeArgs</code> would look like this:</p>
-<pre><code>import 'package:meta/meta.dart';
+<pre><code class="language-dart">import 'package:meta/meta.dart';
 
 @optionalTypeArgs
 class Key&lt;T&gt; {

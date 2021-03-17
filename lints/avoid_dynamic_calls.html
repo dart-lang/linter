@@ -51,7 +51,7 @@ punishing to disallow <code>any.toString()</code> or <code>any == true</code>, f
 to "dynamic", and calls to an object that is typed "Function" will also trigger
 this lint.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void explicitDynamicType(dynamic object) {
+<pre><code class="language-dart">void explicitDynamicType(dynamic object) {
   print(object.foo());
 }
 
@@ -77,7 +77,7 @@ void functionType(Function function) {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void explicitType(Fooable object) {
+<pre><code class="language-dart">void explicitType(Fooable object) {
   object.foo();
 }
 

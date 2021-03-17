@@ -34,11 +34,11 @@ to invoke inherited members using <code>super</code>. The new style of mixins sh
 be used for types that are to be mixed in. As a result, this lint will flag any
 uses of a class in a <code>with</code> clause.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A {}
+<pre><code class="language-dart">class A {}
 class B extends Object with A {}
 </code></pre>
 <p><strong>OK:</strong></p>
-<pre><code>mixin M {}
+<pre><code class="language-dart">mixin M {}
 class C with M {}
 </code></pre>
 

@@ -36,7 +36,7 @@ via the <code>widget</code> field,  passing data to <code>State</code> objects u
 constructor parameters should also be avoided and so further, the State
 constructor is required to be passed no arguments.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>MyState global;
+<pre><code class="language-dart">MyState global;
 
 class MyStateful extends StatefulWidget {
   @override
@@ -46,18 +46,18 @@ class MyStateful extends StatefulWidget {
   } 
 }
 </code></pre>
-<pre><code>class MyStateful extends StatefulWidget {
+<pre><code class="language-dart">class MyStateful extends StatefulWidget {
   @override
   MyState createState() =&gt; MyState()..field = 42;
 }
 </code></pre>
-<pre><code>class MyStateful extends StatefulWidget {
+<pre><code class="language-dart">class MyStateful extends StatefulWidget {
   @override
   MyState createState() =&gt; MyState(42);
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class MyStateful extends StatefulWidget {
+<pre><code class="language-dart">class MyStateful extends StatefulWidget {
   @override
   MyState createState() {
     return MyState();

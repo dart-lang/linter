@@ -33,7 +33,7 @@
 <p><strong>DON'T</strong> declare arguments with values that match the defaults for the
 corresponding parameter.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void f({bool valWithDefault = true, bool val}) {
+<pre><code class="language-dart">void f({bool valWithDefault = true, bool val}) {
   ...
 }
 
@@ -42,7 +42,7 @@ void main() {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void f({bool valWithDefault = true, bool val}) {
+<pre><code class="language-dart">void f({bool valWithDefault = true, bool val}) {
   ...
 }
 

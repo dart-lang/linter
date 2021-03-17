@@ -36,12 +36,12 @@ up the name and link to its docs.  For this all to work, ensure that all
 identifiers in docs wrapped in brackets are in scope.</p>
 <p>For example,</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>/// Return the larger of [a] or [b].
+<pre><code class="language-dart">/// Return the larger of [a] or [b].
 int max_int(int a, int b) { ... }
 </code></pre>
 <p>On the other hand, assuming <code>outOfScopeId</code> is out of scope:</p>
 <p><strong>BAD:</strong></p>
-<pre><code>/// Return true if [value] is larger than [outOfScopeId].
+<pre><code class="language-dart">/// Return true if [value] is larger than [outOfScopeId].
 bool isOutOfRange(int value) { ... }
 </code></pre>
 <p>Note that the square bracket comment format is designed to allow 

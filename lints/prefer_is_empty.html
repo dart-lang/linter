@@ -36,11 +36,11 @@ collection contains anything can be painfully slow.</p>
 <p>Instead, there are faster and more readable getters: <code>isEmpty</code> and
 <code>isNotEmpty</code>.  Use the one that doesn't require you to negate the result.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>if (lunchBox.isEmpty) return 'so hungry...';
+<pre><code class="language-dart">if (lunchBox.isEmpty) return 'so hungry...';
 if (words.isNotEmpty) return words.join(' ');
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>if (lunchBox.length == 0) return 'so hungry...';
+<pre><code class="language-dart">if (lunchBox.length == 0) return 'so hungry...';
 if (words.length != 0) return words.join(' ');
 </code></pre>
 

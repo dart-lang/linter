@@ -32,7 +32,7 @@
             <p><strong>PREFER</strong> using <code>const</code> for instantiating list, map and set literals used as
 parameters in immutable class instantiations.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>@immutable
+<pre><code class="language-dart">@immutable
 class A {
   A(this.v);
   final v;
@@ -42,7 +42,7 @@ A a1 = new A([1]);
 A a2 = new A({});
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>A a1 = new A(const [1]);
+<pre><code class="language-dart">A a1 = new A(const [1]);
 A a2 = new A(const {});
 </code></pre>
 

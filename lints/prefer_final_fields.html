@@ -34,13 +34,13 @@ in the library.</p>
 <p>Declaring fields as final when possible is a good practice because it helps
 avoid accidental reassignments and allows the compiler to do optimizations.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class BadImmutable {
+<pre><code class="language-dart">class BadImmutable {
   var _label = 'hola mundo! BadImmutable'; // LINT
   var label = 'hola mundo! BadImmutable'; // OK
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class MultipleMutable {
+<pre><code class="language-dart">class MultipleMutable {
   var _label = 'hola mundo! GoodMutable', _offender = 'mumble mumble!'; // LINT
   var _someOther; // LINT
 
@@ -54,13 +54,13 @@ avoid accidental reassignments and allows the compiler to do optimizations.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class GoodImmutable {
+<pre><code class="language-dart">class GoodImmutable {
   final label = 'hola mundo! BadImmutable', bla = 5; // OK
   final _label = 'hola mundo! BadImmutable', _bla = 5; // OK
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class GoodMutable {
+<pre><code class="language-dart">class GoodMutable {
   var _label = 'hola mundo! GoodMutable';
 
   void changeLabel() {
@@ -69,14 +69,14 @@ avoid accidental reassignments and allows the compiler to do optimizations.</p>
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class AssignedInAllConstructors {
+<pre><code class="language-dart">class AssignedInAllConstructors {
   var _label; // LINT
   AssignedInAllConstructors(this._label);
   AssignedInAllConstructors.withDefault() : _label = 'Hello';
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class NotAssignedInAllConstructors {
+<pre><code class="language-dart">class NotAssignedInAllConstructors {
   var _label; // OK
   NotAssignedInAllConstructors();
   NotAssignedInAllConstructors.withDefault() : _label = 'Hello';

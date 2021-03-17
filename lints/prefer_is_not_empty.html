@@ -33,12 +33,12 @@
 <p>When testing whether an iterable or map is empty, prefer <code>isNotEmpty</code> over
 <code>!isEmpty</code> to improve code readability.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>if (todo.isNotEmpty) {
+<pre><code class="language-dart">if (todo.isNotEmpty) {
   sendResults(request, todo.isEmpty);
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>if (!sources.isEmpty) {
+<pre><code class="language-dart">if (!sources.isEmpty) {
   process(sources);
 }
 </code></pre>

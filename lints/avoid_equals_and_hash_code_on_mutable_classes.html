@@ -35,7 +35,7 @@ unpredictable and undesirable behavior when used in collections. See
 https://dart.dev/guides/language/effective-dart/design#avoid-defining-custom-equality-for-mutable-classes
 for more information.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>@immutable
+<pre><code class="language-dart">@immutable
 class A {
   final String key;
   const A(this.key);
@@ -46,7 +46,7 @@ class A {
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class B {
+<pre><code class="language-dart">class B {
   String key;
   const B(this.key);
   @override
@@ -58,7 +58,7 @@ class A {
 <p>NOTE: The lint checks the use of the @immutable annotation, and will trigger
 even if the class is otherwise not mutable. Thus:</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class C {
+<pre><code class="language-dart">class C {
   final String key;
   const C(this.key);
   @override

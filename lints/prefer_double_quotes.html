@@ -38,13 +38,13 @@ this case, its much more readable to use a single quote somewhere.  So single
 quotes are allowed either within, or containing, an interpolated string literal.
 Arguably strings within string interpolations should be its own type of lint.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>useStrings(
+<pre><code class="language-dart">useStrings(
     'should be double quote',
     r'should be double quote',
     r'''should be double quotes''')
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>useStrings(
+<pre><code class="language-dart">useStrings(
     "should be double quote",
     r"should be double quote",
     r"""should be double quotes""",

@@ -34,13 +34,13 @@
 ambiguous.  Using named boolean parameters is much more readable because it
 inherently describes what the boolean value represents.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Task(true);
+<pre><code class="language-dart">Task(true);
 Task(false);
 ListBox(false, true, true);
 Button(false);
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Task.oneShot();
+<pre><code class="language-dart">Task.oneShot();
 Task.repeating();
 ListBox(scroll: true, showScrollbars: true);
 Button(ButtonState.enabled);

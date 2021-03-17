@@ -32,7 +32,7 @@
             <p><strong>DO</strong> invoke <code>close</code> on instances of <code>dart.core.Sink</code>.</p>
 <p>Closing instances of Sink prevents memory leaks and unexpected behavior.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class A {
+<pre><code class="language-dart">class A {
   IOSink _sinkA;
   void init(filename) {
     _sinkA = File(filename).openWrite(); // LINT
@@ -40,12 +40,12 @@
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void someFunction() {
+<pre><code class="language-dart">void someFunction() {
   IOSink _sinkF; // LINT
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class B {
+<pre><code class="language-dart">class B {
   IOSink _sinkB;
   void init(filename) {
     _sinkB = File(filename).openWrite(); // OK
@@ -57,7 +57,7 @@
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void someFunctionOK() {
+<pre><code class="language-dart">void someFunctionOK() {
   IOSink _sinkFOK; // OK
   _sinkFOK.close();
 }

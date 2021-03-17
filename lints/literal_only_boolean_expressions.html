@@ -39,42 +39,42 @@ It is quite likely that the code does not match the programmer's intent.
 Either the condition should be removed or it should be updated so that it does
 not always evaluate to <code>true</code> or <code>false</code>.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void bad() {
+<pre><code class="language-dart">void bad() {
   if (true) {} // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void bad() {
+<pre><code class="language-dart">void bad() {
   if (true &amp;&amp; 1 != 0) {} // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void bad() {
+<pre><code class="language-dart">void bad() {
   if (1 != 0 &amp;&amp; true) {} // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void bad() {
+<pre><code class="language-dart">void bad() {
   if (1 &lt; 0 &amp;&amp; true) {} // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void bad() {
+<pre><code class="language-dart">void bad() {
   if (true &amp;&amp; false) {} // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void bad() {
+<pre><code class="language-dart">void bad() {
   if (1 != 0) {} // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void bad() {
+<pre><code class="language-dart">void bad() {
   if (true &amp;&amp; 1 != 0 || 3 &lt; 4) {} // LINT
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>void bad() {
+<pre><code class="language-dart">void bad() {
   if (1 != 0 || 3 &lt; 4 &amp;&amp; true) {} // LINT
 }
 </code></pre>

@@ -33,7 +33,7 @@
 <p>A <code>Container</code> is a heavier Widget than a <code>SizedBox</code>, and as bonus, <code>SizedBox</code>
 has a <code>const</code> constructor.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Widget buildRow() {
+<pre><code class="language-dart">Widget buildRow() {
   return Row(
     children: &lt;Widget&gt;[
       const MyLogo(),
@@ -46,7 +46,7 @@ has a <code>const</code> constructor.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Widget buildRow() {
+<pre><code class="language-dart">Widget buildRow() {
   return Row(
     children: const &lt;Widget&gt;[
       MyLogo(),

@@ -33,7 +33,7 @@
 <p>In most cases, it makes more sense to use a named constructor rather than a
 static method because it makes instantiation clearer.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class Point {
+<pre><code class="language-dart">class Point {
   num x, y;
   Point(this.x, this.y);
   static Point polar(num theta, num radius) {
@@ -43,7 +43,7 @@ static method because it makes instantiation clearer.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Point {
+<pre><code class="language-dart">class Point {
   num x, y;
   Point(this.x, this.y);
   Point.polar(num theta, num radius)

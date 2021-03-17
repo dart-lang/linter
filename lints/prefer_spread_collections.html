@@ -34,7 +34,7 @@
 of individual items. But, when existing items are already stored in another 
 collection, spread collection syntax leads to simpler code.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>Widget build(BuildContext context) {
+<pre><code class="language-dart">Widget build(BuildContext context) {
   return CupertinoPageScaffold(
     child: ListView(
       children: [
@@ -44,14 +44,14 @@ collection, spread collection syntax leads to simpler code.</p>
   );
 }
 </code></pre>
-<pre><code>var ints = [1, 2, 3];
+<pre><code class="language-dart">var ints = [1, 2, 3];
 print(['a']..addAll(ints.map((i) =&gt; i.toString()))..addAll(['c']));
 </code></pre>
-<pre><code>var things;
+<pre><code class="language-dart">var things;
 var l = ['a']..addAll(things ?? const []);
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>Widget build(BuildContext context) {
+<pre><code class="language-dart">Widget build(BuildContext context) {
   return CupertinoPageScaffold(
     child: ListView(
       children: [
@@ -62,10 +62,10 @@ var l = ['a']..addAll(things ?? const []);
   );
 }
 </code></pre>
-<pre><code>var ints = [1, 2, 3];
+<pre><code class="language-dart">var ints = [1, 2, 3];
 print(['a', ...ints.map((i) =&gt; i.toString()), 'c');
 </code></pre>
-<pre><code>var things;
+<pre><code class="language-dart">var things;
 var l = ['a', ...?things];
 </code></pre>
 

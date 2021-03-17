@@ -43,7 +43,7 @@ much slower than their synchronous counterparts.</p>
 <li><code>FileSystemEntity.type</code></li>
 </ul>
 <p><strong>BAD:</strong></p>
-<pre><code>import 'dart:io';
+<pre><code class="language-dart">import 'dart:io';
 
 Future&lt;Null&gt; someFunction() async {
   var file = File('/path/to/my/file');
@@ -52,7 +52,7 @@ Future&lt;Null&gt; someFunction() async {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>import 'dart:io';
+<pre><code class="language-dart">import 'dart:io';
 
 Future&lt;Null&gt; someFunction() async {
   var file = File('/path/to/my/file');

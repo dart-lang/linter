@@ -38,7 +38,7 @@
 </ul>
 <p><strong>DO</strong> define default behavior outside switch statements.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>  switch (testEnum) {
+<pre><code class="language-dart">  switch (testEnum) {
     case TestEnum.A:
       return '123';
     case TestEnum.B:
@@ -48,7 +48,7 @@
   return null;
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>  switch (testEnum) {
+<pre><code class="language-dart">  switch (testEnum) {
     case TestEnum.A:
       return '123';
     case TestEnum.B:

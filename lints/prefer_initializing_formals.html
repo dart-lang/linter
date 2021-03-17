@@ -32,7 +32,7 @@
             <p><strong>DO</strong> use initializing formals when possible.</p>
 <p>Using initializing formals when possible makes your code more terse.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>class Point {
+<pre><code class="language-dart">class Point {
   num x, y;
   Point(num x, num y) {
     this.x = x;
@@ -41,13 +41,13 @@
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Point {
+<pre><code class="language-dart">class Point {
   num x, y;
   Point(this.x, this.y);
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>class Point {
+<pre><code class="language-dart">class Point {
   num x, y;
   Point({num x, num y}) {
     this.x = x;
@@ -56,7 +56,7 @@
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>class Point {
+<pre><code class="language-dart">class Point {
   num x, y;
   Point({this.x, this.y});
 }
@@ -67,7 +67,7 @@ name and the field name are the same. The reason for this is that resolving
 such a lint would require either renaming the field or renaming the parameter,
 and both of those actions would potentially be a breaking change. For example,
 the following will not generate a lint:</p>
-<pre><code>class Point {
+<pre><code class="language-darts">class Point {
   bool isEnabled;
   Point({bool enabled}) {
     this.isEnabled = enable; // OK

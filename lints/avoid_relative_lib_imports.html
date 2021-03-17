@@ -35,14 +35,14 @@ where the same member gets imported in two different ways.  An easy way to avoid
 that is to ensure you have no relative imports that include <code>lib/</code> in their
 paths.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>import 'package:foo/bar.dart';
+<pre><code class="language-dart">import 'package:foo/bar.dart';
 
 import 'baz.dart';
 
 ...
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code>import 'package:foo/bar.dart';
+<pre><code class="language-dart">import 'package:foo/bar.dart';
 
 import '../lib/baz.dart';
 

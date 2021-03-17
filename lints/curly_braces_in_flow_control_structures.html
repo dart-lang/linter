@@ -30,10 +30,10 @@
          <section>
 
             <p><strong>DO</strong> use curly braces for all flow control structures.</p>
-<p>Doing so avoids the <a href="http://en.wikipedia.org/wiki/Dangling_else">dangling else</a>
+<p>Doing so avoids the <a href="https://en.wikipedia.org/wiki/Dangling_else">dangling else</a>
 problem.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>if (isWeekDay) {
+<pre><code class="language-dart">if (isWeekDay) {
   print('Bike to work!');
 } else {
   print('Go dancing or read a book!');
@@ -43,11 +43,11 @@ problem.</p>
 the entire <code>if</code> statement and the then body all fit in one line. In that case,
 you may leave off the braces if you prefer:</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>if (arg == null) return defaultValue;
+<pre><code class="language-dart">if (arg == null) return defaultValue;
 </code></pre>
 <p>If the body wraps to the next line, though, use braces:</p>
 <p><strong>GOOD:</strong></p>
-<pre><code>if (overflowChars != other.overflowChars) {
+<pre><code class="language-dart">if (overflowChars != other.overflowChars) {
   return overflowChars &lt; other.overflowChars;
 }
 </code></pre>

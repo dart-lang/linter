@@ -33,14 +33,14 @@
 <p>As <code>dynamic</code> is the assumed return value of a function or method, it is usually
 not necessary to annotate it.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>dynamic lookUpOrDefault(String name, Map map, dynamic defaultValue) {
+<pre><code class="language-dart">dynamic lookUpOrDefault(String name, Map map, dynamic defaultValue) {
   var value = map[name];
   if (value != null) return value;
   return defaultValue;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>lookUpOrDefault(String name, Map map, defaultValue) {
+<pre><code class="language-dart">lookUpOrDefault(String name, Map map, defaultValue) {
   var value = map[name];
   if (value != null) return value;
   return defaultValue;

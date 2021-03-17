@@ -31,13 +31,13 @@
 
             <p><strong>AVOID</strong> bool literals in conditional expressions.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>condition ? true : boolExpression
+<pre><code class="language-dart">condition ? true : boolExpression
 condition ? false : boolExpression
 condition ? boolExpression : true
 condition ? boolExpression : false
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>condition || boolExpression
+<pre><code class="language-dart">condition || boolExpression
 !condition &amp;&amp; boolExpression
 !condition || boolExpression
 condition &amp;&amp; boolExpression

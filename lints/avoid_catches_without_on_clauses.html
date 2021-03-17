@@ -33,7 +33,7 @@
 <p>Using catch clauses without on clauses make your code prone to encountering
 unexpected errors that won't be thrown (and thus will go unnoticed).</p>
 <p><strong>BAD:</strong></p>
-<pre><code>try {
+<pre><code class="language-dart">try {
  somethingRisky()
 }
 catch(e) {
@@ -41,7 +41,7 @@ catch(e) {
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>try {
+<pre><code class="language-dart">try {
  somethingRisky()
 }
 on Exception catch(e) {

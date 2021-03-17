@@ -32,7 +32,7 @@
             <p><strong>DON'T</strong> use <code>final</code> for local variables.</p>
 <p><code>var</code> is shorter, and <code>final</code> does not change the meaning of the code.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>void badMethod() {
+<pre><code class="language-dart">void badMethod() {
   final label = 'Final or var?';
   for (final char in ['v', 'a', 'r']) {
     print(char);
@@ -40,7 +40,7 @@
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>void goodMethod() {
+<pre><code class="language-dart">void goodMethod() {
   var label = 'Final or var?';
   for (var char in ['v', 'a', 'r']) {
     print(char);
