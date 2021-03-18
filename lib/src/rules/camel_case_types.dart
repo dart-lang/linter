@@ -48,6 +48,7 @@ class CamelCaseTypes extends LintRule implements NodeLintRule {
     final visitor = _Visitor(this);
     registry.addGenericTypeAlias(this, visitor);
     registry.addClassDeclaration(this, visitor);
+    registry.addClassTypeAlias(this, visitor);
     registry.addFunctionTypeAlias(this, visitor);
   }
 }
@@ -65,6 +66,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
+    check(node.name);
+  }
+
+  @override
+  void visitClassTypeAlias(ClassTypeAlias node) {
     check(node.name);
   }
 

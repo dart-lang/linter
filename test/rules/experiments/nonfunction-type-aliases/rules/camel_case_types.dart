@@ -33,3 +33,7 @@ class $FooBar //OK
 typedef foo = Foo; //LINT
 
 typedef F = Foo; //OK
+
+typedef f = void Function(); //LINT
+
+class c = Object with M; //LINT
