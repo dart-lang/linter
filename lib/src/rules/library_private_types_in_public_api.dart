@@ -236,11 +236,7 @@ class Visitor extends SimpleAstVisitor {
   void visitCompilationUnit(CompilationUnit node) {
     if (!Validator.isPrivate(node.declaredElement!)) {
       var validator = Validator(rule);
-      try {
-        node.declarations.accept(validator);
-      } catch (e, st) {
-        DateTime.now();
-      }
+      node.declarations.accept(validator);
     }
   }
 }
