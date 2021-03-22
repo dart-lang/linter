@@ -12,7 +12,20 @@ const _desc = r'Avoid using private types in public APIs.';
 
 const _details = r'''
 
-**AVOID** using private types in public APIs.
+**AVOID** using library private types in public APIs.
+
+For the purposes of this lint, a public API is considered to be any top-level or
+member declaration unless the declaration is library private or contained in a
+declarartion that's library private. The following uses of types are checked:
+
+- the return type of a function or method,
+- the type of any parameter of a function or method,
+- the bound of a type parameter to any function, method, class, mixin,
+  extension's extended type, or type alias,
+- the type of any top level variable or field,
+- any type used in the declaration of a type alias (for example
+  `typedef F = _Private Function();`), or
+- any type used in the `on` clause of an extension or a mixin
 
 **GOOD:**
 ```
@@ -27,8 +40,8 @@ class _Private {}
 
 ''';
 
-class LibraryPrivateTypeInPublicAPI extends LintRule implements NodeLintRule {
-  LibraryPrivateTypeInPublicAPI()
+class LibraryPrivateTypesInPublicAPI extends LintRule implements NodeLintRule {
+  LibraryPrivateTypesInPublicAPI()
       : super(
             name: 'library_private_types_in_public_api',
             description: _desc,
@@ -234,7 +247,8 @@ class Visitor extends SimpleAstVisitor {
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    if (!Validator.isPrivate(node.declaredElement!)) {
+    var element = node.declaredElement;
+    if (element != null && !Validator.isPrivate(element)) {
       var validator = Validator(rule);
       node.declarations.accept(validator);
     }

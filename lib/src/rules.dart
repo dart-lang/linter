@@ -270,7 +270,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(LeadingNewlinesInMultilineStrings())
     ..register(LibraryNames())
     ..register(LibraryPrefixes())
-    ..register(LibraryPrivateTypeInPublicAPI())
+    ..register(LibraryPrivateTypesInPublicAPI())
     ..register(LinesLongerThan80Chars())
     ..register(ListRemoveUnrelatedType())
     ..register(LiteralOnlyBooleanExpressions())
