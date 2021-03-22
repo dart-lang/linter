@@ -9,12 +9,13 @@ import 'package:test/test.dart';
 void main() {
   group('public_member_api_docs', () {
     test('lint lib/ sources and non-lib/ sources', () async {
-
       var pubResult = Process.runSync(
-        'dart',
-        ['pub', 'get',],
-          workingDirectory: 'test/_data/public_member_api_docs'
-      );
+          'dart',
+          [
+            'pub',
+            'get',
+          ],
+          workingDirectory: 'test/_data/public_member_api_docs');
       expect(pubResult.exitCode, 0);
 
       var result = Process.runSync(
