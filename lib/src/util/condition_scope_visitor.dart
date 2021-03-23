@@ -219,10 +219,8 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
     if (elseScope != null) {
       _propagateUndefinedExpressions(elseScope);
     }
-    var addFalseCondition =
-        _isLastStatementAnExitStatement(node.thenStatement);
-    var addTrueCondition =
-        _isLastStatementAnExitStatement(node.elseStatement);
+    var addFalseCondition = _isLastStatementAnExitStatement(node.thenStatement);
+    var addTrueCondition = _isLastStatementAnExitStatement(node.elseStatement);
     // If addTrueCondition and addFalseCondition are true at the same time,
     // then the rest of the block is dead code.
     if (addTrueCondition && addFalseCondition) {

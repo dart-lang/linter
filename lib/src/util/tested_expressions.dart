@@ -48,8 +48,7 @@ bool _isNegationOrComparison(
           BooleanExpressionUtilities.IMPLICATIONS[cOperatorType] ==
               BooleanExpressionUtilities.NEGATIONS[eOperatorType];
 
-  var isTrichotomyConjunction = BooleanExpressionUtilities
-          .TRICHOTOMY_OPERATORS
+  var isTrichotomyConjunction = BooleanExpressionUtilities.TRICHOTOMY_OPERATORS
           .contains(eOperatorType) &&
       BooleanExpressionUtilities.TRICHOTOMY_OPERATORS.contains(cOperatorType) &&
       tokenType == TokenType.AMPERSAND_AMPERSAND;

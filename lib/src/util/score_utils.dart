@@ -40,7 +40,6 @@ Future<LintConfig?> _fetchConfig(Uri url) async {
 Future<List<String>> _fetchPedanticRules() async {
   print('loading $_pedanticOptionsUrl...');
   var req = await http.get(_pedanticOptionsUrl);
-  var includedOptions =
-      req.body.split('include: package:pedantic/')[1].trim();
+  var includedOptions = req.body.split('include: package:pedantic/')[1].trim();
   return fetchRules(_pedanticOptionsRootUrl.resolve(includedOptions));
 }
