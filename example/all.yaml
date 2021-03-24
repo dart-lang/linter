@@ -139,6 +139,7 @@ linter:
     - provide_deprecation_message
     - public_member_api_docs
     - recursive_getters
+    - require_trailing_comma
     - sized_box_for_whitespace
     - slash_for_doc_comments
     - sort_child_properties_last
