@@ -2,19 +2,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-class RequireTrailingCommaExample {
-  RequireTrailingCommaExample.constructor1(Object param1, Object param2);
+class RequireTrailingCommasExample {
+  RequireTrailingCommasExample.constructor1(Object param1, Object param2);
 
-  RequireTrailingCommaExample.constructor2(
+  RequireTrailingCommasExample.constructor2(
     Object param1,
     Object param2,
     Object param3,
   );
 
-  RequireTrailingCommaExample.constructor3(
+  RequireTrailingCommasExample.constructor3(
       Object param1, Object param2, Object param3); // LINT
 
-  RequireTrailingCommaExample.constructor4(
+  RequireTrailingCommasExample.constructor4(
     Object param1,
     Object param2, [
     Object param3 = const [
@@ -22,18 +22,18 @@ class RequireTrailingCommaExample {
     ],
   ]);
 
-  RequireTrailingCommaExample.constructor5(Object param1, Object param2,
+  RequireTrailingCommasExample.constructor5(Object param1, Object param2,
       [Object param3 = const [
         'test',
       ]]); // LINT
 
-  RequireTrailingCommaExample.constructorWithAssert1()
+  RequireTrailingCommasExample.constructorWithAssert1()
       : assert(
           true,
           'A very very very very very very very very long string',
         );
 
-  RequireTrailingCommaExample.constructorWithAssert2()
+  RequireTrailingCommasExample.constructorWithAssert2()
       : assert(true,
             'A very very very very very very very very long string'); // LINT
 

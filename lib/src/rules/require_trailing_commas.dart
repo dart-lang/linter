@@ -41,10 +41,10 @@ parameter does not fit entirely on one line.
 
 ''';
 
-class RequireTrailingComma extends LintRule implements NodeLintRule {
-  RequireTrailingComma()
+class RequireTrailingCommas extends LintRule implements NodeLintRule {
+  RequireTrailingCommas()
       : super(
-          name: 'require_trailing_comma',
+          name: 'require_trailing_commas',
           description: _desc,
           details: _details,
           group: Group.style,
@@ -67,7 +67,7 @@ class RequireTrailingComma extends LintRule implements NodeLintRule {
 
 class _Visitor extends SimpleAstVisitor<void> {
   static const _trailingCommaCode = LintCode(
-    'require_trailing_comma',
+    'require_trailing_commas',
     'Missing a required trailing comma.',
   );
 
