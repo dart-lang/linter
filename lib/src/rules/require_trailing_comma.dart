@@ -44,17 +44,17 @@ entirely on one line.
 class RequireTrailingComma extends LintRule implements NodeLintRule {
   RequireTrailingComma()
       : super(
-    name: 'require_trailing_comma',
-    description: _desc,
-    details: _details,
-    group: Group.style,
-  );
+          name: 'require_trailing_comma',
+          description: _desc,
+          details: _details,
+          group: Group.style,
+        );
 
   @override
   void registerNodeProcessors(
-      NodeLintRegistry registry,
-      LinterContext context,
-      ) {
+    NodeLintRegistry registry,
+    LinterContext context,
+  ) {
     var visitor = _Visitor(this);
     registry
       ..addCompilationUnit(this, visitor)
@@ -112,10 +112,10 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   void _checkTrailingComma(
-      Token leftParenthesis,
-      Token rightParenthesis,
-      AstNode lastNode,
-      ) {
+    Token leftParenthesis,
+    Token rightParenthesis,
+    AstNode lastNode,
+  ) {
     // Early exit if trailing comma is present.
     if (lastNode.endToken.next?.type == TokenType.COMMA) return;
 
@@ -133,7 +133,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool _isSameLine(Token token1, Token token2) =>
       _lineInfo!.getLocation(token1.charOffset).lineNumber ==
-          _lineInfo!.getLocation(token2.charOffset).lineNumber;
+      _lineInfo!.getLocation(token2.charOffset).lineNumber;
 
   bool _shouldAllowTrailingCommaException(AstNode lastNode) {
     // No exceptions are allowed if the last parameter is named.
