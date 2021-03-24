@@ -8,11 +8,11 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Use trailing commas for all function calls and definitions.';
+const _desc = r'Use trailing commas for all function calls and declarations.';
 
 const _details = r'''
 
-**DO** use trailing commas for all function calls and definitions unless the
+**DO** use trailing commas for all function calls and declarations unless the
 function call or definition, from the start of the function name up to the
 closing parenthesis, fits in a single line.
 
@@ -34,10 +34,10 @@ void run() {
 }
 ```
 
-**Exception:** If the final parameter is positional (vs named) and either a
-function literal implemented using curly braces, a literal map, a literal set or
-a literal array. This exception only applies if the final parameter does not fit
-entirely on one line.
+**Exception:** If the final parameter/argument is positional (vs named) and is
+either a function literal implemented using curly braces, a literal map, a
+literal set or a literal array. This exception only applies if the final
+parameter does not fit entirely on one line.
 
 ''';
 
@@ -60,7 +60,8 @@ class RequireTrailingComma extends LintRule implements NodeLintRule {
       ..addCompilationUnit(this, visitor)
       ..addArgumentList(this, visitor)
       ..addFormalParameterList(this, visitor)
-      ..addAssertStatement(this, visitor);
+      ..addAssertStatement(this, visitor)
+      ..addAssertInitializer(this, visitor);
   }
 }
 
@@ -111,6 +112,16 @@ class _Visitor extends SimpleAstVisitor<void> {
     );
   }
 
+  @override
+  void visitAssertInitializer(AssertInitializer node) {
+    super.visitAssertInitializer(node);
+    _checkTrailingComma(
+      node.leftParenthesis,
+      node.rightParenthesis,
+      node.message ?? node.condition,
+    );
+  }
+
   void _checkTrailingComma(
     Token leftParenthesis,
     Token rightParenthesis,
@@ -119,10 +130,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     // Early exit if trailing comma is present.
     if (lastNode.endToken.next?.type == TokenType.COMMA) return;
 
-    // No trailing comma is needed if the function call or definition, up to the
-    // closing parenthesis, fits on a single line. Ensuring the left and right
-    // parenthesis are on the same line is sufficient since dartfmt places the
-    // left parenthesis right after the identifier (on the same line).
+    // No trailing comma is needed if the function call or declaration, up to
+    // the closing parenthesis, fits on a single line. Ensuring the left and
+    // right parenthesis are on the same line is sufficient since dartfmt places
+    // the left parenthesis right after the identifier (on the same line).
     if (_isSameLine(leftParenthesis, rightParenthesis)) return;
 
     // Check the last parameter to determine if there are any exceptions.
@@ -132,8 +143,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _isSameLine(Token token1, Token token2) =>
-      _lineInfo!.getLocation(token1.charOffset).lineNumber ==
-      _lineInfo!.getLocation(token2.charOffset).lineNumber;
+      _lineInfo!.getLocation(token1.offset).lineNumber ==
+      _lineInfo!.getLocation(token2.offset).lineNumber;
 
   bool _shouldAllowTrailingCommaException(AstNode lastNode) {
     // No exceptions are allowed if the last parameter is named.

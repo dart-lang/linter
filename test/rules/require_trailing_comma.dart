@@ -6,44 +6,57 @@ class RequireTrailingCommaExample {
   RequireTrailingCommaExample.constructor1(Object param1, Object param2);
 
   RequireTrailingCommaExample.constructor2(
-      Object param1,
-      Object param2,
-      Object param3,
-      );
+    Object param1,
+    Object param2,
+    Object param3,
+  );
 
   RequireTrailingCommaExample.constructor3(
       Object param1, Object param2, Object param3); // LINT
 
   RequireTrailingCommaExample.constructor4(
-      Object param1,
-      Object param2, [
-        Object param3 = const [
-          'test',
-        ],
-      ]);
+    Object param1,
+    Object param2, [
+    Object param3 = const [
+      'test',
+    ],
+  ]);
 
   RequireTrailingCommaExample.constructor5(Object param1, Object param2,
       [Object param3 = const [
         'test',
       ]]); // LINT
 
+  RequireTrailingCommaExample.constructorWithAssert1()
+      : assert(
+          true,
+          'A very very very very very very very very long string',
+        );
+
+  RequireTrailingCommaExample.constructorWithAssert2()
+      : assert(true,
+            'A very very very very very very very very long string'); // LINT
+
+  void operator [](Object param1, Object param2, Object param3, Object param4,
+      Object param5) {} // LINT
+
   void method1(Object param1, Object param2, {Object param3, Object param4}) {}
 
   void method2(
-      Object param1,
-      Object param2,
-      Object param3,
-      Object param4,
-      Object param5,
-      ) {}
+    Object param1,
+    Object param2,
+    Object param3,
+    Object param4,
+    Object param5,
+  ) {}
 
   void method3(
-      Object param1,
-      Object param2, {
-        Object param3,
-        Object param4,
-        Object param5,
-      }) {}
+    Object param1,
+    Object param2, {
+    Object param3,
+    Object param4,
+    Object param5,
+  }) {}
 
   void method4(Object param1, Object param2, Object param3, Object param4,
       Object param5) {} // LINT
@@ -53,10 +66,13 @@ class RequireTrailingCommaExample {
 
   void method6(Object param1, Object param2,
       {Object param3,
-        Object param4,
-        Object param5,
-        Object param6,
-        Object param7}) {} // LINT
+      Object param4,
+      Object param5,
+      Object param6,
+      Object param7}) {} // LINT
+
+  void method7(Object param1, Object param2, Object param3,
+      {Object namedParam = true}) {} // LINT
 
   void run() {
     void test(Object param1, Object param2, {Object param3}) {}
@@ -81,7 +97,7 @@ class RequireTrailingCommaExample {
 
     test(
       'test',
-          () {
+      () {
         // Function literal implemented using curly braces.
       },
       param3: 'test',
@@ -100,7 +116,7 @@ class RequireTrailingCommaExample {
     );
 
     test(
-          () {
+      () {
         // Function literal implemented using curly braces.
       },
       'test',
@@ -121,13 +137,13 @@ class RequireTrailingCommaExample {
     }, 'map literal'); // LINT
 
     test('set literal', {
-    'one',
-    'two',
+      'one',
+      'two',
     });
 
     test({
-    'one',
-    'two',
+      'one',
+      'two',
     }, 'set literal'); // LINT
 
     test('list literal', [
@@ -140,6 +156,17 @@ class RequireTrailingCommaExample {
       'two',
     ], 'list literal'); // LINT
 
+    (a, b) {
+      // Self-executing closure.
+    }(1, 2);
+
+    (one, two, three, four, five, six, seven, eight, nine, ten,
+            veryVeryVeryLong) //LINT
+        {
+      // Self-executing closure.
+    }(1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        'a very very very very very very very long string'); // LINT
+
     test(
       'no exception for set literal as it fits entirely on 1 line',
       const {'one', 'two', 'three'},
@@ -149,9 +176,9 @@ class RequireTrailingCommaExample {
         const {'one', 'two', 'three'}); // LINT
 
     test('exception for set literal as it spans multiple lines', const {
-    'one',
-    'two',
-    'three',
+      'one',
+      'two',
+      'three',
     });
 
     test('exception for set literal as it spans multiple lines', const <
@@ -193,11 +220,11 @@ class RequireTrailingCommaExample {
 
     test(
       'no exception for function literal as it fits entirely on 1 line',
-          () {},
+      () {},
     );
 
     test('no exception for function literal as it fits entirely on 1 line',
-            () {}); // LINT
+        () {}); // LINT
 
     assert(true);
 
@@ -205,17 +232,17 @@ class RequireTrailingCommaExample {
         .isNotEmpty); // LINT
 
     assert(
-    'a very very very very very very very very very long string'.isNotEmpty,
+      'a very very very very very very very very very long string'.isNotEmpty,
     );
 
     assert(false, 'a short string');
 
     assert(false,
-    'a very very very very very very very very very long string'); // LINT
+        'a very very very very very very very very very long string'); // LINT
 
     assert(
-    false,
-    'a very very very very very very very very very long string',
+      false,
+      'a very very very very very very very very very long string',
     );
   }
 }
