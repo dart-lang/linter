@@ -39,7 +39,8 @@ either a function literal implemented using curly braces, a literal map, a
 literal set or a literal array. This exception only applies if the final
 parameter does not fit entirely on one line.
 
-**Note:** This lint rule assumes `dartfmt` has been run over the code.
+**Note:** This lint rule assumes `dartfmt` has been run over the code and may
+produce false positives until that has happened.
 
 ''';
 
