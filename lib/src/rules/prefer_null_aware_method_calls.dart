@@ -86,7 +86,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       var target = expression.function;
       if (target is PostfixExpression &&
           target.operator.type == TokenType.BANG &&
-          target.operand.toString() == condition.leftOperand.toString()) {
+          target.operand.toSource() == condition.leftOperand.toSource()) {
         rule.reportLint(expression);
       }
     }
