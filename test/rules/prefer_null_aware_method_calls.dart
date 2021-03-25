@@ -5,6 +5,8 @@
 // test w/ `dart test -N prefer_null_aware_method_calls`
 
 var o;
+var f, g;
+
 m() {
   if (o != null) o!(); // LINT
 
@@ -23,4 +25,7 @@ m() {
   o != null ? o!() : null; // LINT
   o.m != null ? o.m!() : null; // LINT
   o.a != null ? o.m!() : null; // OK
+
+  if (f != null) g!(); // OK
+  f != null ? g!() : null; // OK
 }
