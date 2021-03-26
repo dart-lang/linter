@@ -8,7 +8,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Prefer null aware method call.';
+const _desc = r'Prefer null aware method calls.';
 
 const _details = r'''
 
