@@ -51,6 +51,7 @@ class RequireTrailingCommas extends LintRule implements NodeLintRule {
           description: _desc,
           details: _details,
           group: Group.style,
+          maturity: Maturity.experimental,
         );
 
   @override
