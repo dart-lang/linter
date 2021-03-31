@@ -93,7 +93,7 @@ class RequireTrailingCommasExample {
 
     test('test', () {
       // Function literal implemented using curly braces.
-    }, param3: 'test'); // LINT
+    }, param3: 'test'); // OK
 
     test(
       'test',
@@ -105,7 +105,7 @@ class RequireTrailingCommasExample {
 
     test('test', 'test', param3: () {
       // Function literal implemented using curly braces.
-    }); // LINT
+    }); // OK
 
     test(
       'test',
@@ -124,7 +124,7 @@ class RequireTrailingCommasExample {
 
     test(() {
       // Function literal implemented using curly braces.
-    }, 'test'); // LINT
+    }, 'test'); // OK
 
     test('map literal', {
       'one': 'test',
@@ -134,7 +134,7 @@ class RequireTrailingCommasExample {
     test({
       'one': 'test',
       'two': 'test',
-    }, 'map literal'); // LINT
+    }, 'map literal'); // OK
 
     test('set literal', {
       'one',
@@ -144,7 +144,7 @@ class RequireTrailingCommasExample {
     test({
       'one',
       'two',
-    }, 'set literal'); // LINT
+    }, 'set literal'); // OK
 
     test('list literal', [
       'one',
@@ -154,7 +154,7 @@ class RequireTrailingCommasExample {
     test([
       'one',
       'two',
-    ], 'list literal'); // LINT
+    ], 'list literal'); // OK
 
     (a, b) {
       // Self-executing closure.
@@ -182,7 +182,7 @@ class RequireTrailingCommasExample {
     });
 
     test('exception for set literal as it spans multiple lines', const <
-        AnExtremelyLongClassNameOneTwoThreeFourFiveSixSevenEightNineTen>{});
+        AnExtremelyLongClassNameOneTwoThreeFourFiveSixSevenEightNineTen>{}); // LINT
 
     test(
       'no exception for array literal as it fits entirely on 1 line',
@@ -199,7 +199,7 @@ class RequireTrailingCommasExample {
     ]);
 
     test('exception for array literal as it spans multiple lines', const <
-        AnExtremelyLongClassNameOneTwoThreeFourFiveSixSevenEightNineTen>[]);
+        AnExtremelyLongClassNameOneTwoThreeFourFiveSixSevenEightNineTen>[]); // LINT
 
     test(
       'no exception for map literal as it fits entirely on 1 line',
@@ -216,7 +216,7 @@ class RequireTrailingCommasExample {
     });
 
     test('exception for map literal as it spans multiple lines', const <String,
-        AnExtremelyLongClassNameOneTwoThreeFourFiveSixSevenEightNineTen>{});
+        AnExtremelyLongClassNameOneTwoThreeFourFiveSixSevenEightNineTen>{}); // LINT
 
     test(
       'no exception for function literal as it fits entirely on 1 line',
@@ -226,7 +226,32 @@ class RequireTrailingCommasExample {
     test('no exception for function literal as it fits entirely on 1 line',
         () {}); // LINT
 
+    test(A(
+      a: '',
+      b: '',
+      c: '',
+    )); // OK
+    test(method1(
+      '',
+      '',
+      param3: '',
+    )); // OK
+    var o;
+    o(o.map(() {
+      return '';
+    }).join()); // OK
+    o(o.map(() => A(
+      a: '',
+    )).join()); // OK
+    o(o ?? () {
+      return '';
+    }); // OK
+
     assert(true);
+
+    assert((){
+      return true;
+    }()); // OK
 
     assert('a very very very very very very very very very long string'
         .isNotEmpty); // LINT
@@ -244,7 +269,17 @@ class RequireTrailingCommasExample {
       false,
       'a very very very very very very very very very long string',
     );
+
+    print('''
+    '''); // OK
+
+    print(''
+    ''); // LINT
   }
 }
 
 class AnExtremelyLongClassNameOneTwoThreeFourFiveSixSevenEightNineTen {}
+
+class A {
+  A({a, b, c});
+}
