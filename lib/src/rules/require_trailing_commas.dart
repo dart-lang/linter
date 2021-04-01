@@ -208,6 +208,7 @@ class _ArgVisitor extends GeneralizingAstVisitor<void> {
   @override
   void visitListLiteral(ListLiteral node) {
     if (currentLine == lineOf(node.leftBracket.offset) &&
+        node.elements.isNotEmpty &&
         node.elements.last.endToken.next?.type == TokenType.COMMA) {
       currentLine = lineOf(node.end);
       return;
@@ -219,6 +220,7 @@ class _ArgVisitor extends GeneralizingAstVisitor<void> {
   @override
   void visitSetOrMapLiteral(SetOrMapLiteral node) {
     if (currentLine == lineOf(node.leftBracket.offset) &&
+        node.elements.isNotEmpty &&
         node.elements.last.endToken.next?.type == TokenType.COMMA) {
       currentLine = lineOf(node.end);
       return;
