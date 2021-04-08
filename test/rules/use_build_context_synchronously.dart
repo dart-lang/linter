@@ -5,14 +5,37 @@
 // test w/ `dart test -N use_build_context_synchronously`
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 bool get mounted => true;
 
 BuildContext? get contextOrNull => null;
 
+class _ContextImpl extends BuildContext {
+  Widget get widget => Widget();
+  RenderObject? findRenderObject() => null;
+}
+
 class ContextHolder {
+  bool mounted = false;
   BuildContext? get contextOrNull => null;
+  BuildContext get context => _ContextImpl();
+}
+
+class Nav {
+  Nav(BuildContext context);
+  Nav.of(BuildContext context) : this(context);
+  Future<void> foo() async {}
+}
+
+///https://github.com/dart-lang/linter/issues/2573
+void prefixedMountedCheck() async {
+  await Future<void>.delayed(Duration());
+  var widgetStateContext = ContextHolder();
+  await Nav.of(widgetStateContext.context).foo(); // LINT
+  if (!widgetStateContext.mounted) return;
+  await Nav.of(widgetStateContext.context).foo(); // OK
 }
 
 void f2(BuildContext? contextOrNull) {}

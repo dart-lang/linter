@@ -82,6 +82,12 @@ class A {
 
 ''';
 
+class Nav {
+  Nav(Object context);
+  Nav.of(Object context) : this(context);
+  void foo() async {}
+}
+
 bool _isDefaultFormalParameterWithDefaultValue(FormalParameter parameter) =>
     parameter is DefaultFormalParameter && parameter.defaultValue != null;
 
