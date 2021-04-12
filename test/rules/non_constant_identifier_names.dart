@@ -6,8 +6,25 @@
 
 void main() {
   var XYZ = 1; // LINT
-  var ABC?, //LINT
-  def; //OK
+  var ABC = 1, // LINT
+      def = 1;
+
+  const ZZZ = 3; //  OK
+
+  try {
+    for (var XYZ in []) // LINT
+    {
+      print(XYZ);
+    }
+    for (var II = 0; II < [].length; ++II) // LINT
+    {
+      print(II);
+    }
+  } on Exception catch (EE) //LINT
+  {
+    print(EE);
+  } on Object catch (_) //OK
+  {}
 }
 
 String YO = ''; //LINT

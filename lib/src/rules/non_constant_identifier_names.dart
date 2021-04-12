@@ -43,7 +43,9 @@ class NonConstantIdentifierNames extends LintRule implements NodeLintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
+    registry.addCatchClause(this, visitor);
     registry.addConstructorDeclaration(this, visitor);
+    registry.addForEachPartsWithDeclaration(this, visitor);
     registry.addFormalParameterList(this, visitor);
     registry.addFunctionDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
@@ -71,10 +73,20 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitCatchClause(CatchClause node) {
+    checkIdentifier(node.exceptionParameter, underscoresOk: true);
+  }
+
+  @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
     // For rationale on accepting underscores, see:
     // https://github.com/dart-lang/linter/issues/1854
     checkIdentifier(node.name, underscoresOk: true);
+  }
+
+  @override
+  void visitForEachPartsWithDeclaration(ForEachPartsWithDeclaration node) {
+    checkIdentifier(node.loopVariable.identifier);
   }
 
   @override
@@ -99,16 +111,18 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
-  void visitVariableDeclarationStatement(VariableDeclarationStatement node) {
-    for (var variable in node.variables.variables) {
-      checkIdentifier(variable.name);
+  void visitVariableDeclaration(VariableDeclaration node) {
+    if (!node.isConst) {
+      checkIdentifier(node.name);
     }
   }
 
   @override
-  void visitVariableDeclaration(VariableDeclaration node) {
-    if (!node.isConst) {
-      checkIdentifier(node.name);
+  void visitVariableDeclarationStatement(VariableDeclarationStatement node) {
+    for (var variable in node.variables.variables) {
+      if (!variable.isConst) {
+        checkIdentifier(variable.name);
+      }
     }
   }
 }
