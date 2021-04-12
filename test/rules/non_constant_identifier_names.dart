@@ -4,6 +4,12 @@
 
 // test w/ `dart test -N non_constant_identifier_names`
 
+void main() {
+  var XYZ = 1; // LINT
+  var ABC?, //LINT
+  def; //OK
+}
+
 String YO = ''; //LINT
 const Z = 4; //OK
 
@@ -26,9 +32,9 @@ void _funBar() {} //OK
 void _fun_bar() {} //LINT
 
 abstract class A {
-  int _x; //OK
-  int __x; //OK
-  int X; //OK
+  int? _x; //OK
+  int? __x; //OK
+  int? X; //OK
   static const Y = 3; // OK
 
   final String bar_bar; //LINT

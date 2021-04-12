@@ -48,6 +48,7 @@ class NonConstantIdentifierNames extends LintRule implements NodeLintRule {
     registry.addFunctionDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
     registry.addVariableDeclaration(this, visitor);
+    registry.addVariableDeclarationStatement(this, visitor);
   }
 }
 
@@ -94,6 +95,13 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isOperator) {
       checkIdentifier(node.name);
+    }
+  }
+
+  @override
+  void visitVariableDeclarationStatement(VariableDeclarationStatement node) {
+    for (var variable in node.variables.variables) {
+      checkIdentifier(variable.name);
     }
   }
 
