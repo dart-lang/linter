@@ -23,19 +23,13 @@ class ContextHolder {
   BuildContext get context => _ContextImpl();
 }
 
-class Nav {
-  Nav(BuildContext context);
-  Nav.of(BuildContext context) : this(context);
-  Future<void> foo() async {}
-}
-
 ///https://github.com/dart-lang/linter/issues/2573
 void prefixedMountedCheck() async {
   await Future<void>.delayed(Duration());
   var widgetStateContext = ContextHolder();
-  await Nav.of(widgetStateContext.context).foo(); // LINT
+  await Navigator.of(widgetStateContext.context).pushNamed('route'); // LINT
   if (!widgetStateContext.mounted) return;
-  await Nav.of(widgetStateContext.context).foo(); // OK
+  await Navigator.of(widgetStateContext.context).pushNamed('route'); // OK
 }
 
 void f2(BuildContext? contextOrNull) {}
