@@ -82,12 +82,6 @@ class A {
 
 ''';
 
-class Nav {
-  Nav(Object context);
-  Nav.of(Object context) : this(context);
-  void foo() async {}
-}
-
 bool _isDefaultFormalParameterWithDefaultValue(FormalParameter parameter) =>
     parameter is DefaultFormalParameter && parameter.defaultValue != null;
 
@@ -198,8 +192,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       var node = assignmentsNodes.length > 1
           ? assignmentsNodes.last
           : nonNullCoalescingAssignments.isNotEmpty
-          ? nonNullCoalescingAssignments.first
-          : parameter;
+              ? nonNullCoalescingAssignments.first
+              : parameter;
       rule.reportLint(node);
     }
   }
