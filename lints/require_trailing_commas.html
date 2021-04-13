@@ -6,20 +6,20 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>camel_case_extensions</title>
+      <title>require_trailing_commas</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>camel_case_extensions</h1>
+            <h1>require_trailing_commas</h1>
             <p>Group: style</p>
-            <p>Maturity: stable</p>
+            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.6.0-dev.0.0 • <small>(Linter v0.1.97+1)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
-            <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a>
+            
             <ul>
                <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
                <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
@@ -29,19 +29,29 @@
          </header>
          <section>
 
-            <p>From the <a href="https://dart.dev/guides/language/effective-dart/style/">style guide</a>:</p>
-<p><strong>DO</strong> name extensions using <code>UpperCamelCase</code>.</p>
-<p>Extensions should capitalize the first letter of each word (including
-the first word), and use no separators.</p>
+            <p><strong>DO</strong> use trailing commas for all function calls and declarations unless the
+function call or definition, from the start of the function name up to the
+closing parenthesis, fits in a single line.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">extension MyFancyList&lt;T&gt; on List&lt;T&gt; { 
-  // ... 
-}
-
-extension SmartIterable&lt;T&gt; on Iterable&lt;T&gt; {
-  // ...
+<pre><code class="language-dart">void run() {
+  method(
+    'does not fit on one line',
+    'test test test test test test test test test test test',
+  );
 }
 </code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">void run() {
+  method('does not fit on one line',
+      'test test test test test test test test test test test');
+}
+</code></pre>
+<p><strong>Exception:</strong> If the final parameter/argument is positional (vs named) and is
+either a function literal implemented using curly braces, a literal map, a
+literal set or a literal array. This exception only applies if the final
+parameter does not fit entirely on one line.</p>
+<p><strong>Note:</strong> This lint rule assumes <code>dartfmt</code> has been run over the code and may
+produce false positives until that has happened.</p>
 
             
          </section>

@@ -656,7 +656,7 @@
     "sets": [
       "pedantic"
     ],
-    "details": "\n**DO** name extensions using `UpperCamelCase`.\n\nExtensions should capitalize the first letter of each word (including\nthe first word), and use no separators.\n\n**GOOD:**\n```dart\nextension MyFancyList<T> on List<T> { \n  // ... \n}\n\nextension SmartIterable<T> on Iterable<T> {\n  // ...\n}\n```\n"
+    "details": "\nFrom the [style guide](https://dart.dev/guides/language/effective-dart/style/):\n\n**DO** name extensions using `UpperCamelCase`.\n\nExtensions should capitalize the first letter of each word (including\nthe first word), and use no separators.\n\n**GOOD:**\n```dart\nextension MyFancyList<T> on List<T> { \n  // ... \n}\n\nextension SmartIterable<T> on Iterable<T> {\n  // ...\n}\n```\n"
   },
   {
     "name": "camel_case_types",
@@ -817,6 +817,14 @@
       "pedantic"
     ],
     "details": "\n**DO** use `lowercase_with_underscores` when specifying a library prefix.\n\n**GOOD:**\n```dart\nimport 'dart:math' as math;\nimport 'dart:json' as json;\nimport 'package:js/js.dart' as js;\nimport 'package:javascript_utils/javascript_utils.dart' as js_utils;\n```\n\n**BAD:**\n```dart\nimport 'dart:math' as Math;\nimport 'dart:json' as JSON;\nimport 'package:js/js.dart' as JS;\nimport 'package:javascript_utils/javascript_utils.dart' as jsUtils;\n```\n\n"
+  },
+  {
+    "name": "library_private_types_in_public_api",
+    "description": "Avoid using private types in public APIs.",
+    "group": "style",
+    "maturity": "stable",
+    "sets": [],
+    "details": "\n**AVOID** using library private types in public APIs.\n\nFor the purposes of this lint, a public API is considered to be any top-level or\nmember declaration unless the declaration is library private or contained in a\ndeclarartion that's library private. The following uses of types are checked:\n\n- the return type of a function or method,\n- the type of any parameter of a function or method,\n- the bound of a type parameter to any function, method, class, mixin,\n  extension's extended type, or type alias,\n- the type of any top level variable or field,\n- any type used in the declaration of a type alias (for example\n  `typedef F = _Private Function();`), or\n- any type used in the `on` clause of an extension or a mixin\n\n**GOOD:**\n```\nf(String s) { ... }\n```\n\n**BAD:**\n```\nf(_Private p) { ... }\nclass _Private {}\n```\n\n"
   },
   {
     "name": "lines_longer_than_80_chars",
@@ -1232,6 +1240,14 @@
     "details": "\nDart 2.1 introduced a new syntax for mixins that provides a safe way for a mixin\nto invoke inherited members using `super`. The new style of mixins should always\nbe used for types that are to be mixed in. As a result, this lint will flag any\nuses of a class in a `with` clause.\n\n**BAD:**\n```dart\nclass A {}\nclass B extends Object with A {}\n```\n\n**OK:**\n```dart\nmixin M {}\nclass C with M {}\n```\n\n"
   },
   {
+    "name": "prefer_null_aware_method_calls",
+    "description": "Prefer null aware method calls.",
+    "group": "style",
+    "maturity": "stable",
+    "sets": [],
+    "details": "\nInstead of checking nullability of a function/method `f` before calling it you\ncan use `f?.call()`.\n\n**BAD:**\n```\nif (f != null) f!();\n```\n\n**GOOD:**\n```\nf?.call();\n```\n\n"
+  },
+  {
     "name": "prefer_null_aware_operators",
     "description": "Prefer using null aware operators.",
     "group": "style",
@@ -1292,6 +1308,14 @@
       "pedantic"
     ],
     "details": "\n**DON'T** create recursive getters.\n\nRecursive getters are getters which return themselves as a value.  This is\nusually a typo.\n\n**BAD:**\n```dart\nint get field => field; // LINT\n```\n\n**BAD:**\n```dart\nint get otherField {\n  return otherField; // LINT\n}\n```\n\n**GOOD:**\n```dart\nint get field => _field;\n```\n\n"
+  },
+  {
+    "name": "require_trailing_commas",
+    "description": "Use trailing commas for all function calls and declarations.",
+    "group": "style",
+    "maturity": "experimental",
+    "sets": [],
+    "details": "\n**DO** use trailing commas for all function calls and declarations unless the\nfunction call or definition, from the start of the function name up to the\nclosing parenthesis, fits in a single line.\n\n**GOOD:**\n```dart\nvoid run() {\n  method(\n    'does not fit on one line',\n    'test test test test test test test test test test test',\n  );\n}\n```\n\n**BAD:**\n```dart\nvoid run() {\n  method('does not fit on one line',\n      'test test test test test test test test test test test');\n}\n```\n\n**Exception:** If the final parameter/argument is positional (vs named) and is\neither a function literal implemented using curly braces, a literal map, a\nliteral set or a literal array. This exception only applies if the final\nparameter does not fit entirely on one line.\n\n**Note:** This lint rule assumes `dartfmt` has been run over the code and may\nproduce false positives until that has happened.\n\n"
   },
   {
     "name": "sized_box_for_whitespace",

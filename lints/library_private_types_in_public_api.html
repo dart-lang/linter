@@ -6,20 +6,20 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>camel_case_extensions</title>
+      <title>library_private_types_in_public_api</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>camel_case_extensions</h1>
+            <h1>library_private_types_in_public_api</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.6.0-dev.0.0 • <small>(Linter v0.1.97+1)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
-            <a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a>
+            
             <ul>
                <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
                <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
@@ -29,18 +29,26 @@
          </header>
          <section>
 
-            <p>From the <a href="https://dart.dev/guides/language/effective-dart/style/">style guide</a>:</p>
-<p><strong>DO</strong> name extensions using <code>UpperCamelCase</code>.</p>
-<p>Extensions should capitalize the first letter of each word (including
-the first word), and use no separators.</p>
+            <p><strong>AVOID</strong> using library private types in public APIs.</p>
+<p>For the purposes of this lint, a public API is considered to be any top-level or
+member declaration unless the declaration is library private or contained in a
+declarartion that's library private. The following uses of types are checked:</p>
+<ul>
+<li>the return type of a function or method,</li>
+<li>the type of any parameter of a function or method,</li>
+<li>the bound of a type parameter to any function, method, class, mixin,
+extension's extended type, or type alias,</li>
+<li>the type of any top level variable or field,</li>
+<li>any type used in the declaration of a type alias (for example
+<code>typedef F = _Private Function();</code>), or</li>
+<li>any type used in the <code>on</code> clause of an extension or a mixin</li>
+</ul>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">extension MyFancyList&lt;T&gt; on List&lt;T&gt; { 
-  // ... 
-}
-
-extension SmartIterable&lt;T&gt; on Iterable&lt;T&gt; {
-  // ...
-}
+<pre><code>f(String s) { ... }
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code>f(_Private p) { ... }
+class _Private {}
 </code></pre>
 
             
