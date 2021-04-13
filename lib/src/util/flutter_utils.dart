@@ -34,6 +34,11 @@ bool isExactWidgetTypeContainer(DartType? type) =>
 bool isStatefulWidget(ClassElement? element) =>
     _flutter.isStatefulWidget(element);
 
+bool isStatelessWidget(ClassElement? element) =>
+    _flutter.isStatelessWidget(element);
+
+bool isState(ClassElement? element) => _flutter.isState(element);
+
 bool isWidgetProperty(DartType? type) {
   if (isWidgetType(type)) {
     return true;
@@ -52,6 +57,8 @@ bool isWidgetType(DartType? type) => _flutter.isWidgetType(type);
 class _Flutter {
   static const _nameBuildContext = 'BuildContext';
   static const _nameStatefulWidget = 'StatefulWidget';
+  static const _nameStatelessWidget = 'StatelessWidget';
+  static const _nameState = 'State';
   static const _nameWidget = 'Widget';
   static const _nameContainer = 'Container';
 
@@ -104,6 +111,36 @@ class _Flutter {
     }
     for (var type in element.allSupertypes) {
       if (_isExactWidget(type.element, _nameStatefulWidget, _uriFramework)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool isStatelessWidget(ClassElement? element) {
+    if (element == null) {
+      return false;
+    }
+    if (_isExactWidget(element, _nameStatelessWidget, _uriFramework)) {
+      return true;
+    }
+    for (var type in element.allSupertypes) {
+      if (_isExactWidget(type.element, _nameStatelessWidget, _uriFramework)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool isState(ClassElement? element) {
+    if (element == null) {
+      return false;
+    }
+    if (_isExactWidget(element, _nameState, _uriFramework)) {
+      return true;
+    }
+    for (var type in element.allSupertypes) {
+      if (_isExactWidget(type.element, _nameState, _uriFramework)) {
         return true;
       }
     }
