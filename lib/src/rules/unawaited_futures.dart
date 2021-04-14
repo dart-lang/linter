@@ -68,7 +68,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitCascadeExpression(CascadeExpression node) {
     for (var expr in node.cascadeSections) {
-      if (expr.staticType?.isDartAsyncFuture == true &&
+      if ((expr.staticType?.isDartAsyncFuture ?? true) &&
           _isEnclosedInAsyncFunctionBody(expr) &&
           expr is! AssignmentExpression) {
         rule.reportLint(expr);
@@ -102,14 +102,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool _isEnclosedInAsyncFunctionBody(AstNode node) {
     var enclosingFunctionBody = node.thisOrAncestorOfType<FunctionBody>();
-    return enclosingFunctionBody?.isAsynchronous == true;
+    return enclosingFunctionBody?.isAsynchronous ?? true;
   }
 
   /// Detects `Future.delayed(duration, [computation])` creations with a
   /// computation.
   bool _isFutureDelayedInstanceCreationWithComputation(Expression expr) =>
       expr is InstanceCreationExpression &&
-      expr.staticType?.isDartAsyncFuture == true &&
+      (expr.staticType?.isDartAsyncFuture ?? true) &&
       expr.constructorName.name?.name == 'delayed' &&
       expr.argumentList.arguments.length == 2;
 
