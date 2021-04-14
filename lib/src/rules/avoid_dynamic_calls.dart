@@ -126,7 +126,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   bool _lintIfDynamic(Expression? node) {
-    if (node?.staticType?.isDynamic ?? true) {
+    if (node?.staticType?.isDynamic ?? false) {
       rule.reportLint(node);
       return true;
     } else {
