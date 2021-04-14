@@ -9,12 +9,12 @@ import 'package:analyzer/dart/element/element.dart';
 import '../analyzer.dart';
 import '../util/flutter_utils.dart';
 
-const _desc = r'''Don't return a Widget outside the build method of '
-    'a StatelessWidget or a StatefulWidget''';
+const _desc = r"Don't return a Widget outside the build method of "
+    r'a StatelessWidget or a StatefulWidget';
 
 const _details = r'''
-**DON'T** return a Widget outside the build method of a StatelesWidget or a 
-StatefulWidget
+**DON'T** return a Widget outside the build method of a StatelessWidget or a 
+StatefulWidget.
 
 It is considered a good practice to create a new class every time you need to 
 reuse a new widget, instead of creating a field, method or function.
