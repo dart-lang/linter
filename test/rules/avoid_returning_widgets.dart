@@ -78,3 +78,10 @@ class Cat {
 Widget globalFunction() => Container(); // LINT
 
 Widget get globalField => Container(); // LINT
+
+mixin M {
+  Widget myWidget() => Container(); // LINT
+}
+extension on Object {
+  Widget myWidget() => Container(); // LINT
+}
