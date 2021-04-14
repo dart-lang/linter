@@ -13,7 +13,7 @@ const _desc = r'''Don't return a Widget outside the build method of '
     'a StatelessWidget or a StatefulWidget''';
 
 const _details = r'''
-**DON'T** return a Widget outside the build of a StatelesWidget or a 
+**DON'T** return a Widget outside the build method of a StatelesWidget or a 
 StatefulWidget
 
 It is considered a good practice to create a new class every time you need to 
@@ -40,7 +40,8 @@ class MyWidget extends StatelessWidget {
   }
 }
 
-class CustomWidget extends StatelessWidget {  @override
+class CustomWidget extends StatelessWidget {  
+  @override
   Widget build(BuildContext context) {
     return Row(children: [Container()]);
   }}
@@ -61,7 +62,6 @@ class AvoidReturningWidgets extends LintRule implements NodeLintRule {
     var visitor = _Visitor(this);
     registry.addMethodDeclaration(this, visitor);
     registry.addFunctionDeclaration(this, visitor);
-    registry.addFieldDeclaration(this, visitor);
   }
 }
 
@@ -79,18 +79,13 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    if (_isReturningWidget(node.returnType) &&
-        !_isBuildMethod(node.declaredElement)) {
+    if (_isReturningWidget(node.returnType)) {
       rule.reportLint(node);
     }
   }
 
-  bool _isReturningWidget(TypeAnnotation? typeAnnotation) {
-    if (typeAnnotation?.type != null) {
-      return isWidgetType(typeAnnotation!.type);
-    }
-    return false;
-  }
+  bool _isReturningWidget(TypeAnnotation? typeAnnotation) =>
+      typeAnnotation != null && isWidgetType(typeAnnotation.type);
 
   bool _isBuildMethod(ExecutableElement? element) => element?.name == 'build';
 
@@ -102,11 +97,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _isStatelessWidgetOrState(MethodDeclaration node) {
-    var parent = node.thisOrAncestorMatching((e) => e is ClassDeclaration);
-    if (parent is ClassDeclaration) {
-      var element = parent.declaredElement;
-      return isStatelessWidget(element) || isState(element);
-    }
-    return false;
+    var parent = node.thisOrAncestorOfType<ClassDeclaration>();
+    var element = parent?.declaredElement;
+    return isStatelessWidget(element) || isState(element);
   }
 }
