@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// test w/ `dart test -N require_trailing_commas`
+
 class RequireTrailingCommasExample {
   RequireTrailingCommasExample.constructor1(Object param1, Object param2);
 
@@ -146,6 +148,11 @@ class RequireTrailingCommasExample {
       'two',
     }, 'set literal'); // OK
 
+    test([
+      'one',
+      'two'
+    ]);
+
     test('list literal', [
       'one',
       'two',
@@ -240,16 +247,19 @@ class RequireTrailingCommasExample {
     o(o.map(() {
       return '';
     }).join()); // OK
+
+    // flutter codebase style (do not use dartfmt on it)
     o(o.map(() => A(
       a: '',
     )).join()); // OK
     o(o ?? () {
       return '';
     }); // OK
+    // end of flutter
 
     assert(true);
 
-    assert((){
+    assert(() {
       return true;
     }()); // OK
 
@@ -274,7 +284,7 @@ class RequireTrailingCommasExample {
     '''); // OK
 
     print(''
-    ''); // LINT
+        ''); // LINT
   }
 }
 

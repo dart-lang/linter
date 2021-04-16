@@ -34,10 +34,10 @@ void run() {
 }
 ```
 
-**Exception:** If the final parameter/argument is positional (vs named) and is
-either a function literal implemented using curly braces, a literal map, a
-literal set or a literal array. This exception only applies if the final
-parameter does not fit entirely on one line.
+**Exception:** If a parameter/argument is either a function literal
+implemented using curly braces, a literal map, a literal set or a literal array
+then any line break will be ignore and the expression will be treated as a
+single line expression.
 
 **Note:** This lint rule assumes `dartfmt` has been run over the code and may
 produce false positives until that has happened.
@@ -208,8 +208,7 @@ class _ArgVisitor extends GeneralizingAstVisitor<void> {
   @override
   void visitListLiteral(ListLiteral node) {
     if (currentLine == lineOf(node.leftBracket.offset) &&
-        node.elements.isNotEmpty &&
-        node.elements.last.endToken.next?.type == TokenType.COMMA) {
+        node.elements.isNotEmpty) {
       currentLine = lineOf(node.end);
       return;
     }
@@ -220,8 +219,7 @@ class _ArgVisitor extends GeneralizingAstVisitor<void> {
   @override
   void visitSetOrMapLiteral(SetOrMapLiteral node) {
     if (currentLine == lineOf(node.leftBracket.offset) &&
-        node.elements.isNotEmpty &&
-        node.elements.last.endToken.next?.type == TokenType.COMMA) {
+        node.elements.isNotEmpty) {
       currentLine = lineOf(node.end);
       return;
     }
