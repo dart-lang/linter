@@ -1050,7 +1050,7 @@
     "sets": [
       "pedantic"
     ],
-    "details": "\n**DON'T** use `indexOf` to see if a collection contains an element.\n\nCalling `indexOf` to see if a collection contains something is difficult to read\nand may have poor performance.\n\nInstead, prefer `contains`.\n\n**GOOD:**\n```dart\nif (!lunchBox.contains('sandwich') return 'so hungry...';\n```\n\n**BAD:**\n```dart\nif (lunchBox.indexOf('sandwich') == -1 return 'so hungry...';\n```\n\n"
+    "details": "\n**DON'T** use `indexOf` to see if a collection contains an element.\n\nCalling `indexOf` to see if a collection contains something is difficult to read\nand may have poor performance.\n\nInstead, prefer `contains`.\n\n**GOOD:**\n```dart\nif (!lunchBox.contains('sandwich')) return 'so hungry...';\n```\n\n**BAD:**\n```dart\nif (lunchBox.indexOf('sandwich')) == -1 return 'so hungry...';\n```\n\n"
   },
   {
     "name": "prefer_double_quotes",
@@ -1453,7 +1453,7 @@
       "flutter",
       "pedantic"
     ],
-    "details": "\nFrom the [style guide](https://dart.dev/guides/language/effective-dart/style/):\n\n**AVOID** wrapping fields in getters and setters just to be \"safe\".\n\nIn Java and C#, it's common to hide all fields behind getters and setters (or\nproperties in C#), even if the implementation just forwards to the field.  That\nway, if you ever need to do more work in those members, you can without needing\nto touch the callsites.  This is because calling a getter method is different\nthan accessing a field in Java, and accessing a property isn't binary-compatible\nwith accessing a raw field in C#.\n\nDart doesn't have this limitation.  Fields and getters/setters are completely\nindistinguishable.  You can expose a field in a class and later wrap it in a\ngetter and setter without having to touch any code that uses that field.\n\n**GOOD:**\n\n```dart\nclass Box {\n  var contents;\n}\n```\n\n**BAD:**\n\n```dart\nclass Box {\n  var _contents;\n  get contents => _contents;\n  set contents(value) {\n    _contents = value;\n  }\n}\n```\n\n"
+    "details": "\nFrom the [style guide](https://dart.dev/guides/language/effective-dart/style/):\n\n**AVOID** wrapping fields in getters and setters just to be \"safe\".\n\nIn Java and C#, it's common to hide all fields behind getters and setters (or\nproperties in C#), even if the implementation just forwards to the field.  That\nway, if you ever need to do more work in those members, you can do it without needing\nto touch the callsites.  This is because calling a getter method is different\nthan accessing a field in Java, and accessing a property isn't binary-compatible\nwith accessing a raw field in C#.\n\nDart doesn't have this limitation.  Fields and getters/setters are completely\nindistinguishable.  You can expose a field in a class and later wrap it in a\ngetter and setter without having to touch any code that uses that field.\n\n**GOOD:**\n\n```dart\nclass Box {\n  var contents;\n}\n```\n\n**BAD:**\n\n```dart\nclass Box {\n  var _contents;\n  get contents => _contents;\n  set contents(value) {\n    _contents = value;\n  }\n}\n```\n\n"
   },
   {
     "name": "unnecessary_lambdas",

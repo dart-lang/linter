@@ -34,10 +34,10 @@
 and may have poor performance.</p>
 <p>Instead, prefer <code>contains</code>.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">if (!lunchBox.contains('sandwich') return 'so hungry...';
+<pre><code class="language-dart">if (!lunchBox.contains('sandwich')) return 'so hungry...';
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">if (lunchBox.indexOf('sandwich') == -1 return 'so hungry...';
+<pre><code class="language-dart">if (lunchBox.indexOf('sandwich')) == -1 return 'so hungry...';
 </code></pre>
 
             
