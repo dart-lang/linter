@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:linter/src/rules/prefer_final_parameters.dart';
-
 import 'analyzer.dart';
 import 'rules/always_declare_return_types.dart';
 import 'rules/always_put_control_body_on_new_line.dart';
@@ -119,6 +117,7 @@ import 'rules/prefer_expression_function_bodies.dart';
 import 'rules/prefer_final_fields.dart';
 import 'rules/prefer_final_in_for_each.dart';
 import 'rules/prefer_final_locals.dart';
+import 'rules/prefer_final_parameters.dart';
 import 'rules/prefer_for_elements_to_map_fromIterable.dart';
 import 'rules/prefer_foreach.dart';
 import 'rules/prefer_function_declarations_over_variables.dart';
