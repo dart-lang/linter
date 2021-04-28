@@ -4,7 +4,7 @@
 
 // test w/ `dart test -N prefer_final_parameters`
 
-void badMethod(String label) { // LINT
+void badFunction(String label) { // LINT
   print(label);
 }
 
@@ -19,11 +19,11 @@ bool _testingVariable;
 
 void set badSet(bool setting) => _testingVariable = setting; // LINT
 
-var badCallback = (Object random) { // LINT
+var badClosure = (Object random) { // LINT
   print(random);
 };
 
-void goodMethod(final String label) { // OK
+void goodFunction(final String label) { // OK
   print(label);
 }
 
@@ -36,7 +36,7 @@ void goodMultiple(final String bad, final String good) { // OK
 
 void set goodSet(final bool setting) => _testingVariable = setting; // OK
 
-var goodCallback = (final Object random) { // OK
+var goodClosure = (final Object random) { // OK
   print(random);
 };
 
