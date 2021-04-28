@@ -47,3 +47,38 @@ void mutableCase(String label) { // OK
 }
 
 void mutableExpression(int value) => value = 3; // OK
+
+class C {
+  int _contents = 0;
+
+  C(String content) { // LINT
+    _contents = content.length;
+  }
+
+  C.bad(int contents): _contents = contents; // LINT
+
+  C.good(final int contents): _contents = contents; // OK
+
+  void set badContents(int contents) => _contents = setting; // LINT
+  void set goodContents(final int contents) => _contents = setting; // OK
+
+  int get contentValue => _contents + 4; // OK
+
+  void badMethod(String bad) { // LINT
+    print(bad);
+  }
+
+  void goodMethod(final String good) { // OK
+    print(good);
+  }
+
+  @override
+  C operator +(C other) { // LINT
+    return C.good(contentValue + other.contentValue);
+  }
+
+  @override
+  C operator -(final C other) { // OK
+    return C.good(contentValue + other.contentValue);
+  }
+}
