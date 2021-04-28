@@ -49,6 +49,7 @@ void mutableCase(String label) { // OK
 void mutableExpression(int value) => value = 3; // OK
 
 class C {
+  String value = '';
   int _contents = 0;
 
   C(String content) { // LINT
@@ -58,6 +59,10 @@ class C {
   C.bad(int contents): _contents = contents; // LINT
 
   C.good(final int contents): _contents = contents; // OK
+
+  factory C.theValue(this.value); // OK
+
+  factory C.theValue(String value): this.value = value; // LINT
 
   void set badContents(int contents) => _contents = setting; // LINT
   void set goodContents(final int contents) => _contents = setting; // OK
