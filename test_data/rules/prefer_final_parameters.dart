@@ -8,37 +8,37 @@ void badFunction(String label) { // LINT
   print(label);
 }
 
+void goodFunction(final String label) { // OK
+  print(label);
+}
+
 void badExpression(int value) => print(value); // LINT
+
+void goodExpression(final int value) => print(value); // OK
+
+bool _testingVariable;
+
+void set badSet(bool setting) => _testingVariable = setting; // LINT
+
+void set goodSet(final bool setting) => _testingVariable = setting; // OK
+
+var badClosure = (Object random) { // LINT
+  print(random);
+};
+
+var goodClosure = (final Object random) { // OK
+  print(random);
+};
 
 void badMixed(String bad, final String good) { // LINT
   print(bad);
   print(good);
 }
 
-bool _testingVariable;
-
-void set badSet(bool setting) => _testingVariable = setting; // LINT
-
-var badClosure = (Object random) { // LINT
-  print(random);
-};
-
-void goodFunction(final String label) { // OK
-  print(label);
-}
-
-void goodExpression(final int value) => print(value); // OK
-
 void goodMultiple(final String bad, final String good) { // OK
   print(bad);
   print(good);
 }
-
-void set goodSet(final bool setting) => _testingVariable = setting; // OK
-
-var goodClosure = (final Object random) { // OK
-  print(random);
-};
 
 void mutableCase(String label) { // OK
   print(label);
@@ -60,9 +60,9 @@ class C {
 
   C.good(final int contents): _contents = contents; // OK
 
-  factory C.theValue(this.value); // OK
+  factory C.theValueGood(this.value); // OK
 
-  factory C.theValue(String value): this.value = value; // LINT
+  factory C.theValueBad(String value): this.value = value; // LINT
 
   void set badContents(int contents) => _contents = setting; // LINT
   void set goodContents(final int contents) => _contents = setting; // OK
