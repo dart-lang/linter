@@ -68,9 +68,9 @@ class PreferFinalParameters extends LintRule implements NodeLintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
-    registry.addFunctionDeclaration(this, visitor);
-    registry.addMethodDeclaration(this, visitor);
+    registry.addConstructorDeclaration(this, visitor);
     registry.addFunctionExpression(this, visitor);
+    registry.addMethodDeclaration(this, visitor);
   }
 }
 
@@ -85,7 +85,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       FormalParameterList? parameters, FunctionBody body) {
     if (parameters != null) {
       parameters.parameters.forEach((e) {
-        if (e.isFinal || e.isConst) {
+        if (e.isFinal || e.isConst || e is FieldFormalParameter) {
           return;
         }
         var declaredElement = e.declaredElement;
@@ -98,21 +98,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
-  void visitFunctionExpression(FunctionExpression node) {
-    var parameters = node.parameters;
-    _reportApplicableParameters(parameters, node.body);
-  }
+  void visitConstructorDeclaration(ConstructorDeclaration node) =>
+      _reportApplicableParameters(node.parameters, node.body);
 
   @override
-  void visitFunctionDeclaration(FunctionDeclaration node) {
-    var functionExpression = node.functionExpression;
-    var parameters = functionExpression.parameters;
-    _reportApplicableParameters(parameters, functionExpression.body);
-  }
+  void visitFunctionExpression(FunctionExpression node) =>
+      _reportApplicableParameters(node.parameters, node.body);
 
   @override
-  void visitMethodDeclaration(MethodDeclaration node) {
-    var parameters = node.parameters;
-    _reportApplicableParameters(parameters, node.body);
-  }
+  void visitMethodDeclaration(MethodDeclaration node) =>
+      _reportApplicableParameters(node.parameters, node.body);
 }
