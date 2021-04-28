@@ -4,11 +4,35 @@
 
 // test w/ `dart test -N prefer_final_parameters`
 
-void badFunction(String label) { // LINT
+void badRequiredPositional(String label) { // LINT
   print(label);
 }
 
-void goodFunction(final String label) { // OK
+void goodRequiredPositional(final String label) { // OK
+  print(label);
+}
+
+void badOptionalPosition([String? label]) { // LINT
+  print(label);
+}
+
+void goodOptionalPosition([final String? label]) { // OK
+  print(label);
+}
+
+void badRequiredNamed({required String label}) { // LINT
+  print(label);
+}
+
+void goodRequiredNamed({required final String label}) { // OK
+  print(label);
+}
+
+void badOptionalNamed({String? label}) { // LINT
+  print(label);
+}
+
+void goodOptionalNamed({final String? label}) { // OK
   print(label);
 }
 
