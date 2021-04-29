@@ -40,7 +40,7 @@ void badExpression(int value) => print(value); // LINT
 
 void goodExpression(final int value) => print(value); // OK
 
-bool _testingVariable;
+bool? _testingVariable;
 
 void set badSet(bool setting) => _testingVariable = setting; // LINT
 
@@ -53,6 +53,20 @@ var badClosure = (Object random) { // LINT
 var goodClosure = (final Object random) { // OK
   print(random);
 };
+
+var _testingList = [1, 7, 15, 20];
+
+void useBadClosureArgument() {
+  _testingList.forEach((element) => print(element + 4)); // LINT
+}
+
+void useGoodClosureArgument() {
+  _testingList.forEach((final element) => print(element + 4)); // OK
+}
+
+void useGoodTypedClosureArgument() {
+  _testingList.forEach((final int element) => print(element + 4)); // OK
+}
 
 void badMixed(String bad, final String good) { // LINT
   print(bad);
@@ -84,9 +98,17 @@ class C {
 
   C.good(final int contents): _contents = contents; // OK
 
-  factory C.theValueGood(this.value); // OK
+  C.badValue(String value): this.value = value; // LINT
 
-  factory C.theValueBad(String value): this.value = value; // LINT
+  C.goodValue(this.value); // OK
+
+  factory C.goodFactory(final String value) { // OK
+    return C(value);
+  }
+
+  factory C.badFactory(String value) { // LINT
+    return C(value);
+  }
 
   void set badContents(int contents) => _contents = setting; // LINT
   void set goodContents(final int contents) => _contents = setting; // OK
