@@ -42,6 +42,16 @@ void badExpression(int value) => print(value); // LINT
 void goodExpression(final int value) => print(value); // OK
 ```
 
+**BAD:**
+```dart
+[1, 4, 6, 8].forEach((value) => print(value + 2)); // LINT
+```
+
+**GOOD:**
+```dart
+[1, 4, 6, 8].forEach((final value) => print(value + 2)); // OK
+```
+
 **GOOD:**
 ```dart
 void mutableParameter(String label) { // OK
