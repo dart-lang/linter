@@ -61,31 +61,31 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     var right = node.rightOperand;
 
-    // string.toString()
+    // string + ''
     if (node.operator.type == TokenType.PLUS &&
         right is StringLiteral &&
-        right.stringValue == '') {
-      rule.reportLint(node);
+        (right.stringValue?.isEmpty ?? false)) {
+      rule.reportLintForToken(node.operator);
       return;
     }
 
-    // string.toString()
+    // string * 1
     if (node.operator.type == TokenType.STAR &&
         right is IntegerLiteral &&
         right.value == 1) {
-      rule.reportLint(node);
+      rule.reportLintForToken(node.operator);
       return;
     }
   }
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    if (!(node.target?.staticType?.isDartCoreString ?? false)) return;
+    if (!(node.realTarget?.staticType?.isDartCoreString ?? false)) return;
 
     // string.toString()
     if (node.methodName.name == 'toString' &&
         context.typeSystem.isNonNullable(node.target!.staticType!)) {
-      rule.reportLint(node);
+      rule.reportLint(node.methodName);
       return;
     }
 
@@ -94,7 +94,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         node.argumentList.arguments.length == 1) {
       var arg = node.argumentList.arguments.first;
       if (arg is IntegerLiteral && arg.value == 0) {
-        rule.reportLint(node);
+        rule.reportLint(node.methodName);
         return;
       }
     }
@@ -103,7 +103,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (['padLeft', 'padRight'].contains(node.methodName.name)) {
       var firstArg = node.argumentList.arguments.first;
       if (firstArg is IntegerLiteral && firstArg.value == 0) {
-        rule.reportLint(node);
+        rule.reportLint(node.methodName);
         return;
       }
     }
