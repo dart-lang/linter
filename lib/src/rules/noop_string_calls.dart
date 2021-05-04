@@ -44,6 +44,7 @@ class NoopStringCalls extends LintRule implements NodeLintRule {
     LinterContext context,
   ) {
     var visitor = _Visitor(this, context);
+    registry.addAdjacentStrings(this, visitor);
     registry.addBinaryExpression(this, visitor);
     registry.addMethodInvocation(this, visitor);
   }
@@ -54,6 +55,15 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   final LintRule rule;
   final LinterContext context;
+
+  @override
+  void visitAdjacentStrings(AdjacentStrings node) {
+    for (var literal in node.strings) {
+      if (literal.stringValue?.isEmpty ?? false) {
+        rule.reportLint(literal);
+      }
+    }
+  }
 
   @override
   void visitBinaryExpression(BinaryExpression node) {

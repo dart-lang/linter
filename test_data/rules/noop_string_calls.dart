@@ -25,4 +25,8 @@ f() {
   s.padLeft(1); // OK
   s.padRight(0); // LINT
   s.padRight(1); // OK
+
+  s = 'hello'
+      '' // LINT
+      'world';
 }
