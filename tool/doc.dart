@@ -132,6 +132,7 @@ Future<void> fetchBadgeInfo() async {
   var recommended = await fetchConfig(
       'https://raw.githubusercontent.com/dart-lang/lints/master/lib/recommended.yaml');
   if (recommended != null) {
+    recommendedRules.addAll(coreRules);
     for (var ruleConfig in recommended.ruleConfigs) {
       recommendedRules.add(ruleConfig.name);
     }
