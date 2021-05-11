@@ -7,31 +7,27 @@
 import 'package:test_api/test_api.dart';
 
 f() {
-  try // LINT
-  {
+  try {
     f();
-    fail('fail');
+    fail('fail'); // LINT
   } catch (e) {}
 
-  try // OK
-  {
+  try {
     f();
   } catch (e) {}
 
-  try // OK
-  {
+  try {
     f();
-    fail('fail');
+    fail('fail'); // OK
   } catch (e) {
     expect(e, null);
   } finally {
     print('hello');
   }
 
-  try // OK
-  {
+  try {
     f();
-    fail('fail');
+    fail('fail'); // OK
   } on Exception catch (e) {
     expect(e, null);
   } catch (e) {
