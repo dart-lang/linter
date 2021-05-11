@@ -82,15 +82,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitBinaryExpression(BinaryExpression node) {
     var value = _getIntValue(node.rightOperand);
     if (value != null) {
-      var accessor = _getLengthAccess(node.leftOperand);
-      if (accessor != null) {
+      if (_isLengthAccess(node.leftOperand)) {
         _check(node, value, constantOnRight: true);
       }
     } else {
       value = _getIntValue(node.leftOperand);
+      // ignore: invariant_booleans
       if (value != null) {
-        var accessor = _getLengthAccess(node.rightOperand);
-        if (accessor != null) {
+        if (_isLengthAccess(node.rightOperand)) {
           _check(node, value, constantOnRight: false);
         }
       }
@@ -211,10 +210,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     return null;
   }
 
-  SimpleIdentifier? _getLengthAccess(Expression operand) {
+  bool _isLengthAccess(Expression operand) {
     var node = _drillDownTo(operand, ignoreParens: true, ignoreAs: true);
     if (node == null) {
-      return null;
+      return false;
     }
 
     SimpleIdentifier? identifier;
@@ -235,7 +234,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     if (identifier?.name != 'length') {
-      return null;
+      return false;
     }
 
     // Should be subtype of Iterable, Map or String.
@@ -243,9 +242,9 @@ class _Visitor extends SimpleAstVisitor<void> {
         !DartTypeUtilities.implementsInterface(type, 'Iterable', 'dart.core') &&
             !DartTypeUtilities.implementsInterface(type, 'Map', 'dart.core') &&
             !type.isDartCoreString) {
-      return null;
+      return false;
     }
 
-    return identifier;
+    return true;
   }
 }
