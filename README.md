@@ -37,8 +37,8 @@ you could lint your package like this:
 and see any violations of the `annotate_overrides`, `hash_and_equals`, and `prefer_is_not_empty` rules in the console.  To help you choose 
 the rules you want to enable for your package, we have provided a [complete list of rules][lints] with lints recommended by the Dart team
 collected in [`package:lints`][package-dart-lints]. For the lints that are enforced internally at Google, see [`package:pedantic`][package-pedantic].
-For a set of rules corresponding to the [Effective Dart][effective_dart] guide, see [`package:effective_dart`][package-effective-dart].  Flutter
-lints are documented in [`package:flutter_lints`][package-flutter-lints].
+For a set of rules corresponding to the [Effective Dart][effective_dart] guide, see [`package:effective_dart`][package-effective-dart].  Lints
+recommended for Flutter apps, packages, and plugins are documented in [`package:flutter_lints`][package-flutter-lints].
 
 If a specific lint warning should be ignored, it can be flagged with a comment.  For example, 
 
