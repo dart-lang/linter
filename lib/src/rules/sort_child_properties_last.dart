@@ -75,8 +75,11 @@ return Scaffold(
 );
 ```
 
-Exception: It's allowed to have parameter with a function expression after the
-`child` property.
+Exception:
+
+* It's allowed to have parameter with a function expression after the `child`
+  property.
+* The lint only apply if no other widget parameter is used after `child`.
 
 ''';
 
@@ -114,16 +117,21 @@ class _Visitor extends SimpleAstVisitor {
       return;
     }
 
-    var onlyClosuresAfterChild = arguments.reversed
-        .takeWhile((argument) => !isChildArg(argument))
-        .toList()
-        .reversed
-        .where((element) =>
-            element is NamedExpression &&
-            element.expression is! FunctionExpression)
+    var reversedArguments = arguments.reversed.toList();
+    var child = reversedArguments.firstWhere(isChildArg);
+    var lastWidget =
+        reversedArguments.firstWhere((e) => isWidgetProperty(e.staticType));
+
+    // the rule doesn't apply if another widget is after
+    if (child != lastWidget) return;
+
+    var onlyClosuresAfterLastWidget = reversedArguments
+        .takeWhile((e) => e != lastWidget)
+        .where(
+            (e) => e is NamedExpression && e.expression is! FunctionExpression)
         .isEmpty;
-    if (!onlyClosuresAfterChild) {
-      rule.reportLint(arguments.firstWhere(isChildArg));
+    if (!onlyClosuresAfterLastWidget) {
+      rule.reportLint(lastWidget);
     }
   }
 
