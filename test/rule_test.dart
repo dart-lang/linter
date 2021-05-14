@@ -124,7 +124,10 @@ void defineRuleUnitTests() {
           expect(isImplementation(uri), isTrue);
         });
       }
-      for (var uri in [Uri.parse('package:foo/bar.dart'), Uri.parse('src/bar.dart')]) {
+      for (var uri in [
+        Uri.parse('package:foo/bar.dart'),
+        Uri.parse('src/bar.dart')
+      ]) {
         test(uri.toString(), () {
           expect(isImplementation(uri), isFalse);
         });
