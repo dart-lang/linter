@@ -40,7 +40,6 @@ linter:
     - cast_nullable_to_non_nullable
 #    - close_sinks # https://github.com/dart-lang/linter/issues/268
     - comment_references
-    - control_flow_in_finally
     - directives_ordering
     - empty_statements
     - file_names
