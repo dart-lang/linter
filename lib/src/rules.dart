@@ -4,7 +4,6 @@
 
 import 'analyzer.dart';
 import 'rules/always_declare_return_types.dart';
-import 'rules/depend_on_referenced_packages.dart';
 import 'rules/always_put_control_body_on_new_line.dart';
 import 'rules/always_put_required_named_parameters_first.dart';
 import 'rules/always_require_non_null_named_parameters.dart';
@@ -62,6 +61,7 @@ import 'rules/comment_references.dart';
 import 'rules/constant_identifier_names.dart';
 import 'rules/control_flow_in_finally.dart';
 import 'rules/curly_braces_in_flow_control_structures.dart';
+import 'rules/depend_on_referenced_packages.dart';
 import 'rules/deprecated_consistency.dart';
 import 'rules/diagnostic_describe_all_properties.dart';
 import 'rules/directives_ordering.dart';
