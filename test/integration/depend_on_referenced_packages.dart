@@ -12,7 +12,7 @@ import '../mocks.dart';
 import '../test_constants.dart';
 
 void main() {
-  group('always Depend on referenced packages', () {
+  group('Depend on referenced packages', () {
     var currentOut = outSink;
     var collectingOut = CollectingSink();
     setUp(() {

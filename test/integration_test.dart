@@ -13,8 +13,6 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
 import '../test_data/rules/experiments/experiments.dart';
-import 'integration/depend_on_referenced_packages.dart'
-    as depend_on_referenced_packages;
 import 'integration/always_require_non_null_named_parameters.dart'
     as always_require_non_null_named_parameters;
 import 'integration/avoid_private_typedef_functions.dart'
@@ -27,6 +25,8 @@ import 'integration/avoid_web_libraries_in_flutter.dart'
     as avoid_web_libraries_in_flutter;
 import 'integration/cancel_subscriptions.dart' as cancel_subscriptions;
 import 'integration/close_sinks.dart' as close_sinks;
+import 'integration/depend_on_referenced_packages.dart'
+    as depend_on_referenced_packages;
 import 'integration/directives_ordering.dart' as directives_ordering;
 import 'integration/exhaustive_cases.dart' as exhaustive_cases;
 import 'integration/file_names.dart' as file_names;
@@ -187,12 +187,12 @@ void ruleTests() {
     overridden_fields.main();
     close_sinks.main();
     cancel_subscriptions.main();
+    depend_on_referenced_packages.main();
     directives_ordering.main();
     file_names.main();
     flutter_style_todos.main();
     lines_longer_than_80_chars.main();
     only_throw_errors.main();
-    depend_on_referenced_packages.main();
     always_require_non_null_named_parameters.main();
     prefer_asserts_in_initializer_lists.main();
     prefer_const_constructors_in_immutables.main();
