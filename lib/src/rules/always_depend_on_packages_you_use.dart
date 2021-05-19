@@ -74,7 +74,7 @@ class AlwaysDependOnPackagesYouUse extends LintRule implements NodeLintRule {
           if (dep.name?.text != null) dep.name!.text!,
     ];
 
-    var visitor = _Visitor(this, context, availableDeps);
+    var visitor = _Visitor(this, availableDeps);
     registry.addImportDirective(this, visitor);
     registry.addExportDirective(this, visitor);
   }
@@ -82,10 +82,9 @@ class AlwaysDependOnPackagesYouUse extends LintRule implements NodeLintRule {
 
 class _Visitor extends SimpleAstVisitor {
   final AlwaysDependOnPackagesYouUse rule;
-  final LinterContext context;
   final List<String> availableDeps;
 
-  _Visitor(this.rule, this.context, this.availableDeps);
+  _Visitor(this.rule, this.availableDeps);
 
   void _checkDirective(UriBasedDirective node) {
     // Is it a package: uri?
