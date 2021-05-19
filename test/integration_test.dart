@@ -13,8 +13,8 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
 import '../test_data/rules/experiments/experiments.dart';
-import 'integration/always_depend_on_packages_you_use.dart'
-    as always_depend_on_packages_you_use;
+import 'integration/depend_on_referenced_packages.dart'
+    as depend_on_referenced_packages;
 import 'integration/always_require_non_null_named_parameters.dart'
     as always_require_non_null_named_parameters;
 import 'integration/avoid_private_typedef_functions.dart'
@@ -192,7 +192,7 @@ void ruleTests() {
     flutter_style_todos.main();
     lines_longer_than_80_chars.main();
     only_throw_errors.main();
-    always_depend_on_packages_you_use.main();
+    depend_on_referenced_packages.main();
     always_require_non_null_named_parameters.main();
     prefer_asserts_in_initializer_lists.main();
     prefer_const_constructors_in_immutables.main();

@@ -12,7 +12,7 @@ import '../mocks.dart';
 import '../test_constants.dart';
 
 void main() {
-  group('always depend on packages you use', () {
+  group('always Depend on referenced packages', () {
     var currentOut = outSink;
     var collectingOut = CollectingSink();
     setUp(() {
@@ -30,19 +30,19 @@ void main() {
       await cli.run([
         '--packages',
         packagesFilePath,
-        '$integrationTestDir/always_depend_on_packages_you_use/bin',
-        '--rules=always_depend_on_packages_you_use'
+        '$integrationTestDir/depend_on_referenced_packages/bin',
+        '--rules=depend_on_referenced_packages'
       ]);
       expect(
           collectingOut.trim(),
           stringContainsInOrder([
-            "Depend on packages you use.",
+            "Depend on referenced packages.",
             "import 'package:test/test.dart'; // LINT",
-            "Depend on packages you use.",
+            "Depend on referenced packages.",
             "import 'package:matcher/matcher.dart'; // LINT",
-            "Depend on packages you use.",
+            "Depend on referenced packages.",
             "export 'package:test/test.dart'; // LINT",
-            "Depend on packages you use.",
+            "Depend on referenced packages.",
             "export 'package:matcher/matcher.dart'; // LINT",
           ]));
       expect(exitCode, 1);
@@ -53,19 +53,19 @@ void main() {
       await cli.run([
         '--packages',
         packagesFilePath,
-        '$integrationTestDir/always_depend_on_packages_you_use/lib',
-        '--rules=always_depend_on_packages_you_use'
+        '$integrationTestDir/depend_on_referenced_packages/lib',
+        '--rules=depend_on_referenced_packages'
       ]);
       expect(
           collectingOut.trim(),
           stringContainsInOrder([
-            "Depend on packages you use.",
+            "Depend on referenced packages.",
             "import 'package:test/test.dart'; // LINT",
-            "Depend on packages you use.",
+            "Depend on referenced packages.",
             "import 'package:matcher/matcher.dart'; // LINT",
-            "Depend on packages you use.",
+            "Depend on referenced packages.",
             "export 'package:test/test.dart'; // LINT",
-            "Depend on packages you use.",
+            "Depend on referenced packages.",
             "export 'package:matcher/matcher.dart'; // LINT",
           ]));
       expect(exitCode, 1);
@@ -76,15 +76,15 @@ void main() {
       await cli.run([
         '--packages',
         packagesFilePath,
-        '$integrationTestDir/always_depend_on_packages_you_use/test',
-        '--rules=always_depend_on_packages_you_use'
+        '$integrationTestDir/depend_on_referenced_packages/test',
+        '--rules=depend_on_referenced_packages'
       ]);
       expect(
           collectingOut.trim(),
           stringContainsInOrder([
-            "Depend on packages you use.",
+            "Depend on referenced packages.",
             "import 'package:matcher/matcher.dart'; // LINT",
-            "Depend on packages you use.",
+            "Depend on referenced packages.",
             "export 'package:matcher/matcher.dart'; // LINT",
           ]));
       expect(exitCode, 1);

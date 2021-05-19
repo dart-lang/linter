@@ -8,21 +8,21 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 import '../ast.dart';
 
-const _desc = r'Depend on packages you use.';
+const _desc = r'Depend on referenced packages.';
 
 const _details = r'''
 
-**DO** depend on packages you use.
+**DO** Depend on referenced packages.
 
-When importing a package, *always* add a dependency on it to your pubspec.
+When importing a package, add a dependency on it to your pubspec.
 
-Depending explicitly on packages that you use ensures they will always exist
-and allows you to put a dependency constraint on them to guard you against
-breaking changes.
+Depending explicitly on packages that you reference ensures they will always
+exist and allows you to put a dependency constraint on them to guard you
+against breaking changes.
 
 Whether this should be a regular dependency or dev_dependency depends on if it
-is imported from a public file (one under either `lib` or `bin`), or some other
-file.
+is referenced from a public file (one under either `lib` or `bin`), or some
+other private file.
 
 **BAD:**
 ```dart
@@ -45,10 +45,10 @@ dependencies:
 
 ''';
 
-class AlwaysDependOnPackagesYouUse extends LintRule implements NodeLintRule {
-  AlwaysDependOnPackagesYouUse()
+class DependOnReferencedPackages extends LintRule implements NodeLintRule {
+  DependOnReferencedPackages()
       : super(
-            name: 'always_depend_on_packages_you_use',
+            name: 'depend_on_referenced_packages',
             description: _desc,
             details: _details,
             group: Group.pub);
@@ -81,7 +81,7 @@ class AlwaysDependOnPackagesYouUse extends LintRule implements NodeLintRule {
 }
 
 class _Visitor extends SimpleAstVisitor {
-  final AlwaysDependOnPackagesYouUse rule;
+  final DependOnReferencedPackages rule;
   final List<String> availableDeps;
 
   _Visitor(this.rule, this.availableDeps);

@@ -3,7 +3,6 @@
 linter:
   rules:
     - always_declare_return_types
-    - always_depend_on_packages_you_use
     - always_put_control_body_on_new_line
     - always_put_required_named_parameters_first
     - always_require_non_null_named_parameters
@@ -60,6 +59,7 @@ linter:
     - constant_identifier_names
     - control_flow_in_finally
     - curly_braces_in_flow_control_structures
+    - depend_on_referenced_packages
     - deprecated_consistency
     - diagnostic_describe_all_properties
     - directives_ordering

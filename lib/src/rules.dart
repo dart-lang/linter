@@ -4,7 +4,7 @@
 
 import 'analyzer.dart';
 import 'rules/always_declare_return_types.dart';
-import 'rules/always_depend_on_packages_you_use.dart';
+import 'rules/depend_on_referenced_packages.dart';
 import 'rules/always_put_control_body_on_new_line.dart';
 import 'rules/always_put_required_named_parameters_first.dart';
 import 'rules/always_require_non_null_named_parameters.dart';
@@ -201,7 +201,6 @@ void registerLintRules({bool inTestMode = false}) {
   Analyzer.facade.cacheLinterVersion();
   Analyzer.facade
     ..register(AlwaysDeclareReturnTypes())
-    ..register(AlwaysDependOnPackagesYouUse())
     ..register(AlwaysPutControlBodyOnNewLine())
     ..register(AlwaysPutRequiredNamedParametersFirst())
     ..register(AlwaysRequireNonNullNamedParameters())
@@ -259,6 +258,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(ConstantIdentifierNames())
     ..register(ControlFlowInFinally())
     ..register(CurlyBracesInFlowControlStructures())
+    ..register(DependOnReferencedPackages())
     ..register(DeprecatedConsistency())
     ..register(DiagnosticsDescribeAllProperties())
     ..register(DirectivesOrdering())
