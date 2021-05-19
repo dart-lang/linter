@@ -93,12 +93,13 @@ class _Visitor extends SimpleAstVisitor {
     if (uriContent == null) return;
     if (!uriContent.startsWith('package:')) return;
 
-    try {
-      var firstSlash = uriContent.indexOf('/');
-      var packageName = uriContent.substring(8, firstSlash);
-      if (availableDeps.contains(packageName)) return;
-      rule.reportLint(node.uri);
-    } on FormatException catch (_) {}
+    // The package name is the first segment of the uri, find the first slash.
+    var firstSlash = uriContent.indexOf('/');
+    if (firstSlash == -1) return;
+
+    var packageName = uriContent.substring(8, firstSlash);
+    if (availableDeps.contains(packageName)) return;
+    rule.reportLint(node.uri);
   }
 
   @override
