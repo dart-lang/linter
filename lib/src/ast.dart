@@ -129,9 +129,11 @@ bool isInLibDir(CompilationUnit node, WorkspacePackage? package) {
   return path.isWithin(libDir, cuPath);
 }
 
-/// Return true if this compilation unit [node] is declared within a public
+/// Return `true` if this compilation unit [node] is declared within a public
 /// directory in the given [package]'s directory tree. Public dirs are the
 /// `lib` and `bin` dirs.
+//
+//  TODO: move into WorkspacePackage
 bool isInPublicDir(CompilationUnit node, WorkspacePackage? package) {
   if (package == null) return false;
   var cuPath = node.declaredElement?.library.source.fullName;

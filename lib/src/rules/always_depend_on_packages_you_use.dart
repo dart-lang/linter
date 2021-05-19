@@ -27,24 +27,20 @@ file.
 **BAD:**
 ```dart
 import 'package:a/a.dart';
-import 'package:b/b.dart';
 ```
 
 ```yaml
 dependencies:
-  a: ^1.0.0
 ```
 
 **GOOD:**
 ```dart
 import 'package:a/a.dart';
-import 'package:b/b.dart';
 ```
 
 ```yaml
 dependencies:
   a: ^1.0.0
-  b: ^1.0.0
 ```
 
 ''';
@@ -78,27 +74,32 @@ class _Visitor extends SimpleAstVisitor {
   final LinterContext context;
   final Pubspec pubspec;
   final bool isPublicFile;
-  late final availableDeps = [
-    if (pubspec.dependencies != null)
-      for (var dep in pubspec.dependencies!)
-        if (dep.name?.text != null) dep.name!.text!,
-    if (!isPublicFile && pubspec.devDependencies != null)
-      for (var dep in pubspec.devDependencies!)
-        if (dep.name?.text != null) dep.name!.text!
-  ];
+  late final List<String> availableDeps;
 
-  _Visitor(this.rule, this.context, this.pubspec, {required this.isPublicFile});
+  _Visitor(this.rule, this.context, this.pubspec,
+      {required this.isPublicFile}) {
+    var dependencies = pubspec.dependencies;
+    var devDependencies = pubspec.devDependencies;
+    availableDeps = [
+      if (dependencies != null)
+        for (var dep in dependencies)
+          if (dep.name?.text != null) dep.name!.text!,
+      if (!isPublicFile && devDependencies != null)
+        for (var dep in devDependencies)
+          if (dep.name?.text != null) dep.name!.text!
+    ];
+  }
 
   void _checkDirective(UriBasedDirective node) {
-    // Is it a package: import?
-    var importUriContent = node.uriContent;
-    if (importUriContent == null) return;
-    if (!importUriContent.startsWith('package:')) return;
+    // Is it a package: uri?
+    var uriContent = node.uriContent;
+    if (uriContent == null) return;
+    if (!uriContent.startsWith('package:')) return;
 
     try {
-      var importUri = Uri.parse(importUriContent);
-      if (importUri.pathSegments.isEmpty) return;
-      var packageName = importUri.pathSegments.first;
+      var uri = Uri.parse(uriContent);
+      if (uri.pathSegments.isEmpty) return;
+      var packageName = uri.pathSegments.first;
       if (availableDeps.contains(packageName)) return;
       rule.reportLint(node.uri);
     } on FormatException catch (_) {}
