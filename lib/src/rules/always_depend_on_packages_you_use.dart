@@ -62,8 +62,19 @@ class AlwaysDependOnPackagesYouUse extends LintRule implements NodeLintRule {
     var pubspec = package.pubspec;
     if (pubspec == null) return;
 
-    var visitor = _Visitor(this, context, pubspec,
-        isPublicFile: isInPublicDir(context.currentUnit.unit, context.package));
+    var dependencies = pubspec.dependencies;
+    var devDependencies = pubspec.devDependencies;
+    var availableDeps = [
+      if (dependencies != null)
+        for (var dep in dependencies)
+          if (dep.name?.text != null) dep.name!.text!,
+      if (devDependencies != null &&
+          !isInPublicDir(context.currentUnit.unit, context.package))
+        for (var dep in devDependencies)
+          if (dep.name?.text != null) dep.name!.text!,
+    ];
+
+    var visitor = _Visitor(this, context, availableDeps);
     registry.addImportDirective(this, visitor);
     registry.addExportDirective(this, visitor);
   }
@@ -72,23 +83,9 @@ class AlwaysDependOnPackagesYouUse extends LintRule implements NodeLintRule {
 class _Visitor extends SimpleAstVisitor {
   final AlwaysDependOnPackagesYouUse rule;
   final LinterContext context;
-  final Pubspec pubspec;
-  final bool isPublicFile;
-  late final List<String> availableDeps;
+  final List<String> availableDeps;
 
-  _Visitor(this.rule, this.context, this.pubspec,
-      {required this.isPublicFile}) {
-    var dependencies = pubspec.dependencies;
-    var devDependencies = pubspec.devDependencies;
-    availableDeps = [
-      if (dependencies != null)
-        for (var dep in dependencies)
-          if (dep.name?.text != null) dep.name!.text!,
-      if (!isPublicFile && devDependencies != null)
-        for (var dep in devDependencies)
-          if (dep.name?.text != null) dep.name!.text!
-    ];
-  }
+  _Visitor(this.rule, this.context, this.availableDeps);
 
   void _checkDirective(UriBasedDirective node) {
     // Is it a package: uri?
@@ -97,9 +94,8 @@ class _Visitor extends SimpleAstVisitor {
     if (!uriContent.startsWith('package:')) return;
 
     try {
-      var uri = Uri.parse(uriContent);
-      if (uri.pathSegments.isEmpty) return;
-      var packageName = uri.pathSegments.first;
+      var firstSlash = uriContent.indexOf('/');
+      var packageName = uriContent.substring(8, firstSlash);
       if (availableDeps.contains(packageName)) return;
       rule.reportLint(node.uri);
     } on FormatException catch (_) {}
