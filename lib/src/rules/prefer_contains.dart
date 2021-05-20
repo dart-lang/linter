@@ -84,9 +84,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     var parentType = node.target?.staticType;
-    var parentTypeForInterfaceCheck = parentType?.typeForInterfaceCheck;
-    if (parentTypeForInterfaceCheck == null ||
-        !DartTypeUtilities.implementsAnyInterface(parentTypeForInterfaceCheck, [
+    if (parentType == null ||
+        !DartTypeUtilities.implementsAnyInterface(parentType, [
           InterfaceTypeDefinition('Iterable', 'dart.core'),
           InterfaceTypeDefinition('String', 'dart.core'),
         ])) {
