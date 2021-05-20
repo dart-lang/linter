@@ -29,7 +29,6 @@ class CancellableFuture<T> implements Future<T> {
     throw new Exception('Not supported.');
   }
 
-
   @override
   Future<T> timeout(Duration timeLimit, {onTimeout()}) {
     throw new Exception('Not supported.');
