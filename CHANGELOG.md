@@ -1,7 +1,5 @@
 # 1.5.0
 
-- fixed `unnecessary_parenthesis` to report when the parent precedence
-  is equal to the expression precedence
 - (internal) migrated to `SecurityLintCode` instead of deprecated 
   `SecurityLintCodeWithUniqueName`
 - (internal) fixed `avoid_types_as_parameter_names` to skip field formal
