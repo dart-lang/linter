@@ -30,6 +30,7 @@ main() async {
   true ? [] : []
     ..add(''); // OK
   m(p: (1 + 3)); // LINT
+  (a++).toString(); // OK
 
   // OK because it is unobvious where cascades fall in precedence.
   a..b = (c..d); // OK
