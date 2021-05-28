@@ -4,6 +4,7 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:collection/collection.dart';
 
 import '../analyzer.dart';
 import '../util/flutter_utils.dart';
@@ -11,7 +12,7 @@ import '../util/flutter_utils.dart';
 const _desc = r'Sort child properties last in widget instance creations.';
 
 const _details = r'''
-Sort child properties last in widget instance creations.  This improves
+Sort arguments to end with a Widget in widget instance creations.  This improves
 readability and plays nicest with UI as Code visualization in IDEs with UI as
 Code Guides in editors (such as IntelliJ) where Properties in the correct order
 appear clearly associated with the constructor call and separated from the
@@ -75,12 +76,8 @@ return Scaffold(
 );
 ```
 
-Exception:
-
-* It's allowed to have parameter with a function expression after the `child`
-  property.
-* The lint only apply if no other widget parameter is used after `child`.
-
+Exception: It's allowed to have function expression arguments after the last
+Widget argument.
 ''';
 
 class SortChildPropertiesLast extends LintRule implements NodeLintRule {
@@ -111,19 +108,19 @@ class _Visitor extends SimpleAstVisitor {
     }
 
     var arguments = node.argumentList.arguments;
-    if (arguments.length < 2 ||
-        isChildArg(arguments.last) ||
-        arguments.where(isChildArg).length != 1) {
+    if (arguments.length < 2 || isWidgetProperty(arguments.last.staticType)) {
       return;
     }
 
     var reversedArguments = arguments.reversed.toList();
-    var child = reversedArguments.firstWhere(isChildArg);
-    var lastWidget =
-        reversedArguments.firstWhere((e) => isWidgetProperty(e.staticType));
+    var lastWidget = reversedArguments
+        .where((e) => isWidgetProperty(e.staticType))
+        .firstOrNull;
 
-    // the rule doesn't apply if another widget is after
-    if (child != lastWidget) return;
+    // no widget argument
+    if (lastWidget == null) {
+      return;
+    }
 
     var onlyClosuresAfterLastWidget = reversedArguments
         .takeWhile((e) => e != lastWidget)
@@ -133,14 +130,5 @@ class _Visitor extends SimpleAstVisitor {
     if (!onlyClosuresAfterLastWidget) {
       rule.reportLint(lastWidget);
     }
-  }
-
-  static bool isChildArg(Expression e) {
-    if (e is NamedExpression) {
-      var name = e.name.label.name;
-      return (name == 'child' || name == 'children') &&
-          isWidgetProperty(e.staticType);
-    }
-    return false;
   }
 }

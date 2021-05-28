@@ -116,17 +116,33 @@ class WithClosure extends Widget {
 }
 
 class WithSeveralWidgetCreation extends Widget {
-  WithSeveralWidgetCreation({this.header, this.child, this.footer});
-  final Widget header;
-  final Widget child;
-  final Widget footer;
+  WithSeveralWidgetCreation({
+    this.header,
+    this.child,
+    this.boldFooter,
+    this.onFooterClick,
+    this.footer,
+  });
+  final Widget? header;
+  final Widget? child;
+  final bool? boldFooter;
+  final void Function()? onFooterClick;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
-    return WithSeveralWidgetCreation(
+    WithSeveralWidgetCreation(
       header: Text('a'),
       child: Text('b'), // OK
-      footer: Text('c'),
+      footer: Text('c'), // LINT
+      boldFooter: true,
     );
+    WithSeveralWidgetCreation(
+      header: Text('a'),
+      child: Text('b'), // OK
+      footer: Text('c'), // OK
+      onFooterClick: (){},
+    );
+    return null;
   }
 }
