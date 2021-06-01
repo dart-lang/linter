@@ -13,13 +13,14 @@ import 'doc.dart';
 
 /// Generates a list of lint rules in machine format suitable for consumption by
 /// other tools.
-void main(List<String> args) {
+void main(List<String> args) async {
   var parser = ArgParser()
     ..addFlag('pretty',
         abbr: 'p', help: 'Pretty-print output.', defaultsTo: true);
   var options = parser.parse(args);
 
   registerLintRules();
+  await fetchBadgeInfo();
   var json = getMachineListing(Registry.ruleRegistry,
       pretty: options['pretty'] == true);
   print(json);
@@ -39,8 +40,11 @@ String getMachineListing(Iterable<LintRule> ruleRegistry,
         'maturity': rule.maturity.name,
         'incompatible': rule.incompatibleRules,
         'sets': [
+          if (coreRules.contains(rule.name)) 'core',
+          if (recommendedRules.contains(rule.name)) 'recommended',
           if (flutterRules.contains(rule.name)) 'flutter',
           if (pedanticRules.contains(rule.name)) 'pedantic',
+          if (effectiveDartRules.contains(rule.name)) 'effective_dart',
         ],
         'details': rule.details,
       }
