@@ -359,7 +359,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         var directiveUri = directive.uriContent;
         if (previousUri != null &&
             directiveUri != null &&
-            previousUri.compareTo(directiveUri) > 0) {
+            compareDirectives(previousUri, directiveUri) > 0) {
           reportDirective(directive);
         }
       }
@@ -372,4 +372,18 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   Iterable<ImportDirective> _getImportDirectives(CompilationUnit node) =>
       node.directives.whereType<ImportDirective>();
+}
+
+/// Compares directives by package then file in package.
+///
+/// Package is everything until the first `/`.
+int compareDirectives(String a, String b) {
+  if (!a.contains('/') || !b.contains('/')) {
+    return a.compareTo(b);
+  }
+  var as = a.split('/');
+  var bs = b.split('/');
+  var result = as[0].compareTo(bs[0]);
+  if (result != 0) return result;
+  return as.skip(1).join('/').compareTo(bs.skip(1).join('/'));
 }
