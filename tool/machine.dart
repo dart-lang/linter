@@ -16,11 +16,14 @@ import 'doc.dart';
 void main(List<String> args) async {
   var parser = ArgParser()
     ..addFlag('pretty',
-        abbr: 'p', help: 'Pretty-print output.', defaultsTo: true);
+        abbr: 'p', help: 'Pretty-print output.', defaultsTo: true)
+    ..addFlag('sets', abbr: 's', help: 'Include rule sets', defaultsTo: true);
   var options = parser.parse(args);
 
   registerLintRules();
-  await fetchBadgeInfo();
+  if (options['sets'] == true) {
+    await fetchBadgeInfo();
+  }
   var json = getMachineListing(Registry.ruleRegistry,
       pretty: options['pretty'] == true);
   print(json);
