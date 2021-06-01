@@ -31,8 +31,8 @@
 
             <p>Sort child properties last in widget instance creations.  This improves
 readability and plays nicest with UI as Code visualization in IDEs with UI as
-Code Guides in editors (such as IntelliJ) where Properties in the correct order 
-appear clearly associated with the constructor call and separated from the 
+Code Guides in editors (such as IntelliJ) where Properties in the correct order
+appear clearly associated with the constructor call and separated from the
 children.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">return Scaffold(
@@ -88,6 +88,8 @@ children.</p>
   ),
 );
 </code></pre>
+<p>Exception: It's allowed to have parameter with a function expression after the
+<code>child</code> property.</p>
 
             
          </section>

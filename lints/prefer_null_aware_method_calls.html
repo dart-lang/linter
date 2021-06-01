@@ -32,10 +32,10 @@
             <p>Instead of checking nullability of a function/method <code>f</code> before calling it you
 can use <code>f?.call()</code>.</p>
 <p><strong>BAD:</strong></p>
-<pre><code>if (f != null) f!();
+<pre><code class="language-dart">if (f != null) f!();
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code>f?.call();
+<pre><code class="language-dart">f?.call();
 </code></pre>
 
             

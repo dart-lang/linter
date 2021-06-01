@@ -6,20 +6,20 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>prefer_equal_for_default_values</title>
+      <title>prefer_final_parameters</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_equal_for_default_values</h1>
+            <h1>prefer_final_parameters</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0 • <small>(Linter v0.1.46)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
-            <a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints"><!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a><a class="style-type" href="https://github.com/tenhobi/effective_dart"><!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a>
+            
             <ul>
                <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
                <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
@@ -29,16 +29,44 @@
          </header>
          <section>
 
-            <p>From the <a href="https://dart.dev/guides/language/effective-dart/usage">style guide</a>:</p>
-<p><strong>DO</strong> Use <code>=</code> to separate a named parameter from its default value.</p>
+            <p><strong>DO</strong> prefer declaring parameters as final if they are not reassigned in
+the function body.</p>
+<p>Declaring parameters as final when possible is a good practice because it helps
+avoid accidental reassignments.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">m({a: 1})
+<pre><code class="language-dart">void badParameter(String label) { // LINT
+  print(label);
+}
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">m({a = 1})
+<pre><code class="language-dart">void goodParameter(final String label) { // OK
+  print(label);
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">void badExpression(int value) =&gt; print(value); // LINT
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">void goodExpression(final int value) =&gt; print(value); // OK
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">[1, 4, 6, 8].forEach((value) =&gt; print(value + 2)); // LINT
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">[1, 4, 6, 8].forEach((final value) =&gt; print(value + 2)); // OK
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">void mutableParameter(String label) { // OK
+  print(label);
+  label = 'Hello Linter!';
+  print(label);
+}
 </code></pre>
 
-            
+            <p>
+Incompatible with: <!--suppress HtmlUnknownTarget --><a href = "unnecessary_final.html" >unnecessary_final</a>.
+</p>
+
          </section>
       </div>
       <footer>

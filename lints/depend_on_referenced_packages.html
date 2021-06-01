@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>test_types_in_equals</title>
+      <title>depend_on_referenced_packages</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>test_types_in_equals</h1>
-            <p>Group: errors</p>
+            <h1>depend_on_referenced_packages</h1>
+            <p>Group: pub</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0 • <small>(Linter v0.1.16)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,54 +29,24 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> test type arguments in operator ==(Object other).</p>
-<p>Not testing types might result in null pointer exceptions which will be
-unexpected for consumers of your class.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class Field {
-}
-
-class Good {
-  final Field someField;
-
-  Good(this.someField);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    return other is Good &amp;&amp;
-        this.someField == other.someField;
-  }
-
-  @override
-  int get hashCode {
-    return someField.hashCode;
-  }
-}
-</code></pre>
+            <p><strong>DO</strong> Depend on referenced packages.</p>
+<p>When importing a package, add a dependency on it to your pubspec.</p>
+<p>Depending explicitly on packages that you reference ensures they will always
+exist and allows you to put a dependency constraint on them to guard you
+against breaking changes.</p>
+<p>Whether this should be a regular dependency or dev_dependency depends on if it
+is referenced from a public file (one under either <code>lib</code> or <code>bin</code>), or some
+other private file.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class Field {
-}
-
-class Bad {
-  final Field someField;
-
-  Bad(this.someField);
-
-  @override
-  bool operator ==(Object other) {
-    Bad otherBad = other as Bad; // LINT
-    bool areEqual = otherBad != null &amp;&amp; otherBad.someField == someField;
-    return areEqual;
-  }
-
-  @override
-  int get hashCode {
-    return someField.hashCode;
-  }
-}
+<pre><code class="language-dart">import 'package:a/a.dart';
+</code></pre>
+<pre><code class="language-yaml">dependencies:
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">import 'package:a/a.dart';
+</code></pre>
+<pre><code class="language-yaml">dependencies:
+  a: ^1.0.0
 </code></pre>
 
             

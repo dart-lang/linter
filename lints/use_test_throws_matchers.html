@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>test_types_in_equals</title>
+      <title>use_test_throws_matchers</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>test_types_in_equals</h1>
-            <p>Group: errors</p>
+            <h1>use_test_throws_matchers</h1>
+            <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0 • <small>(Linter v0.1.16)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,54 +29,36 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> test type arguments in operator ==(Object other).</p>
-<p>Not testing types might result in null pointer exceptions which will be
-unexpected for consumers of your class.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class Field {
+            <p>Use the <code>throwsA</code> matcher instead of try-catch with <code>fail()</code>.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">// sync code
+try {
+  someSyncFunctionThatThrows();
+  fail('expected Error');
+} on Error catch (error) {
+  expect(error.message, contains('some message'));
 }
 
-class Good {
-  final Field someField;
-
-  Good(this.someField);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    return other is Good &amp;&amp;
-        this.someField == other.someField;
-  }
-
-  @override
-  int get hashCode {
-    return someField.hashCode;
-  }
+// async code
+try {
+  await someAsyncFunctionThatThrows();
+  fail('expected Error');
+} on Error catch (error) {
+  expect(error.message, contains('some message'));
 }
 </code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class Field {
-}
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">// sync code
+expect(
+  () =&gt; someSyncFunctionThatThrows(),
+  throwsA(isA&lt;Error&gt;().having((Error error) =&gt; error.message, 'message', contains('some message'))),
+);
 
-class Bad {
-  final Field someField;
-
-  Bad(this.someField);
-
-  @override
-  bool operator ==(Object other) {
-    Bad otherBad = other as Bad; // LINT
-    bool areEqual = otherBad != null &amp;&amp; otherBad.someField == someField;
-    return areEqual;
-  }
-
-  @override
-  int get hashCode {
-    return someField.hashCode;
-  }
-}
+// async code
+await expectLater(
+  () =&gt; someAsyncFunctionThatThrows(),
+  throwsA(isA&lt;Error&gt;().having((Error error) =&gt; error.message, 'message', contains('some message'))),
+);
 </code></pre>
 
             

@@ -29,7 +29,11 @@
          </header>
          <section>
 
-            <p><strong>AVOID</strong> using await on anything other than a future.</p>
+            <p><strong>AVOID</strong> using await on anything which is not a future.</p>
+<p>Await is allowed on the types: <code>Future&lt;X&gt;</code>, <code>FutureOr&lt;X&gt;</code>, <code>Future&lt;X&gt;?</code>, 
+<code>FutureOr&lt;X&gt;?</code> and <code>dynamic</code>.</p>
+<p>Further, using <code>await null</code> is specifically allowed as a way to introduce a
+microtask delay.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">main() async {
   print(await 23);
@@ -37,7 +41,8 @@
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">main() async {
-  print(await Future.value(23));
+  await null; // If a delay is really intended.
+  print(23);
 }
 </code></pre>
 

@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>test_types_in_equals</title>
+      <title>noop_primitive_operations</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>test_types_in_equals</h1>
-            <p>Group: errors</p>
+            <h1>noop_primitive_operations</h1>
+            <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0 • <small>(Linter v0.1.16)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,54 +29,20 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> test type arguments in operator ==(Object other).</p>
-<p>Not testing types might result in null pointer exceptions which will be
-unexpected for consumers of your class.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class Field {
-}
-
-class Good {
-  final Field someField;
-
-  Good(this.someField);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    return other is Good &amp;&amp;
-        this.someField == other.someField;
-  }
-
-  @override
-  int get hashCode {
-    return someField.hashCode;
-  }
-}
-</code></pre>
+            <p>Some operations on primitive types are idempotent and can be removed.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class Field {
-}
+<pre><code class="language-dart">doubleValue.toDouble();
 
-class Bad {
-  final Field someField;
+intValue.toInt();
+intValue.round();
+intValue.ceil();
+intValue.floor();
+intValue.truncate();
 
-  Bad(this.someField);
-
-  @override
-  bool operator ==(Object other) {
-    Bad otherBad = other as Bad; // LINT
-    bool areEqual = otherBad != null &amp;&amp; otherBad.someField == someField;
-    return areEqual;
-  }
-
-  @override
-  int get hashCode {
-    return someField.hashCode;
-  }
-}
+string.toString();
+string = 'hello\n'
+    'world\n'
+    ''; // useless empty string
 </code></pre>
 
             
