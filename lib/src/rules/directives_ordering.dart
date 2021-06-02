@@ -378,12 +378,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 ///
 /// Package is everything until the first `/`.
 int compareDirectives(String a, String b) {
-  if (!a.contains('/') || !b.contains('/')) {
-    return a.compareTo(b);
-  }
-  var as = a.split('/');
-  var bs = b.split('/');
-  var result = as[0].compareTo(bs[0]);
+  var indexA = a.indexOf('/');
+  var indexB = b.indexOf('/');
+  if (indexA == -1 || indexB == -1) return a.compareTo(b);
+  var result = a.substring(0, indexA).compareTo(b.substring(0, indexB));
   if (result != 0) return result;
-  return as.skip(1).join('/').compareTo(bs.skip(1).join('/'));
+  return a.substring(indexA + 1).compareTo(b.substring(indexB + 1));
 }
