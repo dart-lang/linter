@@ -4,7 +4,6 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:collection/collection.dart';
 
 import '../analyzer.dart';
 import '../util/flutter_utils.dart';
@@ -112,23 +111,21 @@ class _Visitor extends SimpleAstVisitor {
       return;
     }
 
-    var reversedArguments = arguments.reversed.toList();
-    var lastWidget = reversedArguments
-        .where((e) => isWidgetProperty(e.staticType))
-        .firstOrNull;
+    var lastWidgetIndex =
+        arguments.lastIndexWhere((e) => isWidgetProperty(e.staticType));
 
     // no widget argument
-    if (lastWidget == null) {
+    if (lastWidgetIndex == -1) {
       return;
     }
 
-    var onlyClosuresAfterLastWidget = reversedArguments
-        .takeWhile((e) => e != lastWidget)
+    var onlyClosuresAfterLastWidget = arguments
+        .skip(lastWidgetIndex + 1)
         .where(
             (e) => e is NamedExpression && e.expression is! FunctionExpression)
         .isEmpty;
     if (!onlyClosuresAfterLastWidget) {
-      rule.reportLint(lastWidget);
+      rule.reportLint(arguments[lastWidgetIndex]);
     }
   }
 }
