@@ -189,7 +189,7 @@ void main() {
       '\$foo',
       'bar\$',
       'foo\$Generated',
-      'foo\$Generated\$Bar'
+      'foo\$Generated\$Bar',
       'foo_',
     ];
     testEach(good, isLowerCamelCase, isTrue);
