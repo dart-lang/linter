@@ -4,8 +4,8 @@
   underscore
 - fixed false negative in `prefer_final_parameters` where first parameter
   is final
-- improved `directives_ordering` sorting of directives with dot-separated 
-  package names
+- improved `directives_ordering` sorting of directives with dot paths and 
+  dot-separated package names
 - relaxed `sort_child_properties_last` to allow for a trailing Widget in
   instance creations
 
