@@ -217,6 +217,16 @@ Future<void> generateDocs(String? dir) async {
 
 String getBadges(String rule) {
   var sb = StringBuffer();
+  if (coreRules.contains(rule)) {
+    sb.write(
+        '<a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/core.yaml>'
+        '<!--suppress HtmlUnknownTarget --><img alt="core" src="style-core.svg"></a>');
+  }
+  if (recommendedRules.contains(rule)) {
+    sb.write(
+        '<a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml>'
+        '<!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a>');
+  }
   if (flutterRules.contains(rule)) {
     sb.write(
         '<a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml">'
