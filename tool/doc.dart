@@ -403,6 +403,14 @@ class MarkdownIndexer {
     void emit(LintRule rule) {
       buffer
           .writeln('**[${rule.name}](${rule.name}.md)** - ${rule.description}');
+      if (coreRules.contains(rule.name)) {
+        buffer.writeln('[![core](style-core.svg)]'
+            '(https://github.com/dart-lang/lints/blob/main/lib/core.yaml)');
+      }
+      if (recommendedRules.contains(rule.name)) {
+        buffer.writeln('[![recommended](style-recommended.svg)]'
+            '(https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml)');
+      }
       if (flutterRules.contains(rule.name)) {
         buffer.writeln('[![flutter](style-flutter.svg)]'
             '(https://github.com/flutter/packages/blob/master/packages/'
