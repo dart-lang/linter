@@ -229,7 +229,7 @@ String getBadges(String rule) {
   }
   if (flutterRules.contains(rule)) {
     sb.write(
-        '<a class="style-type" href="https://github.com/flutter/flutter/blob/master/packages/flutter/lib/analysis_options_user.yaml">'
+        '<a class="style-type" href="https://github.com/flutter/packages/blob/master/packages/flutter_lints/lib/flutter.yaml">'
         '<!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>');
   }
   if (pedanticRules.contains(rule)) {
