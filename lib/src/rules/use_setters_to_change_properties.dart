@@ -62,7 +62,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    void visitExpression(Expression expression) {
+    void checkExpression(Expression expression) {
       if (expression is AssignmentExpression &&
           expression.operator.type == TokenType.EQ) {
         var leftOperand =
@@ -81,11 +81,11 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (body.block.statements.length == 1) {
         var statement = body.block.statements.first;
         if (statement is ExpressionStatement) {
-          visitExpression(statement.expression);
+          checkExpression(statement.expression);
         }
       }
     } else if (body is ExpressionFunctionBody) {
-      visitExpression(body.expression);
+      checkExpression(body.expression);
     }
   }
 }
