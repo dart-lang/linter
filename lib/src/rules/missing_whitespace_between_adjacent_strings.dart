@@ -120,9 +120,9 @@ class _Visitor extends RecursiveAstVisitor<void> {
 }
 
 extension on String {
-  bool get hasWhitespace => _whitespaces.any(contains);
-  bool get endsWithWhitespace => _whitespaces.any(endsWith);
-  bool get startsWithWhitespace => _whitespaces.any(startsWith);
-}
+  bool get hasWhitespace => whitespaces.any(contains);
+  bool get endsWithWhitespace => whitespaces.any(endsWith);
+  bool get startsWithWhitespace => whitespaces.any(startsWith);
 
-const _whitespaces = [' ', '\n', '\r', '\t'];
+  static const whitespaces = [' ', '\n', '\r', '\t'];
+}
