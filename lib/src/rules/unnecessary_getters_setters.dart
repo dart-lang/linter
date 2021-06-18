@@ -4,6 +4,7 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 import '../ast.dart';
@@ -89,21 +90,21 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     // Only select getters with setter pairs
-    getters.keys
-        .where((id) => setters.keys.contains(id))
-        .forEach((id) => _visitGetterSetter(getters[id], setters[id]));
+    for (var id in getters.keys.where((id) => setters.keys.contains(id))) {
+      _visitGetterSetter(getters[id], setters[id]);
+    }
   }
 
   void _visitGetterSetter(
       MethodDeclaration? getter, MethodDeclaration? setter) {
-    if (getter != null &&
-        setter != null &&
-        isSimpleSetter(setter) &&
+    if (getter == null || setter == null) return;
+    var getterElement = getter.declaredElement;
+    var setterElement = setter.declaredElement;
+    if (getterElement == null || setterElement == null) return;
+    if (isSimpleSetter(setter) &&
         isSimpleGetter(getter) &&
-        !isProtected(getter) &&
-        !isProtected(setter) &&
-        !isDeprecated(getter) &&
-        !isDeprecated(setter)) {
+        getterElement.metadata.isEmpty &&
+        setterElement.metadata.isEmpty) {
       rule..reportLint(getter.name)..reportLint(setter.name);
     }
   }
