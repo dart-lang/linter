@@ -1,5 +1,7 @@
 # master
 
+- update `use_setters_to_change_properties` to only highlight a method name,
+  not the entire body and doc comment.
 - update `missing_whitespace_between_adjacent_strings` to allow String
   interpolations at the beginning and end of String literals.
 
