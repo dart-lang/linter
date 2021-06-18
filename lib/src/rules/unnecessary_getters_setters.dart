@@ -90,12 +90,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     // Only select getters with setter pairs
-    for (var id in getters.keys.where((id) => setters.keys.contains(id))) {
-      _visitGetterSetter(getters[id]!, setters[id]!);
+    for (var id in getters.keys) {
+      _visitGetterSetter(getters[id]!, setters[id]);
     }
   }
 
-  void _visitGetterSetter(MethodDeclaration getter, MethodDeclaration setter) {
+  void _visitGetterSetter(MethodDeclaration getter, MethodDeclaration? setter) {
+    if (setter == null) return;
     var getterElement = getter.declaredElement;
     var setterElement = setter.declaredElement;
     if (getterElement == null || setterElement == null) return;
