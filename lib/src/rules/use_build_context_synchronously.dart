@@ -204,6 +204,16 @@ class _Visitor extends SimpleAstVisitor {
           return terminatesControl(then);
         }
       }
+    } else if (statement is TryStatement) {
+      var statements = statement.finallyBlock?.statements;
+      if (statements != null) {
+        for (var i = statements.length - 1; i >= 0; i--) {
+          var s = statements.elementAt(i);
+          if (isMountedCheck(s)) {
+            return true;
+          }
+        }
+      }
     }
     return false;
   }

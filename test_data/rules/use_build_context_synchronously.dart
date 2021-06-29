@@ -241,6 +241,16 @@ class _MyState extends State<MyWidget> {
     f(context); // OK
   }
 
+  void methodWithBuildContextParameter2i(BuildContext context) async {
+    try {
+      await Future<void>.delayed(Duration());
+    } finally {
+      if (!mounted) return;
+    }
+
+    f(context); // OK
+  }
+
   // Mounted checks are deliberately naive.
   void methodWithBuildContextParameter3(BuildContext context) async {
     Navigator.of(context).pushNamed('routeName'); // OK
