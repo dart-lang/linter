@@ -7,6 +7,25 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+void awaitInSwitchCase(BuildContext context) async {
+  await Future<void>.delayed(Duration());
+  switch (1) {
+    case 1:
+      await Navigator.of(context).pushNamed('routeName'); // LINT
+      break;
+  }
+}
+
+void awaitInSwitchCase_mountedCheckBeforeSwitch(BuildContext context) async {
+  await Future<void>.delayed(Duration());
+  if (!mounted) return;
+  switch (1) {
+    case 1:
+      await Navigator.of(context).pushNamed('routeName'); // OK
+      break;
+  }
+}
+
 bool get mounted => true;
 
 BuildContext? get contextOrNull => null;

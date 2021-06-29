@@ -144,8 +144,10 @@ class _Visitor extends SimpleAstVisitor {
           return;
         }
       } else if (parent is SwitchCase) {
-        checkStatements(child, parent.statements);
-        return;
+        var keepChecking = checkStatements(child, parent.statements);
+        if (!keepChecking) {
+          return;
+        }
       } else if (parent is IfStatement) {
         // if (mounted) { ... do ... }
         if (isMountedCheck(parent, positiveCheck: true)) {
