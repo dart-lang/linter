@@ -1,15 +1,17 @@
-# master
+# 1.7.0
 
-- update `use_setters_to_change_properties` to only highlight a method name,
-  not the entire body and doc comment.
-- update `unnecessary_getters_setters` to allow otherwise "unnecessary" getters
-  and setters with annotations.
-- update `missing_whitespace_between_adjacent_strings` to allow String
-  interpolations at the beginning and end of String literals.
-- update `unnecessary_getters_setters` to allow for setters with non-basic
-  assignments (for example, `??=` or `+=`).
-- update `unnecessary_overrides` to allow overrides with a doc comment only if
-  they are abstract.
+- improved try-block and switch statement flow analysis for 
+  `use_build_context_synchronously`
+- updated `use_setters_to_change_properties` to only highlight a method name,
+  not the entire body and doc comment
+- updated `unnecessary_getters_setters` to allow otherwise "unnecessary" getters
+  and setters with annotations
+- updated `missing_whitespace_between_adjacent_strings` to allow String
+  interpolations at the beginning and end of String literals
+- updated `unnecessary_getters_setters` to allow for setters with non-basic
+  assignments (for example, `??=` or `+=`)
+- updated `unnecessary_overrides` to allow overrides with a doc comment only if
+  they are abstract
 
 # 1.6.1
 
