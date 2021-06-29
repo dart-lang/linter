@@ -25,6 +25,9 @@ f(o) {
     '${1 == 2 ? ', world' : ''}');
   f('${1 == 2 ? 'Hello ' : ''}' // OK
     'world');
+
+  f('${1 + 1}(' // OK
+    'long line)');
 }
 
 void matches(String value) {}
