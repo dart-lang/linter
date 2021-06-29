@@ -122,7 +122,7 @@ class _Visitor extends SimpleAstVisitor {
     bool checkStatements(AstNode child, NodeList<Statement> statements) {
       var index = statements.indexOf(child as Statement);
       for (var i = index - 1; i >= 0; i--) {
-        var s = statements.elementAt(i);
+        var s = statements[i];
         if (isMountedCheck(s)) {
           return false;
         } else if (isAsync(s)) {
@@ -208,7 +208,7 @@ class _Visitor extends SimpleAstVisitor {
       var statements = statement.finallyBlock?.statements;
       if (statements != null) {
         for (var i = statements.length - 1; i >= 0; i--) {
-          var s = statements.elementAt(i);
+          var s = statements[i];
           if (isMountedCheck(s)) {
             return true;
           }
