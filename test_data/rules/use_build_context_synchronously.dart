@@ -212,6 +212,35 @@ class _MyState extends State<MyWidget> {
     unawaited(methodWithBuildContextParameter2e(context)); //OK
   }
 
+  void methodWithBuildContextParameter2g(BuildContext context) async {
+    await Future<void>.delayed(Duration());
+    switch (1) {
+      case 1:
+        if (!mounted) return;
+        await Navigator.of(context).pushNamed('routeName'); // OK
+        break;
+    }
+  }
+
+  void methodWithBuildContextParameter2h(BuildContext context) async {
+    try {
+      await Future<void>.delayed(Duration());
+    } finally {
+      // ...
+    }
+
+    try {
+      // ...
+    } on Exception catch (e) {
+      if (!mounted) return;
+      f(context); // OK
+      return;
+    }
+
+    if (!mounted) return;
+    f(context); // OK
+  }
+
   // Mounted checks are deliberately naive.
   void methodWithBuildContextParameter3(BuildContext context) async {
     Navigator.of(context).pushNamed('routeName'); // OK
@@ -277,8 +306,7 @@ void topLevel5(BuildContext context) async {
       if (!mounted) {
         break;
       }
-      //TODO: should be OK.
-      Navigator.of(context).pushNamed('routeName2'); // LINT
+      Navigator.of(context).pushNamed('routeName2'); // OK
       break;
     default: //nothing.
   }
