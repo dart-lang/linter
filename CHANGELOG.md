@@ -1,5 +1,6 @@
 # 1.7.0
 
+- fixed case-sensitive false positive in `use_full_hex_values_for_flutter_colors`
 - improved try-block and switch statement flow analysis for 
   `use_build_context_synchronously`
 - updated `use_setters_to_change_properties` to only highlight a method name,
@@ -10,8 +11,6 @@
   interpolations at the beginning and end of String literals
 - updated `unnecessary_getters_setters` to allow for setters with non-basic
   assignments (for example, `??=` or `+=`)
-- updated `unnecessary_overrides` to allow overrides with a doc comment only if
-  they are abstract
 
 # 1.6.1
 
