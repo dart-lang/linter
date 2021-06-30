@@ -28,6 +28,11 @@ f(o) {
 
   f('${1 + 1}(' // OK
     'long line)');
+
+  f('a $o' // OK
+    'b');
+  f('a' // OK
+    '$o b');
 }
 
 void matches(String value) {}

@@ -95,44 +95,34 @@ class _Visitor extends RecursiveAstVisitor<void> {
 }
 
 extension on StringLiteral {
-  /// Returns whether this ends with whitespace, where any
+  /// Returns whether this ends with whitespace, where an initial
   /// [InterpolationExpression] counts as whitespace.
   bool get endsWithWhitespace {
-    if (this is SimpleStringLiteral) {
-      return (this as SimpleStringLiteral).value.endsWithWhitespace;
-    } else if (this is StringInterpolation) {
-      var last = (this as StringInterpolation).elements.last;
-      if (last is InterpolationExpression) {
-        // Treat an interpolation expression as containing whitespace so as to
-        // avoid over-reporting strings that end with an interpolation
-        // expression.
-        return true;
-      } else if (last is InterpolationString) {
-        return last.value.endsWithWhitespace;
-      }
+    var self = this;
+    if (self is SimpleStringLiteral) {
+      return self.value.endsWithWhitespace;
+    } else if (self is StringInterpolation) {
+      var last = self.elements.last as InterpolationString;
+      return last.value.isEmpty || last.value.endsWithWhitespace;
     }
     throw ArgumentError(
-        'Expected SimpleStringLiteral or StringInterpolation, got $runtimeType');
+        'Expected SimpleStringLiteral or StringInterpolation, but got '
+        '$runtimeType');
   }
 
-  /// Returns whether this starts with whitespace, where any
+  /// Returns whether this starts with whitespace, where an initial
   /// [InterpolationExpression] counts as whitespace.
   bool get startsWithWhitespace {
-    if (this is SimpleStringLiteral) {
-      return (this as SimpleStringLiteral).value.startsWithWhitespace;
-    } else if (this is StringInterpolation) {
-      var first = (this as StringInterpolation).elements.first;
-      if (first is InterpolationExpression) {
-        // Treat an interpolation expression as containing whitespace so as to
-        // avoid over-reporting strings that start with an interpolation
-        // expression.
-        return true;
-      } else if (first is InterpolationString) {
-        return first.value.endsWithWhitespace;
-      }
+    var self = this;
+    if (self is SimpleStringLiteral) {
+      return self.value.startsWithWhitespace;
+    } else if (self is StringInterpolation) {
+      var first = self.elements.first as InterpolationString;
+      return first.value.isEmpty || first.value.endsWithWhitespace;
     }
     throw ArgumentError(
-        'Expected SimpleStringLiteral or StringInterpolation, got $runtimeType');
+        'Expected SimpleStringLiteral or StringInterpolation, but got '
+        '$runtimeType');
   }
 
   /// Returns whether this contains whitespace, where any
