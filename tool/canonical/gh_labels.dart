@@ -48,25 +48,6 @@ Future<void> main(List<String> args) async {
       }
     }
   }
-
-  //   for (var entry in machine) {
-  //     if (entry['name'] == rule) {
-  //       print('https://dart-lang.github.io/linter/lints/$rule.html');
-  //       print('');
-  //       print('contained in: ${entry["sets"]}');
-  //       var issues = await getLinterIssues(auth: auth);
-  //       for (var issue in issues) {
-  //         var title = issue.title;
-  //         if (title.contains(rule)) {
-  //           print('issue: ${issue.title}');
-  //           print('labels: ${issue.labels.map((e) => e.name).join(", ")}');
-  //           print(issue.htmlUrl);
-  //           print('');
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 void printUsage(ArgParser parser, [String? error]) {
