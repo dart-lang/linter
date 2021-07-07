@@ -126,7 +126,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void visitNamedType(NamedType namedType) {
     var type = namedType.type;
-    if (type is InterfaceType) {
+    if (type is InterfaceType && type.aliasElement == null) {
       if (type.element.typeParameters.isNotEmpty &&
           namedType.typeArguments == null &&
           namedType.parent is! IsExpression &&
