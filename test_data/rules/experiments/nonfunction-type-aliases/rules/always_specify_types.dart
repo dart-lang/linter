@@ -11,6 +11,9 @@ typedef StringList = List<JsonMap>; //OK
 typedef RawList = List; //LINT
 typedef StringMap<V> = Map<String, V>; //OK
 
+StringMap<String> sm = StringMap<String>(); //OK
+StringMap rm = StringMap(); //LINT
+
 Map<String, String> map = {}; //LINT
 List<String> strings = []; //LINT
 Set<String> set = {}; //LINT
