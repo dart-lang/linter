@@ -4,6 +4,8 @@
 
 // test w/ `dart test -N avoid_function_literals_in_foreach_calls`
 
+void f(dynamic iter) => iter?.forEach(...); // OK
+
 class Person {
   Iterable<Person> children;
 }
