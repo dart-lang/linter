@@ -1,3 +1,7 @@
+# master
+
+- New lint: `enable_null_safety`
+
 # 1.8.0
 
 - performance improvements for `prefer_is_not_empty`
