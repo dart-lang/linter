@@ -62,8 +62,7 @@ bool isValidLibraryPrefix(String libraryPrefix) =>
 
 /// Returns true if this [id] is a valid package name.
 bool isValidPackageName(String id) =>
-    _lowerCaseUnderScoreWithLeadingUnderscores.hasMatch(id) &&
-    isValidDartIdentifier(id);
+    _lowerCaseUnderScoreWithLeadingUnderscores.hasMatch(id) && isIdentifier(id);
 
 class CamelCaseString {
   static final _camelCaseMatcher = RegExp(r'[A-Z][a-z]*');
