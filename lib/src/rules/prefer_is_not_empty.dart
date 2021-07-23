@@ -64,9 +64,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    // Should be a property access or prefixed identifier.
     var expression = node.operand.unParenthesized;
 
+    // Should be a property access or prefixed identifier.
     SimpleIdentifier? isEmptyIdentifier;
     if (expression is PropertyAccess) {
       isEmptyIdentifier = expression.propertyName;
