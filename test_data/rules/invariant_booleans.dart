@@ -478,3 +478,14 @@ void bug811_2() {
 
   if (bar < foo) {} // LINT
 }
+
+void bug2696(bool a, bool b) {
+  var c = a;
+  if (c) {
+    return;
+  }
+  c = b;
+  if (c) { // OK
+    return;
+  }
+}

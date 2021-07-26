@@ -434,7 +434,7 @@ class _UndefinedExpression extends _ExpressionBox {
   _UndefinedExpression._internal(this.element);
 
   @override
-  bool haveToStop(Iterable<Element?> elements) => elements.contains(element);
+  bool haveToStop(Iterable<Element?> elements) => true;
 
   @override
   String toString() => '$element got undefined';
