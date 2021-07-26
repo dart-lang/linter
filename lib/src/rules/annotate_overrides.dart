@@ -7,7 +7,6 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
-import '../ast.dart';
 
 const _desc = r'Annotate overridden members.';
 
@@ -100,7 +99,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.isStatic) return;
 
     for (var field in node.fields.variables) {
-      if (isPrivate(field.name)) continue;
 
       check(field.declaredElement, field);
     }
@@ -109,7 +107,6 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
     if (node.isStatic) return;
-    if (isPrivate(node.name)) return;
 
     check(node.declaredElement, node.name);
   }
