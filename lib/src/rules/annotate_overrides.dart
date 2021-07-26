@@ -99,7 +99,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.isStatic) return;
 
     for (var field in node.fields.variables) {
-
       check(field.declaredElement, field);
     }
   }
