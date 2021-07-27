@@ -80,17 +80,6 @@ class _Visitor extends SimpleAstVisitor {
 
   _Visitor(this.rule, this.typeSystem, this.typeType);
 
-  @override
-  void visitMethodInvocation(MethodInvocation node) {
-    thisType = getThisType(node);
-
-    visitArgumentList(node.argumentList);
-
-    var staticType = node.realTarget?.staticType;
-    var targetType = staticType is InterfaceType ? staticType : thisType;
-    _reportIfToStringOnCoreTypeClass(targetType, node.methodName);
-  }
-
   DartType? getThisType(MethodInvocation node) {
     AstNode? parent = node;
     while (parent != null) {
@@ -111,6 +100,36 @@ class _Visitor extends SimpleAstVisitor {
     node.arguments.forEach(_validateArgument);
   }
 
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    thisType = getThisType(node);
+
+    visitArgumentList(node.argumentList);
+
+    var staticType = node.realTarget?.staticType;
+    var targetType = staticType is InterfaceType ? staticType : thisType;
+    _reportIfToStringOnCoreTypeClass(targetType, node.methodName);
+  }
+
+  bool _isSimpleIdDeclByCoreObj(SimpleIdentifier simpleIdentifier) {
+    var encloser = simpleIdentifier.staticElement?.enclosingElement;
+    return encloser is ClassElement && encloser.isDartCoreObject;
+  }
+
+  bool _isToStringOnCoreTypeClass(
+          DartType? targetType, SimpleIdentifier methodIdentifier) =>
+      targetType != null &&
+      methodIdentifier.name == 'toString' &&
+      _isSimpleIdDeclByCoreObj(methodIdentifier) &&
+      typeSystem.isSubtypeOf(targetType, typeType);
+
+  void _reportIfToStringOnCoreTypeClass(
+      DartType? targetType, SimpleIdentifier methodIdentifier) {
+    if (_isToStringOnCoreTypeClass(targetType, methodIdentifier)) {
+      rule.reportLint(methodIdentifier);
+    }
+  }
+
   void _validateArgument(Expression expression) {
     if (expression is PropertyAccess) {
       var expressionType = expression.realTarget.staticType;
@@ -125,24 +144,5 @@ class _Visitor extends SimpleAstVisitor {
     } else if (expression is SimpleIdentifier) {
       _reportIfToStringOnCoreTypeClass(thisType, expression);
     }
-  }
-
-  void _reportIfToStringOnCoreTypeClass(
-      DartType? targetType, SimpleIdentifier methodIdentifier) {
-    if (_isToStringOnCoreTypeClass(targetType, methodIdentifier)) {
-      rule.reportLint(methodIdentifier);
-    }
-  }
-
-  bool _isToStringOnCoreTypeClass(
-      DartType? targetType, SimpleIdentifier methodIdentifier) =>
-      targetType != null &&
-      methodIdentifier.name == 'toString' &&
-      _isSimpleIdDeclByCoreObj(methodIdentifier) &&
-      typeSystem.isSubtypeOf(targetType, typeType);
-
-  bool _isSimpleIdDeclByCoreObj(SimpleIdentifier simpleIdentifier) {
-    var encloser = simpleIdentifier.staticElement?.enclosingElement;
-    return encloser is ClassElement && encloser.isDartCoreObject;
   }
 }
