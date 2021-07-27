@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>leading_newlines_in_multiline_strings</title>
+      <title>eol_at_end_of_file</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>leading_newlines_in_multiline_strings</h1>
+            <h1>eol_at_end_of_file</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Dart SDK: >= 2.8.0-dev.16.0 • <small>(Linter v0.1.113)</small></p>
+               <p>Dart SDK: <strong>unreleased</strong> • <small>(Linter vnull)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,22 +29,15 @@
          </header>
          <section>
 
-            <p>Multiline strings are easier to read when they start with a newline (a newline
-starting a multiline string is ignored).</p>
+            <p><strong>DO</strong> put a single newline at the end of non-empty files.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">var s1 = '''{
-  "a": 1,
-  "b": 2
-}''';
+<pre><code class="language-dart">a {
+}
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">var s1 = '''
-{
-  "a": 1,
-  "b": 2
-}''';
-
-var s2 = '''This one-liner multiline string is ok. It usually allows to escape both ' and " in the string.''';
+<pre><code class="language-dart">b {
+}
+    &lt;-- newline
 </code></pre>
 
             
