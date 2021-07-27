@@ -478,3 +478,17 @@ void bug811_2() {
 
   if (bar < foo) {} // LINT
 }
+
+void bug2478() {
+  var i = 0;
+  var j = 0;
+
+  if (i < j) {
+    i++;
+  } else if (j < i) { // OK
+    j++;
+  } else {
+    i++;
+    j++;
+  }
+}

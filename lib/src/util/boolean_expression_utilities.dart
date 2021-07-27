@@ -31,6 +31,15 @@ class BooleanExpressionUtilities {
     TokenType.LT_EQ: TokenType.GT,
   });
 
+  static HashMap<TokenType, TokenType> INVERSIONS = HashMap.from(const {
+    TokenType.EQ_EQ: TokenType.EQ_EQ,
+    TokenType.BANG_EQ: TokenType.BANG_EQ,
+    TokenType.GT: TokenType.LT,
+    TokenType.GT_EQ: TokenType.LT_EQ,
+    TokenType.LT: TokenType.GT,
+    TokenType.LT_EQ: TokenType.GT_EQ,
+  });
+
   static HashSet<TokenType> TRICHOTOMY_OPERATORS =
       HashSet.from(const [TokenType.EQ_EQ, TokenType.LT, TokenType.GT]);
 

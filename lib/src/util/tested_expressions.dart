@@ -56,14 +56,13 @@ bool _isNegationOrComparison(
   return isNegationOrComparison;
 }
 
-bool _sameOperands(String eLeftOperand, String bcLeftOperand,
-    String eRightOperand, String bcRightOperand) {
-  var sameOperandsSameOrder =
-      eLeftOperand == bcLeftOperand && eRightOperand == bcRightOperand;
-  var sameOperandsInverted =
-      eRightOperand == bcLeftOperand && eLeftOperand == bcRightOperand;
-  return sameOperandsSameOrder || sameOperandsInverted;
-}
+bool _sameOperandsSameOrder(String eLeftOperand, String bcLeftOperand,
+        String eRightOperand, String bcRightOperand) =>
+    eLeftOperand == bcLeftOperand && eRightOperand == bcRightOperand;
+
+bool _sameOperandsInverted(String eLeftOperand, String bcLeftOperand,
+        String eRightOperand, String bcRightOperand) =>
+    eRightOperand == bcLeftOperand && eLeftOperand == bcRightOperand;
 
 typedef _RecurseCallback = void Function(Expression expression);
 
@@ -166,20 +165,26 @@ class TestedExpressions {
 
         var bcLeftOperand = otherExpression.leftOperand.toString();
         var bcRightOperand = otherExpression.rightOperand.toString();
-        var sameOperands = _sameOperands(
-            eLeftOperand, bcLeftOperand, eRightOperand, bcRightOperand);
+        TokenType cOperatorType;
+        if (_sameOperandsSameOrder(
+            eLeftOperand, bcLeftOperand, eRightOperand, bcRightOperand)) {
+          cOperatorType = otherExpression.operator.type;
+        } else if (_sameOperandsInverted(
+            eLeftOperand, bcLeftOperand, eRightOperand, bcRightOperand)) {
+          cOperatorType = BooleanExpressionUtilities
+              .INVERSIONS[otherExpression.operator.type]!;
+        } else {
+          return;
+        }
 
-        var cOperatorType = negations.contains(c)
-            ? BooleanExpressionUtilities
-                .NEGATIONS[otherExpression.operator.type]
-            : otherExpression.operator.type;
-        if (cOperatorType != null) {
-          var isNegationOrComparison =
-              _isNegationOrComparison(cOperatorType, eOperatorType, tokenType);
-          if (isNegationOrComparison && sameOperands) {
-            contradictions
-                .add(ContradictoryComparisons(otherExpression, expression));
-          }
+        if (negations.contains(c)) {
+          cOperatorType = BooleanExpressionUtilities.NEGATIONS[cOperatorType]!;
+        }
+        var isNegationOrComparison =
+            _isNegationOrComparison(cOperatorType, eOperatorType, tokenType);
+        if (isNegationOrComparison) {
+          contradictions
+              .add(ContradictoryComparisons(otherExpression, expression));
         }
       });
     }
