@@ -64,16 +64,7 @@ class AvoidTypeToString extends LintRule implements NodeLintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor =
         _Visitor(this, context.typeSystem, context.typeProvider.typeType);
-    // Gathering meta information at these nodes.
-    // Nodes visited in DFS, so this will be called before
-    // each visitMethodInvocation.
-    registry.addClassDeclaration(this, visitor);
-    registry.addMixinDeclaration(this, visitor);
-    registry.addExtensionDeclaration(this, visitor);
-
     registry.addArgumentList(this, visitor);
-
-    // Actually checking things at these nodes.
     // Also delegates to visitArgumentList.
     registry.addMethodInvocation(this, visitor);
   }
@@ -85,34 +76,34 @@ class _Visitor extends SimpleAstVisitor {
   final InterfaceType typeType;
 
   // Null if there is no logical `this` in the given context.
-  InterfaceType? thisType;
+  DartType? thisType;
 
   _Visitor(this.rule, this.typeSystem, this.typeType);
 
   @override
-  void visitClassDeclaration(ClassDeclaration node) {
-    thisType = node.declaredElement?.thisType;
-  }
-
-  @override
-  void visitMixinDeclaration(MixinDeclaration node) {
-    thisType = node.declaredElement?.thisType;
-  }
-
-  @override
-  void visitExtensionDeclaration(ExtensionDeclaration node) {
-    var extendedType = node.declaredElement?.extendedType;
-    // Might not be InterfaceType. Ex: visiting an extension on a dynamic type.
-    thisType = extendedType is InterfaceType ? extendedType : null;
-  }
-
-  @override
   void visitMethodInvocation(MethodInvocation node) {
+    thisType = getThisType(node);
+
     visitArgumentList(node.argumentList);
 
     var staticType = node.realTarget?.staticType;
     var targetType = staticType is InterfaceType ? staticType : thisType;
     _reportIfToStringOnCoreTypeClass(targetType, node.methodName);
+  }
+
+  DartType? getThisType(MethodInvocation node) {
+    AstNode? parent = node;
+    while (parent != null) {
+      if (parent is ClassOrMixinDeclaration) {
+        return parent.declaredElement?.thisType;
+      }
+      if (parent is ExtensionDeclaration) {
+        return parent.declaredElement?.extendedType;
+      }
+      parent = parent.parent;
+    }
+
+    return null;
   }
 
   @override
@@ -137,14 +128,14 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   void _reportIfToStringOnCoreTypeClass(
-      InterfaceType? targetType, SimpleIdentifier methodIdentifier) {
+      DartType? targetType, SimpleIdentifier methodIdentifier) {
     if (_isToStringOnCoreTypeClass(targetType, methodIdentifier)) {
       rule.reportLint(methodIdentifier);
     }
   }
 
   bool _isToStringOnCoreTypeClass(
-          InterfaceType? targetType, SimpleIdentifier methodIdentifier) =>
+      DartType? targetType, SimpleIdentifier methodIdentifier) =>
       targetType != null &&
       methodIdentifier.name == 'toString' &&
       _isSimpleIdDeclByCoreObj(methodIdentifier) &&
