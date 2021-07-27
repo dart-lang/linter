@@ -223,10 +223,19 @@ void testRule(String ruleName, File file,
     var expected = <AnnotationMatcher>[];
 
     var lineNumber = 1;
+    var inComment = false;
     for (var line in file.readAsLinesSync()) {
-      var annotation = extractAnnotation(lineNumber, line);
-      if (annotation != null) {
-        expected.add(AnnotationMatcher(annotation));
+      if (!inComment && line.contains('/*') && !line.contains('/**')) {
+        inComment = true;
+      }
+      if (inComment && line.contains('*/')) {
+        inComment = false;
+      }
+      if (!inComment) {
+        var annotation = extractAnnotation(lineNumber, line);
+        if (annotation != null) {
+          expected.add(AnnotationMatcher(annotation));
+        }
       }
       ++lineNumber;
     }
