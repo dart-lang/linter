@@ -125,7 +125,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
     if (node.isStatic) return;
