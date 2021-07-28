@@ -60,6 +60,8 @@ class AnnotateOverrides extends LintRule implements NodeLintRule {
 
     // Cache parent element.
     registry.addClassDeclaration(this, visitor);
+    registry.addExtensionDeclaration(this, visitor);
+    registry.addMixinDeclaration(this, visitor);
 
     // Do the work.
     registry.addFieldDeclaration(this, visitor);
@@ -89,6 +91,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (classElement == null) {
       return null;
     }
+
     var name = member.name;
     if (name == null) {
       return null;
@@ -108,6 +111,12 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitExtensionDeclaration(ExtensionDeclaration node) {
+    // Clear the (possibly) cached element.
+    classElement = null;
+  }
+
+  @override
   void visitFieldDeclaration(FieldDeclaration node) {
     if (node.isStatic) return;
 
@@ -116,10 +125,17 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
+
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
     if (node.isStatic) return;
 
     check(node.declaredElement, node.name);
+  }
+
+  @override
+  void visitMixinDeclaration(MixinDeclaration node) {
+    // Clear the (possibly) cached element.
+    classElement = null;
   }
 }
