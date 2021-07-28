@@ -60,13 +60,22 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFormalParameterList(FormalParameterList node) {
     if (node.parent is GenericFunctionType) return;
+    _visitParameters(node, node.parameters);
+  }
 
-    for (var parameter in node.parameters) {
+  void _visitParameters(
+      FormalParameterList node, NodeList<FormalParameter> parameters) {
+    for (var parameter in parameters) {
       var declaredElement = parameter.declaredElement;
       var identifier = parameter.identifier;
+      if (parameter is SimpleFormalParameter) {
+        var type = parameter.type;
+        if (type is GenericFunctionType) {
+          _visitParameters(node, type.parameters.parameters);
+        }
+      }
       if (declaredElement != null &&
           declaredElement is! FieldFormalParameterElement &&
-          declaredElement.hasImplicitType &&
           identifier != null &&
           _isTypeName(node, identifier)) {
         rule.reportLint(identifier);
@@ -75,6 +84,19 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _isTypeName(AstNode scope, SimpleIdentifier node) {
+    var parent = scope.parent;
+    if (parent is FunctionExpression) {
+      if (_isTypeParameter(parent.typeParameters, node)) {
+        return true;
+      }
+    } else if (parent is ClassMember) {
+      parent = parent.parent;
+      if (parent is ClassDeclaration) {
+        if (_isTypeParameter(parent.typeParameters, node)) {
+          return true;
+        }
+      }
+    }
     var result = context.resolveNameInScope(node.name, false, scope);
     if (result.isRequestedName) {
       var element = result.element;
@@ -82,4 +104,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
     return false;
   }
+
+  bool _isTypeParameter(
+          TypeParameterList? typeParameters, SimpleIdentifier node) =>
+      typeParameters?.typeParameters
+          .any((element) => element.name.name == node.name) ??
+      false;
 }
