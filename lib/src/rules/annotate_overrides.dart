@@ -57,6 +57,11 @@ class AnnotateOverrides extends LintRule implements NodeLintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this, context);
+
+    // Cache parent element.
+    registry.addClassDeclaration(this, visitor);
+
+    // Do the work.
     registry.addFieldDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
   }
@@ -65,6 +70,8 @@ class AnnotateOverrides extends LintRule implements NodeLintRule {
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   final LinterContext context;
+
+  ClassElement? classElement;
 
   _Visitor(this.rule, this.context);
 
@@ -78,7 +85,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   Element? getOverriddenMember(Element member) {
-    var classElement = member.thisOrAncestorOfType<ClassElement>();
+    var classElement = this.classElement;
     if (classElement == null) {
       return null;
     }
@@ -92,6 +99,12 @@ class _Visitor extends SimpleAstVisitor<void> {
       classElement.thisType,
       Name(libraryUri, name),
     );
+  }
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    // Cache class element to speed up access to overridden member information.
+    classElement = node.declaredElement;
   }
 
   @override
