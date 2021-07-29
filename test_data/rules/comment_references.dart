@@ -28,7 +28,6 @@ class A {
 /// [
 /// ^--- Should not crash (#819).
 class B {
-
 }
 
 /// A link to [Sha256][rfc] hash function.
@@ -37,22 +36,16 @@ class B {
 class C {
 }
 
-/// A link to [rfc] hash function.
-///
-/// [rfc]: http://tools.ietf.org/html/rfc6234
+/// A link to [Sha256](http://tools.ietf.org/html/rfc6234) hash function.
 class D {
 }
 
-/// A link to [Sha256](http://tools.ietf.org/html/rfc6234) hash function.
+/// A link to [Sha256](http://tools.ietf.org/html/rfc6234 "Some") hash function.
 class E {
-}
-
-/// A link to [something][].
-class F {
 }
 
 /// A link to [rfc][] hash function.
 ///
 /// [rfc]: http://tools.ietf.org/html/rfc6234
-class G {
+class F {
 }
