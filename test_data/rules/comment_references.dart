@@ -37,6 +37,22 @@ class B {
 class C {
 }
 
-/// A link to [Sha256](http://tools.ietf.org/html/rfc6234) hash function.
+/// A link to [rfc] hash function.
+///
+/// [rfc]: http://tools.ietf.org/html/rfc6234
 class D {
+}
+
+/// A link to [Sha256](http://tools.ietf.org/html/rfc6234) hash function.
+class E {
+}
+
+/// A link to [something][].
+class F {
+}
+
+/// A link to [rfc][] hash function.
+///
+/// [rfc]: http://tools.ietf.org/html/rfc6234
+class G {
 }
