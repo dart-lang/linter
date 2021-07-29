@@ -203,15 +203,16 @@ class DartTypeUtilities {
     bool isAnyInterface(InterfaceType i) =>
         definitions.any((d) => isInterface(i, d.name, d.library));
 
-    if (type is InterfaceType) {
-      var element = type.element;
-      return isAnyInterface(type) ||
+    var realType = type;
+    if (type is TypeParameterType) {
+      realType = type.typeForInterfaceCheck;
+    }
+    if (realType is InterfaceType) {
+      var element = realType.element;
+      return isAnyInterface(realType) ||
           !element.isSynthetic && element.allSupertypes.any(isAnyInterface);
     } else {
-      var typeForInterfaceCheck = type.typeForInterfaceCheck;
-      return typeForInterfaceCheck.isDynamic ||
-          DartTypeUtilities.implementsAnyInterface(
-              typeForInterfaceCheck, definitions);
+      return false;
     }
   }
 
