@@ -65,11 +65,15 @@ class CommentReferences extends LintRule implements NodeLintRule {
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+  final links = <String>[];
 
   _Visitor(this.rule);
 
   @override
   void visitComment(Comment node) {
+    // clear links of previous comments
+    links.clear();
+
     // Check for keywords that are not treated as references by the parser
     // but should be flagged by the linter.
     // Note that no special care is taken to handle embedded code blocks.
@@ -86,6 +90,10 @@ class _Visitor extends SimpleAstVisitor<void> {
               rule.reporter.reportErrorForOffset(
                   rule.lintCode, nameOffset, reference.length);
             }
+            if (rightIndex + 1 < comment.length &&
+                comment[rightIndex + 1] == ':') {
+              links.add(reference);
+            }
           }
           leftIndex = rightIndex < 0 ? -1 : comment.indexOf('[', rightIndex);
         }
@@ -96,7 +104,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitCommentReference(CommentReference node) {
     var identifier = node.identifier;
-    if (!identifier.isSynthetic && identifier.staticElement == null) {
+    if (!identifier.isSynthetic &&
+        identifier.staticElement == null &&
+        !links.contains(identifier.name)) {
       rule.reportLint(identifier);
     }
   }

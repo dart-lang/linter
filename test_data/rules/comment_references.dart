@@ -30,3 +30,13 @@ class A {
 class B {
 
 }
+
+/// A link to [Sha256][rfc] hash function.
+///
+/// [rfc]: http://tools.ietf.org/html/rfc6234
+class C {
+}
+
+/// A link to [Sha256](http://tools.ietf.org/html/rfc6234) hash function.
+class D {
+}
