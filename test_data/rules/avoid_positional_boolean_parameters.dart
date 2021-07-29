@@ -99,3 +99,7 @@ extension Ext on E {
 extension on E {
   void badBadBad([bool value]) {} // LINT
 }
+
+typedef J = Function({bool value}); // OK
+
+typedef K = Function(bool value); // LINT

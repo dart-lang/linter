@@ -54,6 +54,7 @@ class AvoidPositionalBooleanParameters extends LintRule
     registry.addConstructorDeclaration(this, visitor);
     registry.addFunctionDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
+    registry.addGenericFunctionType(this, visitor);
   }
 }
 
@@ -101,6 +102,15 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (parametersToLint != null && parametersToLint.isNotEmpty) {
         rule.reportLint(parametersToLint.first);
       }
+    }
+  }
+
+  @override
+  void visitGenericFunctionType(GenericFunctionType node) {
+    var parametersToLint =
+        node.parameters.parameters.where(_isFormalParameterToLint);
+    if (parametersToLint.isNotEmpty) {
+      rule.reportLint(parametersToLint.first);
     }
   }
 
