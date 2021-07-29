@@ -40,6 +40,7 @@ class AvoidTypesAsParameterNames extends LintRule implements NodeLintRule {
     var visitor = _Visitor(this, context);
     registry.addFormalParameterList(this, visitor);
     registry.addCatchClause(this, visitor);
+    registry.addGenericFunctionType(this, visitor);
   }
 }
 
@@ -60,20 +61,10 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFormalParameterList(FormalParameterList node) {
     if (node.parent is GenericFunctionType) return;
-    _visitParameters(node, node.parameters);
-  }
 
-  void _visitParameters(
-      FormalParameterList node, NodeList<FormalParameter> parameters) {
-    for (var parameter in parameters) {
+    for (var parameter in node.parameters) {
       var declaredElement = parameter.declaredElement;
       var identifier = parameter.identifier;
-      if (parameter is SimpleFormalParameter) {
-        var type = parameter.type;
-        if (type is GenericFunctionType) {
-          _visitParameters(node, type.parameters.parameters);
-        }
-      }
       if (declaredElement != null &&
           declaredElement is! FieldFormalParameterElement &&
           identifier != null &&
@@ -83,19 +74,28 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
+  @override
+  void visitGenericFunctionType(GenericFunctionType node) {
+    for (var parameter in node.parameters.parameters) {
+      var identifier = parameter.identifier;
+      if (identifier != null &&
+          (_isTypeParameter(node.typeParameters, identifier) ||
+              _isTypeName(node, identifier))) {
+        rule.reportLint(identifier);
+      }
+    }
+  }
+
   bool _isTypeName(AstNode scope, SimpleIdentifier node) {
     var parent = scope.parent;
-    if (parent is FunctionExpression) {
-      if (_isTypeParameter(parent.typeParameters, node)) {
-        return true;
-      }
-    } else if (parent is ClassMember) {
-      parent = parent.parent;
-      if (parent is ClassDeclaration) {
-        if (_isTypeParameter(parent.typeParameters, node)) {
-          return true;
-        }
-      }
+    if (parent is FunctionExpression &&
+        _isTypeParameter(parent.typeParameters, node)) {
+      return true;
+    }
+    var classDeclaration = parent?.thisOrAncestorOfType<ClassDeclaration>();
+    if (classDeclaration != null &&
+        _isTypeParameter(classDeclaration.typeParameters, node)) {
+      return true;
     }
     var result = context.resolveNameInScope(node.name, false, scope);
     if (result.isRequestedName) {

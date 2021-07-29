@@ -49,7 +49,9 @@ class FieldFormalParameter {
   FieldFormalParameter(this.num); // OK
 }
 
-void g<X>(int X) {} // LINT
+void m11<X>(int X) {} // LINT
+
+void m12(int Function<T>(String T) g) {} // LINT
 
 class C<X> {
   C.name();
