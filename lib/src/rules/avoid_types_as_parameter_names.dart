@@ -40,7 +40,6 @@ class AvoidTypesAsParameterNames extends LintRule implements NodeLintRule {
     var visitor = _Visitor(this, context);
     registry.addFormalParameterList(this, visitor);
     registry.addCatchClause(this, visitor);
-    registry.addGenericFunctionType(this, visitor);
   }
 }
 
@@ -60,8 +59,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFormalParameterList(FormalParameterList node) {
-    if (node.parent is GenericFunctionType) return;
-
     for (var parameter in node.parameters) {
       var declaredElement = parameter.declaredElement;
       var identifier = parameter.identifier;
@@ -74,19 +71,9 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  @override
-  void visitGenericFunctionType(GenericFunctionType node) {
-    for (var parameter in node.parameters.parameters) {
-      var identifier = parameter.identifier;
-      if (identifier != null &&
-          (_isTypeParameter(node.typeParameters, identifier) ||
-              _isTypeName(node, identifier))) {
-        rule.reportLint(identifier);
-      }
-    }
-  }
-
   bool _isTypeName(AstNode scope, SimpleIdentifier node) {
+    // TODO (asashour): the below sections should be removed once
+    // https://github.com/dart-lang/sdk/issues/46753 is fixed
     var parent = scope.parent;
     if (parent is FunctionExpression &&
         _isTypeParameter(parent.typeParameters, node)) {
@@ -95,6 +82,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     var classDeclaration = parent?.thisOrAncestorOfType<ClassDeclaration>();
     if (classDeclaration != null &&
         _isTypeParameter(classDeclaration.typeParameters, node)) {
+      return true;
+    }
+    if (parent is GenericFunctionType &&
+        _isTypeParameter(parent.typeParameters, node)) {
       return true;
     }
     var result = context.resolveNameInScope(node.name, false, scope);
