@@ -11,8 +11,9 @@ main() {
   String string2 = 'hola means' // OK
       ' hello in spanish';
 
-  List<String> list = ['this is' + // LINT
-      ' not allowed'
+  List<String> list = [
+      'this is' + // OK
+      ' allowed!'
   ];
 
   String prefix = 'this is';

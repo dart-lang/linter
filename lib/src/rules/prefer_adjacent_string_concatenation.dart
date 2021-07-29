@@ -53,7 +53,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
-    if (node.operator.type.lexeme == '+' &&
+    if (node.parent is! ListLiteral &&
+        node.operator.type.lexeme == '+' &&
         node.leftOperand is StringLiteral &&
         node.rightOperand is StringLiteral) {
       rule.reportLintForToken(node.operator);
