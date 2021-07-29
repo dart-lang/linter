@@ -208,7 +208,10 @@ class DartTypeUtilities {
       return isAnyInterface(type) ||
           !element.isSynthetic && element.allSupertypes.any(isAnyInterface);
     } else {
-      return false;
+      var typeForInterfaceCheck = type.typeForInterfaceCheck;
+      return typeForInterfaceCheck.isDynamic ||
+          DartTypeUtilities.implementsAnyInterface(
+              typeForInterfaceCheck, definitions);
     }
   }
 
