@@ -20,9 +20,7 @@ class Good {
   }
 
   @override
-  int get hashCode {
-    return someField.hashCode;
-  }
+  int get hashCode => someField.hashCode;
 }
 
 class Bad {
@@ -37,7 +35,18 @@ class Bad {
   }
 
   @override
-  int get hashCode {
-    return someField.hashCode;
+  int get hashCode => someField.hashCode;
+}
+
+class Good2 {
+  bool b = false;
+  @override
+  bool operator ==(Object other) {
+    if (other is! Good2) return false;
+    Good2 otherGood = other as Good2;
+    return this.b == otherGood.b;
   }
+
+  @override
+  int get hashCode => b.hashCode;
 }

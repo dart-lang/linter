@@ -97,6 +97,10 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
+    if (node.expression.staticType == node.staticType) {
+      return;
+    }
+
     var identifier = node.expression as SimpleIdentifier;
     var parameters = declaration?.parameters;
     var parameterName = parameters?.parameterElements.first?.name;
