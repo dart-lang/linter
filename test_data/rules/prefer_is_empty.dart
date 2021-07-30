@@ -57,8 +57,8 @@ bool le = list.length > 0; //LINT
 bool le2 = [].length > 0; //LINT
 bool le3 = ([].length as int) > 0; //LINT
 bool le4 = 0 < list.length; //LINT
-bool le5 = [].length < zero;
-bool le6 = zero < [].length;
+bool le5 = [].length < zero; //LINT
+bool le6 = zero < [].length; //LINT
 bool me = (map.length) == 0; //LINT
 bool ie = iterable.length != 0; //LINT
 bool ce = a()().length == 0; //LINT

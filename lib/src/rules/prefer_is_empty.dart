@@ -81,15 +81,13 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
-    // todo(pq): not evaluating constants deliberately but we *should*.
-    // see: https://github.com/dart-lang/linter/issues/2818
-    var value = getIntValue(node.rightOperand, null);
+    var value = getIntValue(node.rightOperand, context);
     if (value != null) {
       if (_isLengthAccess(node.leftOperand)) {
         _check(node, value, constantOnRight: true);
       }
     } else {
-      value = getIntValue(node.leftOperand, null);
+      value = getIntValue(node.leftOperand, context);
       // ignore: invariant_booleans
       if (value != null) {
         if (_isLengthAccess(node.rightOperand)) {
