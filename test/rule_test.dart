@@ -221,13 +221,20 @@ void testRule(String ruleName, File file,
     registerLintRules(inTestMode: debug);
 
     var expected = <AnnotationMatcher>[];
+    var markedAsFailing = <Annotation>[];
 
     var lineNumber = 1;
     for (var line in file.readAsLinesSync()) {
       var annotation = extractAnnotation(lineNumber, line);
-      if (annotation != null && (!annotation.failing || !annotation.lint)) {
-        expected.add(AnnotationMatcher(annotation));
+      if (annotation != null) {
+        if (annotation.failing) {
+          markedAsFailing.add(annotation);
+        }
+        if (!annotation.failing || !annotation.lint) {
+          expected.add(AnnotationMatcher(annotation));
+        }
       }
+
       ++lineNumber;
     }
 
@@ -253,6 +260,13 @@ void testRule(String ruleName, File file,
       expect(actual, unorderedMatches(expected));
       // ignore: avoid_catches_without_on_clauses
     } catch (_) {
+      for (var annotation in markedAsFailing) {
+        var lintNumber = annotation.lineNumber;
+        var lintTriggered = actual.any((e) => e.lineNumber == lintNumber);
+        if (annotation.lint == lintTriggered) {
+          print('Line $lintNumber is marked as FAILING but already succeeds!');
+        }
+      }
       if (debug) {
         // Dump results for debugging purposes.
 
