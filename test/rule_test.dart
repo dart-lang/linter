@@ -225,7 +225,7 @@ void testRule(String ruleName, File file,
     var lineNumber = 1;
     for (var line in file.readAsLinesSync()) {
       var annotation = extractAnnotation(lineNumber, line);
-      if (annotation != null) {
+      if (annotation != null && (!annotation.failing || !annotation.lint)) {
         expected.add(AnnotationMatcher(annotation));
       }
       ++lineNumber;

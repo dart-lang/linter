@@ -5,22 +5,36 @@
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/line_info.dart';
 
+final lintRE = RegExp(
+    r'(//|#) ?LINT( FAILING)?( \[([\-+]\d+)?(,?(\d+):(\d+))?\])?( (.*))?$');
+final okFailingRE = RegExp(r'(//|#).*FAILING');
+
 Annotation? extractAnnotation(int lineNumber, String line) {
-  var regexp =
-      RegExp(r'(//|#) ?LINT( \[([\-+]\d+)?(,?(\d+):(\d+))?\])?( (.*))?$');
-  var match = regexp.firstMatch(line);
-  if (match == null) return null;
+  var match = lintRE.firstMatch(line);
+  if (match == null) {
+    match = okFailingRE.firstMatch(line);
+    if (match == null) return null;
+
+    // ignore commented out lines
+    var index = match.start;
+    var comment = match[1]!;
+    if (line.indexOf(comment) != index) return null;
+
+    return Annotation.forLint(null, null, null, lint: false, failing: true)
+      ..lineNumber = lineNumber;
+  }
 
   // ignore lints on commented out lines
   var index = match.start;
   var comment = match[1]!;
   if (line.indexOf(comment) != index) return null;
 
-  var relativeLine = match[3].toInt() ?? 0;
-  var column = match[5].toInt();
-  var length = match[6].toInt();
-  var message = match[8].toNullIfBlank();
-  return Annotation.forLint(message, column, length)
+  var failing = match[2] != null;
+  var relativeLine = match[4].toInt() ?? 0;
+  var column = match[6].toInt();
+  var length = match[7].toInt();
+  var message = match[9].toNullIfBlank();
+  return Annotation.forLint(message, column, length, failing: failing)
     ..lineNumber = lineNumber + relativeLine;
 }
 
@@ -32,8 +46,12 @@ class Annotation implements Comparable<Annotation> {
   final ErrorType type;
   int? lineNumber;
 
+  /// `LINT` or failing `OK`
+  final bool lint;
+  final bool failing;
+
   Annotation(this.message, this.type, this.lineNumber,
-      {this.column, this.length});
+      {this.column, this.length, this.lint = true, this.failing = false});
 
   Annotation.forError(AnalysisError error, LineInfo lineInfo)
       : this(error.message, error.errorCode.type,
@@ -41,8 +59,10 @@ class Annotation implements Comparable<Annotation> {
             column: lineInfo.getLocation(error.offset).columnNumber,
             length: error.length);
 
-  Annotation.forLint([String? message, int? column, int? length])
-      : this(message, ErrorType.LINT, null, column: column, length: length);
+  Annotation.forLint(String? message, int? column, int? length,
+      {bool lint = true, bool failing = false})
+      : this(message, ErrorType.LINT, null,
+            column: column, length: length, lint: lint, failing: failing);
 
   @override
   int compareTo(Annotation other) {
