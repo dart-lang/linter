@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
@@ -99,10 +100,18 @@ class AlwaysSpecifyTypes extends LintRule {
     registry.addTypeName(this, visitor);
     registry.addVariableDeclarationList(this, visitor);
   }
+
+  void _reportLintForTokenWithDescription(Token token, String description) {
+    reporter.reportErrorForToken(LintCode(name, description), token);
+  }
+
+  void _reportLintForNodeWithDescription(AstNode node, String description) {
+    reporter.reportErrorForNode(LintCode(name, description), node);
+  }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  final LintRule rule;
+  final AlwaysSpecifyTypes rule;
 
   _Visitor(this.rule);
 
@@ -114,8 +123,16 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitDeclaredIdentifier(DeclaredIdentifier node) {
-    if (node.type == null) {
-      rule.reportLintForToken(node.keyword);
+    var keyword = node.keyword;
+    if (node.type == null && keyword != null) {
+      var element = node.identifier.staticElement;
+      if (element is VariableElement) {
+        var description = keyword.keyword == Keyword.VAR
+            ? "'$keyword' could be '${element.type}'."
+            : "Specify '${element.type}' type.";
+
+        rule._reportLintForTokenWithDescription(keyword, description);
+      }
     }
   }
 
@@ -149,9 +166,16 @@ class _Visitor extends SimpleAstVisitor<void> {
         param.type == null &&
         !isJustUnderscores(identifier.name)) {
       if (param.keyword != null) {
-        rule.reportLintForToken(param.keyword);
-      } else {
-        rule.reportLint(param);
+        var keyword = param.keyword!;
+        var type = param.declaredElement?.type;
+        var description = keyword.type == Keyword.VAR && type != null
+            ? "'${param.keyword}' could be '$type'."
+            : _desc;
+        rule._reportLintForTokenWithDescription(param.keyword!, description);
+      } else if (param.declaredElement != null) {
+        var type = param.declaredElement!.type;
+        rule._reportLintForNodeWithDescription(
+            param, type is DynamicType ? _desc : "Specify '$type' type.");
       }
     }
   }
@@ -163,8 +187,51 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitVariableDeclarationList(VariableDeclarationList list) {
-    if (list.type == null) {
-      rule.reportLintForToken(list.keyword);
+    var keyword = list.keyword;
+    if (list.type == null && keyword != null) {
+      List<String>? types;
+      var parent = list.parent;
+      if (parent is TopLevelVariableDeclaration) {
+        types = _getTypes(parent.variables);
+      } else if (parent is ForPartsWithDeclarations) {
+        types = _getTypes(parent.variables);
+      } else if (parent is FieldDeclaration) {
+        types = _getTypes(parent.fields);
+      } else if (parent is VariableDeclarationStatement) {
+        types = _getTypes(parent.variables);
+      }
+
+      if (types == null) return;
+
+      String? multipleTypesString;
+      if (types.toSet().length > 1) {
+        multipleTypesString =
+            "${types.take(types.length - 1).map((e) => "'$e'").join(", ")} and '${types.last}'";
+      }
+      String description;
+      if (types.isEmpty) {
+        description = _desc;
+      } else if (keyword.type == Keyword.VAR) {
+        description = multipleTypesString == null
+            ? "'${list.keyword}' could be '${types.first}'."
+            : "'${list.keyword}' could be split into $multipleTypesString.";
+      } else {
+        description = multipleTypesString == null
+            ? "Specify '${types.first}' type."
+            : 'Specify $multipleTypesString types.';
+      }
+      rule._reportLintForTokenWithDescription(keyword, description);
     }
+  }
+
+  List<String> _getTypes(VariableDeclarationList list) {
+    var types = <String>[];
+    for (var variable in list.variables) {
+      var type = variable.initializer?.staticType;
+      if (type != null) {
+        types.add(type.getDisplayString(withNullability: false));
+      }
+    }
+    return types;
   }
 }

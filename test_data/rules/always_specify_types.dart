@@ -14,13 +14,14 @@ List list; // LINT
 List<List> lists; //LINT
 List<int> ints; //OK
 
-final x = 1; //LINT [1:5]
+final x = 1; //LINT [1:5] Specify 'int' type.
+final x1 = 1, x2 = '', x3 = 1.2; //LINT [1:5] Specify 'int', 'String' and 'double' types.
 final int xx = 3;
-const y = 2; //LINT
+const y = 2; //LINT Specify 'int' type.
 const int yy = 3;
 
 a(var x) {} //LINT
-b(s) {} //LINT [3:1]
+b(s) {} //LINT [3:1] Specify type annotations.
 c(int x) {}
 d(final x) {} //LINT
 e(final int x) {}
@@ -38,13 +39,15 @@ void test() {
 }
 
 main() {
-  var x = ''; //LINT [3:3]
-  for (var i = 0; i < 10; ++i) {  //LINT [8:3]
+  var x = ''; //LINT [3:3] 'var' could be 'String'.
+  var x1 = '', x2 = 1.2; //LINT [3:3] 'var' could be split into 'String' and 'double'.
+  for (var i = 0; i < 10; ++i) {  //LINT [8:3] 'var' could be 'int'.
     print(i);
   }
   List<String> ls = <String>[];
-  ls.forEach((s) => print(s)); //LINT [15:1]
-  for (var l in ls) { //LINT [8:3]
+  ls.forEach((s) => print(s)); //LINT [15:1] Specify 'String' type.
+  ls.forEach((var s) => print(s)); //LINT [15:3] 'var' could be 'String'.
+  for (var l in ls) { //LINT [8:3] 'var' could be 'String'.
     print(l);
   }
   try {
@@ -77,7 +80,7 @@ var z; //LINT
 
 class Foo {
   static var bar; //LINT
-  static final baz  = 1; //LINT
+  static final baz = 1; //LINT Specify 'int' type.
   static final int bazz = 42;
   var foo; //LINT
   Foo(var bar); //LINT [7:3]
