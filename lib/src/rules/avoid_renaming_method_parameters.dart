@@ -62,10 +62,14 @@ class AvoidRenamingMethodParameters extends LintRule implements NodeLintRule {
     var visitor = _Visitor(this, context);
     registry.addMethodDeclaration(this, visitor);
   }
+
+  void _reportLintForNodeWithDescription(AstNode node, String description) {
+    reporter.reportErrorForNode(LintCode(name, description), node);
+  }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  final LintRule rule;
+  final AvoidRenamingMethodParameters rule;
   final LinterContext context;
 
   _Visitor(this.rule, this.context);
@@ -108,7 +112,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       var paramIdentifier = parameters[i].identifier;
       if (paramIdentifier != null &&
           paramIdentifier.name != parentParameters[i].name) {
-        rule.reportLint(parameters[i].identifier);
+        rule._reportLintForNodeWithDescription(paramIdentifier,
+            "Don't rename parameter '${parentParameters[i].name}' of the overridden method to '${paramIdentifier.name}'.");
       }
     }
   }
