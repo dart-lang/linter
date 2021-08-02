@@ -71,7 +71,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       correction:
           "The parameter '{0}' should have the name '{1}' to match the name used in the overridden method.");
 
-  final AvoidRenamingMethodParameters rule;
+  final LintRule rule;
 
   _Visitor(this.rule);
 
