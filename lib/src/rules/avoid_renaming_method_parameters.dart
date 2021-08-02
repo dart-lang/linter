@@ -59,7 +59,7 @@ class AvoidRenamingMethodParameters extends LintRule implements NodeLintRule {
       return;
     }
 
-    var visitor = _Visitor(this, context);
+    var visitor = _Visitor(this);
     registry.addMethodDeclaration(this, visitor);
   }
 }
@@ -70,10 +70,10 @@ class _Visitor extends SimpleAstVisitor<void> {
       "The overridden method should have same parameter names as the parent method.",
       correction:
           "The parameter '{0}' should have the name '{1}' to match the name used in the overridden method.");
-  final AvoidRenamingMethodParameters rule;
-  final LinterContext context;
 
-  _Visitor(this.rule, this.context);
+  final AvoidRenamingMethodParameters rule;
+
+  _Visitor(this.rule);
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
