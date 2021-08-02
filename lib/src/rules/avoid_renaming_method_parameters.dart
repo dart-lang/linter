@@ -114,7 +114,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (paramIdentifier != null &&
           paramIdentifier.name != parentParameters[i].name) {
         rule.reportLint(paramIdentifier,
-            arguments: [parentParameters[i].name, paramIdentifier.name],
+            arguments: [paramIdentifier.name, parentParameters[i].name],
             errorCode: parameterCode);
       }
     }
