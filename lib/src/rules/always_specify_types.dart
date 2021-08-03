@@ -7,6 +7,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/error/error.dart';
 
 import '../analyzer.dart';
 import '../utils.dart';
@@ -100,18 +101,26 @@ class AlwaysSpecifyTypes extends LintRule {
     registry.addTypeName(this, visitor);
     registry.addVariableDeclarationList(this, visitor);
   }
-
-  void _reportLintForTokenWithDescription(Token token, String description) {
-    reporter.reportErrorForToken(LintCode(name, description), token);
-  }
-
-  void _reportLintForNodeWithDescription(AstNode node, String description) {
-    reporter.reportErrorForNode(LintCode(name, description), node);
-  }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  final AlwaysSpecifyTypes rule;
+  static const LintCode keywordCouldBeTypeCode = LintCode(
+      "always_specify_types", "'{0}' could be '{1}'.",
+      correction: "Try changing the type.");
+
+  static const LintCode keywordCouldBeSplitToTypesCode = LintCode(
+      "always_specify_types", "'{0}' could be split into {1}.",
+      correction: "Try splitting '{0}' to different types.");
+
+  static const LintCode specifyTypeCode = LintCode(
+      "always_specify_types", "Specify '{0}' type.",
+      correction: "Try specifying the type.");
+
+  static const LintCode specifyTypesCode = LintCode(
+      "always_specify_types", "Specify {0} types.",
+      correction: "Try specifying the types.");
+
+  final LintRule rule;
 
   _Visitor(this.rule);
 
@@ -127,11 +136,14 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.type == null && keyword != null) {
       var element = node.identifier.staticElement;
       if (element is VariableElement) {
-        var description = keyword.keyword == Keyword.VAR
-            ? "'$keyword' could be '${element.type}'."
-            : "Specify '${element.type}' type.";
-
-        rule._reportLintForTokenWithDescription(keyword, description);
+        if (keyword.keyword == Keyword.VAR) {
+          rule.reportLintForToken(keyword,
+              arguments: [keyword, element.type],
+              errorCode: keywordCouldBeTypeCode);
+        } else {
+          rule.reportLintForToken(keyword,
+              arguments: [element.type], errorCode: specifyTypeCode);
+        }
       }
     }
   }
@@ -168,14 +180,21 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (param.keyword != null) {
         var keyword = param.keyword!;
         var type = param.declaredElement?.type;
-        var description = keyword.type == Keyword.VAR && type != null
-            ? "'${param.keyword}' could be '$type'."
-            : _desc;
-        rule._reportLintForTokenWithDescription(param.keyword!, description);
+
+        if (keyword.type == Keyword.VAR && type != null) {
+          rule.reportLintForToken(keyword,
+              arguments: [keyword, type], errorCode: keywordCouldBeTypeCode);
+        } else {
+          rule.reportLintForToken(keyword);
+        }
       } else if (param.declaredElement != null) {
         var type = param.declaredElement!.type;
-        rule._reportLintForNodeWithDescription(
-            param, type is DynamicType ? _desc : "Specify '$type' type.");
+
+        if (type is DynamicType) {
+          rule.reportLint(param);
+        } else {
+          rule.reportLint(param, arguments: [type], errorCode: specifyTypeCode);
+        }
       }
     }
   }
@@ -208,19 +227,30 @@ class _Visitor extends SimpleAstVisitor<void> {
         multipleTypesString =
             "${types.take(types.length - 1).map((e) => "'$e'").join(", ")} and '${types.last}'";
       }
-      String description;
+
+      List<Object> arguments;
+      ErrorCode? errorCode;
       if (types.isEmpty) {
-        description = _desc;
+        arguments = [];
       } else if (keyword.type == Keyword.VAR) {
-        description = multipleTypesString == null
-            ? "'${list.keyword}' could be '${types.first}'."
-            : "'${list.keyword}' could be split into $multipleTypesString.";
+        if (multipleTypesString == null) {
+          arguments = [keyword, types.first];
+          errorCode = keywordCouldBeTypeCode;
+        } else {
+          arguments = [keyword, multipleTypesString];
+          errorCode = keywordCouldBeSplitToTypesCode;
+        }
       } else {
-        description = multipleTypesString == null
-            ? "Specify '${types.first}' type."
-            : 'Specify $multipleTypesString types.';
+        if (multipleTypesString == null) {
+          arguments = [types.first];
+          errorCode = specifyTypeCode;
+        } else {
+          arguments = [multipleTypesString];
+          errorCode = specifyTypesCode;
+        }
       }
-      rule._reportLintForTokenWithDescription(keyword, description);
+      rule.reportLintForToken(keyword,
+          arguments: arguments, errorCode: errorCode);
     }
   }
 
