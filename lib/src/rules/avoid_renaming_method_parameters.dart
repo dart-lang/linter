@@ -67,9 +67,8 @@ class AvoidRenamingMethodParameters extends LintRule implements NodeLintRule {
 class _Visitor extends SimpleAstVisitor<void> {
   static const LintCode parameterCode = LintCode(
       "avoid_renaming_method_parameters",
-      "The overridden method should have same parameter names as the parent method.",
-      correction:
-          "The parameter '{0}' should have the name '{1}' to match the name used in the overridden method.");
+      "The parameter '{0}' should have the name '{1}' to match the name used in the overridden method.",
+      correction: "Try renaming the parameter.");
 
   final LintRule rule;
 
