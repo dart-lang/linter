@@ -97,8 +97,9 @@ class CamelCaseString {
   // * followed by any number of letters, digits, `?` or `$`s.
   //
   // This ensures that the text contains a `$`, `?` or upper-case letter
-  // before any lower-case letter or digit.
-  static final _camelCaseTester = RegExp(r'^[_$]*[$?A-Z][$?a-zA-Z\d]*$');
+  // before any lower-case letter or digit, and no letters or `?`s before an
+  // `_`.
+  static final _camelCaseTester = RegExp(r'^_*(?:\$+_+)*[$?A-Z][$?a-zA-Z\d]*$');
 
   final String value;
   CamelCaseString(this.value) {
