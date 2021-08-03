@@ -92,13 +92,13 @@ class CamelCaseString {
   static final _camelCaseMatcher = RegExp(r'[A-Z][a-z]*');
 
   // A camel case string here is defined as:
-  // * An arbitrary number of optional leading `_`s,
+  // * An arbitrary number of optional leading `_`s or `$`s,
   // * followed by an upper-case letter, `$` or `?`,
   // * followed by any number of letters, digits, `?` or `$`s.
   //
   // This ensures that the text contains a `$`, `?` or upper-case letter
   // before any lower-case letter or digit.
-  static final _camelCaseTester = RegExp(r'^_*[$?A-Z][$?a-zA-Z\d]*$');
+  static final _camelCaseTester = RegExp(r'^[_$]*[$?A-Z][$?a-zA-Z\d]*$');
 
   final String value;
   CamelCaseString(this.value) {
