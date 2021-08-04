@@ -15,6 +15,7 @@ import 'package:linter/src/rules/use_setters_to_change_properties.dart';
 
 final experiments = <LintRule>[
   AlwaysDeclareReturnTypes(),
+  AlwaysDeclareReturnTypesAsync(),
   AvoidPositionalBooleanParameters(),
   AvoidReturningThis(),
   CamelCaseExtensions(),

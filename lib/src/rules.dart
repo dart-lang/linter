@@ -2,8 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:linter/src/rules/always_declare_return_types_async.dart';
+
 import 'analyzer.dart';
 import 'rules/always_declare_return_types.dart';
+import 'rules/always_declare_return_types_async.dart';
 import 'rules/always_put_control_body_on_new_line.dart';
 import 'rules/always_put_required_named_parameters_first.dart';
 import 'rules/always_require_non_null_named_parameters.dart';
@@ -202,6 +205,7 @@ void registerLintRules({bool inTestMode = false}) {
   Analyzer.facade.cacheLinterVersion();
   Analyzer.facade
     ..register(AlwaysDeclareReturnTypes())
+    ..register(AlwaysDeclareReturnTypesAsync())
     ..register(AlwaysPutControlBodyOnNewLine())
     ..register(AlwaysPutRequiredNamedParametersFirst())
     ..register(AlwaysRequireNonNullNamedParameters())
