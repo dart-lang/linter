@@ -15,12 +15,12 @@ List<List> lists; //LINT
 List<int> ints; //OK
 
 final x = 1; //LINT [1:5] Specify 'int' type.
-final x1 = 1, x2 = '', x3 = 1.2; //LINT [1:5] Specify 'int', 'String' and 'double' types.
+final x1 = 1, x2 = '', x3 = 1.2; //LINT [1:5]
 final int xx = 3;
 const y = 2; //LINT Specify 'int' type.
 const int yy = 3;
 
-a(var x) {} //LINT
+a(var x) {} //LINT Specify type annotations.
 b(s) {} //LINT [3:1] Specify type annotations.
 c(int x) {}
 d(final x) {} //LINT
@@ -40,7 +40,7 @@ void test() {
 
 main() {
   var x = ''; //LINT [3:3] 'var' could be 'String'.
-  var x1 = '', x2 = 1.2; //LINT [3:3] 'var' could be split into 'String' and 'double'.
+  var x1 = '', x2 = 1.2; //LINT [3:3] 'var' could be split into types.
   for (var i = 0; i < 10; ++i) {  //LINT [8:3] 'var' could be 'int'.
     print(i);
   }
@@ -51,7 +51,7 @@ main() {
     print(l);
   }
   try {
-    for (final l in ls) { // LINT [10:5]
+    for (final l in ls) { // LINT [10:5] Specify 'String' type.
       print(l);
     }
   } on Exception catch (ex) {
@@ -82,8 +82,8 @@ class Foo {
   static var bar; //LINT
   static final baz = 1; //LINT Specify 'int' type.
   static final int bazz = 42;
-  var foo; //LINT
-  Foo(var bar); //LINT [7:3]
+  var foo; //LINT Specify type annotations.
+  Foo(var bar); //LINT [7:3] Specify type annotations.
   void f(List l) { } //LINT
 }
 

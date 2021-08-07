@@ -109,16 +109,12 @@ class _Visitor extends SimpleAstVisitor<void> {
       correction: "Try changing the type.");
 
   static const LintCode keywordCouldBeSplitToTypesCode = LintCode(
-      "always_specify_types", "'{0}' could be split into {1}.",
+      "always_specify_types", "'{0}' could be split into types.",
       correction: "Try splitting '{0}' to different types.");
 
   static const LintCode specifyTypeCode = LintCode(
       "always_specify_types", "Specify '{0}' type.",
       correction: "Try specifying the type.");
-
-  static const LintCode specifyTypesCode = LintCode(
-      "always_specify_types", "Specify {0} types.",
-      correction: "Try specifying the types.");
 
   final LintRule rule;
 
@@ -181,7 +177,9 @@ class _Visitor extends SimpleAstVisitor<void> {
         var keyword = param.keyword!;
         var type = param.declaredElement?.type;
 
-        if (keyword.type == Keyword.VAR && type != null) {
+        if (keyword.type == Keyword.VAR &&
+            type != null &&
+            type is! DynamicType) {
           rule.reportLintForToken(keyword,
               arguments: [keyword, type], errorCode: keywordCouldBeTypeCode);
         } else {
@@ -222,31 +220,26 @@ class _Visitor extends SimpleAstVisitor<void> {
 
       if (types == null) return;
 
-      String? multipleTypesString;
-      if (types.toSet().length > 1) {
-        multipleTypesString =
-            "${types.take(types.length - 1).map((e) => "'$e'").join(", ")} and '${types.last}'";
-      }
+      var singleType = types.toSet().length == 1;
 
       List<Object> arguments;
       ErrorCode? errorCode;
       if (types.isEmpty) {
         arguments = [];
       } else if (keyword.type == Keyword.VAR) {
-        if (multipleTypesString == null) {
+        if (singleType) {
           arguments = [keyword, types.first];
           errorCode = keywordCouldBeTypeCode;
         } else {
-          arguments = [keyword, multipleTypesString];
+          arguments = [keyword];
           errorCode = keywordCouldBeSplitToTypesCode;
         }
       } else {
-        if (multipleTypesString == null) {
+        if (singleType) {
           arguments = [types.first];
           errorCode = specifyTypeCode;
         } else {
-          arguments = [multipleTypesString];
-          errorCode = specifyTypesCode;
+          arguments = [];
         }
       }
       rule.reportLintForToken(keyword,
