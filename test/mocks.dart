@@ -5,13 +5,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/src/generated/engine.dart';
 import 'package:analyzer/src/generated/source.dart';
 import 'package:analyzer/src/lint/linter.dart';
-import 'package:analyzer/src/lint/pub.dart';
 import 'package:linter/src/analyzer.dart';
 
 class CollectingSink extends MockIOSink {
@@ -88,7 +85,7 @@ class MockIOSink implements IOSink {
   void writeln([Object? obj = '']) {}
 }
 
-class MockReporter extends Reporter {
+class MockReporter implements Reporter {
   List<LinterException> exceptions = <LinterException>[];
 
   List<String> warnings = <String>[];
@@ -106,66 +103,36 @@ class MockReporter extends Reporter {
   }
 }
 
-class MockRule implements LintRule {
+class MockSource implements Source {
   @override
-  late ErrorReporter reporter;
-
-  @override
-  late String description;
+  late TimestampedData<String> contents;
 
   @override
-  late String details;
-
-  ProjectVisitor? projectVisitor;
-
-  PubspecVisitor? pubspecVisitor;
-  AstVisitor? visitor;
+  late String encoding;
 
   @override
-  late Group group;
+  late String fullName;
 
   @override
-  late LintCode lintCode;
+  late bool isInSystemLibrary;
 
   @override
-  late Maturity maturity;
+  late Source librarySource;
 
   @override
-  late String name;
+  late int modificationStamp;
 
   @override
-  int compareTo(LintRule other) => 0;
+  late String shortName;
 
   @override
-  ProjectVisitor? getProjectVisitor() => projectVisitor;
+  late Source source;
 
   @override
-  PubspecVisitor? getPubspecVisitor() => pubspecVisitor;
+  late Uri uri;
 
   @override
-  AstVisitor? getVisitor() => visitor;
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-
-  @override
-  void reportPubLint(PSNode node) {}
-}
-
-class MockSource extends BasicSource {
-  @override
-  final String fullName;
-
-  MockSource(this.fullName) : super(Uri.file(fullName));
-
-  @override
-  TimestampedData<String> get contents => TimestampedData<String>(0, '');
-
-  @override
-  int get modificationStamp => 0;
-
-  @override
-  UriKind get uriKind => UriKind.FILE_URI;
+  late UriKind uriKind;
 
   @override
   bool exists() => false;
