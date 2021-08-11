@@ -250,9 +250,21 @@ class _Visitor extends SimpleAstVisitor<void> {
   Set<String> _getTypes(VariableDeclarationList list) {
     var types = <String>{};
     for (var variable in list.variables) {
-      var type = variable.initializer?.staticType;
-      if (type != null) {
-        types.add(type.getDisplayString(withNullability: false));
+      var initializer = variable.initializer;
+      if (initializer != null) {
+        DartType? type;
+        if (initializer is Identifier) {
+          var staticElement = initializer.staticElement;
+          if (staticElement is VariableElement) {
+            type = staticElement.type;
+          }
+        }
+
+        type ??= variable.initializer?.staticType;
+
+        if (type != null) {
+          types.add(type.getDisplayString(withNullability: true));
+        }
       }
     }
     return types;

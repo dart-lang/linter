@@ -19,6 +19,8 @@ final x1 = 1, x2 = '', x3 = 1.2; //LINT [1:5]
 final int xx = 3;
 const y = 2; //LINT Specify 'int' type.
 const int yy = 3;
+String? s1 = '';
+var s2 = '', s3 = s1; //LINT 'var' could be split into types.
 
 a(var x) {} //LINT Specify type annotations.
 b(s) {} //LINT [3:1] Specify type annotations.
