@@ -105,16 +105,21 @@ class AlwaysSpecifyTypes extends LintRule {
 
 class _Visitor extends SimpleAstVisitor<void> {
   static const LintCode keywordCouldBeTypeCode = LintCode(
-      "always_specify_types", "'{0}' could be '{1}'.",
-      correction: "Try changing the type.");
+      "always_specify_types", // ignore: prefer_single_quotes
+      "Specify the type annotation.", // ignore: prefer_single_quotes
+      correction: "Try replacing '{0}' with '{1}'.");
 
   static const LintCode keywordCouldBeSplitToTypesCode = LintCode(
-      "always_specify_types", "'{0}' could be split into types.",
-      correction: "Try splitting '{0}' to different types.");
+      "always_specify_types", // ignore: prefer_single_quotes
+      "Specify type annotations.", // ignore: prefer_single_quotes
+      correction:
+          "Try splitting the declaration and specify the different type annotations."); // ignore: prefer_single_quotes
 
   static const LintCode specifyTypeCode = LintCode(
-      "always_specify_types", "Specify '{0}' type.",
-      correction: "Try specifying the type.");
+      "always_specify_types", // ignore: prefer_single_quotes
+      "Specify the type annotation.", // ignore: prefer_single_quotes
+      correction:
+          "Try specifying the type '{0}'."); // ignore: prefer_single_quotes
 
   final LintRule rule;
 
@@ -231,7 +236,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           arguments = [keyword, types.first];
           errorCode = keywordCouldBeTypeCode;
         } else {
-          arguments = [keyword];
+          arguments = [];
           errorCode = keywordCouldBeSplitToTypesCode;
         }
       } else {
