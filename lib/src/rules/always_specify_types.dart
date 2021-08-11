@@ -206,7 +206,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitVariableDeclarationList(VariableDeclarationList list) {
     var keyword = list.keyword;
     if (list.type == null && keyword != null) {
-      List<String>? types;
+      Set<String>? types;
       var parent = list.parent;
       if (parent is TopLevelVariableDeclaration) {
         types = _getTypes(parent.variables);
@@ -220,7 +220,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
       if (types == null) return;
 
-      var singleType = types.toSet().length == 1;
+      var singleType = types.length == 1;
 
       List<Object> arguments;
       ErrorCode? errorCode;
@@ -247,8 +247,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  List<String> _getTypes(VariableDeclarationList list) {
-    var types = <String>[];
+  Set<String> _getTypes(VariableDeclarationList list) {
+    var types = <String>{};
     for (var variable in list.variables) {
       var type = variable.initializer?.staticType;
       if (type != null) {
