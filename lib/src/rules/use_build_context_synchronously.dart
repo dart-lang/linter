@@ -91,6 +91,11 @@ class _AwaitVisitor extends RecursiveAstVisitor {
     // Stop visiting if it's a function body block.
     // Awaits inside it shouldn't matter
   }
+
+  @override
+  visitExpressionFunctionBody(ExpressionFunctionBody node) {
+    // Stopping following the same logic as function body blocks
+  }
 }
 
 class _Visitor extends SimpleAstVisitor {

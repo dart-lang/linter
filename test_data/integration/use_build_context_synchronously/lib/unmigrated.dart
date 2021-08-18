@@ -29,6 +29,11 @@ void anonymousFunction(BuildContext context) async {
   await Navigator.of(context).pushNamed('routeName'); // OK
 }
 
+void anonymousExpressionFunction(BuildContext context) async {
+  final anon = () async => await Future<void>.delayed(Duration());
+  await Navigator.of(context).pushNamed('routeName'); // OK
+}
+
 void widgetCallbacks(BuildContext context) async {
   final widget = _Button(
     onTap: () async {
