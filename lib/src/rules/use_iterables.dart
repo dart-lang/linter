@@ -24,6 +24,9 @@ confusing.  Alternatively, consider preferring `forEach`.
 **GOOD:**
 ```dart
 [1, 2, 3].forEach(print);
+for (var v in [1, 2, 3]) {
+  print(v);
+}
 [1, 2, 3].map(print).last;
 [1, 2, 3].map(print).toList();
 ```
