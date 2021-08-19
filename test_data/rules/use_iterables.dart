@@ -4,6 +4,9 @@
 
 // test w/ `dart test -N use_iterables`
 
+import 'dart:core';
+import 'dart:core' as core;
+
 void f() {
   [].map(print); // LINT
   var s = { 1 };
@@ -23,6 +26,11 @@ void f() {
   };
   var m2 = { '' : 1};
   m2.keys.map(print); // LINT
+
+  core.List.empty().map(print); // LINT
+  print(core.List.empty().map(print)); // OK
+  var b = [].map(print) == null; // LINT
+  print([].map(print) == null); // LINT
 }
 
 Iterable iter() => [].map(print); // OK
