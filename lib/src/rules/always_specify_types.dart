@@ -211,7 +211,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitVariableDeclarationList(VariableDeclarationList list) {
     var keyword = list.keyword;
     if (list.type == null && keyword != null) {
-      Set<String>? types;
+      Set<String> types;
       var parent = list.parent;
       if (parent is TopLevelVariableDeclaration) {
         types = _getTypes(parent.variables);
@@ -221,9 +221,9 @@ class _Visitor extends SimpleAstVisitor<void> {
         types = _getTypes(parent.fields);
       } else if (parent is VariableDeclarationStatement) {
         types = _getTypes(parent.variables);
+      } else {
+        return;
       }
-
-      if (types == null) return;
 
       var singleType = types.length == 1;
 
