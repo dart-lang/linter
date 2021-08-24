@@ -5,6 +5,8 @@
 // An identifier here is defined as:
 // * A sequence of `_`, `$`, letters or digits,
 // * where no `$` comes after a digit.
+import 'package:linter/src/ast.dart';
+
 final _identifier = RegExp(r'^[_$a-z]+(\d[_a-z\d]*)?$', caseSensitive: false);
 
 // A lower camel-case here is defined as:
@@ -86,7 +88,9 @@ bool isValidLibraryPrefix(String libraryPrefix) =>
 
 /// Returns true if this [id] is a valid package name.
 bool isValidPackageName(String id) =>
-    _lowerCaseUnderScoreWithLeadingUnderscores.hasMatch(id) && isIdentifier(id);
+    _lowerCaseUnderScoreWithLeadingUnderscores.hasMatch(id) &&
+    isIdentifier(id) &&
+    !isReservedWord(id);
 
 class CamelCaseString {
   static final _camelCaseMatcher = RegExp(r'[A-Z][a-z]*');
