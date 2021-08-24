@@ -2,11 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'ast.dart';
+
 // An identifier here is defined as:
 // * A sequence of `_`, `$`, letters or digits,
 // * where no `$` comes after a digit.
-import 'package:linter/src/ast.dart';
-
 final _identifier = RegExp(r'^[_$a-z]+(\d[_a-z\d]*)?$', caseSensitive: false);
 
 // A lower camel-case here is defined as:
