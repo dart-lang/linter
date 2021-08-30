@@ -1300,7 +1300,7 @@
     "sets": [
       "flutter"
     ],
-    "details": "\n**PREFER** using `const` for instantiating constant constructors.\n\nIf a const constructor is available, it is preferable to use it.\n\n**GOOD:**\n```dart\nclass A {\n  const A();\n}\n\nvoid accessA() {\n  A a = const A();\n}\n```\n\n**GOOD:**\n```dart\nclass A {\n  final int x;\n\n  const A(this.x);\n}\n\nA foo(int x) => new A(x);\n```\n\n**BAD:**\n```dart\nclass A {\n  const A();\n}\n\nvoid accessA() {\n  A a = new A();\n}\n```\n\n"
+    "details": "\n**PREFER** using `const` for instantiating constant constructors.\n\nIf a constructor can be invoked as const to produce a canonicalized instance,\nit's preferable to do so.\n\n**GOOD:**\n```dart\nclass A {\n  const A();\n}\n\nvoid accessA() {\n  A a = const A();\n}\n```\n\n**GOOD:**\n```dart\nclass A {\n  final int x;\n\n  const A(this.x);\n}\n\nA foo(int x) => new A(x);\n```\n\n**BAD:**\n```dart\nclass A {\n  const A();\n}\n\nvoid accessA() {\n  A a = new A();\n}\n```\n\n"
   },
   {
     "name": "prefer_const_constructors_in_immutables",
