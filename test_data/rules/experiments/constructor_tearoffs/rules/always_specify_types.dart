@@ -12,15 +12,30 @@ import 'package:meta/meta.dart';
 void constructorTearOffs() {
   List.filled; // LINT
   List<List>.filled; // LINT
+  // todo(pq): should be OK.
+  // List<E> Function<E>(int, E) filledList = List.filled; // OK - generic function
+  filledList<int>(3, 3); // OK
+  filledList(3, 3); // todo(pq): LINT? -- https://github.com/dart-lang/linter/issues/2914
 }
+
+typedef MapList = List<StringMap>; //LINT
+typedef JsonMap = Map<String, dynamic>; //OK
+typedef StringList = List<JsonMap>; //OK
+typedef RawList = List; //LINT
+typedef StringMap<V> = Map<String, V>; //OK
+
+StringMap<String> sm = StringMap<String>(); //OK
+StringMap? rm1; //LINT
+StringMap<String> rm2 = StringMap(); //LINT
+StringMap rm3 = StringMap<String>(); //LINT
 
 Map<String, String> map = {}; //LINT
 List<String> strings = []; //LINT
 Set<String> set = {}; //LINT
 
-List? list; // LINT
+List? list; //LINT
 List<List>? lists; //LINT
-List<int>? ints; //OK
+List<int> ints = <int>[1]; //OK
 
 final x = 1; //LINT [1:5]
 final int xx = 3;
