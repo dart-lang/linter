@@ -44,7 +44,7 @@ void main(List<String> args) {
   }
 
   // Generate rule stub.
-  generateRule(ruleName as String, outDir: outDir as String?);
+  generateRule(ruleName as String, outDir: outDir);
 }
 
 String get _thisYear => DateTime.now().year.toString();
