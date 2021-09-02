@@ -59,9 +59,6 @@ main() {
 
 ''';
 
-bool _isOptionallyParameterized(TypeParameterizedElement element) =>
-    element.hasOptionalTypeArgs;
-
 class AlwaysSpecifyTypes extends LintRule {
   AlwaysSpecifyTypes()
       : super(
@@ -117,7 +114,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (element.typeParameters.isNotEmpty &&
           namedType.typeArguments == null &&
           namedType.parent is! IsExpression &&
-          !_isOptionallyParameterized(element)) {
+          !element.hasOptionalTypeArgs) {
         rule.reportLint(namedType);
       }
     }
