@@ -29,7 +29,6 @@ void constructorTearOffStaticTests<T>() {
   // final C<T> Function() c5 = C.m; // OK -- not constant
 }
 
-
 const o1 = const []; // OK
 final o2 = []; // OK
 final o3 = const []; // LINT
