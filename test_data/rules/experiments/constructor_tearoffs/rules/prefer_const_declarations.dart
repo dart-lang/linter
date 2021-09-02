@@ -6,12 +6,29 @@
 
 //ignore_for_file: unused_local_variable
 
-class C {
-  const C();
+class C<T> {
+  C();
+  static C<X> m<X>() => C<X>();
 }
 
-final cRef = C.new; // LINT
-const cRefOk = C.new; // OK
+void constructorTearOffTests<T>() {
+  final c1 = C.new; // LINT
+  final c2 = C<int>.new; // LINT
+  final C<int> Function() c3 = C.new; // LINT
+  // todo: consider cases -- https://github.com/dart-lang/linter/issues/2911
+  // final c4 = C<T>.new; // OK
+  // final C<T> Function() c5 = C.new; // OK
+}
+
+void constructorTearOffStaticTests<T>() {
+  final c1 = C.m; // LINT
+  // todo: consider cases -- https://github.com/dart-lang/linter/issues/2911
+  // final c2 = C.m<int>; // LINT
+  final C<int> Function() c3 = C.m; // LINT
+  final c4 = C.m<T>; // OK --  not constant (only with ....)
+  // final C<T> Function() c5 = C.m; // OK -- not constant
+}
+
 
 const o1 = const []; // OK
 final o2 = []; // OK
