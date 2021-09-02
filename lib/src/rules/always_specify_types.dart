@@ -59,22 +59,8 @@ main() {
 
 ''';
 
-/// The name of `meta` library, used to define analysis annotations.
-String _metaLibName = 'meta';
-
-/// The name of the top-level variable used to mark a Class as having optional
-/// type args.
-String _optionalTypeArgsVarName = 'optionalTypeArgs';
-
-bool _isOptionallyParameterized(TypeParameterizedElement element) {
-  var metadata = element.metadata;
-  return metadata.any((ElementAnnotation a) => _isOptionalTypeArgs(a.element));
-}
-
-bool _isOptionalTypeArgs(Element? element) =>
-    element is PropertyAccessorElement &&
-    element.name == _optionalTypeArgsVarName &&
-    element.library.name == _metaLibName;
+bool _isOptionallyParameterized(TypeParameterizedElement element) =>
+    element.hasOptionalTypeArgs;
 
 class AlwaysSpecifyTypes extends LintRule {
   AlwaysSpecifyTypes()

@@ -127,17 +127,7 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
     rule.reportLint(declaration.name);
   }
 
-  bool _addsMetadata() {
-    var metadata = declaration.declaredElement?.metadata;
-    if (metadata != null) {
-      for (var annotation in metadata) {
-        if (!annotation.isOverride) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
+  bool _addsMetadata() => declaration.declaredElement?.hasOverride ?? false;
 
   bool _haveSameDeclaration() {
     var declaredElement = declaration.declaredElement;
