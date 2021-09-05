@@ -46,7 +46,7 @@ import '../lib/baz.dart';
 
 ''';
 
-class AlwaysUsePackageImports extends LintRule implements NodeLintRule {
+class AlwaysUsePackageImports extends LintRule {
   AlwaysUsePackageImports()
       : super(
             name: 'always_use_package_imports',
@@ -61,16 +61,15 @@ class AlwaysUsePackageImports extends LintRule implements NodeLintRule {
       return;
     }
 
-    var visitor = _Visitor(this, context);
+    var visitor = _Visitor(this);
     registry.addImportDirective(this, visitor);
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
-  final LinterContext context;
 
-  _Visitor(this.rule, this.context);
+  _Visitor(this.rule);
 
   bool isRelativeImport(ImportDirective node) {
     var uriContent = node.uriContent;

@@ -4,7 +4,6 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
@@ -59,24 +58,7 @@ main() {
 
 ''';
 
-/// The name of `meta` library, used to define analysis annotations.
-String _metaLibName = 'meta';
-
-/// The name of the top-level variable used to mark a Class as having optional
-/// type args.
-String _optionalTypeArgsVarName = 'optionalTypeArgs';
-
-bool _isOptionallyParameterized(TypeParameterizedElement element) {
-  var metadata = element.metadata;
-  return metadata.any((ElementAnnotation a) => _isOptionalTypeArgs(a.element));
-}
-
-bool _isOptionalTypeArgs(Element? element) =>
-    element is PropertyAccessorElement &&
-    element.name == _optionalTypeArgsVarName &&
-    element.library.name == _metaLibName;
-
-class AlwaysSpecifyTypes extends LintRule implements NodeLintRule {
+class AlwaysSpecifyTypes extends LintRule {
   AlwaysSpecifyTypes()
       : super(
             name: 'always_specify_types',
@@ -127,11 +109,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitNamedType(NamedType namedType) {
     var type = namedType.type;
     if (type is InterfaceType) {
-      var element = type.aliasElement ?? type.element;
+      var element = type.alias?.element ?? type.element;
       if (element.typeParameters.isNotEmpty &&
           namedType.typeArguments == null &&
           namedType.parent is! IsExpression &&
-          !_isOptionallyParameterized(element)) {
+          !element.hasOptionalTypeArgs) {
         rule.reportLint(namedType);
       }
     }

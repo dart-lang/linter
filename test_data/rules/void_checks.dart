@@ -8,6 +8,36 @@
 
 import 'dart:async';
 
+Never fail() { throw 'nope'; }
+void foo(FutureOr<void> Function() f2) {}
+
+/// https://github.com/dart-lang/linter/issues/2685
+void m3() {
+  foo(() {
+    fail(); // OK
+  });
+
+  var f = Future.value(0);
+  f.then<void>((_) {
+    fail(); // OK
+  });
+}
+
+void m2() {
+  // https://github.com/dart-lang/linter/issues/2794
+  Future<void> f = Future.value(1).then<void>((_) { // OK
+    throw 'sad';
+  });
+}
+
+void foo(FutureOr<void> x) {}
+
+void main() {
+  FutureOr<void> x;
+  // https://github.com/dart-lang/linter/issues/1675
+  foo(x); // OK
+}
+
 var x;
 get g => null;
 set s(v) {}
@@ -212,4 +242,8 @@ missing_parameter_for_argument() {
 
 void emptyFunctionExpressionReturningFutureOrVoid(FutureOr<void> Function() f) {
   f = () {}; // OK
+}
+
+void bug2813() {
+  return 1; //OK this gives compiler error
 }

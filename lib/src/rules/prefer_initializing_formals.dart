@@ -99,7 +99,7 @@ Element? _getRightElement(AssignmentExpression assignment) =>
     DartTypeUtilities.getCanonicalElementFromIdentifier(
         assignment.rightHandSide);
 
-class PreferInitializingFormals extends LintRule implements NodeLintRule {
+class PreferInitializingFormals extends LintRule {
   PreferInitializingFormals()
       : super(
             name: 'prefer_initializing_formals',
@@ -122,6 +122,12 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
+    // Skip factory constructors.
+    // https://github.com/dart-lang/linter/issues/2441
+    if (node.factoryKeyword != null) {
+      return;
+    }
+
     var parameters = _getParameters(node);
     var parametersUsedOnce = <Element?>{};
     var parametersUsedMoreThanOnce = <Element?>{};

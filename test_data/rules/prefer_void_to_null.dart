@@ -11,6 +11,44 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:core' as core;
 
+abstract class X {
+  dynamic get foo;
+}
+
+/// https://github.com/dart-lang/linter/issues/1523
+class Y extends X {
+  @override
+  Null get foo => null; // OK
+}
+
+/// https://github.com/dart-lang/linter/issues/2792
+class A<T> {
+  Future<T>? something() {}
+}
+
+class B<T> implements A<T> {
+  @override
+  Null something() {}  // OK
+}
+
+class C {
+  FutureOr<void>? something() {}
+}
+
+class D implements C {
+  @override
+  Null something() {}  // LINT
+}
+
+class E {
+  Never? something() {} // LINT
+}
+
+class F implements E {
+  @override
+  Null something() {}  // OK
+}
+
 void void_; // OK
 Null null_; // LINT
 core.Null core_null; // LINT
@@ -134,4 +172,7 @@ class AsMembers {
 
 class MemberNamedNull {
   final Null = null; // OK
+}
+
+extension _ on Null { // OK
 }

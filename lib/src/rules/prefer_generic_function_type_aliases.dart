@@ -33,8 +33,7 @@ typedef F = void Function();
 
 ''';
 
-class PreferGenericFunctionTypeAliases extends LintRule
-    implements NodeLintRule {
+class PreferGenericFunctionTypeAliases extends LintRule {
   PreferGenericFunctionTypeAliases()
       : super(
             name: 'prefer_generic_function_type_aliases',
@@ -57,6 +56,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
+    //https://github.com/dart-lang/linter/issues/2777
+    if (node.semicolon.isSynthetic) return;
+
     rule.reportLint(node.name);
   }
 }

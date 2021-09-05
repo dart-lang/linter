@@ -53,7 +53,7 @@ class _MyWidgetState extends State<MyWidget> {
 ```
 ''';
 
-class UseBuildContextSynchronously extends LintRule implements NodeLintRule {
+class UseBuildContextSynchronously extends LintRule {
   /// Flag to short-circuit `inTestDir` checking when running tests.
   final bool inTestMode;
 
@@ -84,6 +84,17 @@ class _AwaitVisitor extends RecursiveAstVisitor {
   @override
   void visitAwaitExpression(AwaitExpression node) {
     hasAwait = true;
+  }
+
+  @override
+  visitBlockFunctionBody(BlockFunctionBody node) {
+    // Stop visiting if it's a function body block.
+    // Awaits inside it shouldn't matter
+  }
+
+  @override
+  visitExpressionFunctionBody(ExpressionFunctionBody node) {
+    // Stopping following the same logic as function body blocks
   }
 }
 

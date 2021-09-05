@@ -39,7 +39,10 @@ class Better {
   Better(this.value);
 
   @override
-  bool operator ==(Object other) => other is Better && other.value == value;
+  bool operator ==(Object other) =>
+      other is Better &&
+      other.runtimeType == runtimeType &&
+      other.value == value;
 
   @override
   int get hashCode => value.hashCode;
@@ -47,7 +50,7 @@ class Better {
 ```
 ''';
 
-class HashAndEquals extends LintRule implements NodeLintRule {
+class HashAndEquals extends LintRule {
   HashAndEquals()
       : super(
             name: 'hash_and_equals',

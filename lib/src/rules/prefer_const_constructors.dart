@@ -6,7 +6,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
-import '../ast.dart';
 
 const _desc = r'Prefer const with constant constructors.';
 
@@ -14,7 +13,8 @@ const _details = r'''
 
 **PREFER** using `const` for instantiating constant constructors.
 
-If a const constructor is available, it is preferable to use it.
+If a constructor can be invoked as const to produce a canonicalized instance,
+it's preferable to do so.
 
 **GOOD:**
 ```dart
@@ -51,7 +51,7 @@ void accessA() {
 
 ''';
 
-class PreferConstConstructors extends LintRule implements NodeLintRule {
+class PreferConstConstructors extends LintRule {
   PreferConstConstructors()
       : super(
             name: 'prefer_const_constructors',
@@ -76,11 +76,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    var element = node.constructorName.staticElement;
+    if (node.constructorName.type.isDeferred) {
+      return;
+    }
 
+    var element = node.constructorName.staticElement;
     if (!node.isConst && element != null && element.isConst) {
       // Handled by analyzer hint.
-      if (hasLiteralAnnotation(element)) {
+      if (element.hasLiteral) {
         return;
       }
 

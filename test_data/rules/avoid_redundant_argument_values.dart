@@ -13,6 +13,11 @@ class A {
   void h({String valWithDefault = 'default', bool val}) {}
 }
 
+f(void g([bool b = false])) {
+  // Function Expression Invocation.
+  g(false); // LINT
+}
+
 bool q() => true;
 
 void ff({bool valWithDefault = true, bool val}) {}

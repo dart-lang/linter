@@ -4,6 +4,25 @@
 
 // test w/ `dart test -N prefer_initializing_formals`
 
+class D {
+  /// https://github.com/dart-lang/linter/issues/2664
+  D(int initialValue) : value = initialValue;
+
+  int? value;
+}
+
+class C {
+  String? value;
+  C._();
+
+  /// https://github.com/dart-lang/linter/issues/2441
+  factory C.withValue(String? value) {
+    var c = C._();
+    c.value = value; // OK
+    return c;
+  }
+}
+
 class Foo {
   final bool isBlahEnabled;
   final List<String> whatever;

@@ -1,3 +1,32 @@
+# 1.10.0
+
+- improved regular expression parsing performance for common checks 
+  (`camel_case_types`, `file_names`, etc.)
+- (internal) migrated to analyzer 2.1.0 APIs
+- fixed false positive in `use_build_context_synchronously` in awaits inside 
+  anonymous functions
+- fixed `overridden_fields` false positive w/ static fields
+- fixed false positive in `avoid_null_checks_in_equality_operators` w/ 
+  non-nullable params
+- fixed false positive for deferred imports in `prefer_const_constructors`
+
+# 1.9.0
+
+- marked `avoid_dynamic_calls` stable
+- (internal) removed unused `MockPubVisitor` and `MockRule` classes
+- fixed `prefer_void_to_null` false positive w/ overridden properties
+- (internal) removed references to `NodeLintRule` in lint rule declarations
+- fixed `prefer_void_to_null` false positive on overriding returns
+- fixed `prefer_generic_function_type_aliases` false positive w/ incomplete statements
+- fixed false positive for `prefer_initializing_formals` with factory constructors
+- fixed `void_checks` false positives with incomplete source
+- updated `unnecessary_getters_setters` to only flag the getter
+- improved messages for `avoid_renaming_method_parameters`
+- fixed false positive in `prefer_void_to_null`
+- fixed false positive in `omit_local_variable_types`
+- fixed false positive in `use_rethrow_when_possible`
+- performance improvements for `annotate_overrides`, `prefer_contains`, and `prefer_void_to_null`
+
 # 1.8.0
 
 - performance improvements for `prefer_is_not_empty`

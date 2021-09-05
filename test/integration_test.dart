@@ -37,6 +37,8 @@ import 'integration/overridden_fields.dart' as overridden_fields;
 import 'integration/packages_file_test.dart' as packages_file_test;
 import 'integration/prefer_asserts_in_initializer_lists.dart'
     as prefer_asserts_in_initializer_lists;
+import 'integration/prefer_const_constructors.dart'
+    as prefer_const_constructors;
 import 'integration/prefer_const_constructors_in_immutables.dart'
     as prefer_const_constructors_in_immutables;
 import 'integration/prefer_mixin.dart' as prefer_mixin;
@@ -204,6 +206,7 @@ void ruleTests() {
     unnecessary_string_escapes.main();
     prefer_mixin.main();
     use_build_context_synchronously.main();
+    prefer_const_constructors.main();
   });
 }
 
@@ -224,22 +227,16 @@ Map<String, YamlNode> _getOptionsFromString(String? optionsSource) {
     throw Exception(
         'Bad options file format (expected map, got ${doc.runtimeType})');
   }
-  if (doc is YamlMap) {
-    doc.nodes.forEach((k, YamlNode v) {
-      Object? key;
-      if (k is YamlScalar) {
-        key = k.value;
-      }
-      if (key is! String) {
-        throw Exception('Bad options file format (expected String scope key, '
-            'got ${k.runtimeType})');
-      }
-      if (v is! YamlNode) {
-        throw Exception('Bad options file format (expected Node value, '
-            'got ${v.runtimeType}: `${v.toString()}`)');
-      }
-      options[key] = v;
-    });
-  }
+  doc.nodes.forEach((k, YamlNode v) {
+    Object? key;
+    if (k is YamlScalar) {
+      key = k.value;
+    }
+    if (key is! String) {
+      throw Exception('Bad options file format (expected String scope key, '
+          'got ${k.runtimeType})');
+    }
+    options[key] = v;
+  });
   return options;
 }

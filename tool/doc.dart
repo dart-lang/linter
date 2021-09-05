@@ -57,9 +57,9 @@ enabled in practice, but this list should provide a convenient jumping-off point
 
 Many lints are included in various predefined rulesets:
 
-* [pedantic](https://github.com/dart-lang/pedantic) for rules enforced internally at Google
-* [effective_dart](https://github.com/tenhobi/effective_dart) for rules corresponding to the [Effective Dart](https://dart.dev/guides/language/effective-dart) style guide
-* [flutter](https://github.com/flutter/packages/blob/master/packages/flutter_lints/lib/flutter.yaml) for rules recommended for Flutter projects (`flutter create` enables these by default)
+* [core](https://github.com/dart-lang/lints) for official "core" Dart team lint rules.
+* [recommended](https://github.com/dart-lang/lints) for additional lint rules "recommended" by the Dart team.
+* [flutter](https://github.com/flutter/packages/blob/master/packages/flutter_lints/lib/flutter.yaml) for rules recommended for Flutter projects (`flutter create` enables these by default).
 
 Rules included in these rulesets are badged in the documentation below.
 
@@ -350,7 +350,7 @@ class HtmlIndexer {
       </div>
       <footer>
          <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">Github</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
       </footer>
    </body>
 </html>
@@ -538,7 +538,7 @@ linter:
       </div>
       <footer>
          <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">Github</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
       </footer>
    </body>
 </html>
@@ -592,10 +592,12 @@ class RuleHtmlGenerator {
 
   String get since {
     var info = sinceInfo[name]!;
-    var version = info.sinceDartSdk != null
-        ? '>= ${info.sinceDartSdk}'
-        : '<strong>unreleased</strong>';
-    return 'Dart SDK: $version • <small>(Linter v${info.sinceLinter})</small>';
+    // See: https://github.com/dart-lang/linter/issues/2824
+    // var version = info.sinceDartSdk != null
+    //     ? '>= ${info.sinceDartSdk}'
+    //     : '<strong>unreleased</strong>';
+    //return 'Dart SDK: $version • <small>(Linter v${info.sinceLinter})</small>';
+    return 'Linter v${info.sinceLinter}';
   }
 
   void generate([String? filePath]) {
@@ -647,7 +649,7 @@ class RuleHtmlGenerator {
       </div>
       <footer>
          <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">Github</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
       </footer>
    </body>
 </html>
@@ -669,10 +671,12 @@ class RuleMarkdownGenerator {
 
   String get since {
     var info = sinceInfo[name]!;
-    var version = info.sinceDartSdk != null
-        ? '>= ${info.sinceDartSdk}'
-        : '**unreleased**';
-    return 'Dart SDK: $version • (Linter v${info.sinceLinter})';
+    // See: https://github.com/dart-lang/linter/issues/2824
+    // var version = info.sinceDartSdk != null
+    //     ? '>= ${info.sinceDartSdk}'
+    //     : '**unreleased**';
+    // return 'Dart SDK: $version • (Linter v${info.sinceLinter})';
+    return 'Linter v${info.sinceLinter}';
   }
 
   void generate({String? filePath}) {
