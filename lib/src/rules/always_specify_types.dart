@@ -126,7 +126,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
-  void visitTypeName(NamedType typeName) {
+  void visitTypeName(TypeName typeName) {
     var type = typeName.type;
     if (type is InterfaceType) {
       var element = type.alias?.element ?? type.element;
