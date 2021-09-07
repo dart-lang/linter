@@ -105,7 +105,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitListLiteral(ListLiteral literal) {
     checkLiteral(literal);
   }
-  
+
   @override
   void visitSetOrMapLiteral(SetOrMapLiteral literal) {
     checkLiteral(literal);
