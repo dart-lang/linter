@@ -105,20 +105,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitListLiteral(ListLiteral literal) {
     checkLiteral(literal);
   }
-
-  void visitNamedType(NamedType namedType) {
-    var type = namedType.type;
-    if (type is InterfaceType) {
-      var element = type.alias?.element ?? type.element;
-      if (element.typeParameters.isNotEmpty &&
-          namedType.typeArguments == null &&
-          namedType.parent is! IsExpression &&
-          !element.hasOptionalTypeArgs) {
-        rule.reportLint(namedType);
-      }
-    }
-  }
-
+  
   @override
   void visitSetOrMapLiteral(SetOrMapLiteral literal) {
     checkLiteral(literal);
@@ -140,7 +127,16 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitTypeName(NamedType typeName) {
-    visitNamedType(typeName);
+    var type = typeName.type;
+    if (type is InterfaceType) {
+      var element = type.alias?.element ?? type.element;
+      if (element.typeParameters.isNotEmpty &&
+          typeName.typeArguments == null &&
+          typeName.parent is! IsExpression &&
+          !element.hasOptionalTypeArgs) {
+        rule.reportLint(typeName);
+      }
+    }
   }
 
   @override
