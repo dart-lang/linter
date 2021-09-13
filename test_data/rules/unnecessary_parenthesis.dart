@@ -11,6 +11,10 @@ import 'dart:async';
 void foo() {
   final items = [];
   (() => [].add('something')).compose(() {}); // OK
+  (() => '').hashCode; // OK
+  (() => '').f = 1; // OK
+  (() => '') +  1; // OK
+  (() => '')[0]; // OK
 }
 
 extension A on void Function() {
@@ -18,6 +22,10 @@ extension A on void Function() {
     this();
     other();
   };
+
+  set f(int f) {}
+  operator+(int x) {}
+  int operator[](int i) => 0;
 }
 
 var func = (() => null); // LINT

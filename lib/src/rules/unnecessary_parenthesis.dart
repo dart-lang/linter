@@ -69,9 +69,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     // https://github.com/dart-lang/linter/issues/2944
-    // (() => foo()).bar();
-    if (expression is FunctionExpression && parent is MethodInvocation) {
-      return;
+    if (expression is FunctionExpression) {
+      if (parent is MethodInvocation ||
+          parent is PropertyAccess ||
+          parent is BinaryExpression ||
+          parent is IndexExpression) {
+        return;
+      }
     }
 
     if (expression is ConstructorReference) {
