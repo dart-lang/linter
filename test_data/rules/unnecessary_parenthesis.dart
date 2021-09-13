@@ -6,6 +6,20 @@
 
 import 'dart:async';
 
+
+/// https://github.com/dart-lang/linter/issues/2944
+void foo() {
+  final items = [];
+  (() => [].add('something')).compose(() {}); // OK
+}
+
+extension A on void Function() {
+  void Function() compose(void Function() other) => () {
+    this();
+    other();
+  };
+}
+
 class D {
   D.d([int? x, int? y]);
 }
