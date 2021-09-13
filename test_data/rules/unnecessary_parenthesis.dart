@@ -20,6 +20,8 @@ extension A on void Function() {
   };
 }
 
+var func = (() => null); // LINT
+
 class D {
   D.d([int? x, int? y]);
 }
