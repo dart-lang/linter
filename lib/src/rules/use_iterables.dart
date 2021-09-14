@@ -62,7 +62,7 @@ class _Visitor extends SimpleAstVisitor {
 
   static bool _implementsIterable(Expression? target) =>
       target != null &&
-      !DartTypeUtilities.implementsInterface(
+      DartTypeUtilities.implementsInterface(
           target.staticType, 'Iterable', 'dart.core');
 
   static bool _isUsed(AstNode node) {
