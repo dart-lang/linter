@@ -73,6 +73,7 @@ class _Visitor extends SimpleAstVisitor {
         parent is AsExpression ||
         parent is BinaryExpression ||
         parent is ConditionalExpression ||
+        parent is SpreadElement ||
         parent is CascadeExpression) {
       return _isUsed(parent);
     }

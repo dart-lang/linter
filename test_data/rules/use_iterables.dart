@@ -60,7 +60,14 @@ void f() {
   iterOrNull()?.map(print).first; // OK
   true ? [].map(print) : []; // LINT
   var iter3 = true ? [].map(print) : []; // OK
+  visit([1].map((e) => e)); // OK
+  visit([
+    1,
+    ...[2, 3].map((e) => e), // OK
+  ]);
 }
+
+void visit(Iterable iterable) { }
 
 Iterable iter() => [].map(print); // OK
 Iterable? iterOrNull() => [].map(print); // OK
