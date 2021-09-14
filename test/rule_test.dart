@@ -4,6 +4,7 @@
 
 import 'dart:io';
 
+import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/src/analysis_options/analysis_options_provider.dart';
 import 'package:analyzer/src/generated/engine.dart';
@@ -213,6 +214,13 @@ void defineSoloRuleTest(String ruleToTest) {
 
 void testRule(String ruleName, File file,
     {bool debug = true, String? analysisOptions}) {
+  // todo(pq): remove when analyzer latestSdkLanguageVersion is updated to 2.14.0
+  const defaultOptions = '''
+analyzer:
+  enable-experiment:
+    - constructor-tearoffs
+''';
+
   test(ruleName, () async {
     if (!file.existsSync()) {
       throw Exception('No rule found defined at: ${file.path}');
@@ -236,7 +244,8 @@ void testRule(String ruleName, File file,
       fail('rule `$ruleName` is not registered; unable to test.');
     }
 
-    var driver = buildDriver(rule, file, analysisOptions: analysisOptions);
+    var driver = buildDriver(rule, file,
+        analysisOptions: analysisOptions ?? defaultOptions);
 
     var lints = await driver.lintFiles([file]);
 
@@ -263,8 +272,14 @@ void testRule(String ruleName, File file,
         var optionMap = optionsProvider.getOptionsFromString(analysisOptions);
         var optionsImpl = AnalysisOptionsImpl();
         applyToAnalysisOptions(optionsImpl, optionMap);
-        var featureSet = optionsImpl.contextFeatures;
-        Spelunker(file.absolute.path, featureSet: featureSet).spelunk();
+
+        // todo(pq): replace w/ `contextFeatures` when analyzer latestSdkLanguageVersion is updated to 2.14.0
+        var features = FeatureSet.forTesting(
+            sdkVersion: '2.14.0',
+            additionalFeatures: [Feature.constructor_tearoffs]);
+        // var features = optionsImpl.contextFeatures;
+
+        Spelunker(file.absolute.path, featureSet: features).spelunk();
         print('');
         // Lints.
         ResultReporter(lints).write();

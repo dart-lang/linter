@@ -13,6 +13,12 @@ class A {
   void h({String valWithDefault = 'default', bool val}) {}
 }
 
+
+f(void g([bool b = false])) {
+  // Function Expression Invocation.
+  g(false); // LINT
+}
+
 bool q() => true;
 
 void ff({bool valWithDefault = true, bool val}) {}
@@ -25,6 +31,11 @@ void gggg([int a = 0, int b]) {}
 void h([int a, int b = 1]) {}
 
 void main() {
+
+  // Tear-off
+  var aCons = A.new;
+  aCons(valWithDefault: true); //LINT
+
   A(valWithDefault: true); //LINT
   A().f(valWithDefault: true); //LINT
   A().g(valWithDefault: 1); //LINT

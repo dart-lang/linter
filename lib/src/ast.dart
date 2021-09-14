@@ -14,6 +14,10 @@ import 'package:path/path.dart' as path;
 import 'analyzer.dart';
 import 'utils.dart';
 
+List<String>? _reservedWords;
+
+List<String> get reservedWords => _reservedWords ??= _collectReservedWords();
+
 /// Returns direct children of [parent].
 List<Element> getChildren(Element parent, [String? name]) {
   var children = <Element>[];
@@ -48,8 +52,6 @@ SimpleIdentifier? getFieldIdentifier(FieldDeclaration decl, String name) {
 int? getIntValue(Expression expression, LinterContext? context) {
   if (expression is PrefixExpression) {
     var operand = expression.operand;
-    // todo(pq): remove once 1.8.0 is landed.
-    // ignore: avoid_returning_null
     if (expression.operator.type != TokenType.MINUS) return null;
     return _getIntValue(operand, context, negated: true);
   }
@@ -79,26 +81,12 @@ bool hasConstantError(LinterContext context, Expression node) {
 }
 
 /// Returns `true` if this [element] has a `@literal` annotation.
-bool hasLiteralAnnotation(Element element) {
-  var metadata = element.metadata;
-  for (var i = 0; i < metadata.length; i++) {
-    if (metadata[i].isLiteral) {
-      return true;
-    }
-  }
-  return false;
-}
+@Deprecated('prefer: element.hasLiteral')
+bool hasLiteralAnnotation(Element element) => element.hasLiteral;
 
 /// Returns `true` if this [element] has an `@override` annotation.
-bool hasOverrideAnnotation(Element element) {
-  var metadata = element.metadata;
-  for (var i = 0; i < metadata.length; i++) {
-    if (metadata[i].isOverride) {
-      return true;
-    }
-  }
-  return false;
-}
+@Deprecated('prefer: element.hasOverride')
+bool hasOverrideAnnotation(Element element) => element.hasOverride;
 
 /// Returns `true` if this [node] is the child of a private compilation unit
 /// member.
@@ -158,7 +146,7 @@ bool isKeyword(Token token, Keyword keyword) =>
     token is KeywordToken && token.keyword == keyword;
 
 /// Returns `true` if the given [id] is a Dart keyword.
-bool isKeyWord(String id) => Keyword.keywords.keys.contains(id);
+bool isKeyWord(String id) => Keyword.keywords.containsKey(id);
 
 /// Returns `true` if the given [ClassMember] is a method.
 bool isMethod(ClassMember m) => m is MethodDeclaration;
@@ -172,6 +160,9 @@ bool isPublicMethod(ClassMember m) {
   var declaredElement = m.declaredElement;
   return declaredElement != null && isMethod(m) && declaredElement.isPublic;
 }
+
+/// Check if the given word is a Dart reserved word.
+bool isReservedWord(String word) => reservedWords.contains(word);
 
 /// Returns `true` if the given method [declaration] is a "simple getter".
 ///
@@ -328,6 +319,16 @@ bool _checkForSimpleSetter(MethodDeclaration setter, Expression expression) {
   }
 
   return false;
+}
+
+List<String> _collectReservedWords() {
+  var reserved = <String>[];
+  for (var entry in Keyword.keywords.entries) {
+    if (entry.value.isReservedWord) {
+      reserved.add(entry.key);
+    }
+  }
+  return reserved;
 }
 
 int? _getIntValue(Expression expression, LinterContext? context,
