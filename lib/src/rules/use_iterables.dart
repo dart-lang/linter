@@ -83,8 +83,6 @@ class _Visitor extends SimpleAstVisitor {
         parent is VariableDeclaration ||
         parent is MethodInvocation ||
         parent is PropertyAccess ||
-        parent is ExpressionFunctionBody ||
-        parent is ReturnStatement ||
         parent is FunctionExpressionInvocation ||
         parent is ListLiteral ||
         parent is SetOrMapLiteral ||

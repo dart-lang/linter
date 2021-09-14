@@ -15,6 +15,19 @@ class A {
   Iterable map(Function(Object) f) => [];
 }
 
+T identity<T>(T x) => x;
+
+Iterable lazy() => [1].map(identity); // LINT
+Iterable? lazyOrNull() {
+  return [1].map(identity); // LINT
+}
+
+class H {
+  final Iterable iter;
+  H(Iterable iterable) :
+    iter = [...iterable].map(identity); // LINT
+}
+
 void f() {
   A().map(print); // OK
   [].map(print); // LINT
@@ -60,14 +73,14 @@ void f() {
   iterOrNull()?.map(print).first; // OK
   true ? [].map(print) : []; // LINT
   var iter3 = true ? [].map(print) : []; // OK
-  visit([1].map((e) => e)); // OK
+  visit([1].map(identity); // OK
   visit([
     1,
-    ...[2, 3].map((e) => e), // OK
+    ...[2, 3].map(identity), // OK
   ]);
 }
 
 void visit(Iterable iterable) { }
 
-Iterable iter() => [].map(print); // OK
-Iterable? iterOrNull() => [].map(print); // OK
+Iterable iter() => [];
+Iterable? iterOrNull() => [];
