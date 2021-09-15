@@ -9,6 +9,7 @@ import 'dart:core' as core;
 
 extension I on Iterable {
   operator+(Iterable other) => [];
+  operator[](int index) => null;
 }
 
 class A {
@@ -73,11 +74,16 @@ void f() {
   iterOrNull()?.map(print).first; // OK
   true ? [].map(print) : []; // LINT
   var iter3 = true ? [].map(print) : []; // OK
-  visit([1].map(identity); // OK
+  visit([1].map(identity)); // OK
   visit([
     1,
     ...[2, 3].map(identity), // OK
   ]);
+
+  [1].expand((e) => [e].map(identity)); // OK
+  [1].expand((e) {
+    return [e].map(identity); // OK
+  });
 }
 
 void visit(Iterable iterable) { }

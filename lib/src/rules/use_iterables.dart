@@ -65,9 +65,20 @@ class _Visitor extends SimpleAstVisitor {
       DartTypeUtilities.implementsInterface(
           target.staticType, 'Iterable', 'dart.core');
 
-  static bool _isUsed(AstNode node) {
-    var parent = node.parent;
+  static bool _isUsed(AstNode? node) {
+    // todo(pq):consider refactoring to a check for "un"-use instead.
+    var parent = node?.parent;
     if (parent == null) return false;
+
+    if (parent is ExpressionFunctionBody) {
+      // Are we in a lambda?
+      return _isUsed(parent.parent);
+    }
+
+    if (parent is ReturnStatement) {
+      // Are we in a lambda?
+      return parent.thisOrAncestorOfType<ArgumentList>() != null;
+    }
 
     if (parent is ParenthesizedExpression ||
         parent is AsExpression ||
