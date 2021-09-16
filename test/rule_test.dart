@@ -237,8 +237,7 @@ void testRule(String ruleName, File file,
       fail('rule `$ruleName` is not registered; unable to test.');
     }
 
-    var driver = buildDriver(rule, file,
-        analysisOptions: analysisOptions);
+    var driver = buildDriver(rule, file, analysisOptions: analysisOptions);
 
     var lints = await driver.lintFiles([file]);
 
