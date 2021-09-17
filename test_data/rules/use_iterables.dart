@@ -88,6 +88,8 @@ void f() {
   for (var x in [1].map(identity)) { // OK
     print(x);
   }
+  
+  var z = '${[3].map(print)}'; //OK
 }
 
 void visit(Iterable iterable) { }

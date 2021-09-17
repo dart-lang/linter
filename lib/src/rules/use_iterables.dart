@@ -98,6 +98,7 @@ class _Visitor extends SimpleAstVisitor {
         parent is ListLiteral ||
         parent is SetOrMapLiteral ||
         parent is MapLiteralEntry ||
+        parent is InterpolationExpression ||
         parent is ForEachParts;
   }
 }
