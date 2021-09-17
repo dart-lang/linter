@@ -84,6 +84,10 @@ void f() {
   [1].expand((e) {
     return [e].map(identity); // OK
   });
+
+  for (var x in [1].map(identity)) { // OK
+    print(x);
+  }
 }
 
 void visit(Iterable iterable) { }
