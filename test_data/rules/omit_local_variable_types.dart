@@ -81,10 +81,10 @@ class Person {
 }
 
 class LinkedListNode {
-  LinkedListNode? next;
+  late LinkedListNode next;
 }
 void traverse(LinkedListNode head) {
-  for (LinkedListNode? node = head; node != null; node = node.next) { // LINT
+  for (LinkedListNode node = head; ; node = node.next) { // LINT
     // doSomething
   }
 }
