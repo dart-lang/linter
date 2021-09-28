@@ -25,9 +25,9 @@ int doubleFoo() {
 
 class A {
   int? _a;
-  int get myA {
+  int? get myA {
     _a ??= 0; // LINT
-    return _a!;
+    return _a;
   }
 }
 
