@@ -24,11 +24,10 @@ int doubleFoo() {
 }
 
 class A {
-  late int _a;
+  int? _a;
   int get myA {
-    // ignore: dead_null_aware_expression
     _a ??= 0; // LINT
-    return _a;
+    return _a!;
   }
 }
 

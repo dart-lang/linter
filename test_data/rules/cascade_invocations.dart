@@ -62,10 +62,8 @@ void noCascadeWithGetter() {
   foo.bar; // LINT
   foo.foo(); // LINT
   foo.bar = 8; // LINT
-  // ignore: invalid_null_aware_operator
   foo?.bar = 8; // OK
   foo.bar = 0; // OK
-  // ignore: invalid_null_aware_operator
   foo?.bar; // OK
 }
 
@@ -91,7 +89,6 @@ void withDifferentTypes() {
 
 void cascade() {
   final foo = new Foo();
-  // ignore: invalid_null_aware_operator
   foo?.baz();
   foo.baz(); // OK
   foo.baz(); // LINT

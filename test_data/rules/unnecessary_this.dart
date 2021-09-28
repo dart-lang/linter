@@ -5,9 +5,7 @@
 // test w/ `dart test -N unnecessary_this`
 
 extension E on int {
-  // ignore: invalid_null_aware_operator
   String? f() => this?.toString(); //OK
-  // ignore: invalid_null_aware_operator
   int? get h => this?.hashCode; //OK
 }
 
