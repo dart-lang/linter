@@ -17,33 +17,27 @@ class AvoidInitToNullTest extends LintRuleTest {
   @override
   String get lintRule => 'avoid_init_to_null';
 
-  test_lintOnNullable() async {
-    await assertHasLint(r'''
-int? ii = null;
-''');
-  }
-
-  test_NoLintOnInvalidAssignment_field() async {
+  test_invalidAssignment_field() async {
     // Produces an invalid_assignment compilation error.
-    await assertHasNoLint(r'''
+    await assertNoLint(r'''
 class X {
   int x = null;
 }
 ''');
   }
 
-  test_NoLintOnInvalidAssignment_parameter() async {
+  test_invalidAssignment_namedParameter() async {
     // Produces an invalid_assignment compilation error.
-    await assertHasNoLint(r'''
+    await assertNoLint(r'''
 class X {
   X({int a: null});
 }
 ''');
   }
 
-  test_NoLintOnInvalidAssignment_parameter2() async {
+  test_invalidAssignment_namedParameter_fieldFormal() async {
     // Produces an invalid_assignment compilation error.
-    await assertHasNoLint(r'''
+    await assertNoLint(r'''
 class X {
   int x;
   X({this.x: null});
@@ -51,10 +45,16 @@ class X {
 ''');
   }
 
-  test_NoLintOnInvalidAssignment_topLevel() async {
+  test_invalidAssignment_topLevelVariable() async {
     // Produces an invalid_assignment compilation error.
-    await assertHasNoLint(r'''
+    await assertNoLint(r'''
 int i = null;
+''');
+  }
+
+  test_nullable_topLevelVariable() async {
+    await assertLint(r'''
+int? ii = null;
 ''');
   }
 }

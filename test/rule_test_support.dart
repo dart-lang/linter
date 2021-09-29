@@ -31,10 +31,12 @@ class AnalysisOptionsFileConfig {
   String toContent() {
     var buffer = StringBuffer();
 
-    buffer.writeln('analyzer:');
-    buffer.writeln('  enable-experiment:');
-    for (var experiment in experiments) {
-      buffer.writeln('    - $experiment');
+    if (experiments.isNotEmpty) {
+      buffer.writeln('analyzer:');
+      buffer.writeln('  enable-experiment:');
+      for (var experiment in experiments) {
+        buffer.writeln('    - $experiment');
+      }
     }
 
     buffer.writeln('linter:');
@@ -53,7 +55,7 @@ abstract class LintRuleTest extends PubPackageResolutionTest {
   @override
   List<String> get _lintRules => [if (lintRule != null) lintRule!];
 
-  Future<void> assertHasLint(String code) async {
+  Future<void> assertLint(String code) async {
     addTestFile(code);
     await resolveTestFile();
 
@@ -66,7 +68,7 @@ abstract class LintRuleTest extends PubPackageResolutionTest {
     fail('Expected: $lintRule, found none');
   }
 
-  Future<void> assertHasNoLint(String code) async {
+  Future<void> assertNoLint(String code) async {
     addTestFile(code);
     await resolveTestFile();
 
