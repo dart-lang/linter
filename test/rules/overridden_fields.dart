@@ -109,8 +109,7 @@ class GC34 extends GC33 {
   @override
   Object gc33 = 'yada'; // LINT
 }
-''',
-    [
+''', [
       error(HintCode.OVERRIDE_ON_NON_OVERRIDING_FIELD, 120, 1),
       lint('overridden_fields', 127, 5),
       lint('overridden_fields', 202, 9),
@@ -128,7 +127,4 @@ class GC34 extends GC33 {
       lint('overridden_fields', 1004, 4),
     ]);
   }
-
 }
-
-
