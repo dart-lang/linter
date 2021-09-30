@@ -63,9 +63,6 @@ class AnalysisOptionsFileConfig {
 
 /// A description of a diagnostic that is expected to be reported.
 class ExpectedDiagnostic {
-  /// An empty array of diagnostic descriptors used when no errors are expected.
-  static List<ExpectedDiagnostic> noDiagnostics = <ExpectedDiagnostic>[];
-
   final DiagnosticMatcher diagnosticMatcher;
 
   /// The offset of the beginning of the diagnostic's region.

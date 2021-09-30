@@ -58,73 +58,73 @@ class Bad1 extends Base {
 
 class GC11 extends Bad1 {
   @override
-  Object something = 'done'; // LINT
+  Object something = 'done';
 
   Object gc33 = 'gc33';
 }
 
 class GC13 extends Object with Bad1 {
   @override
-  Object something = 'done'; // OK
+  Object something = 'done';
 
   @override
-  Object field = 'lint'; // LINT
+  Object field = 'lint';
 }
 
 abstract class GC21 extends GC11 {
   @override
-  Object something = 'done'; // LINT
+  Object something = 'done';
 }
 
 class GC23 extends Object with GC13 {
   @override
-  Object something = 'done'; // LINT
+  Object something = 'done';
 
   @override
-  Object field = 'lint'; // LINT
+  Object field = 'lint';
 }
 
 abstract class GC31 extends GC13 {
   @override
-  Object something = 'done'; // LINT
+  Object something = 'done';
 }
 
 abstract class GC32 implements GC13 {
   @override
-  Object something = 'done'; // OK
+  Object something = 'done';
 }
 
 class GC33 extends GC21 with GC13 {
   @override
-  Object something = 'done'; // LINT
+  Object something = 'done';
 
   @override
-  Object gc33 = 'yada'; // LINT
+  Object gc33 = 'yada';
 }
 
 class GC34 extends GC33 {
   @override
-  var x = 3; // LINT
+  var x = 3;
 
   @override
-  Object gc33 = 'yada'; // LINT
+  Object gc33 = 'yada';
 }
 ''', [
       error(HintCode.OVERRIDE_ON_NON_OVERRIDING_FIELD, 120, 1),
       lint('overridden_fields', 127, 5),
       lint('overridden_fields', 202, 9),
-      error(CompileTimeErrorCode.MIXIN_INHERITS_FROM_NOT_OBJECT, 289, 4),
-      lint('overridden_fields', 365, 5),
-      lint('overridden_fields', 448, 9),
-      error(CompileTimeErrorCode.MIXIN_INHERITS_FROM_NOT_OBJECT, 510, 4),
-      lint('overridden_fields', 538, 9),
-      lint('overridden_fields', 588, 5),
-      lint('overridden_fields', 671, 9),
-      error(CompileTimeErrorCode.MIXIN_INHERITS_FROM_NOT_OBJECT, 819, 4),
-      lint('overridden_fields', 847, 9),
-      lint('overridden_fields', 897, 4),
-      lint('overridden_fields', 967, 1),
-      lint('overridden_fields', 1004, 4),
+      error(CompileTimeErrorCode.MIXIN_INHERITS_FROM_NOT_OBJECT, 281, 4),
+      lint('overridden_fields', 351, 5),
+      lint('overridden_fields', 426, 9),
+      error(CompileTimeErrorCode.MIXIN_INHERITS_FROM_NOT_OBJECT, 480, 4),
+      lint('overridden_fields', 508, 9),
+      lint('overridden_fields', 550, 5),
+      lint('overridden_fields', 625, 9),
+      error(CompileTimeErrorCode.MIXIN_INHERITS_FROM_NOT_OBJECT, 759, 4),
+      lint('overridden_fields', 787, 9),
+      lint('overridden_fields', 829, 4),
+      lint('overridden_fields', 891, 1),
+      lint('overridden_fields', 920, 4),
     ]);
   }
 }
