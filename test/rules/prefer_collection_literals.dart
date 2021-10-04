@@ -77,4 +77,16 @@ void c() {
       lint('prefer_collection_literals', 86, 20),
     ]);
   }
+
+  test_undefinedFunction() async {
+    await assertDiagnostics(r'''
+import 'dart:collection';
+    
+void f() {
+  printUnresolved(LinkedHashSet<int>());
+}
+''', [
+      error(CompileTimeErrorCode.UNDEFINED_FUNCTION, 44, 15),
+    ]);
+  }
 }
