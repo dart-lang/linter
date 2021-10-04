@@ -86,6 +86,7 @@ void f() {
   printUnresolved(LinkedHashSet<int>());
 }
 ''', [
+      // No lints.
       error(CompileTimeErrorCode.UNDEFINED_FUNCTION, 44, 15),
     ]);
   }
