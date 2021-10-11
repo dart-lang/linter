@@ -9,7 +9,7 @@ import '../rule_test_support.dart';
 main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(FileNamesInvalidTest);
-    defineReflectiveTests(FileNamesValidTest);
+    defineReflectiveTests(FileNamesNonStrictTest);
   });
 }
 
@@ -31,12 +31,12 @@ class A { }
 }
 
 @reflectiveTest
-class FileNamesValidTest extends LintRuleTest {
+class FileNamesNonStrictTest extends LintRuleTest {
   @override
   String get lintRule => 'file_names';
 
   @override
-  String get testFilePath => '$testPackageLibPath/test.dart';
+  String get testFilePath => '$testPackageLibPath/non-strict.css.dart';
 
   test_validName() async {
     await assertNoDiagnostics(r'''
