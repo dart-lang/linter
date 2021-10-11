@@ -1,5 +1,6 @@
 # 1.13.0
 
+- allow `while (true) { ...}` in `literal_only_boolean_expressions`
 - fixed `file_names` to report at the start of the file (not the entire 
   compilation unit)
 - fixed `prefer_collection_literals` named typed param false positive
