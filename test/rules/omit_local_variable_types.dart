@@ -18,7 +18,22 @@ class OmitLocalVariableTypesTest extends LintRuleTest {
   String get lintRule => 'omit_local_variable_types';
 
   /// https://github.com/dart-lang/linter/issues/3016
-  test_neededForInference() async {
+  @failingTest
+  test_paramIsType() async {
+    await assertDiagnostics(r'''
+T bar<T>(T d) => d;
+
+String f() {
+  String h = bar('');
+  return h;
+}
+''', [
+      lint('omit_local_variable_types', 42, 26),
+    ]);
+  }
+
+  /// https://github.com/dart-lang/linter/issues/3016
+  test_typeNeededForInference() async {
     await assertNoDiagnostics(r'''
 T bar<T>(dynamic d) => d;
 
@@ -30,7 +45,7 @@ String f() {
   }
 
   /// https://github.com/dart-lang/linter/issues/3016
-  test_notNeededForInference() async {
+  test_typeParamProvided() async {
     await assertDiagnostics(r'''
 T bar<T>(dynamic d) => d;
 
