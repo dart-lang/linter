@@ -439,6 +439,6 @@ abstract class _ContextResolutionTest with ResourceProviderMixin {
     var convertedPath = convertPath(path);
 
     result = await resolveFile(convertedPath);
-    expect(result.state, ResultState.VALID);
+    expect(result, isA<ResolvedUnitResult>());
   }
 }
