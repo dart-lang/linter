@@ -38,10 +38,8 @@ String f() {
   String h = bar<String>('');
   return h;
 }
-''',
-    [
+''', [
       lint('omit_local_variable_types', 42, 26),
     ]);
   }
-
 }
