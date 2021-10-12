@@ -33,7 +33,7 @@
 <p>It's easy to forget await in async methods as naming conventions usually don't
 tell us if a method is sync or async (except for some in <code>dart:io</code>).</p>
 <p>When you really <em>do</em> want to start a fire-and-forget <code>Future</code>, the recommended
-way is to use <code>unawaited</code> from <code>package:pedantic</code>. The <code>// ignore</code> and
+way is to use <code>unawaited</code> from <code>dart:async</code>. The <code>// ignore</code> and
 <code>// ignore_for_file</code> comments also work.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">Future doSomething() =&gt; ...;
