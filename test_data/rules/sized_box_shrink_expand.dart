@@ -25,6 +25,33 @@ Widget sizedBoxWithInfiniteWidthInfiniteHeight() {
   );
 }
 
+Widget sizedBoxWithInfiniteWidthzeroHeight() {
+  return SizedBox(
+    // OK
+    height: double.0,
+    width: double.infinity,
+    child: Container(),
+  );
+}
+
+Widget sizedBoxWithZeroWidthInfiniteHeight() {
+  return SizedBox(
+    // OK
+    height: double.infinity,
+    width: 0,
+    child: Container(),
+  );
+}
+
+Widget sizedBoxWithMixedWidthsAndHeights() {
+  return SizedBox(
+    // OK
+    height: 26,
+    width: 42,
+    child: Container(),
+  );
+}
+
 Widget sizedBoxWithZeroWidth() {
   return SizedBox(
     // OK
