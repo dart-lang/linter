@@ -8,12 +8,12 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 import '../util/flutter_utils.dart';
 
-const _desc = r'SizedBox shrink and expand.';
+const _sizedBoxShrinkDescription = r'SizedBox.shrink constructor preferred.';
 
-const _details =
-    r'''Use SizedBox.shrink and SizedBox.expand constructors appropriately.
+const _sizedBoxShrinkDetails =
+    r'''Use SizedBox.shrink constructor appropriately.
 
-The `SizedBox.shrink(...)` and `SizedBox.expand(...)` constructors should be used
+The `SizedBox.shrink(...)` constructor should be used
 instead of the more general `SizedBox(...)` constructor for specific use cases. 
 
 **Examples**
@@ -29,6 +29,27 @@ Widget buildLogo() {
 }
 ```
 
+**GOOD:**
+```
+Widget buildLogo() {
+  return SizedBox.shrink(
+    child:const MyLogo(),
+  );
+}
+```
+''';
+
+const _sizedBoxExpandDescription = r'SizedBox.expand constructor preferred.';
+
+const _sizedBoxExpandDetails =
+    r'''Use SizedBox.expand constructor appropriately.
+
+The `SizedBox.expand(...)` constructor should be used
+instead of the more general `SizedBox(...)` constructor for specific use cases. 
+
+**Examples**
+
+**BAD:**
 ```
 Widget buildLogo() {
   return SizedBox(
@@ -39,15 +60,7 @@ Widget buildLogo() {
 }
 ```
 
-
 **GOOD:**
-```
-Widget buildLogo() {
-  return SizedBox.shrink(
-    child:const MyLogo(),
-  );
-}
-```
 
 ```
 Widget buildLogo() {
@@ -58,12 +71,14 @@ Widget buildLogo() {
 ```
 ''';
 
+late LintCode _lintCode;
+
 class SizedBoxShrinkExpand extends LintRule {
   SizedBoxShrinkExpand()
       : super(
             name: 'sized_box_shrink_expand',
-            description: _desc,
-            details: _details,
+            description: '',
+            details: '',
             group: Group.style);
 
   @override
@@ -75,6 +90,9 @@ class SizedBoxShrinkExpand extends LintRule {
   }
 }
 
+// TODO(domesticmouse): populate _lintCode based on analysis
+LintCode get lintCode => _lintCode;
+
 class _Visitor extends SimpleAstVisitor {
   final LintRule rule;
 
@@ -82,6 +100,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    // TODO(domesticmouse): figure out how to confirm this is an instance of `SizedBox`
     if (!isExactWidgetTypeContainer(node.staticType)) {
       return;
     }
