@@ -74,26 +74,20 @@ class _Visitor extends SimpleAstVisitor {
       return;
     }
 
-    var visitor = _WidthOrHeightArgumentVisitor();
-    node.visitChildren(visitor);
-    if (visitor.seenIncompatibleParams) {
+    var data = _ArgumentData(node.argumentList);
+
+    if (data.seenIncompatibleParams) {
       return;
     }
-    if (visitor.seenChild && (visitor.seenWidth || visitor.seenHeight) ||
-        visitor.seenWidth && visitor.seenHeight) {
+    if (data.seenChild && (data.seenWidth || data.seenHeight) ||
+        data.seenWidth && data.seenHeight) {
       rule.reportLint(node.constructorName);
     }
   }
 }
 
-class _WidthOrHeightArgumentVisitor extends SimpleAstVisitor<void> {
-  var seenWidth = false;
-  var seenHeight = false;
-  var seenChild = false;
-  var seenIncompatibleParams = false;
-
-  @override
-  void visitArgumentList(ArgumentList node) {
+class _ArgumentData {
+  _ArgumentData(ArgumentList node) {
     for (var name in node.arguments
         .cast<NamedExpression>()
         .map((arg) => arg.name.label.name)) {
@@ -110,4 +104,9 @@ class _WidthOrHeightArgumentVisitor extends SimpleAstVisitor<void> {
       }
     }
   }
+
+  var seenWidth = false;
+  var seenHeight = false;
+  var seenChild = false;
+  var seenIncompatibleParams = false;
 }

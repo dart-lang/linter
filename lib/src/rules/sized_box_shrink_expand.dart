@@ -8,12 +8,16 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 import '../util/flutter_utils.dart';
 
-const _sizedBoxShrinkDescription = r'SizedBox.shrink constructor preferred.';
+const _sizedBoxShrinkDescription =
+    r'Use the SizedBox.shrink(...) named constructor.';
 
-const _sizedBoxShrinkDetails =
-    r'''Use SizedBox.shrink constructor appropriately.
+const _sizedBoxExpandDescription =
+    r'Use the SizedBox.expand(...) named constructor';
 
-The `SizedBox.shrink(...)` constructor should be used
+const _details =
+    r'''Use SizedBox.shrink and SizedBox.expand constructors appropriately.
+
+The `SizedBox.shrink(...)` and `SizedBox.expand(...)` constructors should be used
 instead of the more general `SizedBox(...)` constructor for specific use cases. 
 
 **Examples**
@@ -28,28 +32,6 @@ Widget buildLogo() {
   );
 }
 ```
-
-**GOOD:**
-```
-Widget buildLogo() {
-  return SizedBox.shrink(
-    child:const MyLogo(),
-  );
-}
-```
-''';
-
-const _sizedBoxExpandDescription = r'SizedBox.expand constructor preferred.';
-
-const _sizedBoxExpandDetails =
-    r'''Use SizedBox.expand constructor appropriately.
-
-The `SizedBox.expand(...)` constructor should be used
-instead of the more general `SizedBox(...)` constructor for specific use cases. 
-
-**Examples**
-
-**BAD:**
 ```
 Widget buildLogo() {
   return SizedBox(
@@ -61,7 +43,13 @@ Widget buildLogo() {
 ```
 
 **GOOD:**
-
+```
+Widget buildLogo() {
+  return SizedBox.shrink(
+    child:const MyLogo(),
+  );
+}
+```
 ```
 Widget buildLogo() {
   return SizedBox.expand(
@@ -71,15 +59,15 @@ Widget buildLogo() {
 ```
 ''';
 
-late LintCode _lintCode;
-
 class SizedBoxShrinkExpand extends LintRule {
   SizedBoxShrinkExpand()
       : super(
             name: 'sized_box_shrink_expand',
             description: '',
-            details: '',
-            group: Group.style);
+            details: _details,
+            group: Group.style) {
+    lintCode = LintCode(name, 'Unused');
+  }
 
   @override
   void registerNodeProcessors(
@@ -88,57 +76,72 @@ class SizedBoxShrinkExpand extends LintRule {
 
     registry.addInstanceCreationExpression(this, visitor);
   }
+
+  @override
+  late LintCode lintCode;
 }
 
-// TODO(domesticmouse): populate _lintCode based on analysis
-LintCode get lintCode => _lintCode;
-
 class _Visitor extends SimpleAstVisitor {
-  final LintRule rule;
+  final SizedBoxShrinkExpand rule;
 
   _Visitor(this.rule);
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    // TODO(domesticmouse): figure out how to confirm this is an instance of `SizedBox`
-    if (!isExactWidgetTypeContainer(node.staticType)) {
+    // Only interested in the default constructor for the SizedBox widget
+    if (!isExactWidgetTypeSizedBox(node.staticType) ||
+        node.constructorName.name != null) {
       return;
     }
 
-    var visitor = _WidthOrHeightArgumentVisitor();
-    node.visitChildren(visitor);
-    if (visitor.seenIncompatibleParams) {
-      return;
-    }
-    if (visitor.seenChild && (visitor.seenWidth || visitor.seenHeight) ||
-        visitor.seenWidth && visitor.seenHeight) {
+    var data = _ArgumentData(node.argumentList);
+    if (data.width == 0 && data.height == 0) {
+      rule.lintCode = LintCode(rule.name, _sizedBoxShrinkDescription);
+      rule.reportLint(node.constructorName);
+    } else if (data.width == double.infinity &&
+        data.height == double.infinity) {
+      rule.lintCode = LintCode(rule.name, _sizedBoxExpandDescription);
       rule.reportLint(node.constructorName);
     }
   }
 }
 
-class _WidthOrHeightArgumentVisitor extends SimpleAstVisitor<void> {
-  var seenWidth = false;
-  var seenHeight = false;
-  var seenChild = false;
-  var seenIncompatibleParams = false;
+class _ArgumentData {
+  _ArgumentData(ArgumentList node) {
+    for (var argument in node.arguments.cast<NamedExpression>()) {
+      if (argument.name.label.name == 'width') {
+        var argumentVisitor = _ArgumentVisitor();
+        argument.expression.visitChildren(argumentVisitor);
+        width = argumentVisitor.argument;
+      } else if (argument.name.label.name == 'height') {
+        var argumentVisitor = _ArgumentVisitor();
+        argument.expression.visitChildren(argumentVisitor);
+        height = argumentVisitor.argument;
+      }
+    }
+  }
+
+  double? width;
+  double? height;
+}
+
+class _ArgumentVisitor extends SimpleAstVisitor {
+  double? argument;
 
   @override
-  void visitArgumentList(ArgumentList node) {
-    for (var name in node.arguments
-        .cast<NamedExpression>()
-        .map((arg) => arg.name.label.name)) {
-      if (name == 'width') {
-        seenWidth = true;
-      } else if (name == 'height') {
-        seenHeight = true;
-      } else if (name == 'child') {
-        seenChild = true;
-      } else if (name == 'key') {
-        // key doesn't matter (both SiezdBox and Container have it)
-      } else {
-        seenIncompatibleParams = true;
-      }
+  visitIntegerLiteral(IntegerLiteral node) {
+    argument = node.value!.toDouble();
+  }
+
+  @override
+  visitDoubleLiteral(DoubleLiteral node) {
+    argument = node.value;
+  }
+
+  @override
+  visitSimpleIdentifier(SimpleIdentifier node) {
+    if (node.name.toLowerCase() == 'infinity') {
+      argument = double.infinity;
     }
   }
 }
