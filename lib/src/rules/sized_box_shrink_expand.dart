@@ -8,12 +8,6 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 import '../util/flutter_utils.dart';
 
-const _sizedBoxShrinkDescription =
-    r'Use the `SizedBox.shrink(...)` named constructor.';
-
-const _sizedBoxExpandDescription =
-    r'Use the `SizedBox.expand(...)` named constructor';
-
 const _details =
     r'''Use `SizedBox.shrink(...)` and `SizedBox.expand(...)` constructors appropriately.
 
