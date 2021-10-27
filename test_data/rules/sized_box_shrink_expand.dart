@@ -8,8 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 Widget sizedBoxWithZeroWidthZeroHeight() {
-  return SizedBox(
-    // LINT
+  return SizedBox( // LINT
     height: 0,
     width: 0,
     child: Container(),
@@ -17,8 +16,7 @@ Widget sizedBoxWithZeroWidthZeroHeight() {
 }
 
 Widget sizedBoxWithInfiniteWidthInfiniteHeight() {
-  return SizedBox(
-    // LINT
+  return SizedBox( // LINT
     height: double.INFINITY,
     width: double.INFINITY,
     child: Container(),
@@ -26,8 +24,7 @@ Widget sizedBoxWithInfiniteWidthInfiniteHeight() {
 }
 
 Widget sizedBoxWithInfiniteWidthzeroHeight() {
-  return SizedBox(
-    // OK
+  return SizedBox( // OK
     height: 0,
     width: double.INFINITY,
     child: Container(),
@@ -35,8 +32,7 @@ Widget sizedBoxWithInfiniteWidthzeroHeight() {
 }
 
 Widget sizedBoxWithZeroWidthInfiniteHeight() {
-  return SizedBox(
-    // OK
+  return SizedBox( // OK
     height: double.INFINITY,
     width: 0,
     child: Container(),
@@ -44,8 +40,7 @@ Widget sizedBoxWithZeroWidthInfiniteHeight() {
 }
 
 Widget sizedBoxWithMixedWidthsAndHeights() {
-  return SizedBox(
-    // OK
+  return SizedBox( // OK
     height: 26,
     width: 42,
     child: Container(),
@@ -53,32 +48,28 @@ Widget sizedBoxWithMixedWidthsAndHeights() {
 }
 
 Widget sizedBoxWithZeroWidth() {
-  return SizedBox(
-    // OK
+  return SizedBox( // OK
     width: 0,
     child: Container(),
   );
 }
 
 Widget sizedBoxWithInfiniteWidth() {
-  return SizedBox(
-    // OK
+  return SizedBox( // OK
     width: double.INFINITY,
     child: Container(),
   );
 }
 
 Widget sizedBoxWithZeroHeight() {
-  return SizedBox(
-    // OK
+  return SizedBox( // OK
     height: 0,
     child: Container(),
   );
 }
 
 Widget sizedBoxWithInfiniteHeight() {
-  return SizedBox(
-    // OK
+  return SizedBox( // OK
     height: double.INFINITY,
     child: Container(),
   );
