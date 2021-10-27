@@ -18,7 +18,7 @@ capture the intent of the code more succinctly.
 **Examples**
 
 **BAD:**
-```
+```dart
 Widget buildLogo() {
   return SizedBox(
     height: 0,
@@ -27,7 +27,8 @@ Widget buildLogo() {
   );
 }
 ```
-```
+
+```dart
 Widget buildLogo() {
   return SizedBox(
     height: double.infinity,
@@ -38,14 +39,15 @@ Widget buildLogo() {
 ```
 
 **GOOD:**
-```
+```dart
 Widget buildLogo() {
   return SizedBox.shrink(
     child:const MyLogo(),
   );
 }
 ```
-```
+
+```dart
 Widget buildLogo() {
   return SizedBox.expand(
     child:const MyLogo(),
@@ -77,9 +79,9 @@ class _Visitor extends SimpleAstVisitor {
   _Visitor(this.rule);
 
   static const LintCode useShrink = LintCode(
-      'sized_box_shrink_expand', "Use the 'SizedBox.shrink' constructor.");
+      'sized_box_shrink_expand', 'Use the `SizedBox.shrink` constructor.');
   static const LintCode useExpand = LintCode(
-      'sized_box_shrink_expand', "Use the 'SizedBox.expand' constructor.");
+      'sized_box_shrink_expand', 'Use the `SizedBox.expand` constructor.');
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
