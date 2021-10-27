@@ -65,9 +65,7 @@ class SizedBoxShrinkExpand extends LintRule {
             name: 'sized_box_shrink_expand',
             description: 'Use SizedBox shrink and expand named constructors.',
             details: _details,
-            group: Group.style) {
-    lintCode = LintCode(name, 'Unused');
-  }
+            group: Group.style);
 
   @override
   void registerNodeProcessors(
@@ -76,15 +74,17 @@ class SizedBoxShrinkExpand extends LintRule {
 
     registry.addInstanceCreationExpression(this, visitor);
   }
-
-  @override
-  late LintCode lintCode;
 }
 
 class _Visitor extends SimpleAstVisitor {
   final SizedBoxShrinkExpand rule;
 
   _Visitor(this.rule);
+
+  static const LintCode useShrink = LintCode(
+      'sized_box_shrink_expand', "Use the 'SizedBox.shrink' constructor.");
+  static const LintCode useExpand = LintCode(
+      'sized_box_shrink_expand', "Use the 'SizedBox.expand' constructor.");
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
@@ -96,12 +96,10 @@ class _Visitor extends SimpleAstVisitor {
 
     var data = _ArgumentData(node.argumentList);
     if (data.width == 0 && data.height == 0) {
-      rule.lintCode = LintCode(rule.name, _sizedBoxShrinkDescription);
-      rule.reportLint(node.constructorName);
+      rule.reportLint(node.constructorName, errorCode: useShrink);
     } else if (data.width == double.infinity &&
         data.height == double.infinity) {
-      rule.lintCode = LintCode(rule.name, _sizedBoxExpandDescription);
-      rule.reportLint(node.constructorName);
+      rule.reportLint(node.constructorName, errorCode: useExpand);
     }
   }
 }
