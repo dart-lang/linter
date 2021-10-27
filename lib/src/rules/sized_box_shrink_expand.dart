@@ -63,7 +63,7 @@ class SizedBoxShrinkExpand extends LintRule {
   SizedBoxShrinkExpand()
       : super(
             name: 'sized_box_shrink_expand',
-            description: '',
+            description: 'Use SizedBox shrink and expand named constructors.',
             details: _details,
             group: Group.style) {
     lintCode = LintCode(name, 'Unused');
