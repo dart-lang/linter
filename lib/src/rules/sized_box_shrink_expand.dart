@@ -110,39 +110,30 @@ class _ArgumentData {
         return;
       }
       if (argument.name.label.name == 'width') {
-        var argumentVisitor = _ArgumentVisitor();
-        argument.expression.visitChildren(argumentVisitor);
-        width = argumentVisitor.argument;
+        width = _argumentValue(argument.expression);
       } else if (argument.name.label.name == 'height') {
-        var argumentVisitor = _ArgumentVisitor();
-        argument.expression.visitChildren(argumentVisitor);
-        height = argumentVisitor.argument;
+        height = _argumentValue(argument.expression);
       }
     }
+  }
+
+  double? _argumentValue(Expression argument) {
+    if (argument is IntegerLiteral) {
+      return argument.value?.toDouble();
+    } else if (argument is DoubleLiteral) {
+      return argument.value;
+    } else if (argument is PropertyAccess &&
+        (argument.propertyName.name == 'infinity' ||
+            argument.propertyName.name == 'INFINITY')) {
+      var target = argument.target;
+      if (target is SimpleIdentifier && target.name == 'double') {
+        return double.infinity;
+      }
+    }
+    return null;
   }
 
   var positionalArgumentFound = false;
   double? width;
   double? height;
-}
-
-class _ArgumentVisitor extends SimpleAstVisitor {
-  double? argument;
-
-  @override
-  visitIntegerLiteral(IntegerLiteral node) {
-    argument = node.value!.toDouble();
-  }
-
-  @override
-  visitDoubleLiteral(DoubleLiteral node) {
-    argument = node.value;
-  }
-
-  @override
-  visitSimpleIdentifier(SimpleIdentifier node) {
-    if (node.name.toLowerCase() == 'infinity') {
-      argument = double.infinity;
-    }
-  }
 }
