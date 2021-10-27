@@ -128,7 +128,8 @@ class _ArgumentData {
         (argument.propertyName.name == 'infinity' ||
             argument.propertyName.name == 'INFINITY')) {
       var target = argument.target;
-      if (target is SimpleIdentifier && target.name == 'double') {
+      if ((target is SimpleIdentifier && target.name == 'double') ||
+          (target is PrefixedIdentifier && target.name == 'double')) {
         return double.infinity;
       }
     }
