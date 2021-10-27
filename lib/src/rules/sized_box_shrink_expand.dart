@@ -12,7 +12,8 @@ const _details =
     r'''Use `SizedBox.shrink(...)` and `SizedBox.expand(...)` constructors appropriately.
 
 The `SizedBox.shrink(...)` and `SizedBox.expand(...)` constructors should be used
-instead of the more general `SizedBox(...)` constructor for specific use cases. 
+instead of the more general `SizedBox(...)` constructor when the named constructors
+capture the intent of the code more succinctly. 
 
 **Examples**
 
