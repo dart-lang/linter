@@ -76,7 +76,7 @@ class _Visitor extends SimpleAstVisitor {
 
     var data = _ArgumentData(node.argumentList);
 
-    if (data.seenIncompatibleParams) {
+    if (data.incompatibleParamsFound || data.positionalArgumentFound) {
       return;
     }
     if (data.seenChild && (data.seenWidth || data.seenHeight) ||
@@ -88,25 +88,28 @@ class _Visitor extends SimpleAstVisitor {
 
 class _ArgumentData {
   _ArgumentData(ArgumentList node) {
-    for (var name in node.arguments
-        .cast<NamedExpression>()
-        .map((arg) => arg.name.label.name)) {
-      if (name == 'width') {
+    for (var argument in node.arguments) {
+      if (argument is! NamedExpression) {
+        positionalArgumentFound = true;
+        return;
+      }
+      if (argument.name.label.name == 'width') {
         seenWidth = true;
-      } else if (name == 'height') {
+      } else if (argument.name.label.name == 'height') {
         seenHeight = true;
-      } else if (name == 'child') {
+      } else if (argument.name.label.name == 'child') {
         seenChild = true;
-      } else if (name == 'key') {
-        // key doesn't matter (both SiezdBox and Container have it)
+      } else if (argument.name.label.name == 'key') {
+        // key doesn't matter (both SizedBox and Container have it)
       } else {
-        seenIncompatibleParams = true;
+        incompatibleParamsFound = true;
       }
     }
   }
 
+  var incompatibleParamsFound = false;
+  var positionalArgumentFound = false;
   var seenWidth = false;
   var seenHeight = false;
   var seenChild = false;
-  var seenIncompatibleParams = false;
 }

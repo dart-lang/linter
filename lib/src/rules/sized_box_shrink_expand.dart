@@ -89,6 +89,9 @@ class _Visitor extends SimpleAstVisitor {
     }
 
     var data = _ArgumentData(node.argumentList);
+    if (data.positionalArgumentFound) {
+      return;
+    }
     if (data.width == 0 && data.height == 0) {
       rule.reportLint(node.constructorName, errorCode: useShrink);
     } else if (data.width == double.infinity &&
@@ -100,7 +103,11 @@ class _Visitor extends SimpleAstVisitor {
 
 class _ArgumentData {
   _ArgumentData(ArgumentList node) {
-    for (var argument in node.arguments.cast<NamedExpression>()) {
+    for (var argument in node.arguments) {
+      if (argument is! NamedExpression) {
+        positionalArgumentFound = true;
+        return;
+      }
       if (argument.name.label.name == 'width') {
         var argumentVisitor = _ArgumentVisitor();
         argument.expression.visitChildren(argumentVisitor);
@@ -113,6 +120,7 @@ class _ArgumentData {
     }
   }
 
+  var positionalArgumentFound = false;
   double? width;
   double? height;
 }
