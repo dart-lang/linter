@@ -17,8 +17,8 @@ Widget sizedBoxWithZeroWidthZeroHeight() {
 
 Widget sizedBoxWithInfiniteWidthInfiniteHeight() {
   return SizedBox( // LINT
-    height: double.INFINITY,
-    width: double.INFINITY,
+    height: double.infinity,
+    width: double.infinity,
     child: Container(),
   );
 }
@@ -26,14 +26,14 @@ Widget sizedBoxWithInfiniteWidthInfiniteHeight() {
 Widget sizedBoxWithInfiniteWidthzeroHeight() {
   return SizedBox( // OK
     height: 0,
-    width: double.INFINITY,
+    width: double.infinity,
     child: Container(),
   );
 }
 
 Widget sizedBoxWithZeroWidthInfiniteHeight() {
   return SizedBox( // OK
-    height: double.INFINITY,
+    height: double.infinity,
     width: 0,
     child: Container(),
   );
@@ -56,7 +56,7 @@ Widget sizedBoxWithZeroWidth() {
 
 Widget sizedBoxWithInfiniteWidth() {
   return SizedBox( // OK
-    width: double.INFINITY,
+    width: double.infinity,
     child: Container(),
   );
 }
@@ -70,7 +70,7 @@ Widget sizedBoxWithZeroHeight() {
 
 Widget sizedBoxWithInfiniteHeight() {
   return SizedBox( // OK
-    height: double.INFINITY,
+    height: double.infinity,
     child: Container(),
   );
 }
