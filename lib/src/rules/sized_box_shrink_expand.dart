@@ -124,14 +124,10 @@ class _ArgumentData {
       return argument.value?.toDouble();
     } else if (argument is DoubleLiteral) {
       return argument.value;
-    } else if (argument is PropertyAccess &&
-        (argument.propertyName.name == 'infinity' ||
-            argument.propertyName.name == 'INFINITY')) {
-      var target = argument.target;
-      if ((target is SimpleIdentifier && target.name == 'double') ||
-          (target is PrefixedIdentifier && target.name == 'double')) {
-        return double.infinity;
-      }
+    } else if (argument is PrefixedIdentifier &&
+        argument.identifier.name == 'infinity' &&
+        argument.prefix.name == 'double') {
+      return double.infinity;
     }
     return null;
   }
