@@ -4,16 +4,20 @@
 
 // test w/ `dart test -N unnecessary_late`
 
-late String unnecessaryTopLevel = ""; // LINT
+late String unnecessaryTopLevelLate = ''; // LINT
 
-late String necessaryTopLevel; // OK
+late String necessaryTopLevelLate; // OK
+
+String unnecessaryTopLevel = ''; // OK
 
 class Test {
-  static late String unnecessaryStatic = ""; // LINT
+  static late String unnecessaryStaticLate = ''; // LINT
 
-  static late String necessaryStatic; // OK
+  static late String necessaryStaticLate; // OK
+
+  static String unnecessaryStatic = ''; // OK
 
   void test() {
-    late String necessaryLocal = ""; // OK
+    late String necessaryLocal = ''; // OK
   }
 }
