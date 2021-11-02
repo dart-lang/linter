@@ -19,25 +19,25 @@ as if they are marked `late`.
 
 **BAD:**
 ```dart
-late String badTopLevelLate = "";
+late String badTopLevel = '';
 ```
 
 **GOOD:**
 ```dart
-late String goodTopLevelLate;
+String goodTopLevel = '';
 ```
 
 **BAD:**
 ```dart
 class BadExample {
-  static late String badStaticLate = "";
+  static late String badStatic = '';
 }
 ```
 
 **GOOD:**
 ```dart
 class GoodExample {
-  static late String goodStaticLate;
+  late String goodStatic;
 }
 ```
 ''';
