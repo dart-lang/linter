@@ -8,6 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group('unicode_utils', () {
     test('unsafe', () {
+      // https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-42574
       for (var c in [
         '‪', // U+202A
         '‫', // U+202B
