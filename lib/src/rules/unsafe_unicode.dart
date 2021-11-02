@@ -8,7 +8,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 import '../util/unicode_utils.dart';
 
-const _desc = r'Do not use bidirectional Unicode text.';
+const _desc = r"Don't use bidirectional Unicode text.";
 
 const _details = r'''
 
