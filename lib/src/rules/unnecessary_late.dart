@@ -64,11 +64,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  void _visitVariableDeclarations(VariableDeclarationList node) {
-    for (var variable in node.variables) {
-      if (variable.isLate && variable.initializer != null) {
-        rule.reportLint(variable);
-      }
+  @override
+  void visitFieldDeclaration(FieldDeclaration node) {
+    if (node.isStatic) {
+      _visitVariableDeclarations(node.fields);
     }
   }
 
@@ -77,10 +76,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     _visitVariableDeclarations(node.variables);
   }
 
-  @override
-  void visitFieldDeclaration(FieldDeclaration node) {
-    if (node.isStatic) {
-      _visitVariableDeclarations(node.fields);
+  void _visitVariableDeclarations(VariableDeclarationList node) {
+    for (var variable in node.variables) {
+      if (variable.isLate && variable.initializer != null) {
+        rule.reportLint(variable);
+      }
     }
   }
 }
