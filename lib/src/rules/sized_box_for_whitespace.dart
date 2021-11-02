@@ -93,13 +93,14 @@ class _ArgumentData {
         positionalArgumentFound = true;
         return;
       }
-      if (argument.name.label.name == 'width') {
+      var label = argument.name.label;
+      if (label.name == 'width') {
         seenWidth = true;
-      } else if (argument.name.label.name == 'height') {
+      } else if (label.name == 'height') {
         seenHeight = true;
-      } else if (argument.name.label.name == 'child') {
+      } else if (label.name == 'child') {
         seenChild = true;
-      } else if (argument.name.label.name == 'key') {
+      } else if (label.name == 'key') {
         // key doesn't matter (both SizedBox and Container have it)
       } else {
         incompatibleParamsFound = true;

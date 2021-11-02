@@ -111,9 +111,10 @@ class _ArgumentData {
         positionalArgumentFound = true;
         return;
       }
-      if (argument.name.label.name == 'width') {
+      var label = argument.name.label;
+      if (label.name == 'width') {
         width = _argumentValue(argument.expression);
-      } else if (argument.name.label.name == 'height') {
+      } else if (label.name == 'height') {
         height = _argumentValue(argument.expression);
       }
     }
