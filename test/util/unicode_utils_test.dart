@@ -7,7 +7,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('unicode_utils', () {
-    /// , , , U+202D, U+202E, U+2066, U+2067, U+2068, U+2069.
     test('unsafe', () {
       for (var c in [
         '‪', // U+202A
