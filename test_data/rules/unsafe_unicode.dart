@@ -4,4 +4,4 @@
 
 // test w/ `dart test -N unsafe_unicode`
 
-var u202e = '‮'; // LINT
+var u202e = '‮'; // LINT [-6]
