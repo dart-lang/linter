@@ -14,8 +14,9 @@ const _details = r'''
 
 **AVOID** using bidirectional Unicode text.
 
-Bidirectional Unicode text may be interpreted and compiled differently than how
-it appears in editors leading to possible security vulnerabilities. 
+[Bidirectional Unicode](https://unicode.org/reports/tr9/) text may be
+interpreted and compiled differently than how it appears in editors
+leading to possible security vulnerabilities. 
 
 See the Common Vulnerabilities and Exposures (CVE) publication:
 [CVE-2021-42574](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-42574)
@@ -26,6 +27,7 @@ class UnsafeUnicode extends LintRule {
   UnsafeUnicode()
       : super(
             name: 'unsafe_unicode',
+            // todo(pq): consider a message that includes the right escape sequence to use
             description: _desc,
             details: _details,
             // todo(pq): consider a new 'security' group
