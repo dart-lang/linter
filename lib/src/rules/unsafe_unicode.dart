@@ -12,7 +12,7 @@ const _desc = r"Don't use bidirectional Unicode text.";
 
 const _details = r'''
 
-**AVOID** using bidirectional Unicode text.
+**DO NOT** use bidirectional Unicode text.
 
 [Bidirectional Unicode](https://unicode.org/reports/tr9/) text may be
 interpreted and compiled differently than how it appears in editors
@@ -21,6 +21,12 @@ leading to possible security vulnerabilities.
 See the Common Vulnerabilities and Exposures (CVE) publication:
 [CVE-2021-42574](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-42574)
 for more details.
+
+For cases where bidirectional unicode text is needed, consider replacing the
+codepoints with the related escape sequences or prefix the occurence with 
+`// ignore: unsafe_unicode` and a comment explaining the intended use. For more
+on configuring analysis see the analysis options file
+[docs](https://dart.dev/guides/language/analysis-options#the-analysis-options-file).
 ''';
 
 class UnsafeUnicode extends LintRule {
