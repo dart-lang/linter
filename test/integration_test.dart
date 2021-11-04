@@ -44,6 +44,7 @@ import 'integration/prefer_mixin.dart' as prefer_mixin;
 import 'integration/prefer_relative_imports.dart' as prefer_relative_imports;
 import 'integration/public_member_api_docs.dart' as public_member_api_docs;
 import 'integration/sort_pub_dependencies.dart' as sort_pub_dependencies;
+import 'integration/pubspec_no_http_urls.dart' as pubspec_no_http_urls;
 import 'integration/unnecessary_lambdas.dart' as unnecessary_lambdas;
 import 'integration/unnecessary_string_escapes.dart'
     as unnecessary_string_escapes;
@@ -198,6 +199,7 @@ void ruleTests() {
     avoid_relative_lib_imports.main();
     prefer_relative_imports.main();
     public_member_api_docs.main();
+    pubspec_no_http_urls.main();
     avoid_renaming_method_parameters.main();
     avoid_private_typedef_functions.main();
     sort_pub_dependencies.main();

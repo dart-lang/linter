@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:linter/src/rules/pub/no_http_urls.dart';
+
 import 'analyzer.dart';
 import 'rules/always_declare_return_types.dart';
 import 'rules/always_put_control_body_on_new_line.dart';
@@ -347,6 +349,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(ProvideDeprecationMessage())
     ..register(PublicMemberApiDocs())
     ..register(PubPackageNames())
+    ..register(PubspecNoHttpUrls())
     ..register(RecursiveGetters())
     ..register(RequireTrailingCommas())
     ..register(SizedBoxForWhitespace())

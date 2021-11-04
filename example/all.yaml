@@ -144,6 +144,7 @@ linter:
     - prefer_void_to_null
     - provide_deprecation_message
     - public_member_api_docs
+    - pubspec_no_http_urls
     - recursive_getters
     - require_trailing_commas
     - sized_box_for_whitespace
