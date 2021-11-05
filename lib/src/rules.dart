@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:linter/src/rules/pub/no_http_urls.dart';
-
 import 'analyzer.dart';
 import 'rules/always_declare_return_types.dart';
 import 'rules/always_put_control_body_on_new_line.dart';
@@ -147,6 +145,7 @@ import 'rules/prefer_spread_collections.dart';
 import 'rules/prefer_typing_uninitialized_variables.dart';
 import 'rules/prefer_void_to_null.dart';
 import 'rules/provide_deprecation_message.dart';
+import 'rules/pub/no_http_urls.dart';
 import 'rules/pub/package_names.dart';
 import 'rules/pub/sort_pub_dependencies.dart';
 import 'rules/public_member_api_docs.dart';

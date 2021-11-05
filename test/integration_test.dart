@@ -43,8 +43,8 @@ import 'integration/prefer_const_constructors_in_immutables.dart'
 import 'integration/prefer_mixin.dart' as prefer_mixin;
 import 'integration/prefer_relative_imports.dart' as prefer_relative_imports;
 import 'integration/public_member_api_docs.dart' as public_member_api_docs;
-import 'integration/sort_pub_dependencies.dart' as sort_pub_dependencies;
 import 'integration/pubspec_no_http_urls.dart' as pubspec_no_http_urls;
+import 'integration/sort_pub_dependencies.dart' as sort_pub_dependencies;
 import 'integration/unnecessary_lambdas.dart' as unnecessary_lambdas;
 import 'integration/unnecessary_string_escapes.dart'
     as unnecessary_string_escapes;

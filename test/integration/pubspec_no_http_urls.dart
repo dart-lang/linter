@@ -35,9 +35,9 @@ void main() {
       expect(
           collectingOut.trim(),
           stringContainsInOrder([
-            'pubspec.yaml 4:11 [lint] Don\'t use http urls.',
-            'pubspec.yaml 14:12 [lint] Don\'t use http urls.',
-            'pubspec.yaml 27:12 [lint] Don\'t use http urls.',
+            'pubspec.yaml 4:11 [lint] The url should not use http as that is insecure.',
+            'pubspec.yaml 14:12 [lint] The url should not use http as that is insecure.',
+            'pubspec.yaml 27:12 [lint] The url should not use http as that is insecure.',
             '1 file analyzed, 3 issues found',
           ]));
       expect(exitCode, 1);

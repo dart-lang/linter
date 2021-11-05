@@ -1,4 +1,4 @@
-// Copyright (c) 2018, the Dart project authors. Please see the AUTHORS file
+// Copyright (c) 2021, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -12,6 +12,15 @@ const _details = r'''
 **DON'T** use http urls in `pubspec.yaml`.
 
 Use https instead.
+
+**GOOD:**
+```yaml
+repository: 'https://github.com/dart-lang/example'
+```
+
+**BAD:**
+```dart
+repository: 'http://github.com/dart-lang/example'
 ''';
 
 class PubspecNoHttpUrls extends LintRule {
@@ -24,6 +33,11 @@ class PubspecNoHttpUrls extends LintRule {
 
   @override
   PubspecVisitor getPubspecVisitor() => Visitor(this);
+
+  @override
+  LintCode get lintCode => const LintCode("Don't use http urls.",
+      'The url should not use http as that is insecure.',
+      correctionMessage: 'Try using https.');
 }
 
 class Visitor extends PubspecVisitor<void> {
@@ -35,7 +49,7 @@ class Visitor extends PubspecVisitor<void> {
     if (node == null) return;
     try {
       var text = node.text;
-      if (text != null && Uri.parse(text).scheme == 'http') {
+      if (text != null && Uri.parse(text).isScheme('http')) {
         rule.reportPubLint(node);
       }
     } on FormatException {
