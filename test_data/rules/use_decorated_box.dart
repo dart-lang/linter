@@ -58,3 +58,24 @@ Widget containerWithKeyAndDecorationAndChild() {
     child: SizedBox(),
   );
 }
+
+Widget containerWithAnotherArgument() {
+  return Container( // OK
+    width: 20,
+  );
+}
+
+Widget containerWithDecorationAndAdditionalArgument() {
+  return Container( // OK
+    decoration: BoxDecoration(),
+    width: 20,
+  );
+}
+
+Widget containerWithDecorationAndAdditionalArgumentAndChild() {
+  return Container( // OK
+    decoration: BoxDecoration(),
+    width: 20,
+    child: SizedBox(),
+  );
+}
