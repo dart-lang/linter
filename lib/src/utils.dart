@@ -43,12 +43,15 @@ final _pubspec = RegExp(r'^_?pubspec\.yaml$');
 
 final _underscores = RegExp(r'^_+$');
 
+final _validLibraryPrefix = RegExp(r'^\$?_*[a-z][_a-z\d]*$');
+
 // A library prefix here is defined as:
 // * An optional leading `?`,
 // * then any number of underscores, `_`,
 // * then a lower-case letter,
 // * followed by any number of lower-case letters, digits and underscores.
-final _validLibraryPrefix = RegExp(r'^\$?_*[a-z][_a-z\d]*$');
+/// Returns `true` if the given [name] has a leading `_`.
+bool hasLeadingUnderscore(String name) => name.startsWith('_');
 
 /// Check if this [string] is formatted in `CamelCase`.
 bool isCamelCase(String string) => CamelCaseString.isCamelCase(string);
