@@ -12,7 +12,7 @@ import '../mocks.dart';
 import '../test_constants.dart';
 
 void main() {
-  group('pubspec_no_http_urls', () {
+  group('secure_pubspec_urls', () {
     var currentOut = outSink;
     var collectingOut = CollectingSink();
 
@@ -29,16 +29,17 @@ void main() {
 
     test('finds http urls', () async {
       await cli.run([
-        '$integrationTestDir/pubspec_no_http_urls',
-        '--rules=pubspec_no_http_urls',
+        '$integrationTestDir/secure_pubspec_urls',
+        '--rules=secure_pubspec_urls',
       ]);
       expect(
           collectingOut.trim(),
           stringContainsInOrder([
-            'pubspec.yaml 4:11 [lint] The url should not use http as that is insecure.',
-            'pubspec.yaml 14:12 [lint] The url should not use http as that is insecure.',
-            'pubspec.yaml 27:12 [lint] The url should not use http as that is insecure.',
-            '1 file analyzed, 3 issues found',
+            'pubspec.yaml 4:11 [lint] The url should only only use secure protocols.',
+            'pubspec.yaml 14:12 [lint] The url should only only use secure protocols.',
+            'pubspec.yaml 27:12 [lint] The url should only only use secure protocols.',
+            'pubspec.yaml 31:12 [lint] The url should only only use secure protocols.',
+            '1 file analyzed, 4 issues found',
           ]));
       expect(exitCode, 1);
     });

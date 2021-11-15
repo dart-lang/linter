@@ -6,12 +6,12 @@ import 'package:analyzer/src/lint/pub.dart'; // ignore: implementation_imports
 
 import '../../analyzer.dart';
 
-const _desc = r"Don't use http urls.";
+const _desc = r'Use secure urls in `pubspec.yaml`.';
 
 const _details = r'''
-**DON'T** use http urls in `pubspec.yaml`.
+**DO** Use secure urls in `pubspec.yaml`.
 
-Use https instead.
+Use `https` instead of `http` an `git:`.
 
 **GOOD:**
 ```yaml
@@ -26,7 +26,7 @@ repository: 'http://github.com/dart-lang/example'
 class PubspecNoHttpUrls extends LintRule {
   PubspecNoHttpUrls()
       : super(
-            name: 'pubspec_no_http_urls',
+            name: 'secure_pubspec_urls',
             description: _desc,
             details: _details,
             group: Group.pub);
@@ -35,8 +35,8 @@ class PubspecNoHttpUrls extends LintRule {
   PubspecVisitor getPubspecVisitor() => Visitor(this);
 
   @override
-  LintCode get lintCode => const LintCode("Don't use http urls.",
-      'The url should not use http as that is insecure.',
+  LintCode get lintCode => const LintCode(
+      'secure_pubspec_urls', 'The url should only only use secure protocols.',
       correctionMessage: 'Try using https.');
 }
 
@@ -47,13 +47,12 @@ class Visitor extends PubspecVisitor<void> {
 
   _checkUrl(PSNode? node) {
     if (node == null) return;
-    try {
-      var text = node.text;
-      if (text != null && Uri.parse(text).isScheme('http')) {
+    var text = node.text;
+    if (text != null) {
+      var uri = Uri.tryParse(text);
+      if (uri != null && (uri.isScheme('http') || uri.isScheme('git'))) {
         rule.reportPubLint(node);
       }
-    } on FormatException {
-      // Do nothing.
     }
   }
 

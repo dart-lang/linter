@@ -26,3 +26,7 @@ dependency_overrides:
     git:
       url: http://github.com/munificent/kittens2.git # lint
       ref: main
+  kittens3:
+    git:
+      url: git://github.com/munificent/kittens2.git # lint
+      ref: main
