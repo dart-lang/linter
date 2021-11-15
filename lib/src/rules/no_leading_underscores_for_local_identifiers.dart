@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 import '../utils.dart';
 
-const _desc = r'Avoid leading underscore for local identifiers.';
+const _desc = r'Avoid leading underscores for local identifiers.';
 
 const _details = r'''
 **DON’T** use a leading underscore for identifiers that aren't private. Dart

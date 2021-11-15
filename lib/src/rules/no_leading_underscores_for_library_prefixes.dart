@@ -8,7 +8,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 import '../utils.dart';
 
-const _desc = r'Avoid leading underscore for library prefixes.';
+const _desc = r'Avoid leading underscores for library prefixes.';
 
 const _details = r'''
 **DON’T** use a leading underscore for library prefixes.
