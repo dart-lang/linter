@@ -4,6 +4,7 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+
 import '../analyzer.dart';
 import '../utils.dart';
 
@@ -86,10 +87,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
-  void visitVariableDeclarationStatement(VariableDeclarationStatement node) {
-    for (var v in node.variables.variables) {
-      checkIdentifier(v.name);
-    }
+  void visitCatchClause(CatchClause node) {
+    checkIdentifier(node.exceptionParameter);
+    checkIdentifier(node.stackTraceParameter);
+  }
+
+  @override
+  void visitDeclaredIdentifier(DeclaredIdentifier node) {
+    checkIdentifier(node.identifier);
   }
 
   @override
@@ -102,13 +107,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
-  void visitDeclaredIdentifier(DeclaredIdentifier node) {
-    checkIdentifier(node.identifier);
-  }
-
-  @override
-  void visitCatchClause(CatchClause node) {
-    checkIdentifier(node.exceptionParameter);
-    checkIdentifier(node.stackTraceParameter);
+  void visitVariableDeclarationStatement(VariableDeclarationStatement node) {
+    for (var v in node.variables.variables) {
+      checkIdentifier(v.name);
+    }
   }
 }
