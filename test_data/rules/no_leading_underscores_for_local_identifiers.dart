@@ -29,6 +29,12 @@ void fn4(_) => null; // OK
 
 void fn5(param_value) => null; // OK
 
+void fn6(void Function() function) {
+  fn6(() {
+    var _v = 1; // LINT
+  });
+}
+
 class TestClass {
   var _foo = 0; // OK
   static const _foo1 = 1; // OK
