@@ -45,6 +45,8 @@ class TestClass {
     [1,2,3].forEach((x) => fn()); // OK
     [1,2,3].forEach((_) => fn()); // OK
 
+    for (var _i = 0; _i < [].length; ++_i) { } // LINT
+
     try {}
     catch(_error) {} // LINT
 
@@ -65,15 +67,26 @@ class TestClass {
     void bar(var _baz) { } // LINT
   }
 
-  void foo1(_param) => null; // LINT
+  void foo1(_param) {} // LINT
 
-  void foo2(param) => null; // OK
+  void foo2(param) {} // OK
 
-  void foo3(_) => null; // OK
+  void foo3(_) {} // OK
 
-  void foo4(param_value) => null; // OK
+  void foo4(param_value) {} // OK
 
-  void foo5(param, [_positional]) => null; // LINT
+  void foo5(param, [_positional]) {} // LINT
 
-  void foo6(param, [positional]) => null; // OK
+  void foo6(param, [positional]) {} // OK
+
+  // ignore: private_optional_parameter
+  void foo7({required _named}) {} // OK
+
+  // ignore: private_optional_parameter
+  void foo8({_named}) {} // OK
+
+  void foo9({named}) {} // OK
+
 }
+
+typedef _OutputFunction = void Function(String msg); // OK
