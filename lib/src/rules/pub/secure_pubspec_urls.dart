@@ -23,8 +23,8 @@ repository: 'https://github.com/dart-lang/example'
 repository: 'http://github.com/dart-lang/example'
 ''';
 
-class PubspecNoHttpUrls extends LintRule {
-  PubspecNoHttpUrls()
+class SecurePubspecUrls extends LintRule {
+  SecurePubspecUrls()
       : super(
             name: 'secure_pubspec_urls',
             description: _desc,
@@ -37,7 +37,7 @@ class PubspecNoHttpUrls extends LintRule {
   @override
   LintCode get lintCode => const LintCode(
       'secure_pubspec_urls', 'The url should only only use secure protocols.',
-      correctionMessage: 'Try using https.');
+      correctionMessage: "Try using 'https'.");
 }
 
 class Visitor extends PubspecVisitor<void> {

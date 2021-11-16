@@ -348,7 +348,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(ProvideDeprecationMessage())
     ..register(PublicMemberApiDocs())
     ..register(PubPackageNames())
-    ..register(PubspecNoHttpUrls())
+    ..register(SecurePubspecUrls())
     ..register(RecursiveGetters())
     ..register(RequireTrailingCommas())
     ..register(SizedBoxForWhitespace())
