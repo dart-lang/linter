@@ -9,12 +9,16 @@ const _foo1 = 1; // OK
 final _foo2 = 2; // OK
 
 void fn() {
-  var _foo = 0; // LINT
+  var _f1, // LINT
+      _f2; // LINT
   const _foo1 = 1; // LINT
   final _foo2 = 2; // LINT
   var foo_value = 0; // OK
   var foo__value = 0; // OK
   var foo__value_ = 0; // OK
+  () {
+    var _f = 0; // LINT
+  }();
 }
 
 void fn2(_param1) => null; // LINT
@@ -46,6 +50,11 @@ class TestClass {
     [1,2,3].forEach((_) => fn()); // OK
 
     for (var _i = 0; _i < [].length; ++_i) { } // LINT
+
+    for (var _i = 0, // LINT
+        _j = 0; // LINT
+        ;
+    ++_i, ++_j) {}
 
     try {}
     catch(_error) {} // LINT

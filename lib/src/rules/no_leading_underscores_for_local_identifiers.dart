@@ -60,10 +60,11 @@ class NoLeadingUnderscoresForLocalIdentifiers extends LintRule
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
-    registry.addFormalParameterList(this, visitor);
-    registry.addVariableDeclarationStatement(this, visitor);
-    registry.addDeclaredIdentifier(this, visitor);
     registry.addCatchClause(this, visitor);
+    registry.addDeclaredIdentifier(this, visitor);
+    registry.addFormalParameterList(this, visitor);
+    registry.addForPartsWithDeclarations(this, visitor);
+    registry.addVariableDeclarationStatement(this, visitor);
   }
 }
 
@@ -100,11 +101,17 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFormalParameterList(FormalParameterList node) {
     for (var p in node.parameters) {
-      // Optional named parameters produce a `private_optional_parameter`
-      // diagnostic.
-      if (p is! FieldFormalParameter && !p.isOptionalNamed) {
+      // Named parameters produce a `private_optional_parameter` diagnostic.
+      if (p is! FieldFormalParameter && !p.isNamed) {
         checkIdentifier(p.identifier, isJustUnderscoresOK: true);
       }
+    }
+  }
+
+  @override
+  void visitForPartsWithDeclarations(ForPartsWithDeclarations node) {
+    for (var variable in node.variables.variables) {
+      checkIdentifier(variable.name);
     }
   }
 
