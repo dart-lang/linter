@@ -3,5 +3,6 @@
 // found in the LICENSE file.
 
 export 'src/material/button.dart';
+export 'src/material/colors.dart';
 export 'src/material/scaffold.dart';
 export 'widgets.dart';
