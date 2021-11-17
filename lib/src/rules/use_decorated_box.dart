@@ -12,7 +12,7 @@ const _desc = r'Use `DecoratedBox`.';
 
 const _details = r'''
 
-**DO** use `DecoratedBox` when `Container` has only `Decoration`.
+**DO** use `DecoratedBox` when `Container` has only a `Decoration`.
 
 A `Container` is a heavier Widget than a `DecoratedBox`, and as bonus,
 `DecoratedBox` has a `const` constructor.
