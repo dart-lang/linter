@@ -39,7 +39,7 @@ capture the intent of the code more succinctly.</p>
   return SizedBox(
     height: 0,
     width: 0,
-    child:const MyLogo(),
+    child: const MyLogo(),
   );
 }
 </code></pre>
@@ -47,20 +47,20 @@ capture the intent of the code more succinctly.</p>
   return SizedBox(
     height: double.infinity,
     width: double.infinity,
-    child:const MyLogo(),
+    child: const MyLogo(),
   );
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">Widget buildLogo() {
   return SizedBox.shrink(
-    child:const MyLogo(),
+    child: const MyLogo(),
   );
 }
 </code></pre>
 <pre><code class="language-dart">Widget buildLogo() {
   return SizedBox.expand(
-    child:const MyLogo(),
+    child: const MyLogo(),
   );
 }
 </code></pre>
