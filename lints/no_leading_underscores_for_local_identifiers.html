@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>avoid_redundant_argument_values</title>
+      <title>no_leading_underscores_for_local_identifiers</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_redundant_argument_values</h1>
+            <h1>no_leading_underscores_for_local_identifiers</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Linter v0.1.107</p>
+               <p>Linter vnull</p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,27 +29,31 @@
          </header>
          <section>
 
-            <p>Avoid redundant argument values.</p>
-<p><strong>DON'T</strong> declare arguments with values that match the defaults for the
-corresponding parameter.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void f({bool valWithDefault = true, bool? val}) {
+            <p><strong>DON’T</strong> use a leading underscore for identifiers that aren't private. Dart
+uses a leading underscore in an identifier to mark members and top-level
+declarations as private. This trains users to associate a leading underscore
+with one of those kinds of declarations. They see <code>_</code> and  think "private".
+There is no concept of "private" for local variables or parameters.  When one of 
+those has a name that starts with an underscore, it sends a confusing signal to
+the reader. To avoid that, don't use leading underscores in those names.</p>
+<p><strong>Exception</strong>: An unused parameter can be named <code>_</code>, <code>__</code>, <code>___</code>, etc.  This is
+common practice in callbacks where you are passed a value but you don't need
+to use it. Giving it a name that consists solely of underscores is the idiomatic
+way to indicate that the value isn't used.</p>
+<p><strong>BAD</strong></p>
+<pre><code class="language-dart">void print(String _name) {
+  var _size = _name.length;
   ...
-}
-
-void main() {
-  f(valWithDefault: true);
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void f({bool valWithDefault = true, bool? val}) {
+<pre><code class="language-dart">void print(String name) {
+  var size = name.length;
   ...
 }
-
-void main() {
-  f(valWithDefault: false);
-  f();
-}
+</code></pre>
+<p><strong>OK:</strong></p>
+<pre><code class="language-dart">[1,2,3].map((_) =&gt; print('Hello'));
 </code></pre>
 
             

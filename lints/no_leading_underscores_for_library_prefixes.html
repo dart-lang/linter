@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>avoid_redundant_argument_values</title>
+      <title>no_leading_underscores_for_library_prefixes</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_redundant_argument_values</h1>
+            <h1>no_leading_underscores_for_library_prefixes</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Linter v0.1.107</p>
+               <p>Linter vnull</p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,27 +29,15 @@
          </header>
          <section>
 
-            <p>Avoid redundant argument values.</p>
-<p><strong>DON'T</strong> declare arguments with values that match the defaults for the
-corresponding parameter.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void f({bool valWithDefault = true, bool? val}) {
-  ...
-}
-
-void main() {
-  f(valWithDefault: true);
-}
+            <p><strong>DON’T</strong> use a leading underscore for library prefixes.
+There is no concept of "private" for library prefixes. When one of those has a
+name that starts with an underscore, it sends a confusing signal to the reader. 
+To avoid that, don't use leading underscores in those names.</p>
+<p><strong>BAD</strong></p>
+<pre><code class="language-dart">import 'dart:core' as _core;
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void f({bool valWithDefault = true, bool? val}) {
-  ...
-}
-
-void main() {
-  f(valWithDefault: false);
-  f();
-}
+<pre><code class="language-dart">import 'dart:core' as core;
 </code></pre>
 
             

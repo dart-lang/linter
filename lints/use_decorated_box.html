@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>avoid_redundant_argument_values</title>
+      <title>use_decorated_box</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_redundant_argument_values</h1>
+            <h1>use_decorated_box</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Linter v0.1.107</p>
+               <p>Linter vnull</p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,26 +29,33 @@
          </header>
          <section>
 
-            <p>Avoid redundant argument values.</p>
-<p><strong>DON'T</strong> declare arguments with values that match the defaults for the
-corresponding parameter.</p>
+            <p><strong>DO</strong> use <code>DecoratedBox</code> when <code>Container</code> has only a <code>Decoration</code>.</p>
+<p>A <code>Container</code> is a heavier Widget than a <code>DecoratedBox</code>, and as bonus,
+<code>DecoratedBox</code> has a <code>const</code> constructor.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void f({bool valWithDefault = true, bool? val}) {
-  ...
-}
-
-void main() {
-  f(valWithDefault: true);
+<pre><code class="language-dart">Widget buildArea() {
+  return Container(
+    decoration: const BoxDecoration(
+      color: Colors.blue,
+      borderRadius: BorderRadius.all(
+        Radius.circular(5),
+      ),
+    ),
+    child: const Text('...'),
+  );
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void f({bool valWithDefault = true, bool? val}) {
-  ...
-}
-
-void main() {
-  f(valWithDefault: false);
-  f();
+<pre><code class="language-dart">Widget buildArea() {
+  return const DecoratedBox(
+    decoration: BoxDecoration(
+      color: Colors.blue,
+      borderRadius: BorderRadius.all(
+        Radius.circular(5),
+      ),
+    ),
+    child: Text('...'),
+  );
 }
 </code></pre>
 

@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>avoid_redundant_argument_values</title>
+      <title>secure_pubspec_urls</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_redundant_argument_values</h1>
-            <p>Group: style</p>
+            <h1>secure_pubspec_urls</h1>
+            <p>Group: pub</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Linter v0.1.107</p>
+               <p>Linter vnull</p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,27 +29,14 @@
          </header>
          <section>
 
-            <p>Avoid redundant argument values.</p>
-<p><strong>DON'T</strong> declare arguments with values that match the defaults for the
-corresponding parameter.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void f({bool valWithDefault = true, bool? val}) {
-  ...
-}
-
-void main() {
-  f(valWithDefault: true);
-}
-</code></pre>
+            <p><strong>DO</strong> Use secure urls in <code>pubspec.yaml</code>.</p>
+<p>Use <code>https</code> instead of <code>http</code> an <code>git:</code>.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void f({bool valWithDefault = true, bool? val}) {
-  ...
-}
+<pre><code class="language-yaml">repository: 'https://github.com/dart-lang/example'
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">repository: 'http://github.com/dart-lang/example'
 
-void main() {
-  f(valWithDefault: false);
-  f();
-}
 </code></pre>
 
             

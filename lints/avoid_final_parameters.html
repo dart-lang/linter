@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>avoid_redundant_argument_values</title>
+      <title>avoid_final_parameters</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_redundant_argument_values</h1>
+            <h1>avoid_final_parameters</h1>
             <p>Group: style</p>
             <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Linter v0.1.107</p>
+               <p>Linter vnull</p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,30 +29,36 @@
          </header>
          <section>
 
-            <p>Avoid redundant argument values.</p>
-<p><strong>DON'T</strong> declare arguments with values that match the defaults for the
-corresponding parameter.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void f({bool valWithDefault = true, bool? val}) {
-  ...
+            <p><strong>AVOID</strong> declaring parameters as final.</p>
+<p>Declaring parameters as final can lead to unecessarily verbose code, especially
+when using the "parameter_assignments" rule.</p>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">void badParameter(String label) { // OK
+  print(label);
 }
-
-void main() {
-  f(valWithDefault: true);
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">void goodParameter(final String label) { // LINT
+  print(label);
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void f({bool valWithDefault = true, bool? val}) {
-  ...
-}
-
-void main() {
-  f(valWithDefault: false);
-  f();
-}
+<pre><code class="language-dart">void badExpression(int value) =&gt; print(value); // OK
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">void goodExpression(final int value) =&gt; print(value); // LINT
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">[1, 4, 6, 8].forEach((value) =&gt; print(value + 2)); // OK
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">[1, 4, 6, 8].forEach((final value) =&gt; print(value + 2)); // LINT
 </code></pre>
 
-            
+            <p>
+Incompatible with: <!--suppress HtmlUnknownTarget --><a href = "prefer_final_parameters.html" >prefer_final_parameters</a>.
+</p>
+
          </section>
       </div>
       <footer>

@@ -29,27 +29,44 @@
          </header>
          <section>
 
-            <p><strong>CONSIDER</strong> omitting type annotations for local variables.</p>
-<p>Usually, the types of local variables can be easily inferred, so it isn't
-necessary to annotate them.</p>
+            <p><strong>DON’T</strong> redundantly type annotate initialized local variables.</p>
+<p>Local variables, especially in modern code where functions tend to be small,
+have very little scope. Omitting the type focuses the reader's attention on the
+more important <em>name</em> of the variable and its initialized value.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">Map&lt;int, List&lt;Person&gt;&gt; groupByZip(Iterable&lt;Person&gt; people) {
-  Map&lt;int, List&lt;Person&gt;&gt; peopleByZip = &lt;int, List&lt;Person&gt;&gt;{};
-  for (Person person in people) {
-    peopleByZip.putIfAbsent(person.zip, () =&gt; &lt;Person&gt;[]);
-    peopleByZip[person.zip].add(person);
+<pre><code class="language-dart">List&lt;List&lt;Ingredient&gt;&gt; possibleDesserts(Set&lt;Ingredient&gt; pantry) {
+  List&lt;List&lt;Ingredient&gt;&gt; desserts = &lt;List&lt;Ingredient&gt;&gt;[];
+  for (final List&lt;Ingredient&gt; recipe in cookbook) {
+    if (pantry.containsAll(recipe)) {
+      desserts.add(recipe);
+    }
   }
-  return peopleByZip;
+
+  return desserts;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">Map&lt;int, List&lt;Person&gt;&gt; groupByZip(Iterable&lt;Person&gt; people) {
-  var peopleByZip = &lt;int, List&lt;Person&gt;&gt;{};
-  for (var person in people) {
-    peopleByZip.putIfAbsent(person.zip, () =&gt; &lt;Person&gt;[]);
-    peopleByZip[person.zip].add(person);
+<pre><code class="language-dart">List&lt;List&lt;Ingredient&gt;&gt; possibleDesserts(Set&lt;Ingredient&gt; pantry) {
+  var desserts = &lt;List&lt;Ingredient&gt;&gt;[];
+  for (final recipe in cookbook) {
+    if (pantry.containsAll(recipe)) {
+      desserts.add(recipe);
+    }
   }
-  return peopleByZip;
+
+  return desserts;
+}
+</code></pre>
+<p>Sometimes the inferred type is not the type you want the variable to have. For
+example, you may intend to assign values of other types later. In that case,
+annotate the variable with the type you want.</p>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">Widget build(BuildContext context) {
+  [!Widget!] result = Text('You won!');
+  if (applyPadding) {
+    result = Padding(padding: EdgeInsets.all(8.0), child: result);
+  }
+  return result;
 }
 </code></pre>
 
