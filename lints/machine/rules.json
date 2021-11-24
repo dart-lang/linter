@@ -393,7 +393,7 @@
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
-    "details": "**DO** Use secure urls in `pubspec.yaml`.\n\nUse `https` instead of `http` an `git:`.\n\n**GOOD:**\n```yaml\nrepository: 'https://github.com/dart-lang/example'\n```\n\n**BAD:**\n```yaml\nrepository: 'http://github.com/dart-lang/example'\n```\n"
+    "details": "**DO** Use secure urls in `pubspec.yaml`.\n\nUse `https` instead of `http` or `git:`.\n\n**GOOD:**\n```yaml\nrepository: https://github.com/dart-lang/example\n```\n\n**BAD:**\n```yaml\nrepository: http://github.com/dart-lang/example\n```\n\n```yaml\ngit:\n  url: git://github.com/dart-lang/example/example.git \n```\n"
   },
   {
     "name": "sort_pub_dependencies",

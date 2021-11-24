@@ -30,12 +30,15 @@
          <section>
 
             <p><strong>DO</strong> Use secure urls in <code>pubspec.yaml</code>.</p>
-<p>Use <code>https</code> instead of <code>http</code> an <code>git:</code>.</p>
+<p>Use <code>https</code> instead of <code>http</code> or <code>git:</code>.</p>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-yaml">repository: 'https://github.com/dart-lang/example'
+<pre><code class="language-yaml">repository: https://github.com/dart-lang/example
 </code></pre>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-yaml">repository: 'http://github.com/dart-lang/example'
+<pre><code class="language-yaml">repository: http://github.com/dart-lang/example
+</code></pre>
+<pre><code class="language-yaml">git:
+  url: git://github.com/dart-lang/example/example.git 
 </code></pre>
 
             
