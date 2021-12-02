@@ -1,3 +1,7 @@
+# 1.16.0
+
+- new lint: `missing_conditional_imports`
+
 # 1.15.0
 
 - new lint: `use_decorated_box`
