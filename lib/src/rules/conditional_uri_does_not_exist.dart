@@ -61,6 +61,9 @@ class _Visitor extends SimpleAstVisitor<void> {
     String? uriContent = configuration.uri.stringValue;
     if (uriContent != null) {
       Source? source = configuration.uriSource;
+      // Checking source with .exists() will not detect the presence of overlays
+      // in the analysis server (although running the script when the files
+      // don't exist on disk would also fail to find it).
       if (!(source?.exists() ?? false)) {
         rule.reportLint(configuration.uri,
             arguments: [uriContent], errorCode: code);
