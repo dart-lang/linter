@@ -40,15 +40,15 @@ class ConditionalUriDoesNotExist extends LintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
-    registry.addCompilationUnit(this, visitor);
+    registry.addConfiguration(this, visitor);
   }
 }
 
-class _Visitor extends RecursiveAstVisitor<void> {
+class _Visitor extends SimpleAstVisitor<void> {
   static const LintCode code = LintCode('conditional_uri_does_not_exist',
       "The target of the conditional URI '{0}' doesn't exist.",
       correctionMessage: 'Try creating the file referenced by the URI, or '
-          'Try using a URI for a file that does exist.');
+          'try using a URI for a file that does exist.');
 
   final LintRule rule;
 
@@ -64,7 +64,5 @@ class _Visitor extends RecursiveAstVisitor<void> {
             arguments: [uriContent], errorCode: code);
       }
     }
-
-    super.visitConfiguration(configuration);
   }
 }
