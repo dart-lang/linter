@@ -57,6 +57,7 @@ linter:
     - cast_nullable_to_non_nullable
     - close_sinks
     - comment_references
+    - conditional_uri_does_not_exist
     - constant_identifier_names
     - control_flow_in_finally
     - curly_braces_in_flow_control_structures
@@ -84,7 +85,6 @@ linter:
     - lines_longer_than_80_chars
     - list_remove_unrelated_type
     - literal_only_boolean_expressions
-    - missing_conditional_import
     - missing_whitespace_between_adjacent_strings
     - no_adjacent_strings_in_list
     - no_default_cases

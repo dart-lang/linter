@@ -7,10 +7,10 @@ import 'avoid_function_literals_in_foreach_calls.dart'
 import 'avoid_init_to_null.dart' as avoid_init_to_null;
 import 'avoid_shadowing_type_parameters.dart'
     as avoid_shadowing_type_parameters;
+import 'conditional_uri_does_not_exist.dart' as conditional_uri_does_not_exist;
 import 'file_names.dart' as file_names;
 import 'literal_only_boolean_expressions.dart'
     as literal_only_boolean_expressions;
-import 'missing_conditional_import.dart' as missing_conditional_import;
 import 'missing_whitespace_between_adjacent_strings.dart'
     as missing_whitespace_between_adjacent_strings;
 import 'non_constant_identifier_names.dart' as non_constant_identifier_names;
@@ -40,9 +40,9 @@ void main() {
   avoid_function_literals_in_foreach_calls.main();
   avoid_init_to_null.main();
   avoid_shadowing_type_parameters.main();
+  conditional_uri_does_not_exist.main();
   file_names.main();
   literal_only_boolean_expressions.main();
-  missing_conditional_import.main();
   missing_whitespace_between_adjacent_strings.main();
   non_constant_identifier_names.main();
   null_closures.main();

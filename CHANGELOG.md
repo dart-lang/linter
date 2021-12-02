@@ -1,6 +1,6 @@
 # 1.16.0
 
-- new lint: `missing_conditional_imports`
+- new lint: `conditional_uri_does_not_exist`
 
 # 1.15.0
 

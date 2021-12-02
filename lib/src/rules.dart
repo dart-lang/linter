@@ -59,6 +59,7 @@ import 'rules/cascade_invocations.dart';
 import 'rules/cast_nullable_to_non_nullable.dart';
 import 'rules/close_sinks.dart';
 import 'rules/comment_references.dart';
+import 'rules/conditional_uri_does_not_exist.dart';
 import 'rules/constant_identifier_names.dart';
 import 'rules/control_flow_in_finally.dart';
 import 'rules/curly_braces_in_flow_control_structures.dart';
@@ -86,7 +87,6 @@ import 'rules/library_private_types_in_public_api.dart';
 import 'rules/lines_longer_than_80_chars.dart';
 import 'rules/list_remove_unrelated_type.dart';
 import 'rules/literal_only_boolean_expressions.dart';
-import 'rules/missing_conditional_import.dart';
 import 'rules/missing_whitespace_between_adjacent_strings.dart';
 import 'rules/no_adjacent_strings_in_list.dart';
 import 'rules/no_default_cases.dart';
@@ -265,6 +265,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(CastNullableToNonNullable())
     ..register(CloseSinks())
     ..register(CommentReferences())
+    ..register(ConditionalUriDoesNotExist())
     ..register(ConstantIdentifierNames())
     ..register(ControlFlowInFinally())
     ..register(CurlyBracesInFlowControlStructures())
@@ -292,7 +293,6 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(LinesLongerThan80Chars())
     ..register(ListRemoveUnrelatedType())
     ..register(LiteralOnlyBooleanExpressions())
-    ..register(MissingConditionalImport())
     ..register(MissingWhitespaceBetweenAdjacentStrings())
     ..register(NoAdjacentStringsInList())
     ..register(NoDefaultCases())

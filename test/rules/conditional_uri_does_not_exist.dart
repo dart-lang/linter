@@ -8,17 +8,17 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(MissingConditionalImportTest);
+    defineReflectiveTests(ConditionalUriDoesNotExistTest);
   });
 }
 
 @reflectiveTest
-class MissingConditionalImportTest extends LintRuleTest {
+class ConditionalUriDoesNotExistTest extends LintRuleTest {
   @override
   bool get addMetaPackageDep => true;
 
   @override
-  String get lintRule => 'missing_conditional_import';
+  String get lintRule => 'conditional_uri_does_not_exist';
 
   test_missingDartLibraries() async {
     await assertDiagnostics(
@@ -30,9 +30,9 @@ import ''
 ''',
       [
         error(HintCode.UNUSED_IMPORT, 7, 2),
-        lint('missing_conditional_import', 35, 16,
+        lint('conditional_uri_does_not_exist', 35, 16,
             messageContains: 'dart:missing_1'),
-        lint('missing_conditional_import', 120, 16,
+        lint('conditional_uri_does_not_exist', 120, 16,
             messageContains: 'dart:missing_2'),
       ],
     );
@@ -50,9 +50,9 @@ import ''
 ''',
       [
         error(HintCode.UNUSED_IMPORT, 7, 2),
-        lint('missing_conditional_import', 35, 16,
+        lint('conditional_uri_does_not_exist', 35, 16,
             messageContains: 'missing_1.dart'),
-        lint('missing_conditional_import', 121, 16,
+        lint('conditional_uri_does_not_exist', 121, 16,
             messageContains: 'missing_2.dart'),
       ],
     );
@@ -68,9 +68,9 @@ import ''
 ''',
       [
         error(HintCode.UNUSED_IMPORT, 7, 2),
-        lint('missing_conditional_import', 35, 29,
+        lint('conditional_uri_does_not_exist', 35, 29,
             messageContains: 'missing_1.dart'),
-        lint('missing_conditional_import', 142, 28,
+        lint('conditional_uri_does_not_exist', 142, 28,
             messageContains: 'missing_2.dart'),
       ],
     );

@@ -28,10 +28,10 @@ import 'file_that_exists.dart';
 
 ''';
 
-class MissingConditionalImport extends LintRule {
-  MissingConditionalImport()
+class ConditionalUriDoesNotExist extends LintRule {
+  ConditionalUriDoesNotExist()
       : super(
-            name: 'missing_conditional_import',
+            name: 'conditional_uri_does_not_exist',
             description: _desc,
             details: _details,
             group: Group.style);
@@ -45,7 +45,7 @@ class MissingConditionalImport extends LintRule {
 }
 
 class _Visitor extends RecursiveAstVisitor<void> {
-  static const LintCode code = LintCode('missing_conditional_import',
+  static const LintCode code = LintCode('conditional_uri_does_not_exist',
       "The target of the conditional URI '{0}' doesn't exist.",
       correctionMessage: 'Try creating the file referenced by the URI, or '
           'Try using a URI for a file that does exist.');

@@ -51,6 +51,7 @@ cascade_invocations: 0.1.29
 cast_nullable_to_non_nullable : 0.1.120
 close_sinks: 0.1.19
 comment_references: 0.1.17
+conditional_uri_does_not_exist: 1.16.0
 control_flow_in_finally: 0.1.16
 constant_identifier_names: 0.1.1
 curly_braces_in_flow_control_structures: 0.1.57
@@ -74,7 +75,6 @@ library_prefixes: 0.1.1
 lines_longer_than_80_chars: 0.1.56
 list_remove_unrelated_type: 0.1.22
 literal_only_boolean_expressions: 0.1.25
-missing_conditional_import: 1.16.0
 missing_whitespace_between_adjacent_strings : 0.1.110
 no_adjacent_strings_in_list: 0.1.30
 no_default_cases : 0.1.116
