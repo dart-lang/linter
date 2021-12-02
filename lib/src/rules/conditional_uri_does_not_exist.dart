@@ -18,12 +18,14 @@ needs to be imported.
 
 **BAD:**
 ```dart
-import 'file_that_does_not_exist.dart';
+import 'file_that_does_exist.dart'
+  if (condition) 'file_that_does_not_exist.dart';
 ```
 
 **GOOD:**
 ```dart
-import 'file_that_exists.dart';
+import 'file_that_does_exist.dart'
+  if (condition) 'file_that_also_does_exist.dart';
 ```
 
 ''';
