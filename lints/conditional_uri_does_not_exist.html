@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <link rel="shortcut icon" href="../dart-192.png">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <title>conditional_uri_does_not_exist</title>
+      <link rel="stylesheet" href="../styles.css">
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>conditional_uri_does_not_exist</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <div class="tooltip">
+               <p>Linter v1.16.0</p>
+               <span class="tooltip-content">Since info is static, may be stale</span>
+            </div>
+            
+            <ul>
+               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
+               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
+            </ul>
+            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+         </header>
+         <section>
+
+            <p><strong>DON'T</strong> reference files that do not exist in conditional imports.</p>
+<p>Code may fail at runtime if the condition evaluates such that the missing file
+needs to be imported.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">import 'file_that_does_exist.dart'
+  if (condition) 'file_that_does_not_exist.dart';
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">import 'file_that_does_exist.dart'
+  if (condition) 'file_that_also_does_exist.dart';
+</code></pre>
+
+            
+         </section>
+      </div>
+      <footer>
+         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
+      </footer>
+   </body>
+</html>

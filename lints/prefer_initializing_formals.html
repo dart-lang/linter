@@ -74,6 +74,17 @@ the following will not generate a lint:</p>
   }
 }
 </code></pre>
+<p><strong>NOTE</strong>
+Also note that it is possible to enforce a type that is stricter than the
+initialized field with an initializing formal parameter.  In the following
+example the unnamed <code>Bid</code> constructor requires a non-null <code>int</code> despite
+<code>amount</code> being declared nullable (<code>int?</code>).</p>
+<pre><code class="language-dart">class Bid {
+ final int? amount;
+ Bid(int this.amount);
+ Bid.pass() : amount = null;
+}
+</code></pre>
 
             
          </section>
