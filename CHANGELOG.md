@@ -4,7 +4,8 @@
 - updates to `secure_pubspec_urls` to check `issue_tracker` and
   `repository` entries
 - new lint: `conditional_uri_does_not_exist`
-- performance improvements `missing_whitespace_between_adjacent_strings`
+- performance improvements for 
+  `missing_whitespace_between_adjacent_strings`
 
 # 1.15.0
 
