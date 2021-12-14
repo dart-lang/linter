@@ -12,6 +12,7 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
 import '../test_data/rules/experiments/experiments.dart';
+import 'conformance_checks_test.dart' as conformance_test;
 import 'integration/always_require_non_null_named_parameters.dart'
     as always_require_non_null_named_parameters;
 import 'integration/avoid_private_typedef_functions.dart'
@@ -158,7 +159,9 @@ void coreTests() {
 
         var registered = Analyzer.facade.registeredRules
             .where((r) =>
-                r.maturity != Maturity.deprecated && !experiments.contains(r))
+                r.maturity != Maturity.deprecated &&
+                !experiments.contains(r) &&
+                !conformance_test.conformanceTestRules.contains(r))
             .map((r) => r.name);
 
         for (var l in configuredLints) {
@@ -167,13 +170,7 @@ void coreTests() {
           }
         }
 
-        expect(
-            configuredLints,
-            unorderedEquals(Analyzer.facade.registeredRules
-                .where((r) =>
-                    r.maturity != Maturity.deprecated &&
-                    !experiments.contains(r))
-                .map((r) => r.name)));
+        expect(configuredLints, unorderedEquals(registered));
       });
     });
   });

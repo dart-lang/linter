@@ -27,6 +27,7 @@ dev_dependencies:
   cli_util: ^0.3.0
   github: ^9.0.0
   grinder: ^0.9.0
+  js: ^0.6.4
   lints: ^1.0.0
   markdown: ^4.0.0
   matcher: ^0.12.10

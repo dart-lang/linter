@@ -4,6 +4,7 @@
 
 import 'package:path/path.dart' as path;
 
+final String conformanceTestsDir = path.join('test', 'conformance');
 final String integrationTestDir = path.join('test_data', 'integration');
 final String ruleTestDir = path.join('test_data', 'rules');
 final String testConfigDir = path.join('test', 'configs');
