@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/src/dart/element/member.dart'; // ignore: implementation_imports
@@ -14,6 +15,23 @@ import '../ast.dart';
 typedef AstNodePredicate = bool Function(AstNode node);
 
 class DartTypeUtilities {
+  /// Returns an [EnumLikeClassDescription] for [classElement] if the latter is
+  /// a valid "enum-like" class.
+  ///
+  /// An enum-like class must meet the following requirements:
+  ///
+  /// * is concrete,
+  /// * has no public constructors,
+  /// * has no factory constructors,
+  /// * has two or more static const fields with the same type as the class,
+  /// * has no subclasses declared in the defining library.
+  ///
+  /// The returned [EnumLikeClassDescription]'s `enumConstantNames` contains all
+  /// of the static const fields with the same type as the class, with one
+  /// exception; any static const field which is marked `@Deprecated` and is
+  /// equal to another static const field with the same type as the class is not
+  /// included. Such a field is assumed to be deprecated in favor of the field
+  /// with equal value.
   static EnumLikeClassDescription? asEnumLikeClass(ClassElement classElement) {
     // See discussion: https://github.com/dart-lang/linter/issues/2083
     //
@@ -34,6 +52,7 @@ class DartTypeUtilities {
 
     // And 2 or more static const fields whose type is the enclosing class.
     var enumConstantNames = <String>[];
+    var enumConstantValues = <DartObject, FieldElement>{};
     for (var field in classElement.fields) {
       // Ensure static const.
       if (field.isSynthetic || !field.isConst || !field.isStatic) {
@@ -43,7 +62,27 @@ class DartTypeUtilities {
       if (field.type != type) {
         continue;
       }
+      var fieldValue = field.computeConstantValue();
+      if (fieldValue == null) {
+        continue;
+      }
+      var seenFieldOfEqualValue = enumConstantValues[fieldValue];
+      if (seenFieldOfEqualValue != null) {
+        // [field] is equal to another static const field.
+        if (field.hasDeprecated) {
+          // [field] is deprecated and appears to be replaced by another field
+          // of the same value. Do not include [field].
+          continue;
+        } else if (seenFieldOfEqualValue.hasDeprecated) {
+          // [seenFieldOfEqualValue] is deprecated and appears to be replaced by
+          // [field]. Replace [seenFieldOfEqualValue] with [field].
+          enumConstantNames.remove(seenFieldOfEqualValue.name);
+        } else {
+          // Neither field is deprecated. Include each.
+        }
+      }
       enumConstantNames.add(field.name);
+      enumConstantValues[fieldValue] = field;
     }
     if (enumConstantNames.length < 2) {
       return null;
