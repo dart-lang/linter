@@ -1905,6 +1905,15 @@
     "details": "\n**DON'T** create a lambda when a tear-off will do.\n\n**BAD:**\n```dart\nnames.forEach((name) {\n  print(name);\n});\n```\n\n**GOOD:**\n```dart\nnames.forEach(print);\n```\n\n"
   },
   {
+    "name": "unnecessary_late",
+    "description": "Don't specify the `late` modifier when it is not needed.",
+    "group": "style",
+    "maturity": "stable",
+    "incompatible": [],
+    "sets": [],
+    "details": "\n**DO** not specify the `late` modifier for top-level and static variables\nwhen the declaration contains an initializer. \n\nTop-level and static variables with initializers are already evaluated lazily\nas if they are marked `late`.\n\n**BAD:**\n```dart\nlate String badTopLevel = '';\n```\n\n**GOOD:**\n```dart\nString goodTopLevel = '';\n```\n\n**BAD:**\n```dart\nclass BadExample {\n  static late String badStatic = '';\n}\n```\n\n**GOOD:**\n```dart\nclass GoodExample {\n  late String goodStatic;\n}\n```\n"
+  },
+  {
     "name": "unnecessary_new",
     "description": "Unnecessary new keyword.",
     "group": "style",
