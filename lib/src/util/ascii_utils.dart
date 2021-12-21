@@ -70,6 +70,6 @@ extension StringExtensions on String {
         return false;
       }
     }
-    return false;
+    return true;
   }
 }
