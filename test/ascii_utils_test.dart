@@ -6,6 +6,27 @@ import 'package:linter/src/util/ascii_utils.dart';
 import 'package:test/test.dart';
 
 void main() {
+  group('isOnlyUnderscores', () {
+    test(
+      'empty is not',
+      () => expect(''.isJustUnderscores, isFalse),
+    );
+
+    test(
+      'non-underscore is not',
+      () => expect('A'.isJustUnderscores, isFalse),
+    );
+
+    test(
+      'one underscore is',
+      () => expect('_'.isJustUnderscores, isTrue),
+    );
+
+    test(
+      'multiple underscores is',
+      () => expect('___'.isJustUnderscores, isTrue),
+    );
+  });
   group('fileNames', () {
     group('good', () {
       for (var name in goodFileNames) {
