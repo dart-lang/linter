@@ -146,4 +146,17 @@ void dep(DeprecatedFields e) {
       print('baz');
       break;
   }
+
+  switch (e) {
+    // OK
+    case DeprecatedFields.oldFoo:
+      print('oldFoo');
+      break;
+    case DeprecatedFields.bar:
+      print('bar');
+      break;
+    case DeprecatedFields.baz:
+      print('baz');
+      break;
+  }
 }

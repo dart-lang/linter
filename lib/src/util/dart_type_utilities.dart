@@ -51,8 +51,8 @@ class DartTypeUtilities {
     var type = classElement.thisType;
 
     // And 2 or more static const fields whose type is the enclosing class.
-    var enumConstantNames = <String>[];
-    var enumConstantValues = <DartObject, FieldElement>{};
+    var enumConstantCount = 0;
+    var enumConstants = <DartObject, Set<FieldElement>>{};
     for (var field in classElement.fields) {
       // Ensure static const.
       if (field.isSynthetic || !field.isConst || !field.isStatic) {
@@ -66,25 +66,10 @@ class DartTypeUtilities {
       if (fieldValue == null) {
         continue;
       }
-      var seenFieldOfEqualValue = enumConstantValues[fieldValue];
-      if (seenFieldOfEqualValue != null) {
-        // [field] is equal to another static const field.
-        if (field.hasDeprecated) {
-          // [field] is deprecated and appears to be replaced by another field
-          // of the same value. Do not include [field].
-          continue;
-        } else if (seenFieldOfEqualValue.hasDeprecated) {
-          // [seenFieldOfEqualValue] is deprecated and appears to be replaced by
-          // [field]. Replace [seenFieldOfEqualValue] with [field].
-          enumConstantNames.remove(seenFieldOfEqualValue.name);
-        } else {
-          // Neither field is deprecated. Include each.
-        }
-      }
-      enumConstantNames.add(field.name);
-      enumConstantValues[fieldValue] = field;
+      enumConstantCount++;
+      enumConstants.putIfAbsent(fieldValue, () => {}).add(field);
     }
-    if (enumConstantNames.length < 2) {
+    if (enumConstantCount < 2) {
       return null;
     }
 
@@ -100,7 +85,7 @@ class DartTypeUtilities {
       } while (classType != null && !classType.isDartCoreObject);
     }
 
-    return EnumLikeClassDescription(enumConstantNames);
+    return EnumLikeClassDescription(enumConstants);
   }
 
   /// Return whether the canonical elements of two elements are equal.
@@ -578,8 +563,11 @@ class DartTypeUtilities {
 }
 
 class EnumLikeClassDescription {
-  List<String> enumConstantNames;
-  EnumLikeClassDescription(this.enumConstantNames);
+  final Map<DartObject, Set<FieldElement>> _enumConstants;
+  EnumLikeClassDescription(this._enumConstants);
+
+  /// Returns a fresh map of the class's enum-like constant values.
+  Map<DartObject, Set<FieldElement>> get enumConstants => {..._enumConstants};
 }
 
 class InterfaceTypeDefinition {
