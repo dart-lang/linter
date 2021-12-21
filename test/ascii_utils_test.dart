@@ -24,7 +24,7 @@ void main() {
     });
   });
 
-  group('isOnlyUnderscores', () {
+  group('isJustUnderscores', () {
     test(
       'empty is not',
       () => expect(''.isJustUnderscores, isFalse),
@@ -43,6 +43,11 @@ void main() {
     test(
       'multiple underscores is',
       () => expect('___'.isJustUnderscores, isTrue),
+    );
+
+    test(
+      'underscores followed by non-underscores is not',
+      () => expect('__x'.isJustUnderscores, isFalse),
     );
   });
 }

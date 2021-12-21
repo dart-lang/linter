@@ -65,11 +65,18 @@ extension StringExtensions on String {
     if (isEmpty) {
       return false;
     }
-    for (var i = 0; i < length; i++) {
-      if (!isUnderScore(codeUnitAt(i))) {
-        return false;
-      }
+    switch (length) {
+      case 1:
+        return this == '_';
+      case 2:
+        return this == '__';
+      default:
+        for (var i = 0; i < length; i++) {
+          if (!isUnderScore(codeUnitAt(i))) {
+            return false;
+          }
+        }
+        return true;
     }
-    return true;
   }
 }
