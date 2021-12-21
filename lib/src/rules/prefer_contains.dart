@@ -90,14 +90,14 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
     var value = getIntValue(node.rightOperand, context);
-    if (value is int && value <= 0) {
-      if (_isUnassignedIndexOf(node.leftOperand)) {
+    if (value is int) {
+      if (value <= 0 && _isUnassignedIndexOf(node.leftOperand)) {
         _checkConstant(node, value, node.operator.type);
       }
     } else {
       value = getIntValue(node.leftOperand, context);
-      if (value is int && value <= 0) {
-        if (_isUnassignedIndexOf(node.rightOperand)) {
+      if (value is int) {
+        if (value <= 0 && _isUnassignedIndexOf(node.rightOperand)) {
           _checkConstant(node, value, _invertedTokenType(node.operator.type));
         }
       }
