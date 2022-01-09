@@ -44,8 +44,11 @@ class UnnecessaryFinal extends LintRule {
             group: Group.style);
 
   @override
-  List<String> get incompatibleRules =>
-      const ['prefer_final_locals', 'prefer_final_parameters'];
+  List<String> get incompatibleRules => const [
+        'prefer_final_locals',
+        'prefer_final_parameters',
+        'avoid_var_declarations'
+      ];
 
   @override
   void registerNodeProcessors(

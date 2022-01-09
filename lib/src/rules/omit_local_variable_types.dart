@@ -73,7 +73,8 @@ class OmitLocalVariableTypes extends LintRule {
             group: Group.style);
 
   @override
-  List<String> get incompatibleRules => const ['always_specify_types'];
+  List<String> get incompatibleRules =>
+      const ['always_specify_types', 'avoid_var_declarations'];
 
   @override
   void registerNodeProcessors(
