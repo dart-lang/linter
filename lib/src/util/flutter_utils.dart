@@ -39,6 +39,8 @@ bool isKDebugMode(Element? element) => _flutter.isKDebugMode(element);
 bool isStatefulWidget(ClassElement? element) =>
     _flutter.isStatefulWidget(element);
 
+bool isState(ClassElement? element) => _flutter.isState(element);
+
 bool isWidgetProperty(DartType? type) {
   if (isWidgetType(type)) {
     return true;
@@ -57,6 +59,7 @@ bool isWidgetType(DartType? type) => _flutter.isWidgetType(type);
 class _Flutter {
   static const _nameBuildContext = 'BuildContext';
   static const _nameStatefulWidget = 'StatefulWidget';
+  static const _nameState = 'State';
   static const _nameWidget = 'Widget';
   static const _nameContainer = 'Container';
   static const _nameSizedBox = 'SizedBox';
@@ -82,7 +85,7 @@ class _Flutter {
     if (element == null || !alreadySeen.add(element)) {
       return false;
     }
-    if (_isExactWidget(element, _nameWidget, _uriFramework)) {
+    if (_hasExactOrigin(element, _nameWidget, _uriFramework)) {
       return true;
     }
     return hasWidgetAsAscendant(element.supertype?.element, alreadySeen);
@@ -95,19 +98,19 @@ class _Flutter {
     if (skipNullable && type.nullabilitySuffix == NullabilitySuffix.question) {
       return false;
     }
-    return _isExactWidget(type.element, _nameBuildContext, _uriFramework);
+    return _hasExactOrigin(type.element, _nameBuildContext, _uriFramework);
   }
 
   bool isExactWidget(ClassElement element) =>
-      _isExactWidget(element, _nameWidget, _uriFramework);
+      _hasExactOrigin(element, _nameWidget, _uriFramework);
 
   bool isExactWidgetTypeContainer(DartType? type) =>
       type is InterfaceType &&
-      _isExactWidget(type.element, _nameContainer, _uriContainer);
+      _hasExactOrigin(type.element, _nameContainer, _uriContainer);
 
   bool isExactWidgetTypeSizedBox(DartType? type) =>
       type is InterfaceType &&
-      _isExactWidget(type.element, _nameSizedBox, _uriBasic);
+      _hasExactOrigin(type.element, _nameSizedBox, _uriBasic);
 
   bool isKDebugMode(Element? element) =>
       element != null &&
@@ -118,23 +121,33 @@ class _Flutter {
     if (element == null) {
       return false;
     }
-    if (_isExactWidget(element, _nameStatefulWidget, _uriFramework)) {
+    if (_hasExactOrigin(element, _nameStatefulWidget, _uriFramework)) {
       return true;
     }
     for (var type in element.allSupertypes) {
-      if (_isExactWidget(type.element, _nameStatefulWidget, _uriFramework)) {
+      if (_hasExactOrigin(type.element, _nameStatefulWidget, _uriFramework)) {
         return true;
       }
     }
     return false;
   }
 
+  bool isState(ClassElement? element) {
+    if (element == null) {
+      return false;
+    }
+    if (_hasExactOrigin(element, _nameState, _uriFramework)) {
+      return true;
+    }
+    return false;
+  }
+
   bool isWidget(ClassElement element) {
-    if (_isExactWidget(element, _nameWidget, _uriFramework)) {
+    if (_hasExactOrigin(element, _nameWidget, _uriFramework)) {
       return true;
     }
     for (var type in element.allSupertypes) {
-      if (_isExactWidget(type.element, _nameWidget, _uriFramework)) {
+      if (_hasExactOrigin(type.element, _nameWidget, _uriFramework)) {
         return true;
       }
     }
@@ -144,6 +157,6 @@ class _Flutter {
   bool isWidgetType(DartType? type) =>
       type is InterfaceType && isWidget(type.element);
 
-  bool _isExactWidget(ClassElement element, String type, Uri uri) =>
+  bool _hasExactOrigin(ClassElement element, String type, Uri uri) =>
       element.name == type && element.source.uri == uri;
 }

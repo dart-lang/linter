@@ -14,7 +14,7 @@ extension on BuildContext {
 void mountedBinOpAnd(BuildContext context, bool condition) async {
   await Future<void>.delayed(Duration());
   if (condition && context.mounted) {
-    await Navigator.of(context).pushNamed('routeName');// OK
+    await Navigator.of(context).pushNamed('routeName'); // OK
   }
 }
 
