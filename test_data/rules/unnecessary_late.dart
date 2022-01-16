@@ -8,6 +8,10 @@ late String unnecessaryTopLevelLate = ''; // LINT
 
 late String necessaryTopLevelLate; // OK
 
+late String unnecessaryListLateOne = '', unnecessaryListLateTwo = ''; // LINT
+
+late String necessaryListLate, forcedNecessaryListLate = ''; // OK
+
 String unnecessaryTopLevel = ''; // OK
 
 class Test {
