@@ -77,8 +77,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   void _visitVariableDeclarations(VariableDeclarationList node) {
-    var lateKeyword = node.lateKeyword;
-    if (lateKeyword == null) {
+    if (node.lateKeyword == null) {
       return;
     }
 
