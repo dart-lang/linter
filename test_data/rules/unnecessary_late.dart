@@ -8,9 +8,11 @@ late String unnecessaryTopLevelLate = ''; // LINT
 
 late String necessaryTopLevelLate; // OK
 
-late String unnecessaryListLateOne = '', unnecessaryListLateTwo = ''; // LINT
+late String unnecessaryListLateOne = '', // LINT
+    unnecessaryListLateTwo = ''; // LINT
 
-late String necessaryListLate, forcedNecessaryListLate = ''; // OK
+late String necessaryListLate, // OK
+    unnecessaryListLate = ''; // LINT
 
 String unnecessaryTopLevel = ''; // OK
 

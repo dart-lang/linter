@@ -81,12 +81,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (lateKeyword == null) {
       return;
     }
+
     for (var variable in node.variables) {
-      if (variable.initializer == null) {
-        // Is necessary if any variable is missing initializer
-        return;
+      if (variable.initializer != null) {
+        rule.reportLint(variable.name);
       }
     }
-    rule.reportLintForToken(lateKeyword);
   }
 }
