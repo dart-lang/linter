@@ -8,7 +8,7 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    //defineReflectiveTests(TypeInitFormalsTest);
+    defineReflectiveTests(TypeInitFormalsTest);
     defineReflectiveTests(TypeInitFormalsSuperTest);
   });
 }
