@@ -16,12 +16,12 @@ main() {
 @reflectiveTest
 class TypeInitFormalsSuperTest extends LintRuleTest {
   @override
-  String get lintRule => 'type_init_formals';
-
-  @override
   List<String> get experiments => [
     EnableString.super_parameters,
   ];
+
+  @override
+  String get lintRule => 'type_init_formals';
 
   test_super() async {
     await assertDiagnostics(r'''
