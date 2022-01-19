@@ -49,6 +49,7 @@ class TypeInitFormals extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addFieldFormalParameter(this, visitor);
+    registry.addSuperFormalParameter(this, visitor);
   }
 }
 
@@ -59,18 +60,29 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFieldFormalParameter(FieldFormalParameter node) {
-    var nodeType = node.type;
-    if (nodeType != null) {
-      var cls = node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
-      if (cls != null) {
-        var field = cls.getField(node.identifier.name);
-        // If no such field exists, the code is invalid; do not report lint.
-        if (field != null) {
-          if (nodeType.type == field.type) {
-            rule.reportLint(nodeType);
-          }
-        }
-      }
+    _checkNode(node.type, node);
+  }
+
+  @override
+  void visitSuperFormalParameter(SuperFormalParameter node) {
+    _checkNode(node.type, node);
+  }
+
+  void _checkNode(TypeAnnotation? nodeType, NormalFormalParameter node) {
+    if (nodeType == null) return;
+
+    var cls = node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
+    if (cls == null) return;
+
+    var name = node.identifier?.name;
+    if (name == null) return;
+
+    var field = cls.getField(name);
+    // If no such field exists, the code is invalid; do not report lint.
+    if (field == null) return;
+
+    if (nodeType.type == field.type) {
+      rule.reportLint(nodeType);
     }
   }
 }
