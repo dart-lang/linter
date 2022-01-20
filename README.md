@@ -100,3 +100,7 @@ Please file feature requests and bugs in the [issue tracker][tracker].
 [package-pedantic]: https://github.com/dart-lang/pedantic/blob/master/lib/analysis_options.yaml
 [style_guide]:https://dart.dev/guides/language/effective-dart/style/
 [tracker]: https://github.com/dart-lang/linter/issues
+
+## Hello, world!
+
+Hi there.
