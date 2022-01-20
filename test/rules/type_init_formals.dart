@@ -17,8 +17,8 @@ main() {
 class TypeInitFormalsSuperTest extends LintRuleTest {
   @override
   List<String> get experiments => [
-    EnableString.super_parameters,
-  ];
+        EnableString.super_parameters,
+      ];
 
   @override
   String get lintRule => 'type_init_formals';
@@ -34,11 +34,10 @@ class B extends A {
   B({String? super.a});
 }
 ''', [
-
+      lint('type_init_formals', 66, 7),
     ]);
   }
 }
-
 
 @reflectiveTest
 class TypeInitFormalsTest extends LintRuleTest {

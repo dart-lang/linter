@@ -4,6 +4,7 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 
@@ -47,42 +48,47 @@ class TypeInitFormals extends LintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this);
+    var visitor = _Visitor(this, context);
     registry.addFieldFormalParameter(this, visitor);
     registry.addSuperFormalParameter(this, visitor);
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
+  final LinterContext context;
   final LintRule rule;
 
-  _Visitor(this.rule);
+  _Visitor(this.rule, this.context);
 
   @override
   void visitFieldFormalParameter(FieldFormalParameter node) {
-    _checkNode(node.type, node);
+    var nodeType = node.type;
+    if (nodeType == null) return;
+    var cls = node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
+    if (cls == null) return;
+
+    var field = cls.getField(node.identifier.name);
+    // If no such field exists, the code is invalid; do not report lint.
+    if (field != null) {
+      if (nodeType.type == field.type) {
+        rule.reportLint(nodeType);
+      }
+    }
   }
 
   @override
   void visitSuperFormalParameter(SuperFormalParameter node) {
-    _checkNode(node.type, node);
-  }
-
-  void _checkNode(TypeAnnotation? nodeType, NormalFormalParameter node) {
+    var nodeType = node.type;
     if (nodeType == null) return;
-
     var cls = node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
     if (cls == null) return;
 
-    var name = node.identifier?.name;
-    if (name == null) return;
-
-    var field = cls.getField(name);
-    // If no such field exists, the code is invalid; do not report lint.
-    if (field == null) return;
-
-    if (nodeType.type == field.type) {
-      rule.reportLint(nodeType);
+    var inheritedElement = context.inheritanceManager
+        .getInherited2(cls, Name(null, node.identifier.name));
+    if (inheritedElement is PropertyAccessorElement) {
+      if (nodeType.type == inheritedElement.variable.type) {
+        rule.reportLint(nodeType);
+      }
     }
   }
 }
