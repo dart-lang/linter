@@ -33,8 +33,8 @@ class B extends A {
   B(dynamic super.a, dynamic super.b);
 }
 ''', [
-      lint('avoid_final_parameters', 83, 13),
-      lint('avoid_final_parameters', 98, 13),
+      lint('avoid_annotating_with_dynamic', 75, 15),
+      lint('avoid_annotating_with_dynamic', 92, 15),
     ]);
   }
 }
