@@ -48,26 +48,25 @@ class TypeInitFormals extends LintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this, context);
+    var visitor = _Visitor(this);
     registry.addFieldFormalParameter(this, visitor);
     registry.addSuperFormalParameter(this, visitor);
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  final LinterContext context;
   final LintRule rule;
 
-  _Visitor(this.rule, this.context);
+  _Visitor(this.rule);
 
   @override
   void visitFieldFormalParameter(FieldFormalParameter node) {
     var nodeType = node.type;
     if (nodeType == null) return;
-    var cls = node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
-    if (cls == null) return;
+    var paramElement = node.declaredElement;
+    if (paramElement is! FieldFormalParameterElement) return;
 
-    var field = cls.getField(node.identifier.name);
+    var field = paramElement.field;
     // If no such field exists, the code is invalid; do not report lint.
     if (field != null) {
       if (nodeType.type == field.type) {
@@ -80,15 +79,15 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitSuperFormalParameter(SuperFormalParameter node) {
     var nodeType = node.type;
     if (nodeType == null) return;
-    var cls = node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
-    if (cls == null) return;
 
-    var inheritedElement = context.inheritanceManager
-        .getInherited2(cls, Name(null, node.identifier.name));
-    if (inheritedElement is PropertyAccessorElement) {
-      if (nodeType.type == inheritedElement.variable.type) {
-        rule.reportLint(nodeType);
-      }
+    var paramElement = node.declaredElement;
+    if (paramElement is! SuperFormalParameterElement) return;
+
+    var superConstructorParameter = paramElement.superConstructorParameter;
+    if (superConstructorParameter == null) return;
+
+    if (superConstructorParameter.type == nodeType.type) {
+      rule.reportLint(nodeType);
     }
   }
 }
