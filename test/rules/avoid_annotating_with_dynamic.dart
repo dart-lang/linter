@@ -12,17 +12,15 @@ main() {
   });
 }
 
-
-
 @reflectiveTest
 class AvoidAnnotatingWithDynamicTest extends LintRuleTest {
-  @override
-  String get lintRule => 'avoid_annotating_with_dynamic';
-
   @override
   List<String> get experiments => [
         EnableString.super_parameters,
       ];
+
+  @override
+  String get lintRule => 'avoid_annotating_with_dynamic';
 
   test_super() async {
     await assertDiagnostics(r'''
