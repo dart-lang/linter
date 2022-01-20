@@ -63,15 +63,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitFieldFormalParameter(FieldFormalParameter node) {
     var nodeType = node.type;
     if (nodeType == null) return;
+
     var paramElement = node.declaredElement;
     if (paramElement is! FieldFormalParameterElement) return;
 
     var field = paramElement.field;
     // If no such field exists, the code is invalid; do not report lint.
-    if (field != null) {
-      if (nodeType.type == field.type) {
-        rule.reportLint(nodeType);
-      }
+    if (field != null && nodeType.type == field.type) {
+      rule.reportLint(nodeType);
     }
   }
 
