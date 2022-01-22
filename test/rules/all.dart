@@ -9,7 +9,11 @@ import 'avoid_redundant_argument_values.dart'
     as avoid_redundant_argument_values;
 import 'avoid_shadowing_type_parameters.dart'
     as avoid_shadowing_type_parameters;
+import 'avoid_types_as_parameter_names.dart' as avoid_types_as_parameter_names;
+import 'avoid_unused_constructor_parameters.dart'
+    as avoid_unused_constructor_parameters;
 import 'conditional_uri_does_not_exist.dart' as conditional_uri_does_not_exist;
+import 'deprecated_consistency.dart' as deprecated_consistency;
 import 'file_names.dart' as file_names;
 import 'literal_only_boolean_expressions.dart'
     as literal_only_boolean_expressions;
@@ -28,6 +32,8 @@ import 'prefer_const_constructors_in_immutables.dart'
 import 'prefer_const_literals_to_create_immutables.dart'
     as prefer_const_literals_to_create_immutables;
 import 'prefer_contains.dart' as prefer_contains;
+import 'prefer_equal_for_default_values.dart'
+    as prefer_equal_for_default_values;
 import 'prefer_generic_function_type_aliases.dart'
     as prefer_generic_function_type_aliases;
 import 'prefer_spread_collections.dart' as prefer_spread_collections;
@@ -43,7 +49,10 @@ void main() {
   avoid_init_to_null.main();
   avoid_redundant_argument_values.main();
   avoid_shadowing_type_parameters.main();
+  avoid_types_as_parameter_names.main();
+  avoid_unused_constructor_parameters.main();
   conditional_uri_does_not_exist.main();
+  deprecated_consistency.main();
   file_names.main();
   literal_only_boolean_expressions.main();
   missing_whitespace_between_adjacent_strings.main();
@@ -57,6 +66,7 @@ void main() {
   prefer_const_constructors_in_immutables.main();
   prefer_const_literals_to_create_immutables.main();
   prefer_contains.main();
+  prefer_equal_for_default_values.main();
   prefer_generic_function_type_aliases.main();
   prefer_spread_collections.main();
   super_goes_last.main();
