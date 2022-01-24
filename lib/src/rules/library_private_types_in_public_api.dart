@@ -210,6 +210,14 @@ class Validator extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitSuperFormalParameter(SuperFormalParameter node) {
+    if (node.isNamed && Identifier.isPrivateName(node.identifier.name)) {
+      return;
+    }
+    node.type?.accept(this);
+  }
+
+  @override
   void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
     if (node.variables.variables
         .any((field) => !Identifier.isPrivateName(field.name.name))) {
