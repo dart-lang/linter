@@ -16,8 +16,11 @@ From the [style guide](https://dart.dev/guides/language/effective-dart/style/):
 
 **DON'T** type annotate initializing formals.
 
-If a constructor parameter is using `this.x` or `super.x` to initialize a field,
-then the type of the parameter is understood to be the same type as the field.
+If a constructor parameter is using `this.x` to initialize a field, then the
+type of the parameter is understood to be the same type as the field. If a 
+a constructor parameter is using `super.x` to forward to a super constructor,
+then the type of the parameter is understood to be the same as the super
+constructor parameter.
 
 **GOOD:**
 ```dart
