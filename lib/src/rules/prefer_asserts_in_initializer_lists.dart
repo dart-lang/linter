@@ -12,7 +12,7 @@ import '../ast.dart';
 const _desc = r'Prefer putting asserts in initializer list.';
 
 const _details = r'''
-**DO** put asserts in initializer list for constructors with only asserts in
+**DO** put asserts in initializer lists for constructors with only asserts in
 their body.
 
 **GOOD:**
@@ -31,6 +31,31 @@ class A {
 }
 ```
 
+**GOOD:**
+```dart
+class A {
+  final int a;
+  A(this.a);
+}
+
+class B extends A {
+  B(super.a) : assert(a != 0);
+}
+```
+
+**BAD:**
+```dart
+class A {
+  final int a;
+  A(this.a);
+}
+
+class B extends A {
+  B(super.a) {
+    assert(a != 0);
+  }
+}
+```
 ''';
 
 class PreferAssertsInInitializerLists extends LintRule {
