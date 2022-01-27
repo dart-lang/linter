@@ -16,8 +16,8 @@ main() {
 class AvoidReturningThisTest extends LintRuleTest {
   @override
   List<String> get experiments => [
-    EnableString.enhanced_enums,
-  ];
+        EnableString.enhanced_enums,
+      ];
 
   @override
   String get lintRule => 'avoid_returning_this';
