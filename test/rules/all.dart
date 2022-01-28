@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'annotate_overrides.dart' as annotate_overrides;
 import 'avoid_annotating_with_dynamic.dart' as avoid_annotating_with_dynamic;
 import 'avoid_function_literals_in_foreach_calls.dart'
     as avoid_function_literals_in_foreach_calls;
@@ -10,6 +11,7 @@ import 'avoid_redundant_argument_values.dart'
     as avoid_redundant_argument_values;
 import 'avoid_renaming_method_parameters.dart'
     as avoid_renaming_method_parameters;
+import 'avoid_returning_this.dart' as avoid_returning_this;
 import 'avoid_shadowing_type_parameters.dart'
     as avoid_shadowing_type_parameters;
 import 'avoid_types_as_parameter_names.dart' as avoid_types_as_parameter_names;
@@ -46,15 +48,18 @@ import 'tighten_type_of_initializing_formals.dart'
 import 'type_init_formals.dart' as type_init_formals;
 import 'unawaited_futures.dart' as unawaited_futures;
 import 'unnecessary_null_checks.dart' as unnecessary_null_checks;
+import 'unnecessary_overrides.dart' as unnecessary_overrides;
 import 'use_is_even_rather_than_modulo.dart' as use_is_even_rather_than_modulo;
 import 'void_checks.dart' as void_checks;
 
 void main() {
+  annotate_overrides.main();
   avoid_annotating_with_dynamic.main();
   avoid_function_literals_in_foreach_calls.main();
   avoid_init_to_null.main();
   avoid_redundant_argument_values.main();
   avoid_renaming_method_parameters.main();
+  avoid_returning_this.main();
   avoid_shadowing_type_parameters.main();
   avoid_types_as_parameter_names.main();
   avoid_unused_constructor_parameters.main();
@@ -81,6 +86,7 @@ void main() {
   type_init_formals.main();
   unawaited_futures.main();
   unnecessary_null_checks.main();
+  unnecessary_overrides.main();
   use_is_even_rather_than_modulo.main();
   void_checks.main();
 }
