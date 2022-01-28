@@ -9,6 +9,7 @@ import 'package:analyzer/dart/element/type.dart';
 
 import '../../analyzer.dart';
 import 'conformance_rule.dart';
+import 'descriptors.dart';
 import 'interop_helpers.dart';
 import 'web_bindings.dart';
 
@@ -20,19 +21,18 @@ class _BannedPropertyWriteCode extends SecurityLintCode {
       : super(name, problemMessage, correctionMessage: correctionMessage);
 }
 
+/// Lint rule that disallows a property write for either the given native
+/// type-property pair or the given `dart:html` type-property pair.
 class BannedPropertyWrite extends ConformanceRule {
-  final String? nativeType;
-  final String? nativeProperty;
-  final String? dartHtmlType;
-  final String? dartHtmlProperty;
+  final MemberDescriptor descriptor;
   BannedPropertyWrite(
       {required String name,
       required String description,
       required String details,
-      required this.nativeType,
-      required this.nativeProperty})
-      : dartHtmlType = null,
-        dartHtmlProperty = null,
+      required String nativeType,
+      required String nativeProperty})
+      : descriptor =
+            NativeMemberDescriptor(type: nativeType, member: nativeProperty),
         super(name: name, description: description, details: details);
 
   // This constructor is meant specifically to disallow specific `dart:html`
@@ -43,34 +43,31 @@ class BannedPropertyWrite extends ConformanceRule {
       {required String name,
       required String description,
       required String details,
-      required this.dartHtmlType,
-      required this.dartHtmlProperty})
-      : nativeType = null,
-        nativeProperty = null,
+      required String dartHtmlType,
+      required String dartHtmlProperty})
+      : descriptor = DartHtmlMemberDescriptor(
+            type: dartHtmlType, member: dartHtmlProperty),
         super(name: name, description: description, details: details);
 
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _BannedPropertyWriteVisitor(this);
-    registry.addCompilationUnit(this, visitor);
     registry.addAssignmentExpression(this, visitor);
     registry.addMethodInvocation(this, visitor);
   }
 }
 
 class _BannedPropertyWriteVisitor extends SimpleAstVisitor<void> {
-  final BannedPropertyWrite rule;
+  final BannedPropertyWrite _rule;
+  static final DartHtmlBindings _bindings = DartHtmlBindings();
 
-  _BannedPropertyWriteVisitor(this.rule);
-
-  @override
-  void visitCompilationUnit(CompilationUnit node) {
-    computeHtmlBindings(node.declaredElement?.library);
-  }
+  _BannedPropertyWriteVisitor(this._rule);
 
   @override
   void visitAssignmentExpression(AssignmentExpression expression) {
+    _bindings.cacheLibrary(expression);
+
     var leftHandSide = expression.leftHandSide;
     DartType? dartTargetType;
     String dartProperty;
@@ -86,10 +83,11 @@ class _BannedPropertyWriteVisitor extends SimpleAstVisitor<void> {
 
     var dartTargetTypeElement = dartTargetType?.element;
 
-    if (dartTargetType == null || dartTargetTypeElement == null) return;
+    if (dartProperty.isEmpty ||
+        dartTargetType == null ||
+        dartTargetTypeElement == null) return;
 
-    var dartHtmlBindingProperty = getWebLibraryMember(
-        nativeType: rule.nativeType, nativeMember: rule.nativeProperty);
+    MemberDescriptor descriptor = _rule.descriptor;
 
     var writeElement = expression.writeElement;
     var isExternal = false;
@@ -105,8 +103,7 @@ class _BannedPropertyWriteVisitor extends SimpleAstVisitor<void> {
 
     // If there is no `dart:html` binding for the given native type, we can use
     // `@JS` or `@anonymous`. This means dynamic interop is possible.
-    var canUseDynamicInterop =
-        rule.nativeType != null && !hasDartHtmlBinding(rule.nativeType!);
+    var canUseDynamicInterop = !_bindings.hasDartHtmlBinding(descriptor);
 
     // Report a lint if the target type is dynamic and one of the following
     // holds true:
@@ -117,12 +114,14 @@ class _BannedPropertyWriteVisitor extends SimpleAstVisitor<void> {
     // 3. The property name matches the given native property, and the type
     // can be dynamically interop'd.
     if (dartTargetType.isDynamic &&
-        (dartProperty == dartHtmlBindingProperty ||
-            dartProperty == rule.dartHtmlProperty ||
-            canUseDynamicInterop && dartProperty == rule.nativeProperty)) {
-      rule.reportLint(expression,
+        (dartProperty == _bindings.getWebLibraryMember(descriptor) ||
+            (descriptor.isDartHtml && dartProperty == descriptor.member) ||
+            (descriptor.isNative &&
+                canUseDynamicInterop &&
+                dartProperty == descriptor.member))) {
+      _rule.reportLint(expression,
           errorCode: _BannedPropertyWriteCode(
-              name: rule.name,
+              name: _rule.name,
               problemMessage:
                   'This conformance check is being triggered because the '
                   'static type of the target is dynamic.',
@@ -131,14 +130,15 @@ class _BannedPropertyWriteVisitor extends SimpleAstVisitor<void> {
     } else if (dartTargetTypeElement is ClassElement) {
       if (isExternal &&
           dartTargetTypeElement.hasJS &&
-          dartProperty == rule.nativeProperty) {
+          descriptor.isNative &&
+          dartProperty == descriptor.member) {
         // Only `@staticInterop` classes can interop the types bound to a
         // `@Native` class. If there is no such binding however, then there
         // needs to be a check for `@JS` and `@anonymous` classes as well.
         if (isStaticInteropType(dartTargetTypeElement)) {
-          rule.reportLint(expression,
+          _rule.reportLint(expression,
               errorCode: _BannedPropertyWriteCode(
-                  name: rule.name,
+                  name: _rule.name,
                   problemMessage:
                       '@staticInterop types may be used to interface native '
                       'types, so this property write may violate conformance.',
@@ -146,9 +146,9 @@ class _BannedPropertyWriteVisitor extends SimpleAstVisitor<void> {
                       'Avoid using the same name as disallowed properties in '
                       '@staticInterop classes.'));
         } else if (canUseDynamicInterop) {
-          rule.reportLint(expression,
+          _rule.reportLint(expression,
               errorCode: _BannedPropertyWriteCode(
-                  name: rule.name,
+                  name: _rule.name,
                   problemMessage:
                       'Since there is no `dart:html` class for this native '
                       'type, non-`@staticInterop` `package:js` classes may be '
@@ -159,30 +159,34 @@ class _BannedPropertyWriteVisitor extends SimpleAstVisitor<void> {
         }
       } else if (fromDartHtml(dartTargetTypeElement)) {
         var errorCode = _BannedPropertyWriteCode(
-            name: rule.name,
+            name: _rule.name,
             problemMessage: 'Disallowed `dart:html` property is being used.',
             correctionMessage: 'Avoid using it.');
-        // If we only care about Dart types, we don't need to do any further
-        // checks.
+        // If we only care about `dart:html` types, we don't need to do any
+        // further checks.
         var dartTypeName = dartTargetTypeElement.name;
-        if (rule.dartHtmlType != null && rule.dartHtmlProperty != null) {
-          if (dartTypeName == rule.dartHtmlType &&
-              dartProperty == rule.dartHtmlProperty) {
-            rule.reportLint(expression, errorCode: errorCode);
+        if (descriptor.isDartHtml) {
+          if (dartTypeName == descriptor.type &&
+              dartProperty == descriptor.member) {
+            _rule.reportLint(expression, errorCode: errorCode);
           }
           return;
         }
 
-        // Check that it is a `@Native` class.
-        var nativeTypes = getBoundNativeTypes(dartType: dartTypeName);
-        if (nativeTypes == null) return;
+        // Check that the target is a `@Native` class.
+        var assignmentDescriptor =
+            DartHtmlMemberDescriptor(type: dartTypeName, member: dartProperty);
+        var nativeTypes = _bindings.getBoundNativeTypes(assignmentDescriptor);
+        if (nativeTypes.isEmpty) return;
 
-        var nativePropertyName = getNativePropertyBinding(
-            dartType: dartTypeName, dartMember: dartProperty);
+        // Check whether there's a binding for the property, and that the
+        // binding matches the rule.
+        var nativePropertyName =
+            _bindings.getNativeMemberBinding(assignmentDescriptor);
         if (isExternal &&
-            nativeTypes.contains(rule.nativeType) &&
-            nativePropertyName == rule.nativeProperty) {
-          rule.reportLint(expression, errorCode: errorCode);
+            nativeTypes.contains(descriptor.type) &&
+            nativePropertyName == descriptor.member) {
+          _rule.reportLint(expression, errorCode: errorCode);
         }
       }
     }
@@ -192,29 +196,38 @@ class _BannedPropertyWriteVisitor extends SimpleAstVisitor<void> {
   void visitMethodInvocation(MethodInvocation node) {
     if (!isJsUtilSetProperty(node)) return;
 
+    _bindings.cacheLibrary(node);
+
     var targetType = node.argumentList.arguments[0].staticType;
     var targetTypeElement = targetType?.element;
 
     if (targetType == null || targetTypeElement == null) return;
 
+    // Nothing to check if the rule isn't concerned about the native property.
+    if (!_rule.descriptor.isNative) return;
+    var descriptor = _rule.descriptor as NativeMemberDescriptor;
+
     var setPropertyName = node.argumentList.arguments[1];
     if (setPropertyName is! StringLiteral ||
-        setPropertyName.stringValue != rule.nativeProperty) return;
+        setPropertyName.stringValue != descriptor.member) return;
 
     if (targetType.isDartCoreObject) {
-      rule.reportLint(node,
+      _rule.reportLint(node,
           errorCode: _BannedPropertyWriteCode(
-              name: rule.name,
+              name: _rule.name,
               problemMessage:
                   'This conformance check is being triggered because the '
                   'static type of the target is Object.',
               correctionMessage:
                   'Try casting the target to a non-Object type.'));
     } else if (targetTypeElement is ClassElement) {
-      if (isNativeInteropType(targetTypeElement, rule.nativeType)) {
-        rule.reportLint(node,
+      if (isNativeInteropType(
+          element: targetTypeElement,
+          bindings: _bindings,
+          descriptor: descriptor)) {
+        _rule.reportLint(node,
             errorCode: _BannedPropertyWriteCode(
-                name: rule.name,
+                name: _rule.name,
                 problemMessage:
                     "The target object's type can be used to interface native "
                     'types, so this call to `setProperty` may violate '
@@ -222,12 +235,10 @@ class _BannedPropertyWriteVisitor extends SimpleAstVisitor<void> {
                 correctionMessage: 'Avoid using this property name in a '
                     '`setProperty` call.'));
       } else if (fromDartHtml(targetTypeElement) &&
-          (getBoundNativeTypes(dartType: targetTypeElement.name)
-                  ?.contains(rule.nativeType) ??
-              false)) {
-        rule.reportLint(node,
+          _bindings.getBoundNativeTypes(descriptor).contains(descriptor.type)) {
+        _rule.reportLint(node,
             errorCode: _BannedPropertyWriteCode(
-                name: rule.name,
+                name: _rule.name,
                 problemMessage:
                     'Disallowed `dart:html` property is being used in this '
                     '`setProperty` call.',

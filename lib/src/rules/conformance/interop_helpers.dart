@@ -5,6 +5,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 
+import 'descriptors.dart';
 import 'web_bindings.dart';
 
 final String _dartInterceptorsLibrary = '_interceptors';
@@ -17,15 +18,19 @@ bool isJsUtilSetProperty(MethodInvocation node) =>
     node.methodName.name == 'setProperty' ||
     node.methodName.staticElement?.library?.name == _jsUtilLibrary;
 
-/// Returns whether [element] is an interop type that can be used as
-/// [nativeType].
-bool isNativeInteropType(ClassElement element, String? nativeType) {
+/// Returns whether [element] is an interop type that can be used as the native
+/// type in [descriptor].
+///
+/// [bindings] is required to determine if there is a `dart:html` equivalent to
+/// this native type.
+bool isNativeInteropType(
+    {required ClassElement element,
+    required DartHtmlBindings bindings,
+    required NativeMemberDescriptor descriptor}) {
   if (isStaticInteropType(element)) return true;
   // If there is no `@Native` type in `dart:html` matching [nativeType], it is
   // possible for non-`@staticInterop` `package:js` classes to be used.
-  if (element.hasJS) {
-    return nativeType != null && !hasDartHtmlBinding(nativeType);
-  }
+  if (element.hasJS) return !bindings.hasDartHtmlBinding(descriptor);
   // If [element] is a subtype of `JavaScriptObject`, it can possibly be used as
   // a native type.
   var possibleTypes = element.allSupertypes..add(element.thisType);
