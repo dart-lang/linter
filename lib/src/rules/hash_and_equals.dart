@@ -111,7 +111,5 @@ class _Visitor extends SimpleAstVisitor<void> {
             errorCode: hashMemberCode);
       }
     }
-
   }
-
 }
