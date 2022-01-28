@@ -28,7 +28,7 @@ class AvoidRenamingMethodParametersTest extends LintRuleTest {
 class C {
   int f(int f) => f;
 }
-enum A extends C {
+enum A implements C {
   a,b,c;
   @override
   int f(int x) => x;
