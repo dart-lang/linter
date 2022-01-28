@@ -23,7 +23,7 @@ class HashAndEqualsTest extends LintRuleTest {
   String get lintRule => 'hash_and_equals';
 
   @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3195')
-  test_missingHash() async {
+  test_enum_missingHash() async {
     await assertDiagnostics(r'''
 enum A {
   a,b,c;
