@@ -16,8 +16,6 @@ import 'integration/always_require_non_null_named_parameters.dart'
     as always_require_non_null_named_parameters;
 import 'integration/avoid_private_typedef_functions.dart'
     as avoid_private_typedef_functions;
-import 'integration/avoid_relative_lib_imports.dart'
-    as avoid_relative_lib_imports;
 import 'integration/avoid_renaming_method_parameters.dart'
     as avoid_renaming_method_parameters;
 import 'integration/avoid_web_libraries_in_flutter.dart'
@@ -196,7 +194,6 @@ void ruleTests() {
     always_require_non_null_named_parameters.main();
     prefer_asserts_in_initializer_lists.main();
     prefer_const_constructors_in_immutables.main();
-    avoid_relative_lib_imports.main();
     prefer_relative_imports.main();
     public_member_api_docs.main();
     secure_pubspec_urls.main();

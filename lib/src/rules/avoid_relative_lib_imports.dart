@@ -4,6 +4,7 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:path/path.dart' as path;
 
 import '../analyzer.dart';
 
@@ -67,7 +68,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (uriContent != null) {
       var uri = Uri.tryParse(uriContent);
       if (uri != null && uri.scheme.isEmpty) {
-        return uri.path.contains('/lib/');
+        var fullPath = node.uriSource?.fullName ?? uri.path;
+        return path.split(fullPath).contains('lib');
       }
     }
     return false;
