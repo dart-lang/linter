@@ -19,7 +19,7 @@ import 'avoid_types_as_parameter_names_test.dart'
     as avoid_types_as_parameter_names;
 import 'avoid_unused_constructor_parameters_test.dart'
     as avoid_unused_constructor_parameters;
-import 'avoid_void_async _test.dart' as avoid_void_async;
+import 'avoid_void_async_test.dart' as avoid_void_async;
 import 'conditional_uri_does_not_exist_test.dart'
     as conditional_uri_does_not_exist;
 import 'deprecated_consistency_test.dart' as deprecated_consistency;
