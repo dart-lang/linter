@@ -31,8 +31,8 @@ Future<void> f2() async => null;
 
 **EXCEPTION**
 
-An exception is made for `main`, where the `Future` annotation *can* (and
-generally should) be dropped in favor of `void`.
+An exception is made for top-level `main` functions, where the `Future`
+annotation *can* (and generally should) be dropped in favor of `void`.
 
 **GOOD:**
 ```dart
