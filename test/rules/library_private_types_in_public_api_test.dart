@@ -22,6 +22,21 @@ class LibraryPrivateTypesInPublicApiTest extends LintRuleTest {
   @override
   String get lintRule => 'library_private_types_in_public_api';
 
+  test_implicitTypeFieldFormalParam() async {
+    await assertDiagnostics(r'''
+class _O {}
+class C {
+  _O _x;
+
+  C(this._x);
+  
+  Object get x => _x;
+}
+''', [
+      lint('library_private_types_in_public_api', 41, 2),
+    ]);
+  }
+
   test_implicitTypeSuperFormalParam() async {
     await assertDiagnostics(r'''
 class _O extends Object {}

@@ -117,7 +117,19 @@ class Validator extends SimpleAstVisitor<void> {
     if (node.isNamed && Identifier.isPrivateName(node.identifier.name)) {
       return;
     }
-    node.type?.accept(this);
+    // Check for a declared type.
+    var type = node.type;
+    if (type != null) {
+      type.accept(this);
+      return;
+    }
+
+    // Check implicit type.
+    var element = node.identifier.staticElement;
+    if (element is FieldFormalParameterElement &&
+        isPrivateName(element.type.element?.name)) {
+      rule.reportLint(node.identifier);
+    }
   }
 
   @override
