@@ -8,33 +8,30 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(AvoidAnnotatingWithDynamicTest);
+    defineReflectiveTests(HashAndEqualsTest);
   });
 }
 
 @reflectiveTest
-class AvoidAnnotatingWithDynamicTest extends LintRuleTest {
+class HashAndEqualsTest extends LintRuleTest {
   @override
   List<String> get experiments => [
-        EnableString.super_parameters,
+        EnableString.enhanced_enums,
       ];
 
   @override
-  String get lintRule => 'avoid_annotating_with_dynamic';
+  String get lintRule => 'hash_and_equals';
 
-  test_super() async {
+  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3195')
+  test_enum_missingHash() async {
     await assertDiagnostics(r'''
-class A {
-  var a;
-  var b;
-  A(this.a, this.b);
-}
-class B extends A {
-  B(dynamic super.a, dynamic super.b);
+enum A {
+  a,b,c;
+  @override
+  bool operator ==(Object other) => false;
 }
 ''', [
-      lint('avoid_annotating_with_dynamic', 75, 15),
-      lint('avoid_annotating_with_dynamic', 92, 15),
+      lint('hash_and_equals', 46, 2), // todo(pq): fix index
     ]);
   }
 }
