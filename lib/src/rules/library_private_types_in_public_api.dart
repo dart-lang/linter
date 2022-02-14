@@ -214,7 +214,20 @@ class Validator extends SimpleAstVisitor<void> {
     if (node.isNamed && Identifier.isPrivateName(node.identifier.name)) {
       return;
     }
-    node.type?.accept(this);
+
+    // Check for a declared type.
+    var type = node.type;
+    if (type != null) {
+      type.accept(this);
+      return;
+    }
+
+    // Check implicit type.
+    var element = node.identifier.staticElement;
+    if (element is SuperFormalParameterElement &&
+        isPrivateName(element.type.element?.name)) {
+      rule.reportLint(node.identifier);
+    }
   }
 
   @override
@@ -242,10 +255,10 @@ class Validator extends SimpleAstVisitor<void> {
 
   /// Return `true` if the given [element] is private or is defined in a private
   /// library.
-  static bool isPrivate(Element element) {
-    var name = element.name;
-    return name != null && Identifier.isPrivateName(name);
-  }
+  static bool isPrivate(Element element) => isPrivateName(element.name);
+
+  static bool isPrivateName(String? name) =>
+      name != null && Identifier.isPrivateName(name);
 }
 
 class Visitor extends SimpleAstVisitor {

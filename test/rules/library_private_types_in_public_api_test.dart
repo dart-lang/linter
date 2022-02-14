@@ -22,6 +22,20 @@ class LibraryPrivateTypesInPublicApiTest extends LintRuleTest {
   @override
   String get lintRule => 'library_private_types_in_public_api';
 
+  test_implicitTypeSuperFormalParam() async {
+    await assertDiagnostics(r'''
+class _O extends Object {}
+class _A {
+  _A(_O o);
+}
+class B extends _A {
+  B(super.o);
+}
+''', [
+      lint('library_private_types_in_public_api', 83, 1),
+    ]);
+  }
+
   test_recursiveInterfaceInheritance() async {
     await assertDiagnostics(r'''
 class _O extends Object {}
