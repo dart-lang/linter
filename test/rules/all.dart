@@ -13,7 +13,8 @@ import 'avoid_redundant_argument_values_test.dart'
 import 'avoid_renaming_method_parameters_test.dart'
     as avoid_renaming_method_parameters;
 import 'avoid_returning_this_test.dart' as avoid_returning_this;
-import 'avoid_setters_without_getters_test.dart' as avoid_setters_without_getters;
+import 'avoid_setters_without_getters_test.dart'
+    as avoid_setters_without_getters;
 import 'avoid_shadowing_type_parameters_test.dart'
     as avoid_shadowing_type_parameters;
 import 'avoid_types_as_parameter_names_test.dart'
