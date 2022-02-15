@@ -26,31 +26,11 @@ class AvoidEqualsAndHashCodeOnMutableClassesTest extends LintRuleTest {
   String get lintRule => 'avoid_equals_and_hash_code_on_mutable_classes';
 
   @FailingTest(
-      issue: 'https://github.com/dart-lang/sdk/issues/48404',
+      issue: 'https://github.com/dart-lang/linter/issues/3094',
       reason: 'Needs new analyzer')
-  test_enum_bad() async {
-    await assertDiagnostics(r'''
-enum E {
-  e(1), f(2), g(3);
-  final int key;
-  const E(this.key);
-  bool operator ==(Object other) => other is E && other.key == key;
-  int get hashCode => key.hashCode;
-}
-''', [
-      lint('avoid_equals_and_hash_code_on_mutable_classes', 69, 4),
-      lint('avoid_equals_and_hash_code_on_mutable_classes', 137, 3),
-    ]);
-  }
-
-  @FailingTest(
-      issue: 'https://github.com/dart-lang/sdk/issues/48404',
-      reason: 'Enums cannot be marked @immutable')
-  test_enum_ok() async {
+  test_enums() async {
+    // Enums are constant by design.
     await assertNoDiagnostics(r'''
-import 'package:meta/meta.dart';
-
-@immutable
 enum E {
   e(1), f(2), g(3);
   final int key;

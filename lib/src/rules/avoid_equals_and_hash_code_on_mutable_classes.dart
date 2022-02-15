@@ -106,13 +106,9 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  ClassElement? _getClassForMethod(MethodDeclaration node) {
-    var decl = node.thisOrAncestorMatching(
-            (p) => p is EnumDeclaration || p is ClassDeclaration)
-        as NamedCompilationUnitMember?;
-    var element = decl?.declaredElement;
-    return element is ClassElement ? element : null;
-  }
+  ClassElement? _getClassForMethod(MethodDeclaration node) =>
+      // todo (pq): should this be ClassOrMixinDeclaration ?
+  node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
 
   bool _hasImmutableAnnotation(ClassElement clazz) {
     var inheritedAndSelfElements = <ClassElement>[
