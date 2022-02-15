@@ -108,7 +108,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   ClassElement? _getClassForMethod(MethodDeclaration node) {
     var decl = node.thisOrAncestorMatching(
-            // todo (pq): should this be ClassOrMixinDeclaration
             (p) => p is EnumDeclaration || p is ClassDeclaration)
         as NamedCompilationUnitMember?;
     var element = decl?.declaredElement;
