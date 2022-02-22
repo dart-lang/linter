@@ -14,10 +14,42 @@ const _desc = r'Avoid `print` calls in production code.';
 const _details = r'''
 **DO** avoid `print` calls in production code.
 
+For production code use `debugPrint`, a logging framework, or surround `print`
+calls with a check for `kDebugMode`.
+
 **BAD:**
 ```dart
 void f(int x) {
   print('debug: $x');
+  ...
+}
+```
+
+
+**GOOD:**
+```dart
+void f(int x) {
+  debugPrint('debug: $x');
+  ...
+}
+```
+
+
+**GOOD:**
+```dart
+void f(int x) {
+  log('log: $x');
+  ...
+}
+```
+
+
+**GOOD:**
+```dart
+void f(int x) {
+  if (kDebugMode) {
+      print('debug: $x');
+  }
   ...
 }
 ```
