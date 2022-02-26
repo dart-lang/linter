@@ -114,6 +114,12 @@ bool isHashCode(ClassMember element) =>
     (element is FieldDeclaration &&
         getFieldIdentifier(element, 'hashCode') != null);
 
+/// Returns `true` if this element is an `index` method or field declaration.
+bool isIndex(ClassMember element) =>
+    (element is MethodDeclaration && element.name.name == 'index') ||
+        (element is FieldDeclaration &&
+            getFieldIdentifier(element, 'index') != null);
+
 /// Return true if this compilation unit [node] is declared within the given
 /// [package]'s `lib/` directory tree.
 bool isInLibDir(CompilationUnit node, WorkspacePackage? package) {
