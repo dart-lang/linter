@@ -60,3 +60,10 @@ f5(int? p) {
   v1 ??= p!; // OK
 }
 
+Future<int?> f6(int? p) async => await p!; // LINT
+List<int?> f7(int? p) => [p!]; // LINT
+Set<int?> f8(int? p) => {p!}; // LINT
+Map<int?, String> f9(int? p) => {p!: ''}; // LINT
+Map<String, int?> f10(int? p) => {'': p!}; // LINT
+Iterable<int?> f11(int? p) sync* {yield p!;} // LINT
+Stream<int?> f12(int? p) async* {yield p!;} // LINT
