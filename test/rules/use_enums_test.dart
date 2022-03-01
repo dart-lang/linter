@@ -8,19 +8,19 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(PreferEnumsTest);
+    defineReflectiveTests(UseEnumsTest);
   });
 }
 
 @reflectiveTest
-class PreferEnumsTest extends LintRuleTest {
+class UseEnumsTest extends LintRuleTest {
   @override
   List<String> get experiments => [
         EnableString.enhanced_enums,
       ];
 
   @override
-  String get lintRule => 'prefer_enums';
+  String get lintRule => 'use_enums';
 
   test_constructor_private() async {
     await assertDiagnostics(r'''
@@ -31,7 +31,7 @@ class A {
   const A._(this.value);
 }
 ''', [
-      lint('prefer_enums', 6, 1),
+      lint('use_enums', 6, 1),
     ]);
   }
 
@@ -43,7 +43,18 @@ class A extends Object {
   const A._();
 }
 ''', [
-      lint('prefer_enums', 6, 1),
+      lint('use_enums', 6, 1),
+    ]);
+  }
+
+  test_multiDeclaration() async {
+    await assertDiagnostics(r'''
+class A {
+  static const A a = A._(), b = A._();
+  const A._();
+}
+''', [
+      lint('use_enums', 6, 1),
     ]);
   }
 
@@ -305,7 +316,7 @@ class _E {
 
 _E e = _E.withValue(0);
 ''', [
-      lint('prefer_enums', 6, 2),
+      lint('use_enums', 6, 2),
       error(HintCode.UNUSED_FIELD, 57, 1),
     ]);
   }
@@ -321,7 +332,7 @@ class _A {
       error(HintCode.UNUSED_ELEMENT, 6, 2),
       error(HintCode.UNUSED_FIELD, 29, 1),
       error(HintCode.UNUSED_FIELD, 57, 1),
-      lint('prefer_enums', 6, 2),
+      lint('use_enums', 6, 2),
     ]);
   }
 
@@ -333,7 +344,7 @@ class A {
   const A._();
 }
 ''', [
-      lint('prefer_enums', 6, 1),
+      lint('use_enums', 6, 1),
     ]);
   }
 
@@ -346,7 +357,7 @@ class A with M {
   const A._();
 }
 ''', [
-      lint('prefer_enums', 22, 1),
+      lint('use_enums', 22, 1),
     ]);
   }
 }

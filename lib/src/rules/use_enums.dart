@@ -11,7 +11,9 @@ import '../analyzer.dart';
 import '../ast.dart';
 import '../util/dart_type_utilities.dart';
 
-const _desc = r'Prefer enums over classes that behave like enums.';
+const _desc = r'Use enums rather than classes that behave like enums.';
+
+// todo(pq): add a link to any docs describing enhanced-enums once published
 
 const _details = r'''
 Classes that look like enumerations should be declared as `enum`s.
@@ -25,7 +27,7 @@ Candidates for enums are classes that:
   * have generative constructors that are only invoked at the top-level of the
     initialization expression of these static fields,
   * do not define `hashCode`, `==` or `index`,
-  * do not extend any class beside Object, and
+  * do not extend any class other than Object, and
   * have no subclasses declared in the defining library.
 
 **BAD:**
@@ -33,7 +35,7 @@ Candidates for enums are classes that:
 class LogPriority {
   static const error = LogPriority._(1, 'Error');
   static const warning = LogPriority._(2, 'Warning');
-  static const unknown = LogPriority._unknown(2, 'Log');
+  static const unknown = LogPriority._unknown('Log');
 
   final String prefix;
   final int priorty;
@@ -57,10 +59,10 @@ enum LogPriority {
 ```
 ''';
 
-class PreferEnums extends LintRule {
-  PreferEnums()
+class UseEnums extends LintRule {
+  UseEnums()
       : super(
-            name: 'prefer_enums',
+            name: 'use_enums',
             description: _desc,
             details: _details,
             group: Group.style);
@@ -190,7 +192,7 @@ class _Visitor extends SimpleAstVisitor {
     if (classElement == null) return;
 
     // Enums can only extend Object.
-    if (node.extendsClause?.superclass.type?.isDartCoreObject == false) {
+    if (classElement.supertype?.isDartCoreObject == false) {
       return;
     }
 
@@ -233,17 +235,9 @@ class _Visitor extends SimpleAstVisitor {
     }
 
     if (candidateConstants.length < 2) return;
-    if (DartTypeUtilities.hasSubclassInDefiningCompilationUnit(classElement)) {
-      return;
-    }
 
     try {
       node.accept(_EnumVisitor(classElement, candidateConstants));
-    } on _InvalidEnumException {
-      return;
-    }
-
-    try {
       node.root.accept(_NonEnumVisitor(classElement));
     } on _InvalidEnumException {
       return;

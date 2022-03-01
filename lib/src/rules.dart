@@ -119,7 +119,6 @@ import 'rules/prefer_const_literals_to_create_immutables.dart';
 import 'rules/prefer_constructors_over_static_methods.dart';
 import 'rules/prefer_contains.dart';
 import 'rules/prefer_double_quotes.dart';
-import 'rules/prefer_enums.dart';
 import 'rules/prefer_equal_for_default_values.dart';
 import 'rules/prefer_expression_function_bodies.dart';
 import 'rules/prefer_final_fields.dart';
@@ -192,6 +191,7 @@ import 'rules/unrelated_type_equality_checks.dart';
 import 'rules/unsafe_html.dart';
 import 'rules/use_build_context_synchronously.dart';
 import 'rules/use_decorated_box.dart';
+import 'rules/use_enums.dart';
 import 'rules/use_full_hex_values_for_flutter_colors.dart';
 import 'rules/use_function_type_syntax_for_parameters.dart';
 import 'rules/use_if_null_to_convert_nulls_to_bools.dart';
@@ -328,7 +328,6 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(PreferContainsOverIndexOf())
     ..register(PreferDoubleQuotes())
     ..register(PreferEqualForDefaultValues())
-    ..register(PreferEnums())
     ..register(PreferExpressionFunctionBodies())
     ..register(PreferFinalFields())
     ..register(PreferFinalInForEach())
@@ -402,6 +401,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(UnsafeHtml())
     ..register(UseBuildContextSynchronously(inTestMode: inTestMode))
     ..register(UseDecoratedBox())
+    ..register(UseEnums())
     ..register(UseFullHexValuesForFlutterColors())
     ..register(UseFunctionTypeSyntaxForParameters())
     ..register(UseIfNullToConvertNullsToBools())

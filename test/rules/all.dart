@@ -49,7 +49,6 @@ import 'prefer_const_constructors_test.dart' as prefer_const_constructors;
 import 'prefer_const_literals_to_create_immutables_test.dart'
     as prefer_const_literals_to_create_immutables;
 import 'prefer_contains_test.dart' as prefer_contains;
-import 'prefer_enums_test.dart' as prefer_enums;
 import 'prefer_equal_for_default_values_test.dart'
     as prefer_equal_for_default_values;
 import 'prefer_final_fields_test.dart' as prefer_final_fields;
@@ -68,6 +67,7 @@ import 'unawaited_futures_test.dart' as unawaited_futures;
 import 'unnecessary_getters_setters_test.dart' as unnecessary_getters_setters;
 import 'unnecessary_null_checks_test.dart' as unnecessary_null_checks;
 import 'unnecessary_overrides_test.dart' as unnecessary_overrides;
+import 'use_enums_test.dart' as use_enums;
 import 'use_is_even_rather_than_modulo_test.dart'
     as use_is_even_rather_than_modulo;
 import 'void_checks_test.dart' as void_checks;
@@ -103,7 +103,6 @@ void main() {
   prefer_const_constructors_in_immutables.main();
   prefer_const_literals_to_create_immutables.main();
   prefer_contains.main();
-  prefer_enums.main();
   prefer_equal_for_default_values.main();
   prefer_final_fields.main();
   prefer_generic_function_type_aliases.main();
@@ -118,6 +117,7 @@ void main() {
   unnecessary_getters_setters.main();
   unnecessary_null_checks.main();
   unnecessary_overrides.main();
+  use_enums.main();
   use_is_even_rather_than_modulo.main();
   void_checks.main();
 }
