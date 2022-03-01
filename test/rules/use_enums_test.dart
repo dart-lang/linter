@@ -196,20 +196,6 @@ class _E {
     ]);
   }
 
-  test_no_lint_hasPart() async {
-    newFile('$testPackageLibPath/a.dart', content: '''
-part of 'test.dart';
-''');
-    await assertNoDiagnostics(r'''
-part 'a.dart';
-class A {
-  static const A a = A._();
-  static const A b = A._();
-  const A._();
-}
-''');
-  }
-
   test_no_lint_implemented() async {
     await assertDiagnostics('''
 class _E {
@@ -318,6 +304,22 @@ _E e = _E.withValue(0);
 ''', [
       lint('use_enums', 6, 2),
       error(HintCode.UNUSED_FIELD, 57, 1),
+    ]);
+  }
+
+  test_simple_hasPart() async {
+    newFile('$testPackageLibPath/a.dart', content: '''
+part of 'test.dart';
+''');
+    await assertDiagnostics(r'''
+part 'a.dart';
+class A {
+  static const A a = A._();
+  static const A b = A._();
+  const A._();
+}
+''', [
+      lint('use_enums', 21, 1),
     ]);
   }
 

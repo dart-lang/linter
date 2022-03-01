@@ -71,9 +71,6 @@ class UseEnums extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     if (!context.isEnabled(Feature.enhanced_enums)) return;
 
-    // Skip contexts w/ parts.
-    if (context.allUnits.length > 1) return;
-
     var visitor = _Visitor(this, context);
     registry.addClassDeclaration(this, visitor);
   }
