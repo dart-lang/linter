@@ -9,7 +9,6 @@ import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 import '../ast.dart';
-import '../util/dart_type_utilities.dart';
 
 const _desc = r'Use enums rather than classes that behave like enums.';
 
