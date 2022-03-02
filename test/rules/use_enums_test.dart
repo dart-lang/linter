@@ -234,6 +234,28 @@ class A {
 ''');
   }
 
+  test_no_lint_implements_values_field() async {
+    await assertNoDiagnostics(r'''
+class A {
+  static const A a = A._();
+  static const A b = A._();
+  const A._();
+  static final List<A> values = [a, b];
+}
+''');
+  }
+
+  test_no_lint_implements_values_method() async {
+    await assertNoDiagnostics(r'''
+class A {
+  static const A a = A._();
+  static const A b = A._();
+  const A._();
+  static List<A> values() => [];
+}
+''');
+  }
+
   test_no_lint_nonConstConstructor() async {
     await assertDiagnostics('''
 class _E {
