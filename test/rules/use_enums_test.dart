@@ -259,16 +259,18 @@ class A {
   test_no_lint_nonConstConstructor() async {
     await assertDiagnostics('''
 class _E {
-  static _E a = _E();
-  static _E b = _E();
+  static final _E a = _E();
+  static final _E b = _E();
 
   _E();
 }
 ''', [
       // No lint.
+      // todo(pq):consider relaxing the lint to flag cases w/o a const
+      // but all final fields.
       error(HintCode.UNUSED_ELEMENT, 6, 2),
-      error(HintCode.UNUSED_FIELD, 23, 1),
-      error(HintCode.UNUSED_FIELD, 45, 1),
+      error(HintCode.UNUSED_FIELD, 29, 1),
+      error(HintCode.UNUSED_FIELD, 57, 1),
     ]);
   }
 
