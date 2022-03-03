@@ -73,3 +73,4 @@ Future<void> f13(int? p) async {
   i = await f!; // LINT
 }
 Future<int?> f14(int? p) async => p!; // LINT
+dynamic f15(int? p) async => p!; // OK

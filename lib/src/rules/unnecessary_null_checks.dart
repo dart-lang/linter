@@ -55,11 +55,13 @@ DartType? getExpectedType(PostfixExpression node) {
     if (staticType is! FunctionType) {
       return null;
     }
+    staticType = staticType.returnType;
     if (withAwait || parentExpression.body.keyword?.lexeme == 'async') {
-      //  return type is obligatorily a Future<X>
-      return (staticType.returnType as ParameterizedType?)?.typeArguments.first;
+      return staticType.isDartAsyncFuture || staticType.isDartAsyncFutureOr
+          ? (staticType as ParameterizedType?)?.typeArguments.first
+          : null;
     } else {
-      return staticType.returnType;
+      return staticType;
     }
   }
   // in yield value
@@ -72,7 +74,10 @@ DartType? getExpectedType(PostfixExpression node) {
     if (staticType is! FunctionType) {
       return null;
     }
-    return (staticType.returnType as ParameterizedType).typeArguments.first;
+    staticType = staticType.returnType;
+    return staticType.isDartCoreIterable || staticType.isDartAsyncStream
+        ? (staticType as ParameterizedType).typeArguments.first
+        : null;
   }
   // assignment
   if (parent is AssignmentExpression &&
