@@ -106,21 +106,21 @@ class _Visitor extends SimpleAstVisitor {
   /// initializing formal parameter.
   bool _checkNamedParameter(
       FormalParameter parameter,
-      ParameterElement thisParameter,
+      ParameterElement parameterElement,
       ConstructorElement superConstructor,
       SuperConstructorInvocation superInvocation) {
     var superParameter =
-        _correspondingNamedParameter(superConstructor, thisParameter);
+        _correspondingNamedParameter(superConstructor, parameterElement);
     if (superParameter == null) return false;
 
     bool matchingArgument = false;
     var arguments = superInvocation.argumentList.arguments;
     for (var argument in arguments) {
       if (argument is NamedExpression &&
-          argument.name.label.name == thisParameter.name) {
+          argument.name.label.name == parameterElement.name) {
         var expression = argument.expression;
         if (expression is SimpleIdentifier &&
-            expression.staticElement == thisParameter) {
+            expression.staticElement == parameterElement) {
           matchingArgument = true;
           break;
         }
@@ -134,7 +134,7 @@ class _Visitor extends SimpleAstVisitor {
 
     // Compare the types.
     var superType = superParameter.type;
-    var thisType = thisParameter.type;
+    var thisType = parameterElement.type;
     if (!context.typeSystem.isAssignableTo(superType, thisType)) {
       // If the type of the selected parameter can't be assigned to the super
       // parameter, then don't lint.
