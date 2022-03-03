@@ -72,3 +72,4 @@ Future<void> f13(int? p) async {
   int? i;
   i = await f!; // LINT
 }
+Future<int?> f14(int? p) async => p!; // LINT

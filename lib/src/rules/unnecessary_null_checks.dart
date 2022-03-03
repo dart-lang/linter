@@ -55,7 +55,7 @@ DartType? getExpectedType(PostfixExpression node) {
     if (staticType is! FunctionType) {
       return null;
     }
-    if (withAwait) {
+    if (withAwait || parentExpression.body.keyword?.lexeme == 'async') {
       //  return type is obligatorily a Future<X>
       return (staticType.returnType as ParameterizedType?)?.typeArguments.first;
     } else {
