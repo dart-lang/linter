@@ -67,3 +67,8 @@ Map<int?, String> f9(int? p) => {p!: ''}; // LINT
 Map<String, int?> f10(int? p) => {'': p!}; // LINT
 Iterable<int?> f11(int? p) sync* {yield p!;} // LINT
 Stream<int?> f12(int? p) async* {yield p!;} // LINT
+Future<void> f13(int? p) async {
+  var f = Future(() => p);
+  int? i;
+  i = await f!; // LINT
+}

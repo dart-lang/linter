@@ -40,12 +40,9 @@ DartType? getExpectedType(PostfixExpression node) {
   var realNode =
       node.thisOrAncestorMatching((e) => e.parent is! ParenthesizedExpression);
   var parent = realNode?.parent;
-
-  DartType? Function(DartType? type) mayHandleAwait = (type) => type;
-  if (parent is AwaitExpression) {
-    mayHandleAwait =
-        (type) => (type as ParameterizedType?)?.typeArguments.first;
-    parent = parent.parent;
+  var withAwait = parent is AwaitExpression;
+  if (withAwait) {
+    parent = parent!.parent;
   }
 
   // in return value
@@ -55,9 +52,15 @@ DartType? getExpectedType(PostfixExpression node) {
       return null;
     }
     var staticType = parentExpression.staticType;
-    return staticType is FunctionType
-        ? mayHandleAwait(staticType.returnType)
-        : null;
+    if (staticType is! FunctionType) {
+      return null;
+    }
+    if (withAwait) {
+      //  return type is obligatorily a Future<X>
+      return (staticType.returnType as ParameterizedType?)?.typeArguments.first;
+    } else {
+      return staticType.returnType;
+    }
   }
   // in yield value
   if (parent is YieldStatement) {
@@ -69,8 +72,7 @@ DartType? getExpectedType(PostfixExpression node) {
     if (staticType is! FunctionType) {
       return null;
     }
-    return mayHandleAwait(
-        (staticType.returnType as ParameterizedType).typeArguments.first);
+    return (staticType.returnType as ParameterizedType).typeArguments.first;
   }
   // assignment
   if (parent is AssignmentExpression &&
@@ -79,11 +81,11 @@ DartType? getExpectedType(PostfixExpression node) {
           node.operand is! Identifier ||
           (parent.leftHandSide as Identifier).name !=
               (node.operand as Identifier).name)) {
-    return mayHandleAwait(parent.writeType);
+    return parent.writeType;
   }
   // in variable declaration
   if (parent is VariableDeclaration) {
-    return mayHandleAwait(parent.declaredElement?.type);
+    return parent.declaredElement?.type;
   }
   // as right member of binary operator
   if (parent is BinaryExpression && parent.rightOperand == realNode) {
@@ -91,24 +93,21 @@ DartType? getExpectedType(PostfixExpression node) {
     if (parentElement == null) {
       return null;
     }
-    return mayHandleAwait(parentElement.parameters.first.type);
+    return parentElement.parameters.first.type;
   }
   // as member of list
   if (parent is ListLiteral) {
-    return mayHandleAwait(
-        (parent.staticType as ParameterizedType?)?.typeArguments.first);
+    return (parent.staticType as ParameterizedType?)?.typeArguments.first;
   }
   // as member of set
   if (parent is SetOrMapLiteral && parent.isSet) {
-    return mayHandleAwait(
-        (parent.staticType as ParameterizedType?)?.typeArguments.first);
+    return (parent.staticType as ParameterizedType?)?.typeArguments.first;
   }
   // as member of map
   if (parent is MapLiteralEntry) {
     var typeParameters =
         (parent.parent! as SetOrMapLiteral).staticType as ParameterizedType?;
-    return mayHandleAwait(
-        typeParameters?.typeArguments[parent.key == node ? 0 : 1]);
+    return typeParameters?.typeArguments[parent.key == node ? 0 : 1];
   }
   // as parameter of function
   if (parent is NamedExpression) {
@@ -116,7 +115,7 @@ DartType? getExpectedType(PostfixExpression node) {
     parent = parent.parent;
   }
   if (parent is ArgumentList && realNode is Expression) {
-    return mayHandleAwait(realNode.staticParameterElement?.type);
+    return realNode.staticParameterElement?.type;
   }
   return null;
 }
