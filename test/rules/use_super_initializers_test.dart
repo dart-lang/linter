@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:linter/src/rules/use_super_initializers.dart';
-import 'package:test/expect.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../rule_test_support.dart';
@@ -23,15 +21,6 @@ class UseSuperInitializersTest extends LintRuleTest {
 
   @override
   String get lintRule => 'use_super_initializers';
-
-  test_message_plural_2() {
-    expect(UseSuperInitializers.joinIdentifiers(['x', 'y']), "'x' and 'y'");
-  }
-
-  test_message_plural_3() {
-    expect(UseSuperInitializers.joinIdentifiers(['x', 'y', 'z']),
-        "'x', 'y', and 'z'");
-  }
 
   test_named() async {
     await assertDiagnostics(r'''
@@ -101,6 +90,17 @@ class A {
 }
 class B extends A {
   B({required Object x}) : super(x: x.toString());
+}
+''');
+  }
+
+  test_no_lint_nonSimpleIdentiferArg() async {
+    await assertNoDiagnostics(r'''
+class A {
+  A(int x, int y, [int? z]);
+}
+class B extends A {
+  B(int a, int b) : super(a, 2, b);
 }
 ''');
   }
@@ -184,6 +184,19 @@ class B extends A {
 }
 ''', [
       lint('use_super_initializers', 65, 1),
+    ]);
+  }
+
+  test_optionalPositional_inSuper() async {
+    await assertDiagnostics(r'''
+class A {
+  A(int x, [int? y]);
+}
+class B extends A {
+  B(int x) : super(x);
+}
+''', [
+      lint('use_super_initializers', 62, 1),
     ]);
   }
 

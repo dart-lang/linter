@@ -7,7 +7,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/src/utilities/extensions/string.dart'; // ignore: implementation_imports
-import 'package:meta/meta.dart';
 
 import '../analyzer.dart';
 
@@ -65,10 +64,6 @@ class UseSuperInitializers extends LintRule {
     var visitor = _Visitor(this, context);
     registry.addConstructorDeclaration(this, visitor);
   }
-
-  @visibleForTesting
-  static String joinIdentifiers(List<String> identifiers) =>
-      identifiers.quotedAndCommaSeparatedWithAnd;
 }
 
 class _Visitor extends SimpleAstVisitor {
@@ -120,16 +115,16 @@ class _Visitor extends SimpleAstVisitor {
       ConstructorElement constructorElement,
       SuperConstructorInvocation superInvocation,
       FormalParameterList parameters) {
-    var positionalSuperArgs = superInvocation.argumentList.arguments
-        .whereType<SimpleIdentifier>()
-        .toList();
-    if (positionalSuperArgs.isEmpty) return true;
-
-    var constructorPositionalParams =
-        constructorElement.parameters.where((p) => !p.isNamed).toList();
-    if (positionalSuperArgs.length < constructorPositionalParams.length) {
-      return false;
+    var positionalSuperArgs = <SimpleIdentifier>[];
+    for (var arg in superInvocation.argumentList.arguments) {
+      if (arg is SimpleIdentifier) {
+        positionalSuperArgs.add(arg);
+      } else if (arg is! NamedExpression) {
+        return false;
+      }
     }
+
+    if (positionalSuperArgs.isEmpty) return true;
 
     var constructorParams = parameters.parameters;
     var convertibleConstructorParams = <FormalParameter>[];
@@ -232,7 +227,7 @@ class _Visitor extends SimpleAstVisitor {
         if (name == null) return; // Bail.
         identifiers.add(name);
       }
-      var msg = UseSuperInitializers.joinIdentifiers(identifiers);
+      var msg = identifiers.quotedAndCommaSeparatedWithAnd;
       rule.reportLint(firstIdentifier,
           errorCode: UseSuperInitializers.multipleParams, arguments: [msg]);
     }
