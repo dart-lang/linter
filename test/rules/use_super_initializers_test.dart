@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:linter/src/rules/use_super_initializers.dart';
+import 'package:test/expect.dart';
 import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../rule_test_support.dart';
@@ -22,7 +24,16 @@ class UseSuperInitializersTest extends LintRuleTest {
   @override
   String get lintRule => 'use_super_initializers';
 
-  test_named_first() async {
+  test_message_plural_2() {
+    expect(UseSuperInitializers.joinIdentifiers(['x', 'y']), "'x' and 'y'");
+  }
+
+  test_message_plural_3() {
+    expect(UseSuperInitializers.joinIdentifiers(['x', 'y', 'z']),
+        "'x', 'y', and 'z'");
+  }
+
+  test_named() async {
     await assertDiagnostics(r'''
 class A {
   A({int? x, int? y});
@@ -31,47 +42,22 @@ class B extends A {
   B({int? x, int? y}) : super(x: x, y: y);
 }
 ''', [
-      lint('use_super_initializers', 79, 17),
+      lint('use_super_initializers', 65, 1),
+      lint('use_super_initializers', 73, 1),
     ]);
   }
 
-  test_named_last() async {
-    await assertDiagnostics(r'''
-class A {
-  A({int? x, int? y});
+  test_no_lint_forwardedOutOfOrder() async {
+    await assertNoDiagnostics(r'''
+class B {
+  final int x;
+  final int y;
+  B(this.x, this.y);
 }
-class B extends A {
-  B({int? x, int? y}) : super(x: x, y: y);
+class C extends B {
+  C(int x, int y) : super(y, x);
 }
-''', [
-      lint('use_super_initializers', 79, 17),
-    ]);
-  }
-
-  test_named_middle() async {
-    await assertDiagnostics(r'''
-class A {
-  A({int? x, int? y, int? z});
-}
-class B extends A {
-  B({int? x, int? y, int? z}) : super(x: x, y: y, z: z);
-}
-''', [
-      lint('use_super_initializers', 95, 23),
-    ]);
-  }
-
-  test_named_only() async {
-    await assertDiagnostics(r'''
-class A {
-  A({int? x});
-}
-class B extends A {
-  B({int? x}) : super(x: x);
-}
-''', [
-      lint('use_super_initializers', 63, 11),
-    ]);
+''');
   }
 
   test_no_lint_named_noSuperInvocation() async {
@@ -115,6 +101,30 @@ class A {
 }
 class B extends A {
   B({required Object x}) : super(x: x.toString());
+}
+''');
+  }
+
+  test_no_lint_notAllForwarded() async {
+    await assertNoDiagnostics(r'''
+class B {
+  final int x;
+  final int y;
+  B(this.x, this.y);
+}
+class C extends B {
+  C(int x) : super(x, 0);
+}
+''');
+  }
+
+  test_no_lint_requiredPositional_namedInSuper() async {
+    await assertNoDiagnostics(r'''
+class A {
+  A({int? x});
+}
+class B extends A {
+  B(int x) : super(x: x);
 }
 ''');
   }
@@ -164,7 +174,20 @@ class B extends A {
 ''');
   }
 
-  test_optionalPositional_singleSuperParameter_only() async {
+  test_nonForwardingNamed() async {
+    await assertDiagnostics(r'''
+class A {
+  A(int x, {int? foo}); 
+}
+class B extends A {
+  B(int x, {int? foo}) : super(x, foo: 0); 
+}
+''', [
+      lint('use_super_initializers', 65, 1),
+    ]);
+  }
+
+  test_optionalPositional_singleSuperParameter() async {
     await assertDiagnostics(r'''
 class A {
   A(int x);
@@ -173,11 +196,26 @@ class B extends A {
   B([int x = 0]) : super(x);
 }
 ''', [
-      lint('use_super_initializers', 63, 8),
+      lint('use_super_initializers', 53, 1),
     ]);
   }
 
-  test_requiredPositional_mixedSuperParameters_first() async {
+  test_requiredPositional_allConvertible() async {
+    await assertDiagnostics(r'''
+class B {
+  final int foo;
+  final int bar;
+  B(this.foo, this.bar);
+}
+class C extends B {
+  C(int foo, int bar) : super(foo, bar);
+}
+''', [
+      lint('use_super_initializers', 99, 3),
+    ]);
+  }
+
+  test_requiredPositional_mixedSuperParameters() async {
     await assertDiagnostics(r'''
 class A {
   A(int x, {int? y});
@@ -186,20 +224,36 @@ class B extends A {
   B(int x, int y) : super(x, y: y);
 }
 ''', [
-      lint('use_super_initializers', 74, 14),
+      lint('use_super_initializers', 62, 1),
     ]);
   }
 
-  test_requiredPositional_mixedSuperParameters_last() async {
+  test_requiredPositional_someConvertible() async {
+    await assertDiagnostics(r'''
+class B {
+  final int foo;
+  final int bar;
+  B(this.foo, this.bar);
+}
+class C extends B {
+  C(int baz, int foo, int bar) : super(foo, bar);
+}
+''', [
+      lint('use_super_initializers', 108, 3),
+    ]);
+  }
+
+  test_requiredPositional_withNamed() async {
     await assertDiagnostics(r'''
 class A {
   A(int x, {int? y});
 }
 class B extends A {
-  B(int y, int x) : super(x, y: y);
+  B(int x, {int? y}) : super(x, y: y);
 }
 ''', [
-      lint('use_super_initializers', 74, 14),
+      lint('use_super_initializers', 62, 1),
+      lint('use_super_initializers', 71, 1),
     ]);
   }
 }

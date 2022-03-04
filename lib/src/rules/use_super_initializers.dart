@@ -6,6 +6,8 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/src/utilities/extensions/string.dart'; // ignore: implementation_imports
+import 'package:meta/meta.dart';
 
 import '../analyzer.dart';
 
@@ -36,12 +38,17 @@ class A {
   A({int? x, int? y});
 }
 class B extends A {
-  B({super.x, int? y}) : super(y: y);
+  B({super.x, super.y});
 }
 ```
 ''';
 
 class UseSuperInitializers extends LintRule {
+  static const LintCode singleParam =
+      LintCode('use_super_initializers', "Convert '{0}' to a super parameter.");
+  static const LintCode multipleParams =
+      LintCode('use_super_initializers', 'Convert {0} to super parameters.');
+
   UseSuperInitializers()
       : super(
             name: 'use_super_initializers',
@@ -58,6 +65,10 @@ class UseSuperInitializers extends LintRule {
     var visitor = _Visitor(this, context);
     registry.addConstructorDeclaration(this, visitor);
   }
+
+  @visibleForTesting
+  static String joinIdentifiers(List<String> identifiers) =>
+      identifiers.map((e) => "'$e'").commaSeparatedWithAnd;
 }
 
 class _Visitor extends SimpleAstVisitor {
@@ -66,25 +77,27 @@ class _Visitor extends SimpleAstVisitor {
 
   _Visitor(this.rule, this.context);
 
-  void check(
-      SuperConstructorInvocation initializer, FormalParameterList parameters) {
-    var constructorElement = initializer.staticElement;
+  void check(SuperConstructorInvocation superInvocation,
+      FormalParameterList parameters) {
+    var constructorElement = superInvocation.staticElement;
     if (constructorElement == null) return;
+
+    // todo(pq): consolidate logic shared w/ server
+    //  (https://github.com/dart-lang/linter/issues/3263)
+
+    // Bail if there are positional params that can't be converted.
+    if (!_checkForConvertiblePositionalParams(
+        constructorElement, superInvocation, parameters)) {
+      return;
+    }
 
     for (var parameter in parameters.parameters) {
       var parameterElement = parameter.declaredElement;
       if (parameterElement == null) continue;
-
-      // todo(pq): consolidate logic shared w/ server (https://github.com/dart-lang/linter/issues/3263)
-      if (parameterElement.isPositional) {
-        if (_checkPositionalParameter(
-            parameter, parameterElement, constructorElement, initializer)) {
-          rule.reportLint(initializer);
-        }
-      } else if (parameterElement.isNamed) {
+      if (parameterElement.isNamed) {
         if (_checkNamedParameter(
-            parameter, parameterElement, constructorElement, initializer)) {
-          rule.reportLint(initializer);
+            parameter, parameterElement, constructorElement, superInvocation)) {
+          _reportOnIdentifier(parameter.identifier);
         }
       }
     }
@@ -92,14 +105,66 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitConstructorDeclaration(ConstructorDeclaration node) {
-    var parameters = node.parameters;
-
-    var initializers = node.initializers;
-    for (var initializer in initializers) {
+    for (var initializer in node.initializers.reversed) {
       if (initializer is SuperConstructorInvocation) {
-        check(initializer, parameters);
+        check(initializer, node.parameters);
+        return;
       }
     }
+  }
+
+  /// Check if all super positional parameters can be converted to use super-
+  /// initializers. Return `false` if there are parameters that can't be
+  /// converted since this will short-circuit the lint.
+  bool _checkForConvertiblePositionalParams(
+      ConstructorElement constructorElement,
+      SuperConstructorInvocation superInvocation,
+      FormalParameterList parameters) {
+    var positionalSuperArgs = superInvocation.argumentList.arguments
+        .whereType<SimpleIdentifier>()
+        .toList();
+    if (positionalSuperArgs.isEmpty) return true;
+
+    var constructorPositionalParams =
+        constructorElement.parameters.where((p) => !p.isNamed).toList();
+    if (positionalSuperArgs.length < constructorPositionalParams.length) {
+      return false;
+    }
+
+    var constructorParams = parameters.parameters;
+    var convertibleConstructorParams = <FormalParameter>[];
+    var matchedConstructorParamIndex = 0;
+
+    // For each super arg, ensure there is a constructor param (in the right
+    // order).
+    for (var i = 0; i < positionalSuperArgs.length; ++i) {
+      var superArg = positionalSuperArgs[i];
+      var superParam = superArg.staticElement;
+      if (superParam is! ParameterElement) return false;
+      bool match = false;
+      for (var i = 0; i < constructorParams.length && !match; ++i) {
+        var constructorParam = constructorParams[i];
+        var constructorElement = constructorParam.declaredElement;
+        if (constructorElement == null) continue;
+        if (constructorElement == superParam) {
+          // Compare the types.
+          var superType = superParam.type;
+          var argType = constructorElement.type;
+          if (!context.typeSystem.isSubtypeOf(argType, superType)) {
+            return false;
+          }
+
+          match = true;
+          convertibleConstructorParams.add(constructorParam);
+          // Ensure we're not out of order.
+          if (i < matchedConstructorParamIndex) return false;
+          matchedConstructorParamIndex = i;
+        }
+      }
+    }
+    _reportOnFirstParam(convertibleConstructorParams);
+
+    return true;
   }
 
   /// Return `true` if the named [parameter] can be converted into a super
@@ -127,8 +192,8 @@ class _Visitor extends SimpleAstVisitor {
       }
     }
     if (!matchingArgument) {
-      // If the selected parameter isn't being passed to the super constructor,
-      // then don't lint.
+      // If the parameter isn't being passed to the super constructor, then
+      // don't lint.
       return false;
     }
 
@@ -136,49 +201,8 @@ class _Visitor extends SimpleAstVisitor {
     var superType = superParameter.type;
     var thisType = parameterElement.type;
     if (!context.typeSystem.isAssignableTo(superType, thisType)) {
-      // If the type of the selected parameter can't be assigned to the super
-      // parameter, then don't lint.
-      return false;
-    }
-
-    return true;
-  }
-
-  /// Return `true` if the positional [parameter] can be converted into a super
-  /// initializing formal parameter.
-  bool _checkPositionalParameter(
-      FormalParameter parameter,
-      ParameterElement thisParameter,
-      ConstructorElement superConstructor,
-      SuperConstructorInvocation superInvocation) {
-    var positionalArguments = _positionalArguments(superInvocation);
-    if (positionalArguments.length != 1) {
-      // If there's more than one positional parameter then they would all need
-      // to be converted at the same time. If there's less than one, the the
-      // selected parameter isn't being passed to the super constructor.
-      return false;
-    }
-    var argument = positionalArguments[0];
-    if (argument is! SimpleIdentifier ||
-        argument.staticElement != parameter.declaredElement) {
-      // If the selected parameter isn't the one being passed to the super
-      // constructor then the change isn't appropriate.
-      return false;
-    }
-    var positionalParameters = superConstructor.parameters
-        .where((param) => param.isPositional)
-        .toList();
-    if (positionalParameters.isEmpty) {
-      return false;
-    }
-
-    var superParameter = positionalParameters[0];
-    // Compare the types.
-    var superType = superParameter.type;
-    var thisType = thisParameter.type;
-    if (!context.typeSystem.isSubtypeOf(thisType, superType)) {
-      // If the type of the selected parameter can't be assigned to the super
-      // parameter, the the change isn't appropriate.
+      // If the type of the parameter can't be assigned to the super parameter,
+      // then don't lint.
       return false;
     }
 
@@ -195,9 +219,29 @@ class _Visitor extends SimpleAstVisitor {
     return null;
   }
 
-  List<Expression> _positionalArguments(
-          SuperConstructorInvocation invocation) =>
-      invocation.argumentList.arguments
-          .where((argument) => argument is! NamedExpression)
-          .toList();
+  void _reportOnFirstParam(List<FormalParameter> params) {
+    var firstIdentifier = params.first.identifier;
+    if (firstIdentifier == null) return;
+
+    if (params.length == 1) {
+      _reportOnIdentifier(firstIdentifier);
+    } else {
+      var identifiers = <String>[];
+      for (var param in params) {
+        var name = param.identifier?.name;
+        if (name == null) return; // Bail.
+        identifiers.add(name);
+      }
+      var msg = UseSuperInitializers.joinIdentifiers(identifiers);
+      rule.reportLint(firstIdentifier,
+          errorCode: UseSuperInitializers.multipleParams, arguments: [msg]);
+    }
+  }
+
+  void _reportOnIdentifier(SimpleIdentifier? identifier) {
+    if (identifier == null) return;
+    rule.reportLint(identifier,
+        errorCode: UseSuperInitializers.singleParam,
+        arguments: [identifier.name]);
+  }
 }
