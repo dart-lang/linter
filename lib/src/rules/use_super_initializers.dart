@@ -68,7 +68,7 @@ class UseSuperInitializers extends LintRule {
 
   @visibleForTesting
   static String joinIdentifiers(List<String> identifiers) =>
-      identifiers.map((e) => "'$e'").commaSeparatedWithAnd;
+      identifiers.quotedAndCommaSeparatedWithAnd;
 }
 
 class _Visitor extends SimpleAstVisitor {
