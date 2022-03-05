@@ -20,7 +20,7 @@ Widget containerWithKey() {
 
 Widget containerWithDecoration() {
   return Container( // LINT
-    decoration: BoxDecoration(),
+    decoration: Decoration(),
   );
 }
 
@@ -40,13 +40,13 @@ Widget containerWithKeyAndChild() {
 Widget containerWithKeyAndDecoration() {
   return Container( // LINT
     key: Key('abc'),
-    decoration: BoxDecoration(),
+    decoration: Decoration(),
   );
 }
 
 Widget containerWithDecorationAndChild() {
   return Container( // LINT
-    decoration: BoxDecoration(),
+    decoration: Decoration(),
     child: SizedBox(),
   );
 }
@@ -54,7 +54,7 @@ Widget containerWithDecorationAndChild() {
 Widget containerWithKeyAndDecorationAndChild() {
   return Container( // LINT
     key: Key('abc'),
-    decoration: BoxDecoration(),
+    decoration: Decoration(),
     child: SizedBox(),
   );
 }
@@ -67,15 +67,49 @@ Widget containerWithAnotherArgument() {
 
 Widget containerWithDecorationAndAdditionalArgument() {
   return Container( // OK
-    decoration: BoxDecoration(),
+    decoration: Decoration(),
     width: 20,
   );
 }
 
 Widget containerWithDecorationAndAdditionalArgumentAndChild() {
   return Container( // OK
-    decoration: BoxDecoration(),
+    decoration: Decoration(),
     width: 20,
+    child: SizedBox(),
+  );
+}
+
+Widget containerWithNullDecoration() {
+  return Container( // OK
+    decoration: null,
+    child: SizedBox(),
+  );
+}
+
+const Decoration? _nullableDecoration = null;
+
+Widget containerWithNullableDecoration() {
+  return Container( // OK
+    decoration: _nullableDecoration,
+    child: SizedBox(),
+  );
+}
+
+final _nonNullDecoration = Decoration();
+
+Widget containerWithNonNullDecoration() {
+  return Container( // LINT
+    decoration: _nonNullDecoration,
+    child: SizedBox(),
+  );
+}
+
+Decoration? _getDecoration() => null;
+
+Widget nullableReturnValue() {
+  return Container( // OK
+    decoration: _getDecoration(),
     child: SizedBox(),
   );
 }
