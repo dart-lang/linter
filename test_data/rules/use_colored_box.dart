@@ -7,9 +7,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-class Color {
-  Color();
-}
+class Color {}
 
 Widget containerWithoutArguments() {
   return Container(); // OK
