@@ -527,6 +527,10 @@ class DartTypeUtilities {
         // Otherwise, they might be related.
         return false;
       } else {
+        if (leftElement.isEnum || rightElement.isEnum) {
+          // Enums are unrelated to anything but themselves.
+          return true;
+        }
         return (leftElement.supertype?.isDartCoreObject ?? false) ||
             leftElement.supertype != rightElement.supertype;
       }

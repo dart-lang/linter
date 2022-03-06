@@ -167,7 +167,7 @@ void function23() {
 }
 
 void function30() {
-  ClassWMethod c =  ClassWMethod();
+  ClassWMethod c = ClassWMethod();
   if (c.determinant == 0.0) print('someFunction30'); // LINT
   if (c.determinant == double) print('someFunction30'); // LINT
   if (c.determinant == c.determinspider) print('someFunction30'); // OK
@@ -176,6 +176,17 @@ void function30() {
   if (c.determinant == callable) print('someFunction30'); // OK
   SubClassWCall callable2 = SubClassWCall();
   if (c.determinant == callable2) print('someFunction30'); // OK
+}
+
+void function31() {
+  const a = EnumOne.one;
+  const b = EnumOne.two;
+  const c = EnumTwo.one;
+  final aClass = ClassBase();
+  if (a == b) print('equal type'); // OK
+  if (a == c) print('not equal type'); // LINT
+  if (a == 'text') print('not equal type'); // LINT
+  if (a == aClass) print('not equal type'); // LINT
 }
 
 class ClassBase {}
@@ -203,3 +214,7 @@ class ClassWCall {
 }
 
 class SubClassWCall extends ClassWCall {}
+
+enum EnumOne { one, two }
+
+enum EnumTwo { one }
