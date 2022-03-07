@@ -30,9 +30,32 @@
          <section>
 
             <p><strong>DO</strong> avoid <code>print</code> calls in production code.</p>
+<p>For production code, consider using a logging framework.
+If you are using Flutter, you can use <code>debugPrint</code>
+or surround <code>print</code> calls with a check for <code>kDebugMode</code></p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">void f(int x) {
   print('debug: $x');
+  ...
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">void f(int x) {
+  debugPrint('debug: $x');
+  ...
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">void f(int x) {
+  log('log: $x');
+  ...
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">void f(int x) {
+  if (kDebugMode) {
+      print('debug: $x');
+  }
   ...
 }
 </code></pre>

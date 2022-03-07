@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>use_late_for_private_fields_and_variables</title>
+      <title>use_super_initializers</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>use_late_for_private_fields_and_variables</h1>
+            <h1>use_super_initializers</h1>
             <p>Group: style</p>
             <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
             <div class="tooltip">
-               <p>Linter v0.1.118</p>
+               <p>Linter v1.19</p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,26 +29,26 @@
          </header>
          <section>
 
-            <p>Use <code>late</code> for private members with non-nullable types that are always expected
-to be non-null. Thus it's clear that the field is not expected to be <code>null</code>
-and it avoids null checks.</p>
+            <p>"Forwarding constructor"s, that do nothing except forward parameters to their 
+superclass constructors should take advantage of super-initializer parameters 
+rather than repeating the names of parameters when passing them to the 
+superclass constructors.  This makes the code more concise and easier to read
+and maintain.</p>
+<p><strong>DO</strong> use super-initializer parameters where possible.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">int? _i;
-m() {
-  _i!.abs();
+<pre><code class="language-dart">class A {
+  A({int? x, int? y});
+}
+class B extends A {
+  B({int? x, int? y}) : super(x: x, y: y);
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">late int _i;
-m() {
-  _i.abs();
+<pre><code class="language-dart">class A {
+  A({int? x, int? y});
 }
-</code></pre>
-<p><strong>OK:</strong></p>
-<pre><code class="language-dart">int? _i;
-m() {
-  _i?.abs();
-  _i = null;
+class B extends A {
+  B({super.x, super.y});
 }
 </code></pre>
 

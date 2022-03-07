@@ -29,17 +29,16 @@
          </header>
          <section>
 
-            <p><strong>DO</strong> put asserts in initializer list for constructors with only asserts in
-their body.</p>
+            <p><strong>DO</strong> put asserts in initializer lists.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">class A {
-  A(int a) : assert(a != null);
+  A(int a) : assert(a != 0);
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">class A {
   A(int a) {
-    assert(a != null);
+    assert(a != 0);
   }
 }
 </code></pre>

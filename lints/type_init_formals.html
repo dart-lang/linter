@@ -32,7 +32,12 @@
             <p>From the <a href="https://dart.dev/guides/language/effective-dart/style/">style guide</a>:</p>
 <p><strong>DON'T</strong> type annotate initializing formals.</p>
 <p>If a constructor parameter is using <code>this.x</code> to initialize a field, then the
-type of the parameter is understood to be the same type as the field.</p>
+type of the parameter is understood to be the same type as the field. If a 
+a constructor parameter is using <code>super.x</code> to forward to a super constructor,
+then the type of the parameter is understood to be the same as the super
+constructor parameter.</p>
+<p>Type annotating an initializing formal with a different type than that of the
+field is OK.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">class Point {
   int x, y;
@@ -43,6 +48,26 @@ type of the parameter is understood to be the same type as the field.</p>
 <pre><code class="language-dart">class Point {
   int x, y;
   Point(int this.x, int this.y);
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">class A {
+  int a;
+  A(this.a);
+}
+
+class B extends A {
+  B(super.a);
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">class A {
+  int a;
+  A(this.a);
+}
+
+class B extends A {
+  B(int super.a);
 }
 </code></pre>
 

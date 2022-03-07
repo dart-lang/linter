@@ -6,17 +6,17 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <meta name="mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>use_late_for_private_fields_and_variables</title>
+      <title>use_colored_box</title>
       <link rel="stylesheet" href="../styles.css">
    </head>
    <body>
       <div class="wrapper">
          <header>
-            <h1>use_late_for_private_fields_and_variables</h1>
+            <h1>use_colored_box</h1>
             <p>Group: style</p>
-            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
+            <p>Maturity: stable</p>
             <div class="tooltip">
-               <p>Linter v0.1.118</p>
+               <p>Linter v1.19</p>
                <span class="tooltip-content">Since info is static, may be stale</span>
             </div>
             
@@ -29,26 +29,23 @@
          </header>
          <section>
 
-            <p>Use <code>late</code> for private members with non-nullable types that are always expected
-to be non-null. Thus it's clear that the field is not expected to be <code>null</code>
-and it avoids null checks.</p>
+            <p><strong>DO</strong> use <code>ColoredBox</code> when <code>Container</code> has only a <code>Color</code>.</p>
+<p>A <code>Container</code> is a heavier Widget than a <code>ColoredBox</code>, and as bonus,
+<code>ColoredBox</code> has a <code>const</code> constructor.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">int? _i;
-m() {
-  _i!.abs();
+<pre><code class="language-dart">Widget buildArea() {
+  return Container(
+    color: Colors.blue,
+    child: const Text('hello'),
+  );
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">late int _i;
-m() {
-  _i.abs();
-}
-</code></pre>
-<p><strong>OK:</strong></p>
-<pre><code class="language-dart">int? _i;
-m() {
-  _i?.abs();
-  _i = null;
+<pre><code class="language-dart">Widget buildArea() {
+  return const ColoredBox(
+    color: Colors.blue,
+    child: Text('hello'),
+  );
 }
 </code></pre>
 

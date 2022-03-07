@@ -34,9 +34,9 @@
 where the same member gets imported in two different ways. One way to avoid
 that is to ensure you consistently use absolute imports for files withing the
 <code>lib/</code> directory.</p>
-<p>This is the opposite of 'prefer_relative_imports'.
-Might be used with 'avoid_relative_lib_imports' to avoid relative imports of
-files within <code>lib/</code> directory outside of it. (for example <code>test/</code>)</p>
+<p>This is the opposite of 'prefer_relative_imports'.</p>
+<p>You can also use 'avoid_relative_lib_imports' to disallow relative imports of
+files within <code>lib/</code> directory outside of it (for example <code>test/</code>).</p>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">import 'package:foo/bar.dart';
 

@@ -31,9 +31,9 @@
 
             <p><strong>DON'T</strong> rename parameters of overridden methods.</p>
 <p>Methods that override another method, but do not have their own documentation
-comment, will inherit the overridden method's comment when dartdoc produces
+comment, will inherit the overridden method's comment when <code>dart doc</code> produces
 documentation. If the inherited method contains the name of the parameter (in
-square brackets), then dartdoc cannot link it correctly.</p>
+square brackets), then <code>dart doc</code> cannot link it correctly.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">abstract class A {
   m(a);
