@@ -1,3 +1,8 @@
+# 1.19.2
+
+- update `use_super_initializers` to lint once on the constructor
+  name (rather than individual parameter identifiers)
+
 # 1.19.1
 
 - new lint: `use_super_initializers`
