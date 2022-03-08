@@ -25,13 +25,13 @@ class UseSuperInitializersTest extends LintRuleTest {
   test_named() async {
     await assertDiagnostics(r'''
 class A {
-  A({int? x, int? y});
+  const A({int? x, int? y});
 }
 class B extends A {
-  B({int? x, int? y}) : super(x: x, y: y);
+  const B({int? x, int? y}) : super(x: x, y: y);
 }
 ''', [
-      lint('use_super_initializers', 57, 1),
+      lint('use_super_initializers', 69, 1),
     ]);
   }
 

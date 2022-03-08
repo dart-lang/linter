@@ -226,13 +226,13 @@ class _Visitor extends SimpleAstVisitor {
 
   void _reportLint(ConstructorDeclaration node, List<String> identifiers) {
     if (identifiers.isEmpty) return;
-    var token = node.firstTokenAfterCommentAndMetadata;
+    var target = node.name ?? node.returnType;
     if (identifiers.length > 1) {
       var msg = identifiers.quotedAndCommaSeparatedWithAnd;
-      rule.reportLintForToken(token,
+      rule.reportLint(target,
           errorCode: UseSuperInitializers.multipleParams, arguments: [msg]);
     } else {
-      rule.reportLintForToken(token,
+      rule.reportLint(target,
           errorCode: UseSuperInitializers.singleParam,
           arguments: [identifiers.first]);
     }
