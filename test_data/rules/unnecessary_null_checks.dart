@@ -74,3 +74,6 @@ Future<void> f13(int? p) async {
 }
 Future<int?> f14(int? p) async => p!; // LINT
 dynamic f15(int? p) async => p!; // OK
+
+typedef F16 = Future<int?>;
+F16 f16(int? p) async => p!; // LINT
