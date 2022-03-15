@@ -8,12 +8,12 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Prefer for elements when building maps from iterables.';
+const _desc = r"Prefer 'for' elements when building maps from iterables.";
 
 const _details = r'''
-When building maps from iterables, it is preferable to use for elements.
+When building maps from iterables, it is preferable to use 'for' elements.
 
-Using for elements brings several benefits including:
+Using 'for' elements brings several benefits including:
 
 - Performance
 - Flexibility
