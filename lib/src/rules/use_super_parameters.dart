@@ -172,6 +172,7 @@ class _Visitor extends SimpleAstVisitor {
       bool match = false;
       for (var i = 0; i < constructorParams.length && !match; ++i) {
         var constructorParam = constructorParams[i];
+        if (constructorParam is FieldFormalParameter) continue;
         var constructorElement = constructorParam.declaredElement;
         if (constructorElement == null) continue;
         if (referencedParameters.contains(constructorElement)) continue;
