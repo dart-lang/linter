@@ -111,9 +111,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   bool _hasKeySuperParameterInitializerArg(ConstructorDeclaration node) {
     for (var parameter in node.parameters.parameters) {
       var element = parameter.declaredElement;
-      if (element is SuperFormalParameterElement &&
-          element.name == 'key' &&
-          _isKeyType(element.type)) {
+      if (element is SuperFormalParameterElement && element.name == 'key') {
         return true;
       }
     }
