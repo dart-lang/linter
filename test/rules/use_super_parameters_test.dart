@@ -130,7 +130,7 @@ class B extends A {
 ''');
   }
 
-  test_no_lint_nonSimpleIdentiferArg() async {
+  test_no_lint_nonSimpleIdentifierArg() async {
     await assertNoDiagnostics(r'''
 class A {
   A(int x, int y, [int? z]);
