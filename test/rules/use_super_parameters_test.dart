@@ -119,6 +119,17 @@ class B extends A {
 ''');
   }
 
+  test_no_lint_named_passedAsPositional() async {
+    await assertNoDiagnostics(r'''
+class A {
+  A(String x);
+}
+class B extends A {
+  B({required String x}) : super(x);
+}
+''');
+  }
+
   test_no_lint_nonSimpleIdentiferArg() async {
     await assertNoDiagnostics(r'''
 class A {
