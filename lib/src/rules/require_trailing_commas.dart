@@ -163,6 +163,15 @@ class _Visitor extends SimpleAstVisitor<void> {
       return true;
     }
 
+    // Exception is allowed if the last parameter is a anonymous function call.
+    // This case arises a lot in asserts.
+    if (lastNode is FunctionExpressionInvocation &&
+        lastNode.function is FunctionExpression &&
+        _isSameLine(lastNode.argumentList.leftParenthesis,
+            lastNode.argumentList.rightParenthesis)) {
+      return true;
+    }
+
     // Exception is allowed if the last parameter is a set, map or list literal.
     if (lastNode is SetOrMapLiteral || lastNode is ListLiteral) return true;
 
