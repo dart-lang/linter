@@ -258,6 +258,15 @@ class RequireTrailingCommasExample {
       }(),
       'comment',
     );
+
+    dynamic f;
+    f((a, b, c) {
+      return true;
+    } (
+      '',
+      '',
+      '',
+    )); // LINT
   }
 }
 
