@@ -60,20 +60,37 @@ class UnnecessaryOverrides extends LintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this);
+    var visitor = _Visitor(this, context);
     registry.addMethodDeclaration(this, visitor);
   }
 }
 
 abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
   final LintRule rule;
+  final LinterContext context;
 
   ExecutableElement? inheritedMethod;
   late MethodDeclaration declaration;
 
-  _AbstractUnnecessaryOverrideVisitor(this.rule);
+  _AbstractUnnecessaryOverrideVisitor(this.rule, this.context);
 
-  ExecutableElement? getInheritedElement(MethodDeclaration node);
+  ExecutableElement? getInheritedElement(MethodDeclaration node) {
+    var declaredElement = node.declaredElement;
+    if (declaredElement == null) return null;
+
+    var parent = node.parent;
+    if (parent is CompilationUnitMember) {
+      var parentElement = parent.declaredElement;
+      if (parentElement is ClassElement) {
+        var name = Name(parentElement.library.source.uri, declaredElement.name);
+        var element = context.inheritanceManager
+            .getInheritedConcreteMap2(parentElement)[name];
+        return element;
+      }
+    }
+
+    return null;
+  }
 
   @override
   void visitBlock(Block node) {
@@ -181,11 +198,8 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
 
 class _UnnecessaryGetterOverrideVisitor
     extends _AbstractUnnecessaryOverrideVisitor {
-  _UnnecessaryGetterOverrideVisitor(LintRule rule) : super(rule);
-
-  @override
-  ExecutableElement? getInheritedElement(MethodDeclaration node) =>
-      DartTypeUtilities.lookUpInheritedConcreteGetter(node);
+  _UnnecessaryGetterOverrideVisitor(LintRule rule, LinterContext context)
+      : super(rule, context);
 
   @override
   void visitPropertyAccess(PropertyAccess node) {
@@ -197,11 +211,8 @@ class _UnnecessaryGetterOverrideVisitor
 
 class _UnnecessaryMethodOverrideVisitor
     extends _AbstractUnnecessaryOverrideVisitor {
-  _UnnecessaryMethodOverrideVisitor(LintRule rule) : super(rule);
-
-  @override
-  ExecutableElement? getInheritedElement(node) =>
-      DartTypeUtilities.lookUpInheritedMethod(node);
+  _UnnecessaryMethodOverrideVisitor(LintRule rule, LinterContext context)
+      : super(rule, context);
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
@@ -217,11 +228,8 @@ class _UnnecessaryMethodOverrideVisitor
 
 class _UnnecessaryOperatorOverrideVisitor
     extends _AbstractUnnecessaryOverrideVisitor {
-  _UnnecessaryOperatorOverrideVisitor(LintRule rule) : super(rule);
-
-  @override
-  ExecutableElement? getInheritedElement(node) =>
-      DartTypeUtilities.lookUpInheritedConcreteMethod(node);
+  _UnnecessaryOperatorOverrideVisitor(LintRule rule, LinterContext context)
+      : super(rule, context);
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
@@ -255,11 +263,8 @@ class _UnnecessaryOperatorOverrideVisitor
 
 class _UnnecessarySetterOverrideVisitor
     extends _AbstractUnnecessaryOverrideVisitor {
-  _UnnecessarySetterOverrideVisitor(LintRule rule) : super(rule);
-
-  @override
-  ExecutableElement? getInheritedElement(node) =>
-      DartTypeUtilities.lookUpInheritedConcreteSetter(node);
+  _UnnecessarySetterOverrideVisitor(LintRule rule, LinterContext context)
+      : super(rule, context);
 
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
@@ -281,8 +286,9 @@ class _UnnecessarySetterOverrideVisitor
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+  final LinterContext context;
 
-  _Visitor(this.rule);
+  _Visitor(this.rule, this.context);
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
@@ -290,16 +296,16 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
     if (node.operatorKeyword != null) {
-      var visitor = _UnnecessaryOperatorOverrideVisitor(rule);
+      var visitor = _UnnecessaryOperatorOverrideVisitor(rule, context);
       visitor.visitMethodDeclaration(node);
     } else if (node.isGetter) {
-      var visitor = _UnnecessaryGetterOverrideVisitor(rule);
+      var visitor = _UnnecessaryGetterOverrideVisitor(rule, context);
       visitor.visitMethodDeclaration(node);
     } else if (node.isSetter) {
-      var visitor = _UnnecessarySetterOverrideVisitor(rule);
+      var visitor = _UnnecessarySetterOverrideVisitor(rule, context);
       visitor.visitMethodDeclaration(node);
     } else {
-      var visitor = _UnnecessaryMethodOverrideVisitor(rule);
+      var visitor = _UnnecessaryMethodOverrideVisitor(rule, context);
       visitor.visitMethodDeclaration(node);
     }
   }
