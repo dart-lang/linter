@@ -84,7 +84,7 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
       if (parentElement is ClassElement) {
         var name = Name(parentElement.library.source.uri, declaredElement.name);
         var element = context.inheritanceManager
-            .getInheritedConcreteMap2(parentElement)[name];
+            .getMember2(parentElement, name, forSuper: true);
         return element;
       }
     }
