@@ -54,6 +54,7 @@ import 'prefer_equal_for_default_values_test.dart'
 import 'prefer_final_fields_test.dart' as prefer_final_fields;
 import 'prefer_generic_function_type_aliases_test.dart'
     as prefer_generic_function_type_aliases;
+import 'prefer_initializing_formals_test.dart' as prefer_initializing_formals;
 import 'prefer_spread_collections_test.dart' as prefer_spread_collections;
 import 'public_member_api_docs_test.dart' as public_member_api_docs;
 import 'sort_constructors_first.dart' as sort_constructors_first;
@@ -106,6 +107,7 @@ void main() {
   prefer_equal_for_default_values.main();
   prefer_final_fields.main();
   prefer_generic_function_type_aliases.main();
+  prefer_initializing_formals.main();
   prefer_spread_collections.main();
   public_member_api_docs.main();
   sort_constructors_first.main();

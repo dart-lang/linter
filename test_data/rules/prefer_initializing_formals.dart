@@ -250,7 +250,7 @@ class BadCaseWithNamedArgsInitializer {
   num? x, y;
   BadCaseWithNamedArgsInitializer({num? x, num y = 1})
       : this.x = x, // LINT
-        this.y = y; // LINT
+        this.y = y; // OK
 }
 
 class GoodCaseWithDifferentNamedArgsInitializer {

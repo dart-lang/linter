@@ -167,12 +167,16 @@ class _Visitor extends SimpleAstVisitor<void> {
       var expression = constructorFieldInitializer.expression;
       if (expression is SimpleIdentifier) {
         var fieldName = constructorFieldInitializer.fieldName;
-        if (fieldName.name != expression.name) {
+        if (fieldName.name != expression.name) return false;
+        var staticElement = expression.staticElement;
+        if (staticElement is! ParameterElement) return false;
+        var fieldElement = fieldName.staticElement;
+        if (fieldElement is! FieldElement) return false;
+        if (staticElement.type != fieldElement.type) {
           return false;
         }
-        var staticElement = expression.staticElement;
-        return staticElement is ParameterElement &&
-            !(constructorFieldInitializer.fieldName.staticElement?.isPrivate ??
+        return !(constructorFieldInitializer
+                    .fieldName.staticElement?.isPrivate ??
                 true) &&
             parameters.contains(staticElement) &&
             (!parametersUsedMoreThanOnce.contains(expression.staticElement) &&
