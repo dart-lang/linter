@@ -37,6 +37,20 @@ class B extends A {
       lint('avoid_init_to_null', 66, 14),
     ]);
   }
+
+  /// https://github.com/dart-lang/linter/issues/3349
+  test_superInit_nolint() async {
+    await assertNoDiagnostics(r'''
+class A {
+  String? a;
+  A({this.a = ''});
+}
+
+class B extends A {
+  B({super.a = null});
+}
+''');
+  }
 }
 
 @reflectiveTest
