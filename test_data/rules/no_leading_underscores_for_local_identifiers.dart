@@ -9,7 +9,7 @@
 void fn0() {
   for (var _ in []) { } // OK
   var _ = g(); //OK
-  for (var _ = 0; _ < 1; ++_) { } // OK
+  for (var __ = 0; __ < 1; ++__) { } // OK
 }
 
 int g() => 0;
