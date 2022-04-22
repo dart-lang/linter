@@ -5,6 +5,7 @@
 import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 // ignore: implementation_imports
 import 'package:analyzer/src/dart/element/element.dart';
@@ -85,19 +86,20 @@ class _Visitor extends SimpleAstVisitor<void> {
       : nnbdEnabled = context.isEnabled(Feature.non_nullable);
 
   bool isNullable(DartType type) =>
-      !nnbdEnabled || (context.typeSystem.isNullable(type));
+      !nnbdEnabled || context.typeSystem.isNullable(type);
 
   @override
   void visitDefaultFormalParameter(DefaultFormalParameter node) {
     var declaredElement = node.declaredElement;
     if (declaredElement == null) return;
-    if (declaredElement is DefaultSuperFormalParameterElementImpl) {
+
+    if (declaredElement is SuperFormalParameterElement) {
       var superConstructorParameter = declaredElement.superConstructorParameter;
-      if (superConstructorParameter is DefaultFieldFormalParameterElementImpl) {
-        var defaultValue = superConstructorParameter.defaultValueCode;
-        if (defaultValue != null) return;
-      }
+      if (superConstructorParameter is! ParameterElement) return;
+      var defaultValue = superConstructorParameter.defaultValueCode ?? 'null';
+      if (defaultValue != 'null') return;
     }
+
     if (DartTypeUtilities.isNullLiteral(node.defaultValue) &&
         isNullable(declaredElement.type)) {
       rule.reportLint(node);
