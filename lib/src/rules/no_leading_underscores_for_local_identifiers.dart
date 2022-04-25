@@ -65,6 +65,7 @@ class NoLeadingUnderscoresForLocalIdentifiers extends LintRule
     registry.addDeclaredIdentifier(this, visitor);
     registry.addFormalParameterList(this, visitor);
     registry.addForPartsWithDeclarations(this, visitor);
+    registry.addFunctionDeclaration(this, visitor);
     registry.addVariableDeclarationStatement(this, visitor);
   }
 }
@@ -110,6 +111,13 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitForPartsWithDeclarations(ForPartsWithDeclarations node) {
     for (var variable in node.variables.variables) {
       checkIdentifier(variable.name);
+    }
+  }
+
+  @override
+  void visitFunctionDeclaration(FunctionDeclaration node) {
+    if (node.parent is FunctionDeclarationStatement) {
+      checkIdentifier(node.name);
     }
   }
 
