@@ -29,7 +29,15 @@
          </header>
          <section>
 
-            <p>When building maps from iterables, it is preferable to use for elements.</p>
+            <p>When building maps from iterables, it is preferable to use 'for' elements.</p>
+<p>Using 'for' elements brings several benefits including:</p>
+<ul>
+<li>Performance</li>
+<li>Flexibility</li>
+<li>Readability</li>
+<li>Improved type inference</li>
+<li>Improved interaction with null safety</li>
+</ul>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">Map&lt;String, WidgetBuilder&gt;.fromIterable(
   kAllGalleryDemos,
@@ -42,6 +50,14 @@
 <pre><code class="language-dart">return {
   for (var demo in kAllGalleryDemos)
     '${demo.routeName}': demo.buildRoute,
+};
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">// Map&lt;int, Student&gt; is not required, type is inferred automatically.
+final pizzaRecipients = {
+  ...studentLeaders,
+  for (var student in classG)
+    if (student.isPassing) student.id: student,
 };
 </code></pre>
 
