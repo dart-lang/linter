@@ -27,4 +27,3 @@ class ConstWidget extends StatelessWidget {
   const ConstWidget(); // LINT [9:11]
   const ConstWidget.named(); // LINT [21:5]
 }
-
