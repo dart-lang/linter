@@ -28,6 +28,8 @@ string.toString();
 string = 'hello\n'
     'world\n'
     ''; // useless empty string
+
+'string with ${x.toString()}';
 ```
 ''';
 
@@ -47,6 +49,7 @@ class NoopPrimitiveOperations extends LintRule {
   ) {
     var visitor = _Visitor(this, context);
     registry.addAdjacentStrings(this, visitor);
+    registry.addInterpolationExpression(this, visitor);
     registry.addMethodInvocation(this, visitor);
   }
 }
@@ -63,6 +66,16 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (literal.stringValue?.isEmpty ?? false) {
         rule.reportLint(literal);
       }
+    }
+  }
+
+  @override
+  void visitInterpolationExpression(InterpolationExpression node) {
+    var expression = node.expression;
+    if (expression is MethodInvocation &&
+        expression.methodName.name == 'toString' &&
+        expression.argumentList.arguments.isEmpty) {
+      rule.reportLint(expression.methodName);
     }
   }
 

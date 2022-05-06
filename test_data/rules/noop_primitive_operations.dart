@@ -4,6 +4,10 @@
 
 // test w/ `dart test -N noop_primitive_operations`
 
+onStringInterpolations() {
+  var s = '${1.toString()}'; // LINT
+}
+
 onString() {
   String? nullable;
   String v = 'hello';
