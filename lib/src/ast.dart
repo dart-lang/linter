@@ -438,7 +438,8 @@ class _ElementVisitorAdapter extends GeneralizingElementVisitor {
 extension ElementExtension on Element? {
   bool get isDartCorePrint {
     var element = this;
-    if (element is! FunctionElement) return false;
-    return element.name == 'print' && element.library.isDartCore;
+    return element is FunctionElement &&
+        element.name == 'print' &&
+        element.library.isDartCore;
   }
 }
