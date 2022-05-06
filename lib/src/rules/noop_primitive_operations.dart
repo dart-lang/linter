@@ -112,6 +112,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void _checkToStringInvocation(Expression expression) {
     if (expression is MethodInvocation &&
+        expression.realTarget != null &&
         expression.realTarget is! SuperExpression &&
         expression.methodName.name == 'toString' &&
         expression.argumentList.arguments.isEmpty) {

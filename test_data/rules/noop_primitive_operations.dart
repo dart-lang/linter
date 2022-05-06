@@ -12,12 +12,16 @@ onPrint() {
   print(''); // OK
   print(1.toString()); // LINT
   print(null.toString()); // LINT
+
+  print(toString()); // OK
 }
 
-class Super {
-  // Can't use 'super' as an expression
-  toString() => '${super.toString()}'; // OK
+String toString() => '';
+
+class Ok {
   f() {
+    // Can't use 'super' as an expression
+    var s = '${super.toString()}'; // OK
     print(super.toString()); // OK
   }
 }
