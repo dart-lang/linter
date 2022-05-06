@@ -80,7 +80,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     var type = node.realTarget?.staticType;
     if (type == null) {
       // print(xxx.toString())
-      if (node.methodName.staticElement?.isDartCorePrint ?? false) {
+      if (node.methodName.staticElement.isDartCorePrint &&
+          node.argumentList.arguments.length == 1) {
         _checkToStringInvocation(node.argumentList.arguments.first);
       }
       return;
