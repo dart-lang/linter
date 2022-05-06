@@ -9,6 +9,7 @@ onStringInterpolations() {
 }
 
 onPrint() {
+  print(''); // OK
   print(1.toString()); // LINT
   print(null.toString()); // LINT
 }

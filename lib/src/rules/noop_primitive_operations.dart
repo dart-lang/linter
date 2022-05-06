@@ -86,7 +86,13 @@ class _Visitor extends SimpleAstVisitor<void> {
       // print(xxx.toString())
       if (node.methodName.name == 'print' &&
           node.methodName.staticElement?.library?.name == 'dart.core') {
-        rule.reportLint(node.methodName);
+        var arg = node.argumentList.arguments.first;
+        if (arg is MethodInvocation &&
+            arg.methodName.name == 'toString' &&
+            arg.argumentList.arguments.isEmpty) {
+          rule.reportLint(node.methodName);
+          return;
+        }
       }
       return;
     }
