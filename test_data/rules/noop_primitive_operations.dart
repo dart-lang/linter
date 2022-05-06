@@ -8,6 +8,11 @@ onStringInterpolations() {
   var s = '${1.toString()}'; // LINT
 }
 
+onPrint() {
+  print(1.toString()); // LINT
+  print(null.toString()); // LINT
+}
+
 onString() {
   String? nullable;
   String v = 'hello';

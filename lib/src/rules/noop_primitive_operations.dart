@@ -82,7 +82,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     var type = node.realTarget?.staticType;
-    if (type == null) return;
+    if (type == null) {
+      // print(xxx.toString())
+      if (node.methodName.name == 'print' &&
+          node.methodName.staticElement?.library?.name == 'dart.core') {
+        rule.reportLint(node.methodName);
+      }
+      return;
+    }
 
     // string.toString()
     if (type.isDartCoreString &&
