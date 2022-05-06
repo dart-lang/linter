@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
+import '../ast.dart';
 
 const _desc = r'Noop primitive operations.';
 
@@ -71,12 +72,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitInterpolationExpression(InterpolationExpression node) {
-    var expression = node.expression;
-    if (expression is MethodInvocation &&
-        expression.methodName.name == 'toString' &&
-        expression.argumentList.arguments.isEmpty) {
-      rule.reportLint(expression.methodName);
-    }
+    _checkToStringInvocation(node.expression);
   }
 
   @override
@@ -84,15 +80,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     var type = node.realTarget?.staticType;
     if (type == null) {
       // print(xxx.toString())
-      if (node.methodName.name == 'print' &&
-          node.methodName.staticElement?.library?.name == 'dart.core') {
-        var arg = node.argumentList.arguments.first;
-        if (arg is MethodInvocation &&
-            arg.methodName.name == 'toString' &&
-            arg.argumentList.arguments.isEmpty) {
-          rule.reportLint(node.methodName);
-          return;
-        }
+      if (node.methodName.staticElement?.isDartCorePrint ?? false) {
+        _checkToStringInvocation(node.argumentList.arguments.first);
       }
       return;
     }
@@ -117,6 +106,15 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (type.isDartCoreDouble && node.methodName.name == 'toDouble') {
       rule.reportLint(node.methodName);
       return;
+    }
+  }
+
+  void _checkToStringInvocation(Expression expression) {
+    if (expression is MethodInvocation &&
+        expression.realTarget is! SuperExpression &&
+        expression.methodName.name == 'toString' &&
+        expression.argumentList.arguments.isEmpty) {
+      rule.reportLint(expression.methodName);
     }
   }
 }

@@ -14,6 +14,14 @@ onPrint() {
   print(null.toString()); // LINT
 }
 
+class Super {
+  // Can't use 'super' as an expression
+  toString() => '${super.toString()}'; // OK
+  f() {
+    print(super.toString()); // OK
+  }
+}
+
 onString() {
   String? nullable;
   String v = 'hello';
