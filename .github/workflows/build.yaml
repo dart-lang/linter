@@ -19,7 +19,6 @@ jobs:
   build:
     permissions:
       checks: write  # for coverallsapp/github-action to create new checks
-      contents: read  # for actions/checkout to fetch code
     name: ${{ matrix.linter-bot }}
     runs-on: ubuntu-latest
     strategy:
