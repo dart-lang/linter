@@ -127,8 +127,7 @@ void _writeTimings(IOSink out, List<_Stat> timings, int summaryLength) {
 }
 
 class DetailedReporter extends SimpleFormatter {
-  DetailedReporter(
-      super.errors, super.filter, super.out,
+  DetailedReporter(super.errors, super.filter, super.out,
       {super.fileCount,
       super.elapsedMs,
       super.fileRoot,
