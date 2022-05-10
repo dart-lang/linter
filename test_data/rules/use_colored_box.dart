@@ -7,9 +7,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-class Color {
-  Color(int value);
-}
+class Color {}
 
 Widget containerWithoutArguments() {
   return Container(); // OK
@@ -23,7 +21,7 @@ Widget containerWithKey() {
 
 Widget containerWithColor() {
   return Container( // LINT
-    color: Color(0xffffffff),
+    color: Color(),
   );
 }
 
@@ -43,13 +41,13 @@ Widget containerWithKeyAndChild() {
 Widget containerWithKeyAndColor() {
   return Container( // LINT
     key: Key('abc'),
-    color: Color(0xffffffff),
+    color: Color(),
   );
 }
 
 Widget containerWithColorAndChild() {
   return Container( // LINT
-    color: Color(0xffffffff),
+    color: Color(),
     child: SizedBox(),
   );
 }
@@ -57,7 +55,7 @@ Widget containerWithColorAndChild() {
 Widget containerWithKeyAndColorAndChild() {
   return Container( // LINT
     key: Key('abc'),
-    color: Color(0xffffffff),
+    color: Color(),
     child: SizedBox(),
   );
 }
@@ -70,15 +68,49 @@ Widget containerWithAnotherArgument() {
 
 Widget containerWithColorAndAdditionalArgument() {
   return Container( // OK
-    color: Color(0xffffffff),
+    color: Color(),
     width: 20,
   );
 }
 
 Widget containerWithColorAndAdditionalArgumentAndChild() {
   return Container( // OK
-    color: Color(0xffffffff),
+    color: Color(),
     width: 20,
+    child: SizedBox(),
+  );
+}
+
+Widget containerWithNullColor() {
+  return Container( // OK
+    color: null,
+    child: SizedBox(),
+  );
+}
+
+const Color? _nullableColor = null;
+
+Widget containerWithNullableColor() {
+  return Container( // OK
+    color: _nullableColor,
+    child: SizedBox(),
+  );
+}
+
+final _nonNullColor = Color();
+
+Widget containerWithNonNullColor() {
+  return Container( // LINT
+    color: _nonNullColor,
+    child: SizedBox(),
+  );
+}
+
+Color? _getColor() => null;
+
+Widget nullableReturnValue() {
+  return Container( // OK
+    color: _getColor(),
     child: SizedBox(),
   );
 }
