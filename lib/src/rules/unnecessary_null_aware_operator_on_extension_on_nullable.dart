@@ -13,7 +13,7 @@ const _desc =
 
 const _details = r'''
 
-Avoid null aware operator for member defined in an extension on a nullable type.
+Avoid null aware operators for members defined in an extension on a nullable type.
 
 **BAD:**
 
