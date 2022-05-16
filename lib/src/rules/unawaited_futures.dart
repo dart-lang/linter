@@ -68,7 +68,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCascadeExpression(CascadeExpression node) {
-    node.cascadeSections.forEach(_visit);
+    var sections = node.cascadeSections;
+    for (int i = 0; i < sections.length; i++) {
+      _visit(sections[i]);
+    }
   }
 
   @override
