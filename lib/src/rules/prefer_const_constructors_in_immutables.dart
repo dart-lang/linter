@@ -128,8 +128,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool _hasMixin(ClassElement clazz) => clazz.mixins.isNotEmpty;
 
-  static Iterable<ClassElement> _getSelfAndInheritedClasses(
-      ClassElement self) {
+  static Iterable<ClassElement> _getSelfAndInheritedClasses(ClassElement self) {
     var elements = <ClassElement>[];
     ClassElement? current = self;
     var seenElements = <ClassElement>{};
