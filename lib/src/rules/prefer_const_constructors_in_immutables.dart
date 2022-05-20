@@ -120,20 +120,23 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool _hasImmutableAnnotation(ClassElement clazz) {
     var selfAndInheritedClasses = _getSelfAndInheritedClasses(clazz);
-    var selfAndInheritedAnnotations =
-        selfAndInheritedClasses.expand((c) => c.metadata).map((m) => m.element);
-    return selfAndInheritedAnnotations.any(_isImmutable);
+    for (var cls in selfAndInheritedClasses) {
+      if (cls.metadata.any((m) => _isImmutable(m.element))) return true;
+    }
+    return false;
   }
 
   bool _hasMixin(ClassElement clazz) => clazz.mixins.isNotEmpty;
 
   static Iterable<ClassElement> _getSelfAndInheritedClasses(
-      ClassElement self) sync* {
+      ClassElement self) {
+    var elements = <ClassElement>[];
     ClassElement? current = self;
     var seenElements = <ClassElement>{};
     while (current != null && seenElements.add(current)) {
-      yield current;
+      elements.add(current);
       current = current.supertype?.element;
     }
+    return elements;
   }
 }
