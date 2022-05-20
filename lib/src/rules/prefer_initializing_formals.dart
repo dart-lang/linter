@@ -103,9 +103,9 @@ Iterable<AssignmentExpression> _getAssignmentExpressionsInConstructorBody(
 }
 
 Iterable<ConstructorFieldInitializer>
-_getConstructorFieldInitializersInInitializers(
-    ConstructorDeclaration node) =>
-    node.initializers.whereType<ConstructorFieldInitializer>();
+    _getConstructorFieldInitializersInInitializers(
+            ConstructorDeclaration node) =>
+        node.initializers.whereType<ConstructorFieldInitializer>();
 
 Element? _getLeftElement(AssignmentExpression assignment) =>
     DartTypeUtilities.getCanonicalElement(assignment.writeElement);
@@ -120,10 +120,10 @@ Element? _getRightElement(AssignmentExpression assignment) =>
 class PreferInitializingFormals extends LintRule {
   PreferInitializingFormals()
       : super(
-      name: 'prefer_initializing_formals',
-      description: _desc,
-      details: _details,
-      group: Group.style);
+            name: 'prefer_initializing_formals',
+            description: _desc,
+            details: _details,
+            group: Group.style);
 
   @override
   void registerNodeProcessors(
@@ -163,7 +163,7 @@ class _Visitor extends SimpleAstVisitor<void> {
               node.declaredElement?.enclosingElement &&
           parameters.contains(rightElement) &&
           (!parametersUsedMoreThanOnce.contains(rightElement) &&
-              !(rightElement as ParameterElement).isNamed ||
+                  !(rightElement as ParameterElement).isNamed ||
               leftElement.name == rightElement.name);
     }
 
@@ -181,7 +181,7 @@ class _Visitor extends SimpleAstVisitor<void> {
                 true) &&
             parameters.contains(staticElement) &&
             (!parametersUsedMoreThanOnce.contains(expression.staticElement) &&
-                !staticElement.isNamed ||
+                    !staticElement.isNamed ||
                 (constructorFieldInitializer.fieldName.staticElement?.name ==
                     expression.staticElement?.name));
       }
