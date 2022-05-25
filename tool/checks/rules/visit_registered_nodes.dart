@@ -83,6 +83,22 @@ class _BodyVisitor extends RecursiveAstVisitor<void> {
   final LintRule rule;
   _BodyVisitor(this.rule);
 
+  bool implements(ClassElement visitor, String methodName) {
+    if (visitor.getMethod(methodName) != null) {
+      return true;
+    }
+
+    var method =
+        visitor.lookUpInheritedConcreteMethod(methodName, visitor.library);
+    // In general lint visitors should only inherit from SimpleAstVisitors
+    // (and the method implementations inherited from there are only stubs).
+    // (We might consider enforcing this since it's harder to ensure that
+    // Unifying and Generalizing visitors are doing the right thing.)
+    // For now we flag methods inherited from SimpleAstVisitor since they
+    // surely don't do anything.
+    return method?.enclosingElement.name != 'SimpleAstVisitor';
+  }
+
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.target?.staticType?.element?.name != 'NodeLintRegistry') return;
@@ -92,9 +108,8 @@ class _BodyVisitor extends RecursiveAstVisitor<void> {
     var args = node.argumentList.arguments;
     var visitor = args[1].staticType?.element;
     if (visitor is! ClassElement) return;
-    for (var method in visitor.methods) {
-      if (method.name == 'visit$nodeType') return;
-    }
+    if (implements(visitor, 'visit$nodeType')) return;
+
     rule.reportLint(node.methodName);
   }
 }
