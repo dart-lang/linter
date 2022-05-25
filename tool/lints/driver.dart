@@ -6,19 +6,17 @@ import 'dart:io' as io;
 
 import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/dart/analysis/results.dart';
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/file_system/file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:analyzer/src/generated/engine.dart' // ignore: implementation_imports
-    show AnalysisErrorInfoImpl, AnalysisOptionsImpl;
-import 'package:analyzer/src/lint/linter.dart'; // ignore: implementation_imports
+    show
+        AnalysisErrorInfoImpl,
+        AnalysisOptionsImpl;
 import 'package:analyzer/src/lint/registry.dart'; // ignore: implementation_imports
-import 'package:args/args.dart';
 import 'package:cli_util/cli_logging.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/formatter.dart';
-import 'package:linter/src/rules.dart'; // ignore: implementation_imports
 import 'package:path/path.dart' as path;
 
 import 'rules/visit_registered_nodes.dart';
@@ -37,14 +35,13 @@ class Driver {
 
   Driver(this.lints);
 
-  Future analyze(List<String> sources,
-      {bool displayTiming = false}) {
+  Future analyze(List<String> sources, {bool displayTiming = false}) {
     var analysisFuture = _analyze(sources);
     if (!displayTiming) return analysisFuture;
 
     var stopwatch = Stopwatch()..start();
     return analysisFuture.then((value) {
-      print(
+      _print(
           '(Elapsed time: ${Duration(milliseconds: stopwatch.elapsedMilliseconds)})');
     });
   }
@@ -87,9 +84,9 @@ class Driver {
               var result = await context.currentSession.getErrors(filePath);
               if (result is ErrorsResult) {
                 if (result.errors.isNotEmpty) {
-                  errors.add(AnalysisErrorInfoImpl(result.errors, result.lineInfo));
+                  errors.add(
+                      AnalysisErrorInfoImpl(result.errors, result.lineInfo));
                 }
-
               }
             } on Exception catch (e) {
               _print('Exception caught analyzing: $filePath');
@@ -98,13 +95,9 @@ class Driver {
           }
         }
       }
-      // errors.forEach(print);
-
       ReportFormatter(errors, _TodoFilter(), io.stdout).write();
     }
   }
-
-
 
   /// Pass the following [msg] to the [logger] instance iff [silent] is false.
   void _print(String msg) {
