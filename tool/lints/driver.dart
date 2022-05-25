@@ -6,7 +6,6 @@ import 'dart:io' as io;
 
 import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/dart/analysis/results.dart';
-import 'package:analyzer/error/error.dart';
 import 'package:analyzer/file_system/file_system.dart';
 import 'package:analyzer/file_system/physical_file_system.dart';
 import 'package:analyzer/src/generated/engine.dart' // ignore: implementation_imports
@@ -83,9 +82,11 @@ class Driver {
             try {
               var result = await context.currentSession.getErrors(filePath);
               if (result is ErrorsResult) {
-                if (result.errors.isNotEmpty) {
-                  errors.add(
-                      AnalysisErrorInfoImpl(result.errors, result.lineInfo));
+                var filtered = result.errors
+                    .where((e) => e.errorCode.name != 'TODO')
+                    .toList();
+                if (filtered.isNotEmpty) {
+                  errors.add(AnalysisErrorInfoImpl(filtered, result.lineInfo));
                 }
               }
             } on Exception catch (e) {
@@ -95,7 +96,11 @@ class Driver {
           }
         }
       }
-      ReportFormatter(errors, _TodoFilter(), io.stdout).write();
+      ReportFormatter(errors, null /*_TodoFilter()*/, io.stdout).write();
+
+      if (errors.isNotEmpty) {
+        io.exitCode = 3;
+      }
     }
   }
 
@@ -108,9 +113,4 @@ class Driver {
 
   /// Returns `true` if this [fileName] is a Dart file.
   static bool isDartFileName(String fileName) => fileName.endsWith('.dart');
-}
-
-class _TodoFilter extends LintFilter {
-  @override
-  bool filter(AnalysisError lint) => lint.errorCode.name == 'TODO';
 }
