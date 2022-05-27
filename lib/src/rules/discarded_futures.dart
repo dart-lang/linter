@@ -61,20 +61,29 @@ class DiscardedFutures extends LintRule {
 }
 
 class _InvocationVisitor extends RecursiveAstVisitor<void> {
-  bool foundFuture = false;
+  final LintRule rule;
+  _InvocationVisitor(this.rule);
+
+  @override
+  void visitFunctionExpression(FunctionExpression node) {
+    if (node.body.isAsynchronous) return;
+    super.visitFunctionExpression(node);
+  }
 
   @override
   void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
-    if (foundFuture) return;
-    foundFuture = node.staticInvokeType.isFuture;
+    if (node.staticInvokeType.isFuture) {
+      rule.reportLint(node.function);
+    }
     super.visitFunctionExpressionInvocation(node);
   }
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    if (foundFuture) return;
     if (node.methodName.staticElement.isDartAsyncUnawaited) return;
-    foundFuture = node.staticInvokeType.isFuture;
+    if (node.staticInvokeType.isFuture) {
+      rule.reportLint(node.methodName);
+    }
     super.visitMethodInvocation(node);
   }
 }
@@ -84,25 +93,20 @@ class _Visitor extends SimpleAstVisitor {
 
   _Visitor(this.rule);
 
-  bool discardsFuture(FunctionBody body) {
-    if (body.isAsynchronous) return false;
-    var visitor = _InvocationVisitor();
+  void check(FunctionBody body) {
+    if (body.isAsynchronous) return;
+    var visitor = _InvocationVisitor(rule);
     body.accept(visitor);
-    return visitor.foundFuture;
   }
 
   @override
   visitFunctionDeclaration(FunctionDeclaration node) {
-    if (discardsFuture(node.functionExpression.body)) {
-      rule.reportLint(node.name);
-    }
+    check(node.functionExpression.body);
   }
 
   @override
   visitMethodDeclaration(MethodDeclaration node) {
-    if (discardsFuture(node.body)) {
-      rule.reportLint(node.name);
-    }
+    check(node.body);
   }
 }
 

@@ -5,9 +5,9 @@
 // test w/ `dart test -N discarded_futures`
 import 'dart:async';
 
-void recreateDir(String path) { // LINT
-  deleteDir(path);
-  createDir(path);
+void recreateDir(String path) {
+  deleteDir(path); // LINT
+  createDir(path); // LINT
 }
 
 Future<void> recreateDir2(String path) async { // OK
@@ -26,19 +26,30 @@ Future<void> createDir(String path) async {}
 class A {
   Future<void> m() async {}
   FutureOr<void> n() async {}
-  void f() { // LINT
-    m();
+  void f() {
+    m(); // LINT
   }
-  void g() { // OK
-    unawaited(m());
+  void g() {
+    unawaited(m()); // OK
   }
-  void h() { // LINT
-    n();
+  void h() {
+    n(); // LINT
   }
 }
 
-void f() { //LINT
+void f() {
   () {
-    createDir('.');
+    createDir('.'); //LINT
   }();
 }
+
+var handler = <String, Function>{};
+
+void ff(String command) {
+  handler[command] = () async {
+    await g(); // OK
+    g();  // OK
+  };
+}
+Future<int> g() async => 0;
+
