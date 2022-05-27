@@ -52,10 +52,30 @@ class DiscardedFutures extends LintRule {
             group: Group.style);
 
   @override
-  void registerNodeProcessors(NodeLintRegistry registry, LinterContext context) {
+  void registerNodeProcessors(
+      NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addFunctionDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
+  }
+}
+
+class _InvocationVisitor extends RecursiveAstVisitor<void> {
+  bool foundFuture = false;
+
+  @override
+  void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
+    if (foundFuture) return;
+    foundFuture = node.staticInvokeType.isFuture;
+    super.visitFunctionExpressionInvocation(node);
+  }
+
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (foundFuture) return;
+    if (node.methodName.staticElement.isDartAsyncUnawaited) return;
+    foundFuture = node.staticInvokeType.isFuture;
+    super.visitMethodInvocation(node);
   }
 }
 
@@ -63,6 +83,13 @@ class _Visitor extends SimpleAstVisitor {
   final LintRule rule;
 
   _Visitor(this.rule);
+
+  bool discardsFuture(FunctionBody body) {
+    if (body.isAsynchronous) return false;
+    var visitor = _InvocationVisitor();
+    body.accept(visitor);
+    return visitor.foundFuture;
+  }
 
   @override
   visitFunctionDeclaration(FunctionDeclaration node) {
@@ -77,33 +104,6 @@ class _Visitor extends SimpleAstVisitor {
       rule.reportLint(node.name);
     }
   }
-
-  bool discardsFuture(FunctionBody body) {
-    if (body.isAsynchronous) return false;
-    var visitor = _InvocationVisitor();
-    body.accept(visitor);
-    return visitor.foundFuture;
-  }
-}
-
-class _InvocationVisitor extends RecursiveAstVisitor<void> {
-  bool foundFuture = false;
-
-  @override
-  void visitMethodInvocation(MethodInvocation node) {
-    if (foundFuture) return;
-    if (node.methodName.staticElement.isDartAsyncUnawaited) return;
-    foundFuture = node.staticInvokeType.isFuture;
-    super.visitMethodInvocation(node);
-  }
-
-  @override
-  void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
-    if (foundFuture) return;
-    foundFuture = node.staticInvokeType.isFuture;
-    super.visitFunctionExpressionInvocation(node);
-  }
-
 }
 
 extension on DartType? {
