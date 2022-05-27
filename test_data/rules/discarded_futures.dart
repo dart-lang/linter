@@ -25,11 +25,15 @@ Future<void> createDir(String path) async {}
 
 class A {
   Future<void> m() async {}
+  FutureOr<void> n() async {}
   void f() { // LINT
     m();
   }
   void g() { // OK
     unawaited(m());
+  }
+  void h() { // LINT
+    n();
   }
 }
 
