@@ -55,8 +55,11 @@ class DiscardedFutures extends LintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
+    registry.addConstructorDeclaration(this, visitor);
+    registry.addFieldDeclaration(this, visitor);
     registry.addFunctionDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
+    registry.addTopLevelVariableDeclaration(this, visitor);
   }
 }
 
@@ -99,23 +102,57 @@ class _Visitor extends SimpleAstVisitor {
     body.accept(visitor);
   }
 
+  void checkVariables(VariableDeclarationList variables) {
+    if (variables.type?.type?.isFuture ?? false) return;
+    for (var variable in variables.variables) {
+      var initializer = variable.initializer;
+      if (initializer is FunctionExpression) {
+        check(initializer.body);
+      }
+    }
+  }
+
   @override
-  visitFunctionDeclaration(FunctionDeclaration node) {
+  void visitConstructorDeclaration(ConstructorDeclaration node) {
+    check(node.body);
+  }
+
+  @override
+  void visitFieldDeclaration(FieldDeclaration node) {
+    checkVariables(node.fields);
+  }
+
+  @override
+  void visitFunctionDeclaration(FunctionDeclaration node) {
+    if (node.returnType?.type.isFuture ?? false) return;
     check(node.functionExpression.body);
   }
 
   @override
-  visitMethodDeclaration(MethodDeclaration node) {
+  void visitMethodDeclaration(MethodDeclaration node) {
+    if (node.returnType?.type.isFuture ?? false) return;
     check(node.body);
+  }
+
+  @override
+  void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
+    checkVariables(node.variables);
   }
 }
 
 extension on DartType? {
   bool get isFuture {
     var self = this;
-    if (self is! FunctionType) return false;
-    var returnType = self.returnType;
-    return returnType.isDartAsyncFuture || returnType.isDartAsyncFutureOr;
+    DartType? returnType;
+    if (self is FunctionType) {
+      returnType = self.returnType;
+    }
+    if (self is InterfaceType) {
+      returnType = self;
+    }
+
+    return returnType != null &&
+        (returnType.isDartAsyncFuture || returnType.isDartAsyncFutureOr);
   }
 }
 
