@@ -88,6 +88,33 @@ Future<void> createDir(String path) async {}
     ]);
   }
 
+  test_function_closure_ok() async {
+    await assertNoDiagnostics(r'''
+Future<void> f() async {
+  () {
+    createDir('.');
+  }();
+}
+
+Future<void> createDir(String path) async {}
+''');
+  }
+
+  test_function_expression() async {
+    await assertDiagnostics(r'''
+void f() {
+  var x = h(() => g());
+  print(x);
+}
+
+int h(Function f) => 0;
+
+Future<int> g() async => 0;
+''', [
+      lint('discarded_futures', 29, 1),
+    ]);
+  }
+
   test_function_ok_async() async {
     await assertNoDiagnostics(r'''
 Future<void> recreateDir(String path) async {
