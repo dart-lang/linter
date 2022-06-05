@@ -32,3 +32,4 @@ jobs:
           publish_branch: gh-pages
           publish_dir: lints
           destination_dir: lints
+          keep_files: true
