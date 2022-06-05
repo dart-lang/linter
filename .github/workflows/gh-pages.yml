@@ -12,12 +12,15 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
+    if: github.repository == 'dart-lang/linter'
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@d171c3b028d844f2bf14e9fdec0c58114451e4bf
       - name: Setup Dart
-        run: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
+        uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
+        with:
+          sdk: stable
       - name: Get dependencies
         run: dart pub get
       - name: Generate docs
