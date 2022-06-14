@@ -31,6 +31,8 @@ import 'integration/exhaustive_cases.dart' as exhaustive_cases;
 import 'integration/flutter_style_todos.dart' as flutter_style_todos;
 import 'integration/lines_longer_than_80_chars.dart'
     as lines_longer_than_80_chars;
+import 'integration/no_top_public_members_in_executable_libraries.dart'
+    as no_top_public_members_in_executable_libraries;
 import 'integration/only_throw_errors.dart' as only_throw_errors;
 import 'integration/overridden_fields.dart' as overridden_fields;
 import 'integration/packages_file_test.dart' as packages_file_test;
@@ -207,6 +209,7 @@ void ruleTests() {
     prefer_mixin.main();
     use_build_context_synchronously.main();
     prefer_const_constructors.main();
+    no_top_public_members_in_executable_libraries.main();
   });
 }
 
