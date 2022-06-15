@@ -27,6 +27,12 @@ void multiUnmutated() {
   print(unmutated2);
 }
 
+void multiUnmutatedWithType() {
+  String unmutated1 = 'hello', unmutated2 = 'world'; // LINT
+  print(unmutated1);
+  print(unmutated2);
+}
+
 void multiWithAMutation() {
   var mutated = 'hello', unmutated = 'unmutated'; // OK
   print(mutated);

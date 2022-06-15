@@ -87,6 +87,10 @@ class _Visitor extends SimpleAstVisitor<void> {
         return;
       }
     }
-    rule.reportLint(node);
+    if (node.keyword != null) {
+      rule.reportLintForToken(node.keyword);
+    } else if (node.type != null) {
+      rule.reportLint(node.type);
+    }
   }
 }
