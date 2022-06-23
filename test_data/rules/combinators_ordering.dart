@@ -9,3 +9,9 @@ import 'dart:math' as m2 show min, max; // LINT
 
 export 'dart:math' show max, min; // OK
 export 'dart:math' show min, max; // LINT
+
+import 'dart:math' as m3 hide max, min; // OK
+import 'dart:math' as m4 hide min, max; // LINT
+
+export 'dart:math' hide max, min; // OK
+export 'dart:math' hide min, max; // LINT
