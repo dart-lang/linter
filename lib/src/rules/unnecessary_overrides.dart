@@ -148,11 +148,6 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
       for (var annotation in metadata) {
         if (annotation.isOverride) continue;
         if (annotation.isProtected && _inheritedMethod.hasProtected) continue;
-        // TODO(srawlins): The above check probably holds for any annotation
-        // which has a private constructor. That is, overriding
-        // `@visibleForTesting` with `@visibleForTesting` does not add value,
-        // but overriding `@Deprecated("one reason")` with
-        // `@Deprecated("another reason")` may.
 
         // Any other annotation implies a meaningful override.
         return true;
