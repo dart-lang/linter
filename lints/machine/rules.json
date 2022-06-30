@@ -2030,7 +2030,7 @@
       "recommended",
       "flutter"
     ],
-    "details": "\n**DON'T** override a method to do a super method invocation with same parameters.\n\n**BAD:**\n```dart\nclass A extends B {\n  @override\n  void foo() {\n    super.foo();\n  }\n}\n```\n\n**GOOD:**\n```dart\nclass A extends B {\n  @override\n  void foo() {\n    doSomethingElse();\n  }\n}\n```\n\nIt's valid to override a member in the following cases:\n\n* if a type (return type or a parameter type) is not the exactly the same as the\nsuper method,\n* if the `covariant` keyword is added to one of the parameters,\n* if documentation comments are present on the member,\n* if the member has annotations other than `@override`.\n\n`noSuchMethod` is a special method and is not checked by this rule.\n\n"
+    "details": "\n**DON'T** override a method to do a super method invocation with same parameters.\n\n**BAD:**\n```dart\nclass A extends B {\n  @override\n  void foo() {\n    super.foo();\n  }\n}\n```\n\n**GOOD:**\n```dart\nclass A extends B {\n  @override\n  void foo() {\n    doSomethingElse();\n  }\n}\n```\n\nIt's valid to override a member in the following cases:\n\n* if a type (return type or a parameter type) is not the exactly the same as the\n  super member,\n* if the `covariant` keyword is added to one of the parameters,\n* if documentation comments are present on the member,\n* if the member has annotations other than `@override`,\n* if the member is not annotated with `@protected`, and the super member is.\n\n`noSuchMethod` is a special method and is not checked by this rule.\n\n"
   },
   {
     "name": "unnecessary_parenthesis",

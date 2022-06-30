@@ -49,10 +49,11 @@
 <p>It's valid to override a member in the following cases:</p>
 <ul>
 <li>if a type (return type or a parameter type) is not the exactly the same as the
-super method,</li>
+super member,</li>
 <li>if the <code>covariant</code> keyword is added to one of the parameters,</li>
 <li>if documentation comments are present on the member,</li>
-<li>if the member has annotations other than <code>@override</code>.</li>
+<li>if the member has annotations other than <code>@override</code>,</li>
+<li>if the member is not annotated with <code>@protected</code>, and the super member is.</li>
 </ul>
 <p><code>noSuchMethod</code> is a special method and is not checked by this rule.</p>
 
