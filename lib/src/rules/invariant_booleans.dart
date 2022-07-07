@@ -111,7 +111,7 @@ class InvariantBooleans extends LintRule {
             name: 'invariant_booleans',
             description: _desc,
             details: _details,
-	    maturity: Maturity.deprecated,
+            maturity: Maturity.deprecated,
             group: Group.errors);
 
   @override
