@@ -14,7 +14,7 @@
          <header>
             <h1>invariant_booleans</h1>
             <p>Group: errors</p>
-            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
+            <p>Maturity: <span style="color:orangered;font-weight:bold;" >deprecated</span></p>
             <div class="tooltip">
                <p>Linter v0.1.25</p>
                <span class="tooltip-content">Since info is static, may be stale</span>
@@ -29,7 +29,9 @@
          </header>
          <section>
 
-            <p><strong>DON'T</strong> test for conditions that can be inferred at compile time or test the
+            <p><strong>DEPRECATED:</strong> This rule is unmaintained and will be removed in a future Linter
+release.</p>
+<p><strong>DON'T</strong> test for conditions that can be inferred at compile time or test the
 same condition twice.</p>
 <p>Conditional statements using a condition which cannot be anything but <code>false</code>
 have the effect of making blocks of code non-functional.  If the condition
