@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r' ';
+const _desc = r'';
 
 const _details = r'''
 
