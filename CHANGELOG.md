@@ -7,8 +7,6 @@
 - fixed false positive for `prefer_final_locals` reporting on fields
 - fixed `unnecessary_overrides` to allow overrides on `@Protected`
   members
-- fixed `unnecessary_parenthesis` false positives on map and set
-  literal at the beginning of expressions
 - fixed `avoid_multiple_declarations_per_line` false positive in
   `for` statements
 - fixed `prefer_final_locals` false positive on declaration lists
