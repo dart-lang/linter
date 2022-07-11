@@ -32,26 +32,10 @@
             <p>When building collections, it is preferable to use <code>if</code> elements rather than
 conditionals.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">Widget build(BuildContext context) {
-  return Row(
-    children: [
-      IconButton(icon: Icon(Icons.menu)),
-      Expanded(child: title),
-      isAndroid ? IconButton(icon: Icon(Icons.search)) : null,
-    ].where((child) =&gt; child != null).toList(),
-  );
-}
+<pre><code class="language-dart">var list = ['a', 'b', condition ? 'c' : null].where((e) =&gt; e != null).toList();
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">Widget build(BuildContext context) {
-  return Row(
-    children: [
-      IconButton(icon: Icon(Icons.menu)),
-      Expanded(child: title),
-      if (isAndroid) IconButton(icon: Icon(Icons.search)),
-    ]
-  );
-}
+<pre><code class="language-dart">var list = ['a', 'b', if (condition) 'c'];
 </code></pre>
 
             
