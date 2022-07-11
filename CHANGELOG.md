@@ -1,5 +1,6 @@
 # 1.26.0
 
+- new lint: `combinators_ordering`
 - fixed `use_colored_box` and `use_decorated_box` to not over-report
   on containers without a child
 - fixed false positive for `unnecessary_parenthesis` on a map-or-set
