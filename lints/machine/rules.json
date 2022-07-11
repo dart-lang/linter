@@ -870,6 +870,15 @@
     "details": "\nDon't cast a nullable value to a non nullable type. This hides a null check\nand most of the time it is not what is expected.\n\n**BAD:**\n```dart\nclass A {}\nclass B extends A {}\n\nA? a;\nvar v = a as B;\nvar v = a as A;\n```\n\n**GOOD:**\n```dart\nclass A {}\nclass B extends A {}\n\nA? a;\nvar v = a! as B;\nvar v = a!;\n```\n\n"
   },
   {
+    "name": "combinators_ordering",
+    "description": "Sort combinator names alphabetically.",
+    "group": "style",
+    "maturity": "stable",
+    "incompatible": [],
+    "sets": [],
+    "details": "\n**DO** sort combinator names alphabetically.\n\n**BAD:**\n```dart\nimport 'a.dart' show B, A hide D, C;\nexport 'a.dart' show B, A hide D, C;\n```\n\n**GOOD:**\n```dart\nimport 'a.dart' show A, B hide C, D;\nexport 'a.dart' show A, B hide C, D;\n```\n\n"
+  },
+  {
     "name": "conditional_uri_does_not_exist",
     "description": "Missing conditional import.",
     "group": "style",
