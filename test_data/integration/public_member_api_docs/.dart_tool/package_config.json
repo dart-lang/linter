@@ -1,0 +1,14 @@
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "public_member_api_docs",
+      "rootUri": "../",
+      "packageUri": "lib/",
+      "languageVersion": "2.13"
+    }
+  ],
+  "generated": "2022-07-07T14:16:50.175540Z",
+  "generator": "pub",
+  "generatorVersion": "2.18.0-216.0.dev"
+}
