@@ -12,7 +12,7 @@ class A {
 var j = 0;
 
 class B1 extends A {
-  int get i => ++j + super.i; //L INT
+  int get i => ++j + super.i; //LINT
   B1(super.i);
 }
 
