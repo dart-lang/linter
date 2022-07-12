@@ -41,6 +41,7 @@ var j = 0;
 
 class B1 extends A {
   int get i => ++j + super.i; // LINT.
+  B1(super.i);
 }
 
 class B2 implements A {
@@ -51,17 +52,18 @@ class B2 implements A {
 
 **GOOD:**
 ```dart
-class A {
+class C {
   final int i;
-  A(this.i);
+  C(this.i);
 }
 
-class B1 implements A {
+class D1 implements C {
   late final int i = someExpression; // OK.
 }
 
-class B2 extends A {
+class D2 extends C {
   int get i => super.i + 1; // OK.
+  D2(super.i);
 }
 ```
 
@@ -94,6 +96,11 @@ bool _requiresStability(Element element) {
 abstract class _AbstractVisitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   final LinterContext context;
+
+  // Will be false initially when a getter body is traversed. Will be made
+  // true if the getter body turns out to be stable. Is checked after the
+  // traversal of the body, ot emit a lint if it is still false at that time.
+  bool isStable = false;
 
   // Initialized in `visitMethodDeclaration` if a lint might be emitted.
   // It is then guaranteed that `declaration.isGetter` is true.
@@ -160,6 +167,7 @@ class _MethodVisitor extends _AbstractVisitor {
     if (declaredElement != null) {
       if (!_requiresStability(declaredElement)) return;
       node.body.accept(this);
+      if (!isStable) rule.reportLint(node.name);
     }
   }
 }
@@ -170,6 +178,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule, this.context);
 
+  bool _doDebug(FieldElement fieldElement) { // DEBUG
+    throw fieldElement.name; // DEBUG
+    return fieldElement.name == 'i';
+  }
+
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     assert(!node.isStatic);
@@ -179,6 +192,9 @@ class _Visitor extends SimpleAstVisitor<void> {
     for (var variable in node.fields.variables) {
       var declaredElement = variable.declaredElement;
       if (declaredElement is FieldElement) {
+        if (_doDebug(declaredElement)) {
+          throw '>>> Debugging!';
+        }
         // A final instance variable can never violate stability.
         if (declaredElement.isFinal) continue;
         // A non-final instance variable is always a violation of stability.
