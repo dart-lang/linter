@@ -15,8 +15,11 @@ const _desc = 'Unused top-level members in executable libraries.';
 const _details = r'''
 
 Top-level members in an executable library should be used directly inside this
-library. Executable library are usually never used as dependency and it's better
-to avoid defining unused members.
+library. Executable libraries are usually never used as dependency and it's
+better to avoid defining unused members.
+
+This rule assumes that an executable library shouldn't be imported by other
+files except to execute its `main` function.
 
 **BAD:**
 
@@ -32,7 +35,7 @@ main() {
   f();
 }
 void f() {}
-``
+```
 
 ''';
 
@@ -66,8 +69,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.directives.whereType<PartOfDirective>().isNotEmpty) return;
     if (node.directives.whereType<PartDirective>().isNotEmpty) return;
 
-    if (!_isInsideExecutableLibrary(node)) return;
-
     var topDeclarations = node.declarations
         .expand((e) => [
               if (e is TopLevelVariableDeclaration)
@@ -76,6 +77,8 @@ class _Visitor extends SimpleAstVisitor<void> {
                 e,
             ])
         .toSet();
+
+    if (!topDeclarations.any(_isEntryPoint)) return;
 
     var declarationByElement = <Element, Declaration>{};
     for (var declaration in topDeclarations) {
@@ -118,9 +121,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     while (toTraverse.isNotEmpty) {
       var declaration = toTraverse.removeLast();
       for (var dep in dependencies[declaration]!) {
-        if (!usedMembers.contains(dep)) {
-          usedMembers.add(dep);
-          if (!toTraverse.contains(dep)) toTraverse.add(dep);
+        if (usedMembers.add(dep)) {
+          toTraverse.add(dep);
         }
       }
     }
@@ -160,13 +162,5 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     }
     return false;
-  }
-
-  bool _isInsideExecutableLibrary(AstNode node) {
-    var root = node.root;
-    if (root is! CompilationUnit) return false;
-    var library = root.declaredElement?.library;
-    return library != null &&
-        library.exportNamespace.definedNames.containsKey('main');
   }
 }
