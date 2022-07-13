@@ -153,3 +153,11 @@ class F14 implements E {
   F14 get o => F14(jTop); //LINT
   F14(int whatever);
 }
+
+class F15 implements E {
+  String get o => 'Something $cNever, and ${1 + 1} more things'; //OK
+}
+
+class F16 implements E {
+  String get o => 'Stuff, $cNever, but not $jTop'; //LINT
+}

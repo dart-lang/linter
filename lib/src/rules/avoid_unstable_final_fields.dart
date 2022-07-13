@@ -164,13 +164,19 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
-    // TODO(eernst): Stable if the right hand side is stable.
-    isStable = false;
+    var operator = node.operator;
+    if (operator.type != TokenType.EQ) {
+      // TODO(eernst): Could a compound assignment be stable?
+      isStable = false;
+    } else {
+      // A regular assignment is stable iff its right hand side is stable.
+      node.rightHandSide.accept(this);
+    }
   }
 
   @override
   void visitAwaitExpression(AwaitExpression node) {
-    // TODO(eernst): Double check, could it be stable?
+    // We cannot predict the outcome of awaiting a future.
     isStable = false;
   }
 
@@ -287,8 +293,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitInterpolationExpression(InterpolationExpression node) {
-    // TODO(eernst): Wc could handle several cases here.
-    isStable = false;
+    node.expression.accept(this);
   }
 
   @override
@@ -327,7 +332,6 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitPostfixExpression(PostfixExpression node) {
-    print('>>> PostFixExpression, $node');
     // `x.y?.z` is handled in [visitPropertyAccess], this is only about
     // `<assignableExpression> <postfixOperator>`, and they are not stable.
     isStable = false;
@@ -365,9 +369,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitRethrowExpression(RethrowExpression node) {
-    // TODO(eernst): We wouldn't see this, right?
-    // If that is true then there is nothing to do.
-    isStable = false;
+    // Throws, cannot be unstable.
   }
 
   @override
@@ -391,6 +393,16 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   @override
   void visitSimplStringLiteral(SimpleStringLiteral node) {
     // No interpolations: Keep it stable!
+  }
+
+  @override
+  void visitStringInterpolation(StringInterpolation node) {
+    var interpolationElements = node.elements;
+    for (var interpolationElement in interpolationElements) {
+      if (interpolationElement is InterpolationExpression) {
+        interpolationElement.expression.accept(this);
+      }
+    }
   }
 
   @override
