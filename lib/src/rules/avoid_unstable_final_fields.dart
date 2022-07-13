@@ -187,21 +187,49 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
     if (isStable) {
       // So far no problems! Only a few cases are working,
       // see if we have one of those.
-      if (node.operator.type == TokenType.PLUS) {
-        var dartType = node.leftOperand.staticType;
-        if (dartType != null) {
-          if (dartType.isDartCoreInt ||
-              dartType.isDartCoreDouble ||
-              dartType.isDartCoreString) {
-            // These are all stable.
-            return;
-          }
-          // "Other" cases must be assumed to be unstable.
-          isStable = false;
+      var operatorType = node.operator.type;
+      var leftType = node.leftOperand.staticType;
+      if (leftType == null) {
+        isStable = false; // Presumably a wrong program. Be safe.
+        return;
+      }
+      if (operatorType == TokenType.PLUS) {
+        if (leftType.isDartCoreInt ||
+            leftType.isDartCoreDouble ||
+            leftType.isDartCoreString) {
+          // These are all stable.
+          return;
         } else {
+          // A user-defined `+` cannot be assumed to be stable.
           isStable = false;
         }
+      } else if (operatorType == TokenType.EQ_EQ || operatorType == TokenType.BANG_EQ) {
+        // Equality/inequality of two stable expressions is stable.
+        return;
+      } else if (operatorType == TokenType.AMPERSAND_AMPERSAND || operatorType == TokenType.BAR_BAR) {
+        // Logical and/or cannot be user-defined, is stable.
+        return;
+      } else if (operatorType == TokenType.MINUS ||
+          operatorType == TokenType.STAR ||
+          operatorType == TokenType.SLASH ||
+          operatorType == TokenType.PERCENT ||
+          operatorType == TokenType.LT ||
+          operatorType == TokenType.LT_EQ ||
+          operatorType == TokenType.GT ||
+          operatorType == TokenType.GT_EQ) {
+        if (leftType.isDartCoreInt || leftType.isDartCoreDouble) {
+          // Primitive arithmetic operations and relations are stable.
+          return;
+        } else {
+          // A user-defined operator can not be assumed to be stable.
+          isStable = false;
+        }
+      } else if (operatorType == TokenType.QUESTION_QUESTION) {
+        // An if-null expression with stable operands is stable.
+        return;
       }
+      // TODO(eernst): Add support for missing cases, if any.
+      isStable = false;
     }
   }
 
@@ -298,9 +326,12 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitIsExpression(IsExpression node) {
-    // TODO(eernst): Surely we can recognize a stable expression tested for
-    // a compile-time constant type, that would be stable.
-    isStable = false;
+    // Testing `e is T` where `e` is stable depends on `T`. However, there is
+    // no `<type>` that denotes two different types in the context of the same
+    // receiver (so class type variables represent the same type each time this
+    // getter is invoked, and we can't have member type variables in a getter).
+    // Hence, we just need to check that `e` is stable.
+    node.expression.accept(this);
   }
 
   @override

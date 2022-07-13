@@ -161,3 +161,11 @@ class F15 implements E {
 class F16 implements E {
   String get o => 'Stuff, $cNever, but not $jTop'; //LINT
 }
+
+class F17 implements E {
+  bool get o => this is E; //OK
+}
+
+class F18 implements E {
+  bool get o => jTop is int; //LINT
+}
