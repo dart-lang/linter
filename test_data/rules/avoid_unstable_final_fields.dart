@@ -140,12 +140,16 @@ class F11<X> implements E {
   Type get o => X; //LINT
 }
 
-class F12 implements E {
-  F12 get o => const F12(42); //OK
-  const F12(int whatever);
+class F12<X> implements E {
+  Type get o => F12<X>; //LINT
 }
 
 class F13 implements E {
-  F13 get o => F13(jTop); //LINT
-  F13(int whatever);
+  F13 get o => const F13(42); //OK
+  const F13(int whatever);
+}
+
+class F14 implements E {
+  F14 get o => F14(jTop); //LINT
+  F14(int whatever);
 }

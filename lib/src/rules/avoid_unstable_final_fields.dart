@@ -286,7 +286,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitInterpolationExpression(InterpolationExpression node) {
-    // TODO(eernst): Wc eould handle several cases here.
+    // TODO(eernst): Wc could handle several cases here.
     isStable = false;
   }
 
@@ -319,6 +319,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitPostfixExpression(PostfixExpression node) {
+    print('>>> PostFixExpression, $node');
     // TODO(eernst): `x.y?.z` is property accesses, so always unstable here?
     isStable = false;
   }
