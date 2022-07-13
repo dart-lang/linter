@@ -21,16 +21,32 @@ class B2 implements A {
   B2(this.i);
 }
 
-class C {
-  final int i;
-  C(this.i);
-}
-
-class D1 implements C {
+class B3 implements A {
   late final int i = j++; //OK
 }
 
-class D2 extends C {
+class B4 extends A {
   int get i => super.i + 1; //OK
-  D2(super.i);
+  B4(super.i);
+}
+
+class B5 implements A {
+  final int j;
+  int get i => j; //OK
+  B5(this.j);
+}
+
+class B6 implements A {
+  int get i => 1; //OK
+}
+
+class C<X> {
+  final C<X>? next;
+  C(this.next);
+}
+
+C<Never> cNever = C<Never>(null);
+
+class D1<X> implements C<X> {
+  final C<X>? next => cNever;
 }
