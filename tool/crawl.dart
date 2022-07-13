@@ -24,8 +24,8 @@ Map<String, String?> _dartSdkToLinterMap = <String, String?>{};
 
 final _flutterOptionsUrl = Uri.https('raw.githubusercontent.com',
     '/flutter/packages/main/packages/flutter_lints/lib/flutter.yaml');
-final _flutterRepoOptionsUrl = Uri.https('raw.githubusercontent.com',
-    '/flutter/flutter/main/analysis_options.yaml');
+final _flutterRepoOptionsUrl = Uri.https(
+    'raw.githubusercontent.com', '/flutter/flutter/main/analysis_options.yaml');
 
 List<String>? _flutterRepoRules;
 
