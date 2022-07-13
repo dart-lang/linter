@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
@@ -402,6 +403,38 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   @override
   void visitThrowExpression(ThrowExpression node) {
     // Keep it stable!
+  }
+
+  @override
+  void visitTypeLiteral(TypeLiteral node) {
+    bool containsNonConstantType(TypeAnnotation? typeAnnotation) {
+      if (typeAnnotation == null) return false;
+      if (typeAnnotation is NamedType) {
+        var typeArguments = typeAnnotation.typeArguments;
+        if (typeArguments != null) {
+          for (var typeArgument in typeArguments.arguments) {
+            if (containsNonConstantType(typeArgument)) return true;
+          }
+        }
+        var element = typeAnnotation.type?.element?.declaration;
+        if (element is ClassElement) return false;
+        if (element is TypeParameterElement) return true;
+        // TODO(eernst): Handle `typedef` and other missing cases.
+        return true;
+      } else if (typeAnnotation is GenericFunctionType) {
+        // TODO(eernst): For now, just use the safe approximation.
+        return true;
+      } else {
+        // TODO(eernst): Further cases?
+        return true;
+      }
+    }
+
+    print('>>> TypeLiteral, $node, $dartType'); // DEBUG
+    var namedType = node.type;
+    if (containsNonConstantType(namedType)) {
+      isStable = false;
+    }
   }
 }
 
