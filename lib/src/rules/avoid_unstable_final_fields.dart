@@ -264,7 +264,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
-    // We cannot expect a function invocation to be stable, no matter what.
+    // We cannot expect a function invocation to be stable.
     isStable = false;
   }
 
@@ -304,6 +304,13 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   }
 
   @override
+  void visitMethodInvocation(MethodInvocation node) {
+    // We could have a notion of pure functions, but for now a
+    // method invocation is never stable.
+    isStable = false;
+  }
+
+  @override
   void visitNamedExpression(NamedExpression node) {
     node.expression.accept(this);
   }
@@ -321,7 +328,8 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   @override
   void visitPostfixExpression(PostfixExpression node) {
     print('>>> PostFixExpression, $node');
-    // TODO(eernst): `x.y?.z` is property accesses, so always unstable here?
+    // `x.y?.z` is handled in [visitPropertyAccess], this is only about
+    // `<assignableExpression> <postfixOperator>`, and they are not stable.
     isStable = false;
   }
 
@@ -407,6 +415,12 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitTypeLiteral(TypeLiteral node) {
+    // A type literal can contain a type parameter of the enclosing class
+    // (in a getter it can't be a type parameter of the member). This means
+    // that it denotes the same type each time it is evaluated on the same
+    // receiver, but it may still be a different object. So we need to exclude
+    // type literals that contain type variables.
+
     bool containsNonConstantType(TypeAnnotation? typeAnnotation) {
       if (typeAnnotation == null) return false;
       if (typeAnnotation is NamedType) {
@@ -418,7 +432,12 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
         }
         var element = typeAnnotation.type?.element?.declaration;
         if (element is ClassElement) return false;
-        if (element is TypeParameterElement) return true;
+        if (element is TypeParameterElement) {
+          var owner = element.enclosingElement;
+          // A class type parameter is not constant, but it is stable.
+          if (owner is ClassElement) return false;
+          return true;
+        }
         // TODO(eernst): Handle `typedef` and other missing cases.
         return true;
       } else if (typeAnnotation is GenericFunctionType) {

@@ -141,7 +141,7 @@ class F11<X> implements E {
 }
 
 class F12<X> implements E {
-  Type get o => F12<X>; //LINT
+  Type get o => F12<X>; //OK
 }
 
 class F13 implements E {
