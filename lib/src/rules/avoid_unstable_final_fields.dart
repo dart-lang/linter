@@ -425,16 +425,12 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
         // TODO(eernst): For now, just use the safe approximation.
         return true;
       } else {
-        // TODO(eernst): Further cases?
+        // TODO(eernst): Add missing cases. Be safe for now.
         return true;
       }
     }
 
-    print('>>> TypeLiteral, $node, $dartType'); // DEBUG
-    var namedType = node.type;
-    if (containsNonConstantType(namedType)) {
-      isStable = false;
-    }
+    if (containsNonConstantType(node.type)) isStable = false;
   }
 }
 
