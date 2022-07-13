@@ -85,40 +85,57 @@ class AvoidUnstableFinalFields extends LintRule {
   }
 }
 
-bool _requiresStability(
+bool _isLocallyStable(Element element) {
+  if (element is PropertyAccessorElement &&
+      element.isSynthetic &&
+      element.correspondingSetter == null) {
+    // This is a final, non-local variable, and they are stable.
+    return true;
+  } else if (element is FunctionElement) {
+    // A tear-off of a top-level function or static method is stable,
+    // local functions and function literals are not.
+    return element.isStatic;
+  } else if (element is ClassElement) {
+    // A reified type of a class is stable.
+    return true;
+  } else if (element is MethodElement) {
+    // An instance method tear-off is never stable.
+    return false;
+  }
+  // TODO(eernst): Any cases still missing?
+  return false;
+}
+
+bool _inheritsStability(
     ClassElement classElement, Name name, LinterContext context) {
-  // In this first approximation of 'final getters', no other situation
-  // can make a getter stable than being the implicitly induced getter
-  // of a final instance variable.
   var overriddenList =
       context.inheritanceManager.getOverridden2(classElement, name);
   if (overriddenList == null) return false;
   for (var overridden in overriddenList) {
-    if (overridden is PropertyAccessorElement &&
-        overridden.isSynthetic &&
-        overridden.correspondingSetter == null) {
-      return true;
-    }
+    if (_isLocallyStable(overridden)) return true;
   }
   return false;
 }
 
-bool _isStable(PropertyAccessorElement propertyAccessorElement, LinterContext context) {
-  var classElement = propertyAccessorElement.enclosingElement;
-  assert(propertyAccessorElement.isGetter);
-  if (propertyAccessorElement.isSynthetic && propertyAccessorElement.correspondingSetter == null) {
-    return true;
+bool _isStable(Element? element, LinterContext context) {
+  if (element == null) return false; // This would be an error in the program.
+  var enclosingElement = element.enclosingElement;
+  if (_isLocallyStable(element)) return true;
+  if (element is PropertyAccessorElement) {
+    if (element.isStatic) return false;
+    if (enclosingElement is! ClassElement) {
+      // This should not happen, a top-level variable `isStatic`.
+      // TODO(eernst): Do something like `throw Unhandled(...)`.
+      return false;
+    }
+    var libraryUri = element.library.source.uri;
+    var name = Name(libraryUri, element.name);
+    return _inheritsStability(enclosingElement, name, context);
   }
-  if (classElement is! ClassElement) {
-    // This should not happen.
-    return false;
-  }
-  var libraryUri = propertyAccessorElement.library.source.uri;
-  var name = Name(libraryUri, propertyAccessorElement.name);
-  return _requiresStability(classElement, name, context);
+  return false;
 }
 
-abstract class _AbstractVisitor extends SimpleAstVisitor<void> {
+abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   final LintRule rule;
   final LinterContext context;
 
@@ -166,7 +183,9 @@ abstract class _AbstractVisitor extends SimpleAstVisitor<void> {
       if (node.operator.type == TokenType.PLUS) {
         var dartType = node.leftOperand.staticType;
         if (dartType != null) {
-          if (dartType.isDartCoreInt || dartType.isDartCoreDouble || dartType.isDartCoreString) {
+          if (dartType.isDartCoreInt ||
+              dartType.isDartCoreDouble ||
+              dartType.isDartCoreString) {
             // These are all stable.
             return;
           }
@@ -203,15 +222,26 @@ abstract class _AbstractVisitor extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitBooleanLiteral(BooleanLiteral node) {
+    // Keep it stable!
+  }
+
+  @override
   void visitCascadeExpression(CascadeExpression node) {
     // A cascade is stable if its target is stable.
     node.target.accept(this);
   }
 
   @override
-  visitConditionalExpression(ConditionalExpression node) {
-    // TODO(eernst): Stable if all parts are stable.
-    isStable = false;
+  void visitConditionalExpression(ConditionalExpression node) {
+    node.condition.accept(this);
+    node.thenExpression.accept(this);
+    node.elseExpression.accept(this);
+  }
+
+  @override
+  void visitDoubleLiteral(DoubleLiteral node) {
+    // Keep it stable!
   }
 
   @override
@@ -245,6 +275,16 @@ abstract class _AbstractVisitor extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    if (!node.isConst) isStable = false;
+  }
+
+  @override
+  void visitIntegerLiteral(IntegerLiteral node) {
+    // Keep it stable!
+  }
+
+  @override
   void visitInterpolationExpression(InterpolationExpression node) {
     // TODO(eernst): Wc eould handle several cases here.
     isStable = false;
@@ -258,8 +298,18 @@ abstract class _AbstractVisitor extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitListLiteral(ListLiteral node) {
+    if (!node.isConst) isStable = false;
+  }
+
+  @override
   void visitNamedExpression(NamedExpression node) {
     node.expression.accept(this);
+  }
+
+  @override
+  void visitNullLiteral(NullLiteral node) {
+    // Keep it stable!
   }
 
   @override
@@ -269,31 +319,37 @@ abstract class _AbstractVisitor extends SimpleAstVisitor<void> {
 
   @override
   void visitPostfixExpression(PostfixExpression node) {
-    // TODO(eernst): !!! This is the most important case.
+    // TODO(eernst): `x.y?.z` is property accesses, so always unstable here?
     isStable = false;
   }
 
   @override
   void visitPrefixExpression(PrefixExpression node) {
-    // TODO(eernst): Think about this one.
-    isStable = false;
+    if (node.operator.type == TokenType.MINUS) {
+      node.operand.accept(this);
+    } else {
+      isStable = false;
+    }
+  }
+
+  @override
+  void visitPrefixedIdentifier(PrefixedIdentifier node) {
+    var prefixDeclaration = node.prefix.staticElement?.declaration;
+    if (prefixDeclaration is PrefixElement) {
+      var declaredElement = node.identifier.staticElement?.declaration;
+      if (!_isStable(declaredElement, context)) isStable = false;
+    } else if (prefixDeclaration is ClassElement) {
+      var declaredElement = node.identifier.staticElement?.declaration;
+      if (!_isStable(declaredElement, context)) isStable = false;
+    }
   }
 
   @override
   void visitPropertyAccess(PropertyAccess node) {
     node.realTarget.accept(this);
     if (isStable) {
-      var element = node.propertyName.staticElement;
-      if (element == null) {
-        // TODO(eernst): When does this occur? Can it be stable?
-        isStable = false;
-        return;
-      }
-      if (element is PropertyAccessorElement) {
-        if (!_isStable(element, context)) {
-          isStable = false;
-        }
-      }
+      var element = node.propertyName.staticElement?.declaration;
+      if (!_isStable(element, context)) isStable = false;
     }
   }
 
@@ -310,8 +366,31 @@ abstract class _AbstractVisitor extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitSetOrMapLiteral(SetOrMapLiteral node) {
+    if (!node.isConst) isStable = false;
+  }
+
+  @override
+  void visitSimpleIdentifier(SimpleIdentifier node) {
+    var declaration = node.staticElement?.declaration;
+    if (!_isStable(declaration, context)) {
+      isStable = false;
+    }
+  }
+
+  @override
+  void visitSimplStringLiteral(SimpleStringLiteral node) {
+    // No interpolations: Keep it stable!
+  }
+
+  @override
   void visitSuperExpression(SuperExpression node) {
     // This is simply the keyword `super`: Keep it stable!
+  }
+
+  @override
+  void visitSymbolLiteral(SymbolLiteral node) {
+    // Keep it stable!
   }
 
   @override
@@ -339,7 +418,7 @@ class _MethodVisitor extends _AbstractVisitor {
       var classElement = declaredElement.enclosingElement as ClassElement;
       var libraryUri = declaredElement.library.source.uri;
       var name = Name(libraryUri, declaredElement.name);
-      if (!_requiresStability(classElement, name, context)) return;
+      if (!_inheritsStability(classElement, name, context)) return;
       node.body.accept(this);
       if (!isStable) rule.reportLint(node.name);
     }
@@ -354,7 +433,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    assert(!node.isStatic);
     Uri? libraryUri;
     Name? name;
     ClassElement? classElement;
@@ -368,7 +446,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         classElement ??= declaredElement.enclosingElement as ClassElement;
         libraryUri ??= declaredElement.library.source.uri;
         name ??= Name(libraryUri, declaredElement.name);
-        if (_requiresStability(classElement, name, context)) {
+        if (_inheritsStability(classElement, name, context)) {
           rule.reportLint(variable.name);
         }
       }

@@ -4,15 +4,17 @@
 
 // test w/ `dart test -N avoid_unstable_final_fields`
 
+import 'dart:math' as math;
+
 class A {
   final int i;
   A(this.i);
 }
 
-var j = 0;
+var jTop = 0;
 
 class B1 extends A {
-  int get i => ++j + super.i; //LINT
+  int get i => ++jTop + super.i; //LINT
   B1(super.i);
 }
 
@@ -22,7 +24,7 @@ class B2 implements A {
 }
 
 class B3 implements A {
-  late final int i = j++; //OK
+  late final int i = jTop++; //OK
 }
 
 class B4 extends A {
@@ -40,13 +42,110 @@ class B6 implements A {
   int get i => 1; //OK
 }
 
-class C<X> {
-  final C<X>? next;
-  C(this.next);
+class B7 implements A {
+  int get i { //OK
+    return 1;
+  }
 }
 
-C<Never> cNever = C<Never>(null);
+class B8 implements A {
+  int get i { //LINT
+    return jTop;
+  }
+}
+
+class B9 extends A {
+  int get i => -super.i; //OK
+  B9(super.i);
+}
+
+class B10 implements A {
+  final bool b;
+  final int j;
+  int get i => b ? j : 10; //OK
+  B10(this.b, this.j);
+}
+
+class B11 implements A {
+  bool b;
+  final int j;
+  int get i => b ? j : 10; //LINT
+  B11(this.b, this.j);
+}
+
+class C<X> {
+  final C<X>? next;
+  final C<X>? nextNext = null;
+  final X? value = null;
+  const C(this.next);
+}
+
+const cNever = C<Never>(null);
 
 class D1<X> implements C<X> {
-  final C<X>? next => cNever;
+  late X x;
+  C<X>? get next => cNever; //OK
+  C<X>? get nextNext => this.next?.next; //OK
+  X? get value => x; //LINT
+}
+
+class E {
+  final Object o;
+  E(this.o);
+}
+
+class F1 implements E {
+  Function get o => m; //LINT
+  void m() {}
+  static late final Function fStatic = () {};
+}
+
+class F2 implements E {
+  Function get o => () {}; //LINT
+}
+
+class F3 implements E {
+  Function get o => print..toString(); //OK
+}
+
+class F4 implements E {
+  Function get o => math.cos; //OK
+}
+
+class F5 implements E {
+  Function get o => F1.fStatic; //OK
+}
+
+class F6 implements E {
+  List<int> get o => []; //LINT
+}
+
+class F7 implements E {
+  Set<double> get o => const {}; //OK
+}
+
+class F8 implements E {
+  Object get o => <String, String>{}; //LINT
+}
+
+class F9 implements E {
+  Symbol get o => #symbol; //OK
+}
+
+class F10 implements E {
+  Type get o => int; //OK
+}
+
+class F11<X> implements E {
+  Type get o => X; //LINT
+}
+
+class F12 implements E {
+  F12 get o => const F12(42); //OK
+  const F12(int whatever);
+}
+
+class F13 implements E {
+  F13 get o => F13(jTop); //LINT
+  F13(int whatever);
 }
