@@ -93,6 +93,8 @@ final List<LintRule> rules =
 
 late Map<String, SinceInfo> sinceInfo;
 
+final Map<String, String> _fixStatusMap = <String, String>{};
+
 Future<String> get pedanticLatestVersion async {
   var url =
       'https://raw.githubusercontent.com/dart-lang/pedantic/master/lib/analysis_options.yaml';
@@ -149,8 +151,6 @@ Future<LintConfig?> fetchConfig(String url) async {
   var req = await client.get(Uri.parse(url));
   return processAnalysisOptionsFile(req.body);
 }
-
-final Map<String, String> _fixStatusMap = <String, String>{};
 
 Future<Map<String, String>> fetchFixStatusMap() async {
   if (_fixStatusMap.isNotEmpty) return _fixStatusMap;
@@ -215,7 +215,6 @@ Future<void> generateDocs(String? dir,
   await fetchSinceInfo(auth);
 
   var fixStatusMap = await fetchFixStatusMap();
-  print(fixStatusMap);
 
   // Generate rule files.
   for (var l in rules) {
@@ -306,6 +305,24 @@ class HtmlIndexer {
   final Map<String, String> fixStatusMap;
   HtmlIndexer(this.rules, this.fixStatusMap);
 
+  String get enumerateErrorRules => rules
+      .where((r) => r.group == Group.errors)
+      .map(toDescription)
+      .join('\n\n');
+
+  String get enumerateGroups => Group.builtin
+      .map((Group g) =>
+          '<li><strong>${g.name} -</strong> ${markdownToHtml(g.description)}</li>')
+      .join('\n');
+
+  String get enumeratePubRules =>
+      rules.where((r) => r.group == Group.pub).map(toDescription).join('\n\n');
+
+  String get enumerateStyleRules => rules
+      .where((r) => r.group == Group.style)
+      .map(toDescription)
+      .join('\n\n');
+
   void generate(String? filePath) {
     var generated = _generate();
     if (filePath != null) {
@@ -316,6 +333,9 @@ class HtmlIndexer {
       print(generated);
     }
   }
+
+  String toDescription(LintRule r) =>
+      '<!--suppress HtmlUnknownTarget --><strong><a href = "${r.name}.html">${qualify(r)}</a></strong><br/> ${getBadges(r.name, fixStatusMap[r.name])} ${markdownToHtml(r.description)}';
 
   String _generate() => '''
 <!DOCTYPE html>
@@ -374,27 +394,6 @@ class HtmlIndexer {
    </body>
 </html>
 ''';
-
-  String get enumerateErrorRules => rules
-      .where((r) => r.group == Group.errors)
-      .map(toDescription)
-      .join('\n\n');
-
-  String get enumerateGroups => Group.builtin
-      .map((Group g) =>
-          '<li><strong>${g.name} -</strong> ${markdownToHtml(g.description)}</li>')
-      .join('\n');
-
-  String get enumeratePubRules =>
-      rules.where((r) => r.group == Group.pub).map(toDescription).join('\n\n');
-
-  String get enumerateStyleRules => rules
-      .where((r) => r.group == Group.style)
-      .map(toDescription)
-      .join('\n\n');
-
-  String toDescription(LintRule r) =>
-      '<!--suppress HtmlUnknownTarget --><strong><a href = "${r.name}.html">${qualify(r)}</a></strong><br/> ${getBadges(r.name, fixStatusMap[r.name])} ${markdownToHtml(r.description)}';
 }
 
 class MachineSummaryGenerator {
