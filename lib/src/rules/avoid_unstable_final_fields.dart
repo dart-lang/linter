@@ -6,6 +6,8 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/diagnostic/diagnostic.dart';
+import 'package:analyzer/src/diagnostic/diagnostic.dart';
 
 import '../analyzer.dart';
 
@@ -106,35 +108,6 @@ bool _isLocallyStable(Element element) {
   return false;
 }
 
-bool _inheritsStability(
-    ClassElement classElement, Name name, LinterContext context) {
-  var overriddenList =
-      context.inheritanceManager.getOverridden2(classElement, name);
-  if (overriddenList == null) return false;
-  for (var overridden in overriddenList) {
-    if (_isLocallyStable(overridden)) return true;
-  }
-  return false;
-}
-
-bool _isStable(Element? element, LinterContext context) {
-  if (element == null) return false; // This would be an error in the program.
-  var enclosingElement = element.enclosingElement;
-  if (_isLocallyStable(element)) return true;
-  if (element is PropertyAccessorElement) {
-    if (element.isStatic) return false;
-    if (enclosingElement is! ClassElement) {
-      // This should not happen, a top-level variable `isStatic`.
-      // TODO(eernst): Do something like `throw Unhandled(...)`.
-      return false;
-    }
-    var libraryUri = element.library.source.uri;
-    var name = Name(libraryUri, element.name);
-    return _inheritsStability(enclosingElement, name, context);
-  }
-  return false;
-}
-
 abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   final LintRule rule;
   final LinterContext context;
@@ -144,11 +117,47 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   // traversal of the body, ot emit a lint if it is still false at that time.
   bool isStable = true;
 
+  // Each [MethodDeclaration] which is causing the lint to be reported is added
+  // to this list, which is then used to create context messages.
+  var causes = <PropertyAccessorElement>{};
+
   // Initialized in `visitMethodDeclaration` if a lint might be emitted.
   // It is then guaranteed that `declaration.isGetter` is true.
   late final MethodDeclaration declaration;
 
   _AbstractVisitor(this.rule, this.context);
+
+  bool _inheritsStability(
+      ClassElement classElement, Name name, LinterContext context) {
+    var overriddenList =
+        context.inheritanceManager.getOverridden2(classElement, name);
+    if (overriddenList == null) return false;
+    for (var overridden in overriddenList) {
+      if (_isLocallyStable(overridden)) {
+        if (overridden is PropertyAccessorElement) causes.add(overridden);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool _isStable(Element? element, LinterContext context) {
+    if (element == null) return false; // This would be an error in the program.
+    var enclosingElement = element.enclosingElement;
+    if (_isLocallyStable(element)) return true;
+    if (element is PropertyAccessorElement) {
+      if (element.isStatic) return false;
+      if (enclosingElement is! ClassElement) {
+        // This should not happen, a top-level variable `isStatic`.
+        // TODO(eernst): Do something like `throw Unhandled(...)`.
+        return false;
+      }
+      var libraryUri = element.library.source.uri;
+      var name = Name(libraryUri, element.name);
+      return _inheritsStability(enclosingElement, name, context);
+    }
+    return false;
+  }
 
   // The following visitor methods will only be executed in the situation
   // where `declaration` is a getter which must be stable, and the
@@ -202,10 +211,12 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
           // A user-defined `+` cannot be assumed to be stable.
           isStable = false;
         }
-      } else if (operatorType == TokenType.EQ_EQ || operatorType == TokenType.BANG_EQ) {
+      } else if (operatorType == TokenType.EQ_EQ ||
+          operatorType == TokenType.BANG_EQ) {
         // Equality/inequality of two stable expressions is stable.
         return;
-      } else if (operatorType == TokenType.AMPERSAND_AMPERSAND || operatorType == TokenType.BAR_BAR) {
+      } else if (operatorType == TokenType.AMPERSAND_AMPERSAND ||
+          operatorType == TokenType.BAR_BAR) {
         // Logical and/or cannot be user-defined, is stable.
         return;
       } else if (operatorType == TokenType.MINUS ||
@@ -236,13 +247,14 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   void visitBlock(Block node) {
     // TODO(eernst): Check that only one return statement exists, and it is
     // the last statement in the body, and it returns a stable expression.
-    if (node.statements.length == 1) {
+    if (node.statements.length == 0) {
+      // This getter returns null, keep it stable.
+    } else if (node.statements.length == 1) {
       var statement = node.statements.first;
       if (statement is ReturnStatement) {
         statement.accept(this);
       } else {
-        // TODO(eernst): Detect further cases where stability holds.
-        isStable = false;
+        // This getter returns null or throws, keep it stable.
       }
     } else {
       // TODO(eernst): Allow multiple statements, just check returns.
@@ -257,7 +269,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitBooleanLiteral(BooleanLiteral node) {
-    // Keep it stable!
+    // Keep it stable.
   }
 
   @override
@@ -275,7 +287,12 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitDoubleLiteral(DoubleLiteral node) {
-    // Keep it stable!
+    // Keep it stable.
+  }
+
+  @override
+  void visitEmptyFunctionBody(EmptyFunctionBody node) {
+    // Returns null: keep it stable.
   }
 
   @override
@@ -315,7 +332,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitIntegerLiteral(IntegerLiteral node) {
-    // Keep it stable!
+    // Keep it stable.
   }
 
   @override
@@ -352,7 +369,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitNullLiteral(NullLiteral node) {
-    // Keep it stable!
+    // Keep it stable.
   }
 
   @override
@@ -422,7 +439,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitSimplStringLiteral(SimpleStringLiteral node) {
-    // No interpolations: Keep it stable!
+    // No interpolations: Keep it stable.
   }
 
   @override
@@ -437,22 +454,22 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitSuperExpression(SuperExpression node) {
-    // This is simply the keyword `super`: Keep it stable!
+    // This is simply the keyword `super`: Keep it stable.
   }
 
   @override
   void visitSymbolLiteral(SymbolLiteral node) {
-    // Keep it stable!
+    // Keep it stable.
   }
 
   @override
   void visitThisExpression(ThisExpression node) {
-    // Keep it stable!
+    // Keep it stable.
   }
 
   @override
   void visitThrowExpression(ThrowExpression node) {
-    // Keep it stable!
+    // Keep it stable.
   }
 
   @override
@@ -495,32 +512,8 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   }
 }
 
-class _MethodVisitor extends _AbstractVisitor {
-  late MethodDeclaration declaration;
-
-  _MethodVisitor(super.rule, super.context);
-
-  @override
-  void visitMethodDeclaration(MethodDeclaration node) {
-    if (!node.isGetter) return;
-    declaration = node;
-    var declaredElement = node.declaredElement;
-    if (declaredElement != null) {
-      var classElement = declaredElement.enclosingElement as ClassElement;
-      var libraryUri = declaredElement.library.source.uri;
-      var name = Name(libraryUri, declaredElement.name);
-      if (!_inheritsStability(classElement, name, context)) return;
-      node.body.accept(this);
-      if (!isStable) rule.reportLint(node.name);
-    }
-  }
-}
-
-class _Visitor extends SimpleAstVisitor<void> {
-  final LintRule rule;
-  final LinterContext context;
-
-  _Visitor(this.rule, this.context);
+class _FieldVisitor extends _AbstractVisitor {
+  _FieldVisitor(super.rule, super.context);
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
@@ -541,6 +534,60 @@ class _Visitor extends SimpleAstVisitor<void> {
           rule.reportLint(variable.name);
         }
       }
+    }
+  }
+}
+
+class _MethodVisitor extends _AbstractVisitor {
+  late MethodDeclaration declaration;
+
+  _MethodVisitor(super.rule, super.context);
+
+  @override
+  void visitMethodDeclaration(MethodDeclaration node) {
+    if (!node.isGetter) return;
+    declaration = node;
+    var declaredElement = node.declaredElement;
+    if (declaredElement != null) {
+      var enclosingElement = declaredElement.enclosingElement;
+      if (enclosingElement is ClassElement) {
+        var libraryUri = declaredElement.library.source.uri;
+        var name = Name(libraryUri, declaredElement.name);
+        if (!_inheritsStability(enclosingElement, name, context)) return;
+        node.body.accept(this);
+        if (!isStable) {
+          var contextMessages = <DiagnosticMessage>[];
+          for (var cause in causes) {
+            contextMessages.add(
+              DiagnosticMessageImpl(
+                  filePath: cause.library.source.fullName ?? 'unknown library',
+                  message: "The declaration of '$name' that requires this "
+                      "declaration to be stable is here",
+                  offset: cause.nameOffset,
+                  length: cause.nameLength,
+                  url: cause.library.source.uri.toString()),
+            );
+          }
+          rule.reportLint(node.name, contextMessages: contextMessages);
+        }
+      } else {
+        // Extensions cannot override anything.
+      }
+    }
+  }
+}
+
+class _Visitor extends SimpleAstVisitor<void> {
+  final LintRule rule;
+  final LinterContext context;
+
+  _Visitor(this.rule, this.context);
+
+  @override
+  void visitFieldDeclaration(FieldDeclaration node) {
+    if (!node.isStatic) {
+      var visitor = _FieldVisitor(rule, context);
+      visitor.visitFieldDeclaration(node);
     }
   }
 

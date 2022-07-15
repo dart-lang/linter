@@ -73,6 +73,16 @@ class B11 implements A {
   B11(this.b, this.j);
 }
 
+class B12 implements A {
+  int get i => throw 0; //OK
+}
+
+class B13 implements A {
+  int get i { //OK
+    throw 0;
+  }
+}
+
 class C<X> {
   final C<X>? next;
   final C<X>? nextNext = null;
