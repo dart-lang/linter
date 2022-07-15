@@ -159,6 +159,27 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
     return false;
   }
 
+  void doReportLint(ClassMember node, SimpleIdentifier name) {
+    var contextMessages = <DiagnosticMessage>[];
+    for (var cause in causes) {
+      contextMessages.add(
+        DiagnosticMessageImpl(
+            filePath: cause.library.source.fullName ?? 'unknown library',
+            message: "The declaration of '$name' that requires this "
+                "declaration to be stable is here",
+            offset: cause.nameOffset,
+            length: cause.nameLength,
+            url: cause.library.source.uri.toString()),
+      );
+    }
+    rule.reportLint(
+      name,
+      contextMessages: contextMessages,
+      ignoreSyntheticNodes: false,
+    );
+
+  }
+
   // The following visitor methods will only be executed in the situation
   // where `declaration` is a getter which must be stable, and the
   // traversal is visiting the body of said getter. Hence, a lint must
@@ -531,7 +552,7 @@ class _FieldVisitor extends _AbstractVisitor {
         libraryUri ??= declaredElement.library.source.uri;
         name ??= Name(libraryUri, declaredElement.name);
         if (_inheritsStability(classElement, name, context)) {
-          rule.reportLint(variable.name);
+          doReportLint(node, variable.name);
         }
       }
     }
@@ -555,21 +576,7 @@ class _MethodVisitor extends _AbstractVisitor {
         var name = Name(libraryUri, declaredElement.name);
         if (!_inheritsStability(enclosingElement, name, context)) return;
         node.body.accept(this);
-        if (!isStable) {
-          var contextMessages = <DiagnosticMessage>[];
-          for (var cause in causes) {
-            contextMessages.add(
-              DiagnosticMessageImpl(
-                  filePath: cause.library.source.fullName ?? 'unknown library',
-                  message: "The declaration of '$name' that requires this "
-                      "declaration to be stable is here",
-                  offset: cause.nameOffset,
-                  length: cause.nameLength,
-                  url: cause.library.source.uri.toString()),
-            );
-          }
-          rule.reportLint(node.name, contextMessages: contextMessages);
-        }
+        if (!isStable) doReportLint(node, node.name);
       } else {
         // Extensions cannot override anything.
       }
