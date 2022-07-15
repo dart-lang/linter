@@ -204,11 +204,13 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitAsExpression(AsExpression node) {
+    if (node.expression.staticType?.isBottom ?? true) return;
     node.expression.accept(this);
   }
 
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
+    if (node.staticType?.isBottom ?? true) return;
     var operator = node.operator;
     if (operator.type != TokenType.EQ) {
       // TODO(eernst): Could a compound assignment be stable?
@@ -227,6 +229,8 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
+    if (node.leftOperand.staticType?.isBottom ?? true) return;
+    if (node.rightOperand.staticType?.isBottom ?? true) return;
     node.leftOperand.accept(this);
     node.rightOperand.accept(this);
     if (isStable) {
@@ -317,6 +321,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitConditionalExpression(ConditionalExpression node) {
+    if (node.condition.staticType?.isBottom ?? true) return;
     node.condition.accept(this);
     node.thenExpression.accept(this);
     node.elseExpression.accept(this);
@@ -334,6 +339,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitExpressionFunctionBody(ExpressionFunctionBody node) {
+    if (node.expression.staticType?.isBottom ?? true) return;
     node.expression.accept(this);
   }
 
@@ -351,12 +357,14 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
+    if (node.staticType?.isBottom ?? true) return;
     // We cannot expect a function invocation to be stable.
     isStable = false;
   }
 
   @override
   void visitIndexExpression(IndexExpression node) {
+    if (node.staticType?.isBottom ?? true) return;
     // The type system does not recognize immutable lists or similar entities,
     // so we can never hope to detect that this is stable.
     isStable = false;
@@ -379,6 +387,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitIsExpression(IsExpression node) {
+    if (node.expression.staticType?.isBottom ?? true) return;
     // Testing `e is T` where `e` is stable depends on `T`. However, there is
     // no `<type>` that denotes two different types in the context of the same
     // receiver (so class type variables represent the same type each time this
@@ -394,6 +403,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
+    if (node.staticType?.isBottom ?? true) return;
     // We could have a notion of pure functions, but for now a
     // method invocation is never stable.
     isStable = false;
@@ -401,6 +411,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitNamedExpression(NamedExpression node) {
+    if (node.staticType?.isBottom ?? true) return;
     node.expression.accept(this);
   }
 
@@ -411,11 +422,13 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitParenthesizedExpression(ParenthesizedExpression node) {
+    if (node.staticType?.isBottom ?? true) return;
     node.unParenthesized.accept(this);
   }
 
   @override
   void visitPostfixExpression(PostfixExpression node) {
+    if (node.staticType?.isBottom ?? true) return;
     // `x.y?.z` is handled in [visitPropertyAccess], this is only about
     // `<assignableExpression> <postfixOperator>`, and they are not stable.
     isStable = false;
@@ -423,6 +436,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   @override
   void visitPrefixExpression(PrefixExpression node) {
+    if (node.staticType?.isBottom ?? true) return;
     if (node.operator.type == TokenType.MINUS) {
       node.operand.accept(this);
     } else {
