@@ -218,10 +218,10 @@ Future<void> generateDocs(String? dir,
 
   // Generate rule files.
   for (var l in rules) {
-    RuleHtmlGenerator(l, fixStatusMap[l.name] ?? 'unregistered')
-        .generate(outDir);
+    var fixStatus = fixStatusMap[l.name] ?? 'unregistered';
+    RuleHtmlGenerator(l, fixStatus).generate(outDir);
     if (enableMarkdown) {
-      RuleMarkdownGenerator(l).generate(filePath: outDir);
+      RuleMarkdownGenerator(l).generate(filePath: outDir, fixStatus: fixStatus);
     }
   }
 
@@ -229,7 +229,8 @@ Future<void> generateDocs(String? dir,
   HtmlIndexer(Registry.ruleRegistry, fixStatusMap).generate(outDir);
 
   if (enableMarkdown) {
-    MarkdownIndexer(Registry.ruleRegistry).generate(filePath: outDir);
+    MarkdownIndexer(Registry.ruleRegistry, fixStatusMap)
+        .generate(filePath: outDir);
   }
 
   // Generate options samples.
@@ -416,8 +417,9 @@ class MachineSummaryGenerator {
 
 class MarkdownIndexer {
   final Iterable<LintRule> rules;
+  final Map<String, String> fixStatusMap;
 
-  MarkdownIndexer(this.rules);
+  MarkdownIndexer(this.rules, this.fixStatusMap);
 
   void generate({String? filePath}) {
     var buffer = StringBuffer();
@@ -464,7 +466,10 @@ class MarkdownIndexer {
         buffer.writeln('[![pedantic](style-pedantic.svg)]'
             '(https://github.com/dart-lang/pedantic/#enabled-lints)');
       }
-      // todo(pq): generate fixStatus
+      if (fixStatusMap[rule.name] == 'hasFix') {
+        // todo(pq): add a url when we have a good doc to link to.
+        buffer.writeln('![has-fix](has-fix.svg)');
+      }
 
       buffer.writeln();
     }
@@ -720,7 +725,7 @@ class RuleMarkdownGenerator {
     return sinceLinter != null ? 'Linter v$sinceLinter' : 'Unreleased';
   }
 
-  void generate({String? filePath}) {
+  void generate({String? filePath, String? fixStatus}) {
     var buffer = StringBuffer();
 
     buffer.writeln('# Rule $name');
@@ -747,6 +752,10 @@ class RuleMarkdownGenerator {
     if (pedanticRules.contains(name)) {
       buffer.writeln('[![pedantic](style-pedantic.svg)]'
           '(https://github.com/dart-lang/pedantic/#enabled-lints)');
+    }
+    if (fixStatus == 'hasFix') {
+      // todo(pq): add a url when we have a good doc to link to.
+      buffer.writeln('![has-fix](has-fix.svg)');
     }
 
     buffer.writeln();
