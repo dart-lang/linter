@@ -179,3 +179,13 @@ class F17 implements E {
 class F18 implements E {
   bool get o => jTop is int; //LINT
 }
+
+class G {
+  @Object()
+  final String s;
+  G(this.s);
+}
+
+class H1 implements G {
+  String get s => '${++jTop}'; //OK
+}

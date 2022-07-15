@@ -92,6 +92,19 @@ bool _isLocallyStable(Element element) {
       element.isSynthetic &&
       element.correspondingSetter == null) {
     // This is a final, non-local variable, and they are stable.
+    var metadata = element.variable.metadata;
+    if (metadata.isNotEmpty) {
+      for (var elementAnnotation in metadata) {
+        var metadataElement = elementAnnotation.element;
+        if (metadataElement is ConstructorElement) {
+          var metadataOwner = metadataElement.declaration.enclosingElement;
+          if (metadataOwner.isDartCoreObject) {
+            // A declaration with `@Object()` is not considered stable.
+            return false;
+          }
+        }
+      }
+    }
     return true;
   } else if (element is FunctionElement) {
     // A tear-off of a top-level function or static method is stable,
@@ -462,7 +475,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   }
 
   @override
-  void visitSimplStringLiteral(SimpleStringLiteral node) {
+  void visitSimpleStringLiteral(SimpleStringLiteral node) {
     // No interpolations: Keep it stable.
   }
 
