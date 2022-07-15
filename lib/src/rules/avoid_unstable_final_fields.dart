@@ -162,22 +162,25 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   void doReportLint(ClassMember node, SimpleIdentifier name) {
     var contextMessages = <DiagnosticMessage>[];
     for (var cause in causes) {
+      var length = cause.nameLength;
+      var offset = cause.nameOffset;
+      if (offset < 0) offset = cause.variable.nameOffset;
+      if (offset < 0) offset = 0;
       contextMessages.add(
         DiagnosticMessageImpl(
-            filePath: cause.library.source.fullName ?? 'unknown library',
+            filePath: cause.library.source.fullName,
             message: "The declaration of '$name' that requires this "
-                "declaration to be stable is here",
-            offset: cause.nameOffset,
-            length: cause.nameLength,
-            url: cause.library.source.uri.toString()),
+                "declaration to be stable is here.\n",
+            offset: offset,
+            length: length,
+            url: null),
       );
     }
     rule.reportLint(
       name,
       contextMessages: contextMessages,
-      ignoreSyntheticNodes: false,
+      ignoreSyntheticNodes: true,
     );
-
   }
 
   // The following visitor methods will only be executed in the situation
