@@ -100,7 +100,7 @@ class D1<X> implements C<X> {
 }
 
 class E {
-  final Object o;
+  final Object? o;
   E(this.o);
 }
 
@@ -178,6 +178,11 @@ class F17 implements E {
 
 class F18 implements E {
   bool get o => jTop is int; //LINT
+}
+
+class F19 extends E {
+  Object get o => super.o!; //OK
+  F19(super.o);
 }
 
 class G {

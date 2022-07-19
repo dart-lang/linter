@@ -183,7 +183,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
         DiagnosticMessageImpl(
             filePath: cause.library.source.fullName,
             message: "The declaration of '$name' that requires this "
-                "declaration to be stable is here.\n",
+                "declaration to be stable is",
             offset: offset,
             length: length,
             url: null),
@@ -429,9 +429,14 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   @override
   void visitPostfixExpression(PostfixExpression node) {
     if (node.staticType?.isBottom ?? true) return;
-    // `x.y?.z` is handled in [visitPropertyAccess], this is only about
-    // `<assignableExpression> <postfixOperator>`, and they are not stable.
-    isStable = false;
+    if (node.operator.type == TokenType.BANG) {
+      // A non-null assertion expression, `e!`: stable if `e` is stable.
+      node.operand.accept(this);
+    } else {
+      // `x.y?.z` is handled in [visitPropertyAccess], this is only about
+      // `<assignableExpression> <postfixOperator>`, and they are not stable.
+      isStable = false;
+    }
   }
 
   @override
