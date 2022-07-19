@@ -1267,7 +1267,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "needsEvaluation",
-    "details": "\nSome operations on primitive types are idempotent and can be removed.\n\n**BAD:**\n\n```dart\ndoubleValue.toDouble();\n\nintValue.toInt();\nintValue.round();\nintValue.ceil();\nintValue.floor();\nintValue.truncate();\n\nstring.toString();\nstring = 'hello\\n'\n    'world\\n'\n    ''; // useless empty string\n```\n"
+    "details": "\nSome operations on primitive types are idempotent and can be removed.\n\n**BAD:**\n\n```dart\ndoubleValue.toDouble();\n\nintValue.toInt();\nintValue.round();\nintValue.ceil();\nintValue.floor();\nintValue.truncate();\n\nstring.toString();\nstring = 'hello\\n'\n    'world\\n'\n    ''; // useless empty string\n\n'string with ${x.toString()}';\n```\n"
   },
   {
     "name": "null_check_on_nullable_type_parameter",
