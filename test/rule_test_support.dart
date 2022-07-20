@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io' as io;
+
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/file_system/file_system.dart';
@@ -16,12 +18,17 @@ import 'package:analyzer/src/test_utilities/resource_provider_mixin.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';
 import 'package:meta/meta.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart' as yaml;
 
 export 'package:analyzer/src/dart/analysis/experiments.dart';
 export 'package:analyzer/src/dart/error/syntactic_errors.dart';
 export 'package:analyzer/src/error/codes.dart';
 export 'package:analyzer/src/test_utilities/package_config_file_builder.dart';
+
+/// Corresponds to the minimum SDK constraint in `pubspec.yaml`.
+final minSdkVersion = _parseMinSdkVersion();
 
 ExpectedError error(ErrorCode code, int offset, int length,
         {Pattern? messageContains}) =>
@@ -30,6 +37,14 @@ ExpectedError error(ErrorCode code, int offset, int length,
 ExpectedLint lint(String lintName, int offset, int length,
         {Pattern? messageContains}) =>
     ExpectedLint(lintName, offset, length, messageContains: messageContains);
+
+Version _parseMinSdkVersion() {
+  var pubspec = io.File('pubspec.yaml');
+  var yamlDoc = yaml.loadYaml(pubspec.readAsStringSync());
+  var sdkConstraint = yamlDoc['environment']['sdk'];
+  var range = VersionConstraint.parse(sdkConstraint as String) as VersionRange;
+  return range.min!;
+}
 
 typedef DiagnosticMatcher = bool Function(AnalysisError error);
 
@@ -232,9 +247,7 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
   @override
   List<String> get collectionIncludedPaths => [workspaceRootPath];
 
-  List<String> get experiments => [
-        EnableString.constructor_tearoffs,
-      ];
+  List<String> get experiments => [];
 
   /// The path that is not in [workspaceRootPath], contains external packages.
   String get packagesRootPath => '/packages';
@@ -254,6 +267,17 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
   @mustCallSuper
   void setUp() {
     super.setUp();
+    // Check for any needlessly enabled experiments.
+    for (var experiment in experiments) {
+      var feature = ExperimentStatus.knownFeatures[experiment];
+      var releaseVersion = feature?.releaseVersion;
+      if (releaseVersion != null && releaseVersion >= minSdkVersion) {
+        if (feature?.isEnabledByDefault ?? false) {
+          fail("The '$experiment' experiment is enabled by default, "
+              'try removing it from `experiments`.');
+        }
+      }
+    }
 
     writeTestPackageAnalysisOptionsFile(
       AnalysisOptionsFileConfig(
