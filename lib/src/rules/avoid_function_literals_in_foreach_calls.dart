@@ -16,6 +16,9 @@ const _details = r'''
 
 **AVOID** using `forEach` with a function literal.
 
+`forEach` requires a lambda, which creates a new scope, which increases code size and run time. 
+`for` loops are cheaper.
+
 **BAD:**
 ```dart
 people.forEach((person) {
