@@ -245,11 +245,30 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
       if (operatorType == TokenType.PLUS) {
         if (leftType.isDartCoreInt ||
             leftType.isDartCoreDouble ||
+            leftType.isDartCoreNum ||
             leftType.isDartCoreString) {
           // These are all stable.
           return;
         } else {
           // A user-defined `+` cannot be assumed to be stable.
+          isStable = false;
+        }
+      } else if (operatorType == TokenType.MINUS ||
+          operatorType == TokenType.STAR ||
+          operatorType == TokenType.SLASH ||
+          operatorType == TokenType.PERCENT ||
+          operatorType == TokenType.LT ||
+          operatorType == TokenType.LT_EQ ||
+          operatorType == TokenType.GT ||
+          operatorType == TokenType.GT_EQ) {
+        if (leftType.isDartCoreInt ||
+            leftType.isDartCoreDouble ||
+            leftType.isDartCoreNum) {
+          // These are all stable.
+          return;
+        } else {
+          // User-defined operators in this group
+          // cannot be assumed to be stable.
           isStable = false;
         }
       } else if (operatorType == TokenType.EQ_EQ ||
@@ -260,16 +279,25 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
           operatorType == TokenType.BAR_BAR) {
         // Logical and/or cannot be user-defined, is stable.
         return;
-      } else if (operatorType == TokenType.MINUS ||
-          operatorType == TokenType.STAR ||
-          operatorType == TokenType.SLASH ||
-          operatorType == TokenType.PERCENT ||
-          operatorType == TokenType.LT ||
-          operatorType == TokenType.LT_EQ ||
-          operatorType == TokenType.GT ||
-          operatorType == TokenType.GT_EQ) {
-        if (leftType.isDartCoreInt || leftType.isDartCoreDouble) {
-          // Primitive arithmetic operations and relations are stable.
+      } else if (operatorType == TokenType.QUESTION_QUESTION) {
+        // `e1 ?? e2` is stable when both operands are stable.
+        return;
+      } else if (operatorType == TokenType.TILDE_SLASH ||
+          operatorType == TokenType.GT_GT ||
+          operatorType == TokenType.GT_GT_GT ||
+          operatorType == TokenType.LT_LT) {
+        if (leftType.isDartCoreInt) {
+          // These primitive arithmetic operations and relations are stable.
+          return;
+        } else {
+          // A user-defined operator can not be assumed to be stable.
+          isStable = false;
+        }
+      } else if (operatorType == TokenType.AMPERSAND ||
+          operatorType == TokenType.BAR ||
+          operatorType == TokenType.CARET) {
+        if (leftType.isDartCoreInt || leftType.isDartCoreBool) {
+          // These primitive logical operations are stable.
           return;
         } else {
           // A user-defined operator can not be assumed to be stable.
@@ -404,6 +432,20 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.staticType?.isBottom ?? true) return;
+    // Special case `identical`.
+    if (node.target == null) {
+      var nodeLibrary = node.methodName.staticElement?.declaration?.library;
+      var isFromCore = nodeLibrary?.isDartCore ?? false;
+      if (isFromCore && node.methodName.name == 'identical') {
+        var arguments = node.argumentList.arguments;
+        if (arguments.length == 2) {
+          // `identical(e1, e2)` is stable iff `e1` and `e2` are stable.
+          arguments[0].accept(this);
+          arguments[1].accept(this);
+          return;
+        }
+      }
+    }
     // We could have a notion of pure functions, but for now a
     // method invocation is never stable.
     isStable = false;

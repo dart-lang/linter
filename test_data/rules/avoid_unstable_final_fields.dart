@@ -28,7 +28,7 @@ class B3 implements A {
 }
 
 class B4 extends A {
-  int get i => super.i + 1; //OK
+  int get i => super.i - 1; //OK
   B4(super.i);
 }
 
@@ -69,7 +69,7 @@ class B10 implements A {
 class B11 implements A {
   bool b;
   final int j;
-  int get i => b ? j : 10; //LINT
+  int get i => b ? 2 * j : 10; //LINT
   B11(this.b, this.j);
 }
 
@@ -165,7 +165,7 @@ class F14 implements E {
 }
 
 class F15 implements E {
-  String get o => 'Something $cNever, and ${1 + 1} more things'; //OK
+  String get o => 'Something $cNever, and ${1 * 1} more things'; //OK
 }
 
 class F16 implements E {
@@ -183,6 +183,22 @@ class F18 implements E {
 class F19 extends E {
   Object get o => super.o!; //OK
   F19(super.o);
+}
+
+class F20Helper {
+  const F20Helper.named(int i);
+}
+
+class F20 implements E {
+  F20Helper get o => const F20Helper.named(15); //OK
+}
+
+class F21 implements E {
+  bool get o => identical(const <int>[], const <int>[]); //OK
+}
+
+class F22 implements E {
+  bool get o => identical(<int>[], const <int>[]); //LINT
 }
 
 class G {
