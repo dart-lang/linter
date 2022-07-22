@@ -175,7 +175,6 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (getIntValue(start, context) != 0) return false;
     }
 
-
     var parentType = invocation.target?.staticType;
     return parentType != null &&
         DartTypeUtilities.implementsAnyInterface(parentType, [
