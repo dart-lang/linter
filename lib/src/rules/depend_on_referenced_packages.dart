@@ -70,7 +70,8 @@ class DependOnReferencedPackages extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var package = context.package;
     var packageHash = package.hashCode;
-    // Only calculate deps if we've got a new package hash.
+    // Only calculate `availableDeps` if we've got a new package hash, otherwise
+    // fall back on our cache.
     if (packageHash != lastPackageHash) {
       lastPackageHash = packageHash;
       if (package is! PubWorkspacePackage) return;
