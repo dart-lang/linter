@@ -1708,7 +1708,7 @@
       "pedantic"
     ],
     "fixStatus": "hasFix",
-    "details": "Declare elements in list literals inline, rather than using `add` and \n`addAll` methods where possible.\n\n\n**BAD:**\n```dart\nvar l = ['a']..add('b')..add('c');\nvar l2 = ['a']..addAll(['b', 'c'])\n```\n\n**GOOD:**\n```dart\nvar l = ['a', 'b', 'c'];\nvar 2 = ['a', 'b', 'c'];\n```\n"
+    "details": "Declare elements in list literals inline, rather than using `add` and \n`addAll` methods where possible.\n\n\n**BAD:**\n```dart\nvar l = ['a']..add('b')..add('c');\nvar l2 = ['a']..addAll(['b', 'c']);\n```\n\n**GOOD:**\n```dart\nvar l = ['a', 'b', 'c'];\nvar l2 = ['a', 'b', 'c'];\n```\n"
   },
   {
     "name": "prefer_int_literals",
@@ -1789,7 +1789,7 @@
       "pedantic"
     ],
     "fixStatus": "hasFix",
-    "details": "\n**PREFER** `iterable.whereType<T>()` over `iterable.where((e) => e is T)`.\n\n**BAD:**\n```dart\niterable.where((e) => e is MyClass)\n```\n\n**GOOD:**\n```dart\niterable.whereType<MyClass>()\n```\n\n"
+    "details": "\n**PREFER** `iterable.whereType<T>()` over `iterable.where((e) => e is T)`.\n\n**BAD:**\n```dart\niterable.where((e) => e is MyClass);\n```\n\n**GOOD:**\n```dart\niterable.whereType<MyClass>();\n```\n\n"
   },
   {
     "name": "prefer_mixin",
