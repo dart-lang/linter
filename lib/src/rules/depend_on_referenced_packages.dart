@@ -51,6 +51,10 @@ class DependOnReferencedPackages extends LintRule {
       correctionMessage:
           "Try adding a dependency for '{0}' in the 'pubspec.yaml' file.");
 
+  static int? lastPackageHash;
+
+  static List<String> availableDeps = [];
+
   DependOnReferencedPackages()
       : super(
             name: 'depend_on_referenced_packages',
@@ -64,26 +68,31 @@ class DependOnReferencedPackages extends LintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    // Only lint if we have a pubspec.
     var package = context.package;
-    if (package is! PubWorkspacePackage) return;
-    var pubspec = package.pubspec;
-    if (pubspec == null) return;
-    var name = pubspec.name?.value.text;
-    if (name == null) return;
+    var packageHash = package.hashCode;
+    // Only calculate deps if we've got a new package hash.
+    if (packageHash != lastPackageHash) {
+      lastPackageHash = packageHash;
+      if (package is! PubWorkspacePackage) return;
+      var pubspec = package.pubspec;
+      // Only lint if we have a pubspec.
+      if (pubspec == null) return;
+      var name = pubspec.name?.value.text;
+      if (name == null) return;
 
-    var dependencies = pubspec.dependencies;
-    var devDependencies = pubspec.devDependencies;
-    var availableDeps = [
-      name,
-      if (dependencies != null)
-        for (var dep in dependencies)
-          if (dep.name?.text != null) dep.name!.text!,
-      if (devDependencies != null &&
-          !isInPublicDir(context.currentUnit.unit, context.package))
-        for (var dep in devDependencies)
-          if (dep.name?.text != null) dep.name!.text!,
-    ];
+      var dependencies = pubspec.dependencies;
+      var devDependencies = pubspec.devDependencies;
+      availableDeps = [
+        name,
+        if (dependencies != null)
+          for (var dep in dependencies)
+            if (dep.name?.text != null) dep.name!.text!,
+        if (devDependencies != null &&
+            !isInPublicDir(context.currentUnit.unit, context.package))
+          for (var dep in devDependencies)
+            if (dep.name?.text != null) dep.name!.text!,
+      ];
+    }
 
     var visitor = _Visitor(this, availableDeps);
     registry.addImportDirective(this, visitor);
