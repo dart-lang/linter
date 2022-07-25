@@ -23,7 +23,7 @@ var l2 = ['a']..addAll(['b', 'c']);
 **GOOD:**
 ```dart
 var l = ['a', 'b', 'c'];
-var 12 = ['a', 'b', 'c'];
+var l2 = ['a', 'b', 'c'];
 ```
 ''';
 
