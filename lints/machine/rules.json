@@ -450,13 +450,13 @@
   },
   {
     "name": "sort_pub_dependencies",
-    "description": "Sort pub dependencies.",
+    "description": "Sort pub dependencies alphabetically.",
     "group": "pub",
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
     "fixStatus": "needsEvaluation",
-    "details": "**DO** sort pub dependencies in `pubspec.yaml`.\n\nSorting list of pub dependencies makes maintenance easier.\n"
+    "details": "**DO** sort pub dependencies alphabetically (A to Z) in `pubspec.yaml`.\n\nSorting list of pub dependencies makes maintenance easier.\n"
   },
   {
     "name": "always_declare_return_types",
