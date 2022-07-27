@@ -28,11 +28,11 @@ You're done!
 
 Documentation on https://dart-lang.github.io/linter/ 
 is located on the [gh-pages branch](https://github.com/dart-lang/linter/tree/gh-pages)
-and automatically updated as changes are made.
+and automatically updated as changes are made to the `main` branch.
 
 To update the dart.dev
 [linter rules](https://dart.dev/tools/linter-rules) documentation,
-you need to manually push the changes:
+you need to manually update the file its generated from:
 
   1. Download the automatically generated [`rules.json`](https://github.com/dart-lang/linter/blob/gh-pages/lints/machine/rules.json) file.
   2. Rename the downloaded file to `linter_rules.json`.
