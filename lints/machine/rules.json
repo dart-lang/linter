@@ -394,7 +394,7 @@
       "flutter"
     ],
     "fixStatus": "hasFix",
-    "details": "**DO** use key in widget constructors.\n\nIt's a good practice to expose the ability to provide a key when creating public\nwidgets.\n\n**BAD:**\n```dart\nclass MyPublicWidget extends StatelessWidget {\n}\n```\n\n**GOOD:**\n```dart\nclass MyPublicWidget extends StatelessWidget {\n  MyPublicWidget({Key? key}) : super(key: key);\n}\n```\n"
+    "details": "**DO** use key in widget constructors.\n\nIt's a good practice to expose the ability to provide a key when creating public\nwidgets.\n\n**BAD:**\n```dart\nclass MyPublicWidget extends StatelessWidget {\n}\n```\n\n**GOOD:**\n```dart\nclass MyPublicWidget extends StatelessWidget {\n  MyPublicWidget({super.key});\n}\n```\n"
   },
   {
     "name": "valid_regexps",
