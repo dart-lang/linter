@@ -191,9 +191,9 @@ import 'rules/unnecessary_string_escapes.dart';
 import 'rules/unnecessary_string_interpolations.dart';
 import 'rules/unnecessary_this.dart';
 import 'rules/unnecessary_to_list_in_spreads.dart';
+import 'rules/unreachable_from_main.dart';
 import 'rules/unrelated_type_equality_checks.dart';
 import 'rules/unsafe_html.dart';
-import 'rules/unused_top_members_in_executable_libraries.dart';
 import 'rules/use_build_context_synchronously.dart';
 import 'rules/use_colored_box.dart';
 import 'rules/use_decorated_box.dart';
@@ -409,9 +409,9 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(UnnecessaryStringInterpolations())
     ..register(UnnecessaryThis())
     ..register(UnnecessaryToListInSpreads())
+    ..register(UnreachableFromMain())
     ..register(UnrelatedTypeEqualityChecks())
     ..register(UnsafeHtml())
-    ..register(UnusedTopMembersInExecutableLibraries())
     ..register(UseBuildContextSynchronously(inTestMode: inTestMode))
     ..register(UseColoredBox())
     ..register(UseDecoratedBox())

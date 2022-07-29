@@ -12,7 +12,7 @@ import 'package:collection/collection.dart';
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
 
-const _desc = 'Unused top-level members in executable libraries.';
+const _desc = 'Unreachable top-level members in executable libraries.';
 
 const _details = r'''
 
@@ -41,10 +41,10 @@ void f() {}
 
 ''';
 
-class UnusedTopMembersInExecutableLibraries extends LintRule {
-  UnusedTopMembersInExecutableLibraries()
+class UnreachableFromMain extends LintRule {
+  UnreachableFromMain()
       : super(
-          name: 'unused_top_members_in_executable_libraries',
+          name: 'unreachable_from_main',
           description: _desc,
           details: _details,
           group: Group.style,
