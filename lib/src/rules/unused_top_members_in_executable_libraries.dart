@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:collection';
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -15,11 +17,11 @@ const _desc = 'Unused top-level members in executable libraries.';
 const _details = r'''
 
 Top-level members in an executable library should be used directly inside this
-library. Executable libraries are usually never used as dependency and it's
-better to avoid defining unused members.
+library.  Executable libraries are usually never imported and it's better to
+avoid defining unused members.
 
-This rule assumes that an executable library shouldn't be imported by other
-files except to execute its `main` function.
+This rule assumes that an executable library isn't imported by other files
+except to execute its `main` function.
 
 **BAD:**
 
@@ -46,6 +48,7 @@ class UnusedTopMembersInExecutableLibraries extends LintRule {
           description: _desc,
           details: _details,
           group: Group.style,
+          maturity: Maturity.experimental,
         );
 
   @override
@@ -78,7 +81,8 @@ class _Visitor extends SimpleAstVisitor<void> {
             ])
         .toSet();
 
-    if (!topDeclarations.any(_isEntryPoint)) return;
+    var entryPoints = topDeclarations.where(_isEntryPoint).toList();
+    if (entryPoints.isEmpty) return;
 
     var declarationByElement = <Element, Declaration>{};
     for (var declaration in topDeclarations) {
@@ -98,26 +102,32 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     var dependencies = Map<Declaration, Set<Declaration>>.fromIterable(
       topDeclarations,
-      value: (e) => DartTypeUtilities.traverseNodesInDFS(e as Declaration)
-          .expand((e) => [
-                if (e is SimpleIdentifier) e.staticElement,
-                // with `id++` staticElement of `id` is null
-                if (e is CompoundAssignmentExpression) ...[
-                  e.readElement,
-                  e.writeElement,
-                ],
-              ])
-          .whereNotNull()
-          .map((e) => declarationByElement[e])
-          .whereNotNull()
-          .toSet(),
+      value: (declaration) =>
+          DartTypeUtilities.traverseNodesInDFS(declaration as Declaration)
+              .expand((e) => [
+                    if (e is SimpleIdentifier) e.staticElement,
+                    // with `id++` staticElement of `id` is null
+                    if (e is CompoundAssignmentExpression) ...[
+                      e.readElement,
+                      e.writeElement,
+                    ],
+                  ])
+              .whereNotNull()
+              .map((e) {
+                while (e.enclosingElement2 != null &&
+                    e.enclosingElement2 is! CompilationUnitElement) {
+                  e = e.enclosingElement2!;
+                }
+                return e;
+              })
+              .map((e) => declarationByElement[e])
+              .whereNotNull()
+              .where((e) => e != declaration)
+              .toSet(),
     );
 
-    var entryPoints = topDeclarations.where(_isEntryPoint);
-    if (entryPoints.isEmpty) return;
-
     var usedMembers = entryPoints.toSet();
-    var toTraverse = usedMembers.toList();
+    var toTraverse = Queue.from(usedMembers);
     while (toTraverse.isNotEmpty) {
       var declaration = toTraverse.removeLast();
       for (var dep in dependencies[declaration]!) {

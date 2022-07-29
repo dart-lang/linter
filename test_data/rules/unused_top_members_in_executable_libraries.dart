@@ -6,6 +6,7 @@
 
 import 'package:meta/meta.dart';
 
+/// see [Comment]
 main() // OK
 {
   _f5();
@@ -14,7 +15,15 @@ main() // OK
     f4(b);
   });
   f4(b);
+  usageInTypeBound();
+  usageInFunctionType();
+  usageInDefaultValue();
+  usageInAnnotation();
+  Future<C5>.value(C5()).extensionUsage();
+  accessors();
 }
+
+class Comment {} // LINT
 
 const a = 1; // LINT
 const b = 1; // OK
@@ -44,8 +53,8 @@ void f2() // OK
   f1();
 }
 
-void f3(Function f) {} //OK
-void f4(int p) {} //OK
+void f3(Function f) {} // OK
+void f4(int p) {} // OK
 
 int id = 0; // OK
 void _f5() {
@@ -54,3 +63,57 @@ void _f5() {
 
 @pragma('vm:entry-point')
 void f6() {} // OK
+
+const entryPoint = pragma('vm:entry-point');
+@entryPoint
+void f7() {} // OK
+
+@pragma('other') // LINT
+void f8() {}
+
+// test accessors
+int get id9 => 0;
+void set id9(int value) {}
+void accessors() {
+  id9 += 4; // usage
+}
+
+// Usage in type bound
+class C1 {}
+
+void usageInTypeBound<T extends C1>() {}
+
+// Usage in Function type
+class C2 {}
+
+void Function(C2)? usageInFunctionType() {}
+
+// Usage in default value
+class C3 {
+  const C3();
+}
+
+void usageInDefaultValue([Object? p = const C3()]) {}
+
+// Usage in annotation
+class C4 {
+  const C4();
+}
+
+@C4()
+void usageInAnnotation() {}
+
+// Usage in type parameter in extension `on` clause.
+class C5 {}
+
+extension UsedPublicExt on Future<C5> {
+  extensionUsage() {}
+}
+
+// Usage in type parameter in extension `on` clause.
+class C6 {} //LINT
+
+extension UnusedPublicExt on C6 //LINT
+{
+  m() {}
+}
