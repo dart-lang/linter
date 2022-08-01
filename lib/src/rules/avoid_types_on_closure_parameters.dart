@@ -4,6 +4,7 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
@@ -11,11 +12,9 @@ const _desc = r'Avoid annotating types for function expression parameters.';
 
 const _details = r'''
 
-**AVOID** annotating types for function expression parameters.
+From [effective dart](https://dart.dev/guides/language/effective-dart/design#dont-annotate-inferred-parameter-types-on-function-expressions):
 
-Annotating types for function expression parameters is usually unnecessary
-because the parameter types can almost always be inferred from the context,
-thus making the practice redundant.
+**DON’T** annotate inferred parameter types on function expressions.
 
 **BAD:**
 ```dart
@@ -43,12 +42,12 @@ class AvoidTypesOnClosureParameters extends LintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this);
+    var visitor = _Visitor(this, context);
     registry.addFunctionExpression(this, visitor);
   }
 }
 
-class AvoidTypesOnClosureParametersVisitor extends SimpleAstVisitor {
+class AvoidTypesOnClosureParametersVisitor extends SimpleAstVisitor<void> {
   LintRule rule;
 
   AvoidTypesOnClosureParametersVisitor(this.rule);
@@ -86,12 +85,42 @@ class AvoidTypesOnClosureParametersVisitor extends SimpleAstVisitor {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
+  _Visitor(this.rule, this.context);
   final LintRule rule;
-
-  _Visitor(this.rule);
+  final LinterContext context;
 
   @override
   void visitFunctionExpression(FunctionExpression node) {
+    var staticParameterElement = node.staticParameterElement;
+    var parent = node.parent;
+    while (parent is ParenthesizedExpression) {
+      parent = parent.parent;
+    }
+    DartType? expectedType;
+    if (parent is AssignmentExpression) {
+      expectedType = parent.writeType;
+    } else if (parent is VariableDeclaration) {
+      var parentParent = parent.parent;
+      if (parentParent is VariableDeclarationList) {
+        if (parentParent.type == null) {
+          // type infered: allow types
+          return;
+        }
+      }
+      expectedType = parent.declaredElement?.type;
+    } else if (parent is ReturnStatement || parent is ExpressionFunctionBody) {
+      expectedType =
+          node.thisOrAncestorOfType<FunctionDeclaration>()?.returnType?.type;
+    } else if (staticParameterElement != null) {
+      expectedType = staticParameterElement.type;
+    } else if (parent is NamedExpression) {
+      expectedType = parent.element?.type;
+    }
+
+    if (expectedType != null &&
+        context.typeSystem.promoteToNonNull(expectedType) != node.staticType) {
+      return;
+    }
     var visitor = AvoidTypesOnClosureParametersVisitor(rule);
     visitor.visitFunctionExpression(node);
   }
