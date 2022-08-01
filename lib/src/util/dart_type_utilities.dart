@@ -6,11 +6,11 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/src/dart/element/member.dart'; // ignore: implementation_imports
 import 'package:analyzer/src/dart/element/type.dart'; // ignore: implementation_imports
 
 import '../analyzer.dart';
 import '../ast.dart';
+import '../extensions.dart';
 
 typedef AstNodePredicate = bool Function(AstNode node);
 
@@ -565,54 +565,13 @@ class InterfaceTypeDefinition {
   }
 }
 
-extension ElementExtensions on Element {
-  Element get canonicalElement {
-    var self = this;
-    if (self is PropertyAccessorElement) {
-      var variable = self.variable;
-      if (variable is FieldMember) {
-        // A field element defined in a parameterized type where the values of
-        // the type parameters are known.
-        //
-        // This concept should be invisible when comparing FieldElements, but a
-        // bug in the analyzer causes FieldElements to not evaluate as
-        // equivalent to equivalent FieldMembers. See
-        // https://github.com/dart-lang/sdk/issues/35343.
-        return variable.declaration;
-      } else {
-        return variable;
-      }
-    } else {
-      return self;
-    }
-  }
-}
-
-extension AstNodeExtensions on AstNode? {
-  Element? get canonicalElement {
-    var self = this;
-    if (self is Expression) {
-      var node = self.unParenthesized;
-      if (node is Identifier) {
-        return node.staticElement?.canonicalElement;
-      } else if (node is PropertyAccess) {
-        return node.propertyName.staticElement?.canonicalElement;
-      }
-    }
-    return null;
-  }
-}
-
-extension ExpressionExtensions on Expression? {
-  bool get isNullLiteral => this?.unParenthesized is NullLiteral;
-}
-
 extension DartTypeExtensions on DartType {
   /// Returns the type which should be used when conducting "interface checks"
   /// on `this`.
   ///
   /// If `this` is a type variable, then the type-for-interface-check of its
   /// promoted bound or bound is returned. Otherwise, `this` is returned.
+  // TODO(srawlins): Move to extensions.dart.
   DartType get typeForInterfaceCheck {
     if (this is TypeParameterType) {
       if (this is TypeParameterTypeImpl) {
