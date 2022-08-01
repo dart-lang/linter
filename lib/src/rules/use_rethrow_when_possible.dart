@@ -64,13 +64,10 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitThrowExpression(ThrowExpression node) {
     if (node.parent is Expression || node.parent is ArgumentList) return;
 
-    var element =
-        DartTypeUtilities.getCanonicalElementFromIdentifier(node.expression);
+    var element = node.expression.canonicalElement;
     if (element != null) {
       var catchClause = node.thisOrAncestorOfType<CatchClause>();
-      var exceptionParameter =
-          DartTypeUtilities.getCanonicalElementFromIdentifier(
-              catchClause?.exceptionParameter);
+      var exceptionParameter = catchClause?.exceptionParameter.canonicalElement;
       if (element == exceptionParameter) {
         rule.reportLint(node);
       }

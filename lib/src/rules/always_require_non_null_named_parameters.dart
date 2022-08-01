@@ -144,7 +144,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
       if (expression.operator.type == TokenType.BANG_EQ) {
         var operands = [expression.leftOperand, expression.rightOperand];
-        return operands.any(DartTypeUtilities.isNullLiteral) &&
+        return operands.any((e) => e.isNullLiteral) &&
             operands.any(hasSameName);
       }
     }

@@ -60,7 +60,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.writeElement is PropertyAccessorElement) return;
 
     if (node.operator.type == TokenType.QUESTION_QUESTION_EQ &&
-        DartTypeUtilities.isNullLiteral(node.rightHandSide)) {
+        node.rightHandSide.isNullLiteral) {
       rule.reportLint(node);
     }
   }

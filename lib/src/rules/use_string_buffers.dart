@@ -124,8 +124,7 @@ class _UseStringBufferVisitor extends SimpleAstVisitor {
     if (left is SimpleIdentifier &&
         DartTypeUtilities.isClass(node.writeType, 'String', 'dart.core')) {
       if (node.operator.type == TokenType.PLUS_EQ &&
-          !localElements.contains(
-              DartTypeUtilities.getCanonicalElement(node.writeElement))) {
+          !localElements.contains(node.writeElement?.canonicalElement)) {
         rule.reportLint(node);
       }
       if (node.operator.type == TokenType.EQ) {

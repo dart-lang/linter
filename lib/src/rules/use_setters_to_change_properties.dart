@@ -65,10 +65,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     void checkExpression(Expression expression) {
       if (expression is AssignmentExpression &&
           expression.operator.type == TokenType.EQ) {
-        var leftOperand =
-            DartTypeUtilities.getCanonicalElement(expression.writeElement);
-        var rightOperand = DartTypeUtilities.getCanonicalElementFromIdentifier(
-            expression.rightHandSide);
+        var leftOperand = expression.writeElement?.canonicalElement;
+        var rightOperand = expression.rightHandSide.canonicalElement;
         var parameterElement = node.declaredElement?.parameters.first;
         if (rightOperand == parameterElement && leftOperand is FieldElement) {
           rule.reportLint(node.name);

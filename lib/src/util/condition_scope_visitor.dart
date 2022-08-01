@@ -11,7 +11,7 @@ import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
 
 Element? _getLeftElement(AssignmentExpression assignment) =>
-    DartTypeUtilities.getCanonicalElement(assignment.writeElement);
+    assignment.writeElement?.canonicalElement;
 
 List<Expression?> _splitConjunctions(Expression? rawExpression) {
   var expression = rawExpression?.unParenthesized;
@@ -435,7 +435,7 @@ class _UndefinedExpression extends ExpressionBox {
   String toString() => '$element got undefined';
 
   static _UndefinedExpression? forElement(Element? element) {
-    var canonicalElement = DartTypeUtilities.getCanonicalElement(element);
+    var canonicalElement = element?.canonicalElement;
     if (canonicalElement == null) return null;
     return _UndefinedExpression._internal(canonicalElement);
   }

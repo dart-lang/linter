@@ -98,8 +98,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (defaultValue != 'null') return;
     }
 
-    if (DartTypeUtilities.isNullLiteral(node.defaultValue) &&
-        isNullable(declaredElement.type)) {
+    if (node.defaultValue.isNullLiteral && isNullable(declaredElement.type)) {
       rule.reportLint(node);
     }
   }
@@ -110,7 +109,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (declaredElement != null &&
         !node.isConst &&
         !node.isFinal &&
-        DartTypeUtilities.isNullLiteral(node.initializer) &&
+        node.initializer.isNullLiteral &&
         isNullable(declaredElement.type)) {
       rule.reportLint(node);
     }

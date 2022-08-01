@@ -152,9 +152,9 @@ class _Visitor extends UnifyingAstVisitor<void> {
 
     Element? element;
     if (parent is AssignmentExpression && parent.leftHandSide == node) {
-      element = DartTypeUtilities.getCanonicalElement(parent.writeElement);
+      element = parent.writeElement?.canonicalElement;
     } else {
-      element = DartTypeUtilities.getCanonicalElementFromIdentifier(node);
+      element = node.canonicalElement;
     }
 
     if (element != null) {

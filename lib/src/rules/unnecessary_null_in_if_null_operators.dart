@@ -55,8 +55,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitBinaryExpression(BinaryExpression node) {
     if (node.operator.type == TokenType.QUESTION_QUESTION &&
-        (DartTypeUtilities.isNullLiteral(node.rightOperand) ||
-            DartTypeUtilities.isNullLiteral(node.leftOperand))) {
+        (node.rightOperand.isNullLiteral || node.leftOperand.isNullLiteral)) {
       rule.reportLint(node);
     }
   }
