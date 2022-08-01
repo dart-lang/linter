@@ -146,6 +146,10 @@ class DartTypeUtilities {
           DartType? type, String? className, String? library) =>
       _extendsClass(type, <ClassElement>{}, className, library);
 
+  @Deprecated('Replace with `rawNode.canonicalElement`')
+  static Element? getCanonicalElementFromIdentifier(AstNode? rawNode) =>
+      rawNode.canonicalElement;
+
   static Iterable<InterfaceType> getImplementedInterfaces(InterfaceType type) {
     void recursiveCall(InterfaceType? type, Set<ClassElement> alreadyVisited,
         List<InterfaceType> interfaceTypes) {
@@ -246,6 +250,9 @@ class DartTypeUtilities {
 
   static bool isNonNullable(LinterContext context, DartType? type) =>
       type != null && context.typeSystem.isNonNullable(type);
+
+  @Deprecated('Replace with `expression.isNullLiteral`')
+  static bool isNullLiteral(Expression? expression) => expression.isNullLiteral;
 
   static PropertyAccessorElement? lookUpGetter(MethodDeclaration node) {
     var declaredElement = node.declaredElement;
