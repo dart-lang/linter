@@ -10,6 +10,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart';
 
 import '../analyzer.dart';
+import '../extensions.dart';
 import '../util/dart_type_utilities.dart';
 
 const _desc = r'Use late for private members with a non-nullable type.';
@@ -129,6 +130,11 @@ class _Visitor extends UnifyingAstVisitor<void> {
   }
 
   @override
+  void visitEnumDeclaration(EnumDeclaration node) {
+    // See: https://dart.dev/tools/diagnostic-messages#late_final_field_with_const_constructor
+  }
+
+  @override
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var variable in node.fields.variables) {
       var parent = node.parent;
@@ -152,9 +158,9 @@ class _Visitor extends UnifyingAstVisitor<void> {
 
     Element? element;
     if (parent is AssignmentExpression && parent.leftHandSide == node) {
-      element = DartTypeUtilities.getCanonicalElement(parent.writeElement);
+      element = parent.writeElement?.canonicalElement;
     } else {
-      element = DartTypeUtilities.getCanonicalElementFromIdentifier(node);
+      element = node.canonicalElement;
     }
 
     if (element != null) {

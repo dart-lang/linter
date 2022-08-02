@@ -8,6 +8,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
+import '../extensions.dart';
 import '../util/dart_type_utilities.dart';
 
 const _desc =
@@ -50,7 +51,7 @@ bool _isPrimitiveType(DartType type) =>
     DartTypeUtilities.isClass(type, 'double', 'dart.core');
 
 bool _isReturnNull(AstNode node) =>
-    node is ReturnStatement && DartTypeUtilities.isNullLiteral(node.expression);
+    node is ReturnStatement && node.expression.isNullLiteral;
 
 class AvoidReturningNull extends LintRule {
   AvoidReturningNull()
@@ -97,13 +98,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  void _visitFunctionBody(FunctionBody? node) {
-    if (node is ExpressionFunctionBody &&
-        DartTypeUtilities.isNullLiteral(node.expression)) {
+  void _visitFunctionBody(FunctionBody node) {
+    if (node is ExpressionFunctionBody && node.expression.isNullLiteral) {
       rule.reportLint(node);
       return;
     }
-    DartTypeUtilities.traverseNodesInDFS(node!,
+    DartTypeUtilities.traverseNodesInDFS(node,
             excludeCriteria: _isFunctionExpression)
         .where(_isReturnNull)
         .forEach(rule.reportLint);

@@ -27,6 +27,23 @@ condition() {
 ''', [
       // No lint
       error(HintCode.UNUSED_LOCAL_VARIABLE, 41, 4),
+      error(CompileTimeErrorCode.ARGUMENT_TYPE_NOT_ASSIGNABLE, 77, 3),
+    ]);
+  }
+
+  /// https://github.com/dart-lang/linter/issues/3546
+  test_secondArgNonZero() async {
+    await assertNoDiagnostics(r'''
+bool b = '11'.indexOf('2', 1) == -1;
+''');
+  }
+
+  /// https://github.com/dart-lang/linter/issues/3546
+  test_secondArgZero() async {
+    await assertDiagnostics(r'''
+bool b = '11'.indexOf('2', 0) == -1;
+''', [
+      lint('prefer_contains', 9, 26),
     ]);
   }
 

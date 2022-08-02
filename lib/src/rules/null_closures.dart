@@ -8,7 +8,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Do not pass `null` as an argument where a closure is expected.';
 
@@ -184,7 +184,7 @@ List<NonNullableFunction> _staticFunctionsWithNonNullableArguments =
 
 /// Function with closure parameters that cannot accept null arguments.
 class NonNullableFunction {
-  final String? library;
+  final String library;
   final String? type;
   final String? name;
   final List<int> positional;
@@ -233,8 +233,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var type = node.staticType;
     for (var constructor in _constructorsWithNonNullableArguments) {
       if (constructorName.name?.name == constructor.name) {
-        if (DartTypeUtilities.extendsClass(
-            type, constructor.type, constructor.library)) {
+        if (type.extendsClass(constructor.type, constructor.library)) {
           _checkNullArgForClosure(
               node.argumentList, constructor.positional, constructor.named);
         }
@@ -298,7 +297,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return null;
     }
 
-    NonNullableFunction? getMethod(String? library, String? className) =>
+    NonNullableFunction? getMethod(String library, String className) =>
         possibleMethods
             .lookup(NonNullableFunction(library, className, methodName));
 

@@ -8,7 +8,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Specify `@required` on named parameters without defaults.';
 
@@ -117,7 +117,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  void _checkParams(List<DefaultFormalParameter> params, FunctionBody? body) {
+  void _checkParams(List<DefaultFormalParameter> params, FunctionBody body) {
     if (body is BlockFunctionBody) {
       for (var statement in body.block.statements) {
         if (statement is AssertStatement) {
@@ -144,7 +144,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
       if (expression.operator.type == TokenType.BANG_EQ) {
         var operands = [expression.leftOperand, expression.rightOperand];
-        return operands.any(DartTypeUtilities.isNullLiteral) &&
+        return operands.any((e) => e.isNullLiteral) &&
             operands.any(hasSameName);
       }
     }

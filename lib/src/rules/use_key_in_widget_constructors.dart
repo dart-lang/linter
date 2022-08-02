@@ -28,7 +28,7 @@ class MyPublicWidget extends StatelessWidget {
 **GOOD:**
 ```dart
 class MyPublicWidget extends StatelessWidget {
-  MyPublicWidget({Key? key}) : super(key: key);
+  MyPublicWidget({super.key});
 }
 ```
 ''';
@@ -73,7 +73,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (constructorElement == null) {
       return;
     }
-    var classElement = constructorElement.enclosingElement;
+    var classElement = constructorElement.enclosingElement2;
     if (constructorElement.isPublic &&
         !constructorElement.isFactory &&
         classElement.isPublic &&

@@ -3,229 +3,91 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/src/dart/element/member.dart'; // ignore: implementation_imports
 import 'package:analyzer/src/dart/element/type.dart'; // ignore: implementation_imports
 
 import '../analyzer.dart';
 import '../ast.dart';
+import '../extensions.dart';
 
 typedef AstNodePredicate = bool Function(AstNode node);
 
+/// Returns whether the canonical elements of [element1] and [element2] are
+/// equal.
+bool canonicalElementsAreEqual(Element? element1, Element? element2) =>
+    element1?.canonicalElement == element2?.canonicalElement;
+
+/// Returns whether the canonical elements from two nodes are equal.
+///
+/// As in, [AstNodeExtension.canonicalElement], the two nodes must be
+/// [Expression]s in order to be compared (otherwise `false` is returned).
+///
+/// The two nodes must both be a [SimpleIdentifier], [PrefixedIdentifier], or
+/// [PropertyAccess] (otherwise `false` is returned).
+///
+/// If the two nodes are PrefixedIdentifiers, or PropertyAccess nodes, then
+/// `true` is returned only if their canonical elements are equal, in
+/// addition to their prefixes' and targets' (respectfully) canonical
+/// elements.
+///
+/// There is an inherent assumption about pure getters. For example:
+///
+///     A a1 = ...
+///     A a2 = ...
+///     a1.b.c; // statement 1
+///     a2.b.c; // statement 2
+///     a1.b.c; // statement 3
+///
+/// The canonical elements from statements 1 and 2 are different, because a1
+/// is not the same element as a2.  The canonical elements from statements 1
+/// and 3 are considered to be equal, even though `A.b` may have side effects
+/// which alter the returned value.
+bool canonicalElementsFromIdentifiersAreEqual(
+    Expression? rawExpression1, Expression? rawExpression2) {
+  if (rawExpression1 == null || rawExpression2 == null) return false;
+
+  var expression1 = rawExpression1.unParenthesized;
+  var expression2 = rawExpression2.unParenthesized;
+
+  if (expression1 is SimpleIdentifier) {
+    return expression2 is SimpleIdentifier &&
+        canonicalElementsAreEqual(getWriteOrReadElement(expression1),
+            getWriteOrReadElement(expression2));
+  }
+
+  if (expression1 is PrefixedIdentifier) {
+    return expression2 is PrefixedIdentifier &&
+        canonicalElementsAreEqual(expression1.prefix.staticElement,
+            expression2.prefix.staticElement) &&
+        canonicalElementsAreEqual(getWriteOrReadElement(expression1.identifier),
+            getWriteOrReadElement(expression2.identifier));
+  }
+
+  if (expression1 is PropertyAccess && expression2 is PropertyAccess) {
+    var target1 = expression1.target;
+    var target2 = expression2.target;
+    return canonicalElementsFromIdentifiersAreEqual(target1, target2) &&
+        canonicalElementsAreEqual(
+            getWriteOrReadElement(expression1.propertyName),
+            getWriteOrReadElement(expression2.propertyName));
+  }
+
+  return false;
+}
+
 class DartTypeUtilities {
-  /// Returns an [EnumLikeClassDescription] for [classElement] if the latter is
-  /// a valid "enum-like" class.
-  ///
-  /// An enum-like class must meet the following requirements:
-  ///
-  /// * is concrete,
-  /// * has no public constructors,
-  /// * has no factory constructors,
-  /// * has two or more static const fields with the same type as the class,
-  /// * has no subclasses declared in the defining library.
-  ///
-  /// The returned [EnumLikeClassDescription]'s `enumConstantNames` contains all
-  /// of the static const fields with the same type as the class, with one
-  /// exception; any static const field which is marked `@Deprecated` and is
-  /// equal to another static const field with the same type as the class is not
-  /// included. Such a field is assumed to be deprecated in favor of the field
-  /// with equal value.
-  static EnumLikeClassDescription? asEnumLikeClass(ClassElement classElement) {
-    // See discussion: https://github.com/dart-lang/linter/issues/2083
-    //
-
-    // Must be concrete.
-    if (classElement.isAbstract) {
-      return null;
-    }
-
-    // With only private non-factory constructors.
-    for (var cons in classElement.constructors) {
-      if (!cons.isPrivate || cons.isFactory) {
-        return null;
-      }
-    }
-
-    var type = classElement.thisType;
-
-    // And 2 or more static const fields whose type is the enclosing class.
-    var enumConstantCount = 0;
-    var enumConstants = <DartObject, Set<FieldElement>>{};
-    for (var field in classElement.fields) {
-      // Ensure static const.
-      if (field.isSynthetic || !field.isConst || !field.isStatic) {
-        continue;
-      }
-      // Check for type equality.
-      if (field.type != type) {
-        continue;
-      }
-      var fieldValue = field.computeConstantValue();
-      if (fieldValue == null) {
-        continue;
-      }
-      enumConstantCount++;
-      enumConstants.putIfAbsent(fieldValue, () => {}).add(field);
-    }
-    if (enumConstantCount < 2) {
-      return null;
-    }
-
-    // And no subclasses in the defining library.
-    if (hasSubclassInDefiningCompilationUnit(classElement)) return null;
-
-    return EnumLikeClassDescription(enumConstants);
-  }
-
-  /// Return whether the canonical elements of two elements are equal.
-  static bool canonicalElementsAreEqual(Element? element1, Element? element2) =>
-      getCanonicalElement(element1) == getCanonicalElement(element2);
-
-  /// Returns whether the canonical elements from two nodes are equal.
-  ///
-  /// As in, [getCanonicalElementFromIdentifier], the two nodes must be
-  /// [Expression]s in order to be compared (otherwise `false` is returned).
-  ///
-  /// The two nodes must both be a [SimpleIdentifier], [PrefixedIdentifier], or
-  /// [PropertyAccess] (otherwise `false` is returned).
-  ///
-  /// If the two nodes are PrefixedIdentifiers, or PropertyAccess nodes, then
-  /// `true` is returned only if their canonical elements are equal, in
-  /// addition to their prefixes' and targets' (respectfully) canonical
-  /// elements.
-  ///
-  /// There is an inherent assumption about pure getters. For example:
-  ///
-  ///     A a1 = ...
-  ///     A a2 = ...
-  ///     a1.b.c; // statement 1
-  ///     a2.b.c; // statement 2
-  ///     a1.b.c; // statement 3
-  ///
-  /// The canonical elements from statements 1 and 2 are different, because a1
-  /// is not the same element as a2.  The canonical elements from statements 1
-  /// and 3 are considered to be equal, even though `A.b` may have side effects
-  /// which alter the returned value.
-  static bool canonicalElementsFromIdentifiersAreEqual(
-      Expression? rawExpression1, Expression? rawExpression2) {
-    if (rawExpression1 == null || rawExpression2 == null) return false;
-
-    var expression1 = rawExpression1.unParenthesized;
-    var expression2 = rawExpression2.unParenthesized;
-
-    if (expression1 is SimpleIdentifier) {
-      return expression2 is SimpleIdentifier &&
-          canonicalElementsAreEqual(getWriteOrReadElement(expression1),
-              getWriteOrReadElement(expression2));
-    }
-
-    if (expression1 is PrefixedIdentifier) {
-      return expression2 is PrefixedIdentifier &&
-          canonicalElementsAreEqual(expression1.prefix.staticElement,
-              expression2.prefix.staticElement) &&
-          canonicalElementsAreEqual(
-              getWriteOrReadElement(expression1.identifier),
-              getWriteOrReadElement(expression2.identifier));
-    }
-
-    if (expression1 is PropertyAccess && expression2 is PropertyAccess) {
-      var target1 = expression1.target;
-      var target2 = expression2.target;
-      return canonicalElementsFromIdentifiersAreEqual(target1, target2) &&
-          canonicalElementsAreEqual(
-              getWriteOrReadElement(expression1.propertyName),
-              getWriteOrReadElement(expression2.propertyName));
-    }
-
-    return false;
-  }
-
+  @Deprecated('Replace with type.extendsClass')
   static bool extendsClass(
           DartType? type, String? className, String? library) =>
-      _extendsClass(type, <ClassElement>{}, className, library);
+      type.extendsClass(className, library!);
 
-  static Element? getCanonicalElement(Element? element) {
-    if (element is PropertyAccessorElement) {
-      var variable = element.variable;
-      if (variable is FieldMember) {
-        // A field element defined in a parameterized type where the values of
-        // the type parameters are known.
-        //
-        // This concept should be invisible when comparing FieldElements, but a
-        // bug in the analyzer causes FieldElements to not evaluate as
-        // equivalent to equivalent FieldMembers. See
-        // https://github.com/dart-lang/sdk/issues/35343.
-        return variable.declaration;
-      } else {
-        return variable;
-      }
-    } else {
-      return element;
-    }
-  }
-
-  static Element? getCanonicalElementFromIdentifier(AstNode? rawNode) {
-    if (rawNode is Expression) {
-      var node = rawNode.unParenthesized;
-      if (node is Identifier) {
-        return getCanonicalElement(node.staticElement);
-      } else if (node is PropertyAccess) {
-        return getCanonicalElement(node.propertyName.staticElement);
-      }
-    }
-    return null;
-  }
-
-  static Iterable<InterfaceType> getImplementedInterfaces(InterfaceType type) {
-    void recursiveCall(InterfaceType? type, Set<ClassElement> alreadyVisited,
-        List<InterfaceType> interfaceTypes) {
-      if (type == null || !alreadyVisited.add(type.element)) {
-        return;
-      }
-      interfaceTypes.add(type);
-      recursiveCall(type.superclass, alreadyVisited, interfaceTypes);
-      for (var interface in type.interfaces) {
-        recursiveCall(interface, alreadyVisited, interfaceTypes);
-      }
-      for (var mixin in type.mixins) {
-        recursiveCall(mixin, alreadyVisited, interfaceTypes);
-      }
-    }
-
-    var interfaceTypes = <InterfaceType>[];
-    recursiveCall(type, <ClassElement>{}, interfaceTypes);
-    return interfaceTypes;
-  }
-
-  static Statement? getLastStatementInBlock(Block node) {
-    if (node.statements.isEmpty) {
-      return null;
-    }
-    var lastStatement = node.statements.last;
-    if (lastStatement is Block) {
-      return getLastStatementInBlock(lastStatement);
-    }
-    return lastStatement;
-  }
+  @Deprecated('Replace with `rawNode.canonicalElement`')
+  static Element? getCanonicalElementFromIdentifier(AstNode? rawNode) =>
+      rawNode.canonicalElement;
 
   static bool hasInheritedMethod(MethodDeclaration node) =>
       lookUpInheritedMethod(node) != null;
-
-  static bool hasSubclassInDefiningCompilationUnit(ClassElement classElement) {
-    var compilationUnit = classElement.library.definingCompilationUnit;
-    for (var cls in compilationUnit.classes) {
-      InterfaceType? classType = cls.thisType;
-      do {
-        classType = classType?.superclass;
-        if (classType == classElement.thisType) {
-          return true;
-        }
-      } while (classType != null && !classType.isDartCoreObject);
-    }
-    return false;
-  }
 
   static bool implementsAnyInterface(
       DartType type, Iterable<InterfaceTypeDefinition> definitions) {
@@ -259,17 +121,13 @@ class DartTypeUtilities {
       type.element.name == className &&
       type.element.library.name == library;
 
-  static bool isClassElement(
-          ClassElement element, String className, String library) =>
-      element.name == className && element.library.name == library;
-
   static bool isConstructorElement(ConstructorElement? element,
           {required String uriStr,
           required String className,
           required String constructorName}) =>
       element != null &&
       element.library.name == uriStr &&
-      element.enclosingElement.name == className &&
+      element.enclosingElement2.name == className &&
       element.name == constructorName;
 
   static bool isInterface(
@@ -279,15 +137,15 @@ class DartTypeUtilities {
   static bool isNonNullable(LinterContext context, DartType? type) =>
       type != null && context.typeSystem.isNonNullable(type);
 
-  static bool isNullLiteral(Expression? expression) =>
-      expression?.unParenthesized is NullLiteral;
+  @Deprecated('Replace with `expression.isNullLiteral`')
+  static bool isNullLiteral(Expression? expression) => expression.isNullLiteral;
 
   static PropertyAccessorElement? lookUpGetter(MethodDeclaration node) {
     var declaredElement = node.declaredElement;
     if (declaredElement == null) {
       return null;
     }
-    var parent = declaredElement.enclosingElement;
+    var parent = declaredElement.enclosingElement2;
     if (parent is ClassElement) {
       return parent.lookUpGetter(node.name.name, declaredElement.library);
     }
@@ -303,7 +161,7 @@ class DartTypeUtilities {
     if (declaredElement == null) {
       return null;
     }
-    var parent = declaredElement.enclosingElement;
+    var parent = declaredElement.enclosingElement2;
     if (parent is ClassElement) {
       return parent.lookUpInheritedConcreteGetter(
           node.name.name, declaredElement.library);
@@ -315,7 +173,7 @@ class DartTypeUtilities {
   static MethodElement? lookUpInheritedConcreteMethod(MethodDeclaration node) {
     var declaredElement = node.declaredElement;
     if (declaredElement != null) {
-      var parent = declaredElement.enclosingElement;
+      var parent = declaredElement.enclosingElement2;
       if (parent is ClassElement) {
         return parent.lookUpInheritedConcreteMethod(
             node.name.name, declaredElement.library);
@@ -329,7 +187,7 @@ class DartTypeUtilities {
       MethodDeclaration node) {
     var declaredElement = node.declaredElement;
     if (declaredElement != null) {
-      var parent = declaredElement.enclosingElement;
+      var parent = declaredElement.enclosingElement2;
       if (parent is ClassElement) {
         return parent.lookUpInheritedConcreteSetter(
             node.name.name, declaredElement.library);
@@ -342,7 +200,7 @@ class DartTypeUtilities {
   static MethodElement? lookUpInheritedMethod(MethodDeclaration node) {
     var declaredElement = node.declaredElement;
     if (declaredElement != null) {
-      var parent = declaredElement.enclosingElement;
+      var parent = declaredElement.enclosingElement2;
       if (parent is ClassElement) {
         return parent.lookUpInheritedMethod(
             node.name.name, declaredElement.library);
@@ -354,7 +212,7 @@ class DartTypeUtilities {
   static PropertyAccessorElement? lookUpSetter(MethodDeclaration node) {
     var declaredElement = node.declaredElement;
     if (declaredElement != null) {
-      var parent = declaredElement.enclosingElement;
+      var parent = declaredElement.enclosingElement2;
       if (parent is ClassElement) {
         return parent.lookUpSetter(node.name.name, declaredElement.library);
       }
@@ -383,15 +241,13 @@ class DartTypeUtilities {
     }
     for (var argument in arguments) {
       if (argument is NamedExpression) {
-        var element = DartTypeUtilities.getCanonicalElementFromIdentifier(
-            argument.expression);
+        var element = argument.expression.canonicalElement;
         if (element == null) {
           return false;
         }
         namedArguments[argument.name.label.name] = element;
       } else {
-        var element =
-            DartTypeUtilities.getCanonicalElementFromIdentifier(argument);
+        var element = argument.canonicalElement;
         if (element == null) {
           return false;
         }
@@ -415,30 +271,6 @@ class DartTypeUtilities {
     }
 
     return true;
-  }
-
-  static bool overridesMethod(MethodDeclaration node) {
-    var parent = node.parent;
-    if (parent is! ClassOrMixinDeclaration) {
-      return false;
-    }
-    var name = node.declaredElement?.name;
-    if (name == null) {
-      return false;
-    }
-    var clazz = parent;
-    var classElement = clazz.declaredElement;
-    if (classElement == null) {
-      return false;
-    }
-    var library = classElement.library;
-    return classElement.allSupertypes
-        .map(node.isGetter
-            ? (InterfaceType t) => t.lookUpGetter2
-            : node.isSetter
-                ? (InterfaceType t) => t.lookUpSetter2
-                : (InterfaceType t) => t.lookUpMethod2)
-        .any((lookUp) => lookUp(name, library) != null);
   }
 
   /// Builds the list resulting from traversing the node in DFS and does not
@@ -546,13 +378,6 @@ class DartTypeUtilities {
     return false;
   }
 
-  static bool _extendsClass(DartType? type, Set<ClassElement> seenTypes,
-          String? className, String? library) =>
-      type is InterfaceType &&
-      seenTypes.add(type.element) &&
-      (isClass(type, className, library) ||
-          _extendsClass(type.superclass, seenTypes, className, library));
-
   static bool _isFunctionTypeUnrelatedToType(
       FunctionType type1, DartType type2) {
     if (type2 is FunctionType) {
@@ -565,14 +390,6 @@ class DartTypeUtilities {
     }
     return true;
   }
-}
-
-class EnumLikeClassDescription {
-  final Map<DartObject, Set<FieldElement>> _enumConstants;
-  EnumLikeClassDescription(this._enumConstants);
-
-  /// Returns a fresh map of the class's enum-like constant values.
-  Map<DartObject, Set<FieldElement>> get enumConstants => {..._enumConstants};
 }
 
 class InterfaceTypeDefinition {
@@ -601,6 +418,7 @@ extension DartTypeExtensions on DartType {
   ///
   /// If `this` is a type variable, then the type-for-interface-check of its
   /// promoted bound or bound is returned. Otherwise, `this` is returned.
+  // TODO(srawlins): Move to extensions.dart.
   DartType get typeForInterfaceCheck {
     if (this is TypeParameterType) {
       if (this is TypeParameterTypeImpl) {
