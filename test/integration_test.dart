@@ -49,8 +49,6 @@ import 'integration/unnecessary_string_escapes.dart'
     as unnecessary_string_escapes;
 import 'integration/use_build_context_synchronously.dart'
     as use_build_context_synchronously;
-import 'integration/use_string_in_part_of_directives.dart'
-    as use_string_in_part_of_directives;
 import 'mocks.dart';
 import 'test_constants.dart';
 
@@ -203,7 +201,6 @@ void ruleTests() {
     prefer_mixin.main();
     use_build_context_synchronously.main();
     prefer_const_constructors.main();
-    use_string_in_part_of_directives.main();
   });
 }
 
