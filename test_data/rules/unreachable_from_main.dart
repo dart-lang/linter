@@ -68,8 +68,8 @@ const entryPoint = pragma('vm:entry-point');
 @entryPoint
 void f7() {} // OK
 
-@pragma('other') // LINT
-void f8() {}
+@pragma('other')
+void f8() {} // LINT
 
 // test accessors
 int get id9 => 0;

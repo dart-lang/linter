@@ -143,7 +143,19 @@ class _Visitor extends SimpleAstVisitor<void> {
           element.isPublic &&
           !element.hasVisibleForTesting;
     });
-    unusedMembers.forEach(rule.reportLint);
+
+    for (var member in unusedMembers) {
+      if (member is NamedCompilationUnitMember) {
+        rule.reportLint(member.name);
+      } else if (member is VariableDeclaration) {
+        rule.reportLint(member.name);
+      } else if (member is ExtensionDeclaration) {
+        rule.reportLintForToken(
+            member.name?.token ?? member.firstTokenAfterCommentAndMetadata);
+      } else {
+        rule.reportLintForToken(member.firstTokenAfterCommentAndMetadata);
+      }
+    }
   }
 
   bool _isEntryPoint(Declaration e) =>
