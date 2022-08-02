@@ -103,6 +103,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
       var iterableType = loopParts.iterable.staticType;
       if (iterableType is InterfaceType) {
+        // TODO(srawlins): Is `DartType.asInstanceOf` the more correct API here?
         var iterableInterfaces = iterableType.implementedInterfaces.where(
             (type) =>
                 DartTypeUtilities.isInterface(type, 'Iterable', 'dart.core'));
