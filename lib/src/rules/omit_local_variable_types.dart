@@ -8,6 +8,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
+import '../extensions.dart';
 import '../util/dart_type_utilities.dart';
 
 const _desc = r'Omit type annotations for local variables.';
@@ -102,9 +103,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
       var iterableType = loopParts.iterable.staticType;
       if (iterableType is InterfaceType) {
-        var iterableInterfaces = DartTypeUtilities.getImplementedInterfaces(
-                iterableType)
-            .where((type) =>
+        var iterableInterfaces = iterableType.implementedInterfaces.where(
+            (type) =>
                 DartTypeUtilities.isInterface(type, 'Iterable', 'dart.core'));
         if (iterableInterfaces.length == 1 &&
             iterableInterfaces.first.typeArguments.first == staticType) {
