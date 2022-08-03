@@ -21,12 +21,17 @@ main() // OK
   usageInAnnotation();
   Future<C5>.value(C5()).extensionUsage();
   accessors();
+  print(c2);
 }
 
 class Comment {} // LINT
 
 const a = 1; // LINT
 const b = 1; // OK
+
+final int //
+    c1 = 1, // LINT
+    c2 = 2; // OK
 
 int v = 1; // LINT
 
@@ -116,4 +121,10 @@ class C6 {} //LINT
 extension UnusedPublicExt on C6 //LINT
 {
   m() {}
+}
+
+class C7 // LINT
+{
+  C7();
+  C7.named();
 }

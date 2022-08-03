@@ -17,8 +17,10 @@ const _desc = 'Unreachable top-level members in executable libraries.';
 const _details = r'''
 
 Top-level members in an executable library should be used directly inside this
-library.  Executable libraries are usually never imported and it's better to
-avoid defining unused members.
+library.  An executable library is a library that contains a `main` top-level
+function or that contains a top-level function annotated with
+`@pragma('vm:entry-point')`).  Executable libraries are usually never imported
+and it's better to avoid defining unused members.
 
 This rule assumes that an executable library isn't imported by other files
 except to execute its `main` function.
@@ -100,6 +102,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     }
 
+    // The following map contains for every declaration the set of the
+    // declarations it references.
     var dependencies = Map<Declaration, Set<Declaration>>.fromIterable(
       topDeclarations,
       value: (declaration) =>
@@ -113,13 +117,9 @@ class _Visitor extends SimpleAstVisitor<void> {
                     ],
                   ])
               .whereNotNull()
-              .map((e) {
-                while (e.enclosingElement2 != null &&
-                    e.enclosingElement2 is! CompilationUnitElement) {
-                  e = e.enclosingElement2!;
-                }
-                return e;
-              })
+              .map((e) => e.thisOrAncestorMatching((a) =>
+                  a.enclosingElement2 == null ||
+                  a.enclosingElement2 is CompilationUnitElement))
               .map((e) => declarationByElement[e])
               .whereNotNull()
               .where((e) => e != declaration)
@@ -127,7 +127,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     );
 
     var usedMembers = entryPoints.toSet();
-    var toTraverse = Queue.from(usedMembers);
+    // The following variable will be used to visit every reachable declaration
+    // starting from entry-points. At every loop an element is removed. This
+    // element is marked as used and we add its dependencies in the declaration
+    // list to traverse. Once this list is empty `usedMembers` contains every
+    // declarations reachable from an entry-point.
+    var toTraverse = Queue.of(usedMembers);
     while (toTraverse.isNotEmpty) {
       var declaration = toTraverse.removeLast();
       for (var dep in dependencies[declaration]!) {
@@ -163,26 +168,17 @@ class _Visitor extends SimpleAstVisitor<void> {
       (e.name.name == 'main' || e.metadata.any(_isPragmaVmEntry));
 
   bool _isPragmaVmEntry(Annotation annotation) {
-    var elementAnnotation = annotation.elementAnnotation;
-    if (elementAnnotation != null) {
-      var value = elementAnnotation.computeConstantValue();
-      if (value != null) {
-        var type = value.type;
-        if (type != null) {
-          var element = type.element;
-          if (element != null) {
-            var library = element.library;
-            if (library != null && library.isDartCore ||
-                element.name == 'pragma') {
-              var name = value.getField('name');
-              return name != null &&
-                  name.hasKnownValue &&
-                  name.toStringValue() == 'vm:entry-point';
-            }
-          }
-        }
-      }
-    }
-    return false;
+    var value = annotation.elementAnnotation?.computeConstantValue();
+    if (value == null) return false;
+    var element = value.type?.element;
+    if (element == null || !element.isPragma) return false;
+    var name = value.getField('name');
+    return name != null &&
+        name.hasKnownValue &&
+        name.toStringValue() == 'vm:entry-point';
   }
+}
+
+extension on Element {
+  bool get isPragma => (library?.isDartCore ?? false) && name == 'pragma';
 }
