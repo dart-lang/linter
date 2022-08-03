@@ -114,6 +114,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     } else if (staticParameterElement != null) {
       expectedType = staticParameterElement.type;
     } else if (parent is NamedExpression) {
+      // TODO(a14n): remove this if-block once https://github.com/dart-lang/sdk/issues/45964 is fixed
       expectedType = parent.element?.type;
     }
 
