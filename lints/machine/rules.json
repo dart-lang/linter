@@ -654,7 +654,7 @@
       "flutter"
     ],
     "fixStatus": "hasFix",
-    "details": "\n**AVOID** using `forEach` with a function literal.\n\n**BAD:**\n```dart\npeople.forEach((person) {\n  ...\n});\n```\n\n**GOOD:**\n```dart\nfor (var person in people) {\n  ...\n}\n\npeople.forEach(print);\n```\n"
+    "details": "\n**AVOID** using `forEach` with a function literal.\n\nThe `for` loop enables a developer to be clear and explicit as to their intent.\nA return in the body of the `for` loop returns from the body of the function, \nwhere as a return in the body of the `forEach` closure only returns a value \nfor that iteration of the `forEach`. The body of a `for` loop can contain \n`await`s, while the closure body of a `forEach` cannot.\n\n**BAD:**\n```dart\npeople.forEach((person) {\n  ...\n});\n```\n\n**GOOD:**\n```dart\nfor (var person in people) {\n  ...\n}\n```\n"
   },
   {
     "name": "avoid_implementing_value_types",
