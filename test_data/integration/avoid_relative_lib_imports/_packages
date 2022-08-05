@@ -1,1 +1,11 @@
-p6:../p6/lib/
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "p6",
+      "rootUri": "../p6",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    }
+  ]
+}

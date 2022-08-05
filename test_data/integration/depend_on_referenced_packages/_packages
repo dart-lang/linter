@@ -1,5 +1,35 @@
-flutter_gen:vendor/flutter_gen
-sample_project:lib/
-public_dep:vendor/public_dep/
-private_dep:vendor/private_dep/
-transitive_dep:vendor/transitive_dep/
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "flutter_gen",
+      "rootUri": "vendor/flutter_gen",
+      "packageUri": ".",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "sample_project",
+      "rootUri": ".",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "public_dep",
+      "rootUri": "vendor/public_dep",
+      "packageUri": ".",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "private_dep",
+      "rootUri": "vendor/private_dep",
+      "packageUri": ".",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "transitive_dep",
+      "rootUri": "vendor/transitive_dep",
+      "packageUri": ".",
+      "languageVersion": "2.17"
+    }
+  ]
+}

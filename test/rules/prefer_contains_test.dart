@@ -22,7 +22,7 @@ class PreferContainsTest extends LintRuleTest {
 List<int> list = [];
 condition() {
   var next;
-  while ((next = list.indexOf('{')) != -1) {}
+  while ((next = list.indexOf(42)) != -1) {}
 }
 ''', [
       // No lint

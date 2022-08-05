@@ -1,1 +1,11 @@
-p4:lib/
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "p4",
+      "rootUri": ".",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    }
+  ]
+}

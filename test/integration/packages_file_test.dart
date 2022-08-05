@@ -26,9 +26,9 @@ void main() {
       outSink = currentOut;
       exitCode = 0;
     });
-    group('.packages', () {
+    group('package_config.json', () {
       test('basic', () async {
-        // Requires .packages to analyze cleanly.
+        // Requires package_config.json to analyze cleanly.
         await cli.runLinter([
           '$integrationTestDir/p5',
           '--packages',

@@ -1,1 +1,11 @@
-avoid_renaming_method_parameters:lib/
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "avoid_renaming_method_parameters",
+      "rootUri": ".",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    }
+  ]
+}
