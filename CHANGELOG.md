@@ -2,6 +2,7 @@
 
 - fix `avoid_redundant_argument_values` when referencing required 
   parameters in legacy libraries
+- performance improvements for `use_late_for_private_fields_and_variables`
 - new lint: `use_string_in_part_of_directives`
 - fixed `use_super_parameters` false positive with repeated super
   parameter references
