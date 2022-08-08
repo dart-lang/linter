@@ -1,5 +1,7 @@
 # 1.27.0
 
+- fix `avoid_redundant_argument_values` when referencing required 
+  parameters in legacy libraries
 - new lint: `use_string_in_part_of_directives`
 - fixed `use_super_parameters` false positive with repeated super
   parameter references
