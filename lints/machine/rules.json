@@ -2446,7 +2446,7 @@
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "unregistered",
+    "fixStatus": "needsEvaluation",
     "details": "\nFrom [effective dart](https://dart.dev/guides/language/effective-dart/usage#do-use-strings-in-part-of-directives):\n\n**DO** use strings in `part of` directives.\n\n**BAD:**\n\n```dart\npart of my_library;\n```\n\n**GOOD:**\n\n```dart\npart of '../../my_library.dart';\n```\n\n"
   },
   {
