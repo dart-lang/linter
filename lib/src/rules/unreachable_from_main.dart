@@ -7,6 +7,7 @@ import 'dart:collection';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 
 import '../analyzer.dart';
@@ -19,7 +20,7 @@ const _details = r'''
 Top-level members in an executable library should be used directly inside this
 library.  An executable library is a library that contains a `main` top-level
 function or that contains a top-level function annotated with
-`@pragma('vm:entry-point')`).  Executable libraries are usually never imported
+`@pragma('vm:entry-point')`).  Executable libraries are not usually imported
 and it's better to avoid defining unused members.
 
 This rule assumes that an executable library isn't imported by other files
@@ -168,10 +169,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       (e.name.name == 'main' || e.metadata.any(_isPragmaVmEntry));
 
   bool _isPragmaVmEntry(Annotation annotation) {
+    if (!annotation.isPragma) return false;
     var value = annotation.elementAnnotation?.computeConstantValue();
     if (value == null) return false;
-    var element = value.type?.element;
-    if (element == null || !element.isPragma) return false;
     var name = value.getField('name');
     return name != null &&
         name.hasKnownValue &&
@@ -181,4 +181,20 @@ class _Visitor extends SimpleAstVisitor<void> {
 
 extension on Element {
   bool get isPragma => (library?.isDartCore ?? false) && name == 'pragma';
+}
+
+extension on Annotation {
+  bool get isPragma {
+    var element = elementAnnotation?.element;
+    DartType type;
+    if (element is ConstructorElement) {
+      type = element.returnType;
+    } else if (element is PropertyAccessorElement && element.isGetter) {
+      type = element.returnType;
+    } else {
+      // Dunno what this is.
+      return false;
+    }
+    return type.element?.isPragma ?? false;
+  }
 }
