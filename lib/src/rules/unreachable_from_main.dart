@@ -119,8 +119,8 @@ class _Visitor extends SimpleAstVisitor<void> {
                   ])
               .whereNotNull()
               .map((e) => e.thisOrAncestorMatching((a) =>
-                  a.enclosingElement2 == null ||
-                  a.enclosingElement2 is CompilationUnitElement))
+                  a.enclosingElement3 == null ||
+                  a.enclosingElement3 is CompilationUnitElement))
               .map((e) => declarationByElement[e])
               .whereNotNull()
               .where((e) => e != declaration)
@@ -152,12 +152,12 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     for (var member in unusedMembers) {
       if (member is NamedCompilationUnitMember) {
-        rule.reportLint(member.name);
+        rule.reportLintForToken(member.name2);
       } else if (member is VariableDeclaration) {
-        rule.reportLint(member.name);
+        rule.reportLintForToken(member.name2);
       } else if (member is ExtensionDeclaration) {
         rule.reportLintForToken(
-            member.name?.token ?? member.firstTokenAfterCommentAndMetadata);
+            member.name2 ?? member.firstTokenAfterCommentAndMetadata);
       } else {
         rule.reportLintForToken(member.firstTokenAfterCommentAndMetadata);
       }
@@ -166,7 +166,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool _isEntryPoint(Declaration e) =>
       e is FunctionDeclaration &&
-      (e.name.name == 'main' || e.metadata.any(_isPragmaVmEntry));
+      (e.name2.lexeme == 'main' || e.metadata.any(_isPragmaVmEntry));
 
   bool _isPragmaVmEntry(Annotation annotation) {
     if (!annotation.isPragma) return false;
@@ -195,6 +195,6 @@ extension on Annotation {
       // Dunno what this is.
       return false;
     }
-    return type.element?.isPragma ?? false;
+    return type is InterfaceType && type.element2.isPragma;
   }
 }

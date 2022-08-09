@@ -24,7 +24,7 @@ main() // OK
   print(c2);
 }
 
-class Comment {} // LINT
+class Comment {} // OK
 
 const a = 1; // LINT
 const b = 1; // OK
@@ -91,7 +91,7 @@ void usageInTypeBound<T extends C1>() {}
 // Usage in Function type
 class C2 {}
 
-void Function(C2)? usageInFunctionType() {}
+void Function(C2)? usageInFunctionType() => null;
 
 // Usage in default value
 class C3 {
