@@ -66,6 +66,11 @@ class D2 extends C {
   int get i => super.i + 1; // OK.
   D2(super.i);
 }
+
+class D3 implements C {
+  final int i; // OK.
+  D3(this.i);
+}
 ```
 
 ''';
@@ -89,6 +94,7 @@ class AvoidUnstableFinalFields extends LintRule {
 
 bool _isLocallyStable(Element element) {
   if (element is PropertyAccessorElement &&
+      element.isGetter &&
       element.isSynthetic &&
       element.correspondingSetter == null) {
     // This is a final, non-local variable, and they are stable.
@@ -114,8 +120,9 @@ bool _isLocallyStable(Element element) {
     // A reified type of a class is stable.
     return true;
   } else if (element is MethodElement) {
-    // An instance method tear-off is never stable.
-    return false;
+    // An instance method tear-off is never stable,
+    // but a static method tear-off is stable.
+    return element.isStatic;
   }
   // TODO(eernst): Any cases still missing?
   return false;
@@ -126,8 +133,8 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   final LinterContext context;
 
   // Will be true initially when a getter body is traversed. Will be made
-  // true if the getter body turns out to be unstable. Is checked after the
-  // traversal of the body, ot emit a lint if it is still false at that time.
+  // false if the getter body turns out to be unstable. Is checked after the
+  // traversal of the body, to emit a lint if it is false at that time.
   bool isStable = true;
 
   // Each [MethodDeclaration] which is causing the lint to be reported is added
@@ -140,8 +147,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   _AbstractVisitor(this.rule, this.context);
 
-  bool _inheritsStability(
-      ClassElement classElement, Name name, LinterContext context) {
+  bool _inheritsStability(ClassElement classElement, Name name) {
     var overriddenList =
         context.inheritanceManager.getOverridden2(classElement, name);
     if (overriddenList == null) return false;
@@ -154,7 +160,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
     return false;
   }
 
-  bool _isStable(Element? element, LinterContext context) {
+  bool _isStable(Element? element) {
     if (element == null) return false; // This would be an error in the program.
     var enclosingElement = element.enclosingElement;
     if (_isLocallyStable(element)) return true;
@@ -167,7 +173,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
       }
       var libraryUri = element.library.source.uri;
       var name = Name(libraryUri, element.name);
-      return _inheritsStability(enclosingElement, name, context);
+      return _inheritsStability(enclosingElement, name);
     }
     return false;
   }
@@ -496,10 +502,10 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
     var prefixDeclaration = node.prefix.staticElement?.declaration;
     if (prefixDeclaration is PrefixElement) {
       var declaredElement = node.identifier.staticElement?.declaration;
-      if (!_isStable(declaredElement, context)) isStable = false;
+      if (!_isStable(declaredElement)) isStable = false;
     } else if (prefixDeclaration is ClassElement) {
       var declaredElement = node.identifier.staticElement?.declaration;
-      if (!_isStable(declaredElement, context)) isStable = false;
+      if (!_isStable(declaredElement)) isStable = false;
     }
   }
 
@@ -508,7 +514,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
     node.realTarget.accept(this);
     if (isStable) {
       var element = node.propertyName.staticElement?.declaration;
-      if (!_isStable(element, context)) isStable = false;
+      if (!_isStable(element)) isStable = false;
     }
   }
 
@@ -530,7 +536,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   @override
   void visitSimpleIdentifier(SimpleIdentifier node) {
     var declaration = node.staticElement?.declaration;
-    if (!_isStable(declaration, context)) {
+    if (!_isStable(declaration)) {
       isStable = false;
     }
   }
@@ -628,7 +634,7 @@ class _FieldVisitor extends _AbstractVisitor {
         classElement ??= declaredElement.enclosingElement as ClassElement;
         libraryUri ??= declaredElement.library.source.uri;
         name ??= Name(libraryUri, declaredElement.name);
-        if (_inheritsStability(classElement, name, context)) {
+        if (_inheritsStability(classElement, name)) {
           doReportLint(node, variable.name);
         }
       }
@@ -651,7 +657,7 @@ class _MethodVisitor extends _AbstractVisitor {
       if (enclosingElement is ClassElement) {
         var libraryUri = declaredElement.library.source.uri;
         var name = Name(libraryUri, declaredElement.name);
-        if (!_inheritsStability(enclosingElement, name, context)) return;
+        if (!_inheritsStability(enclosingElement, name)) return;
         node.body.accept(this);
         if (!isStable) doReportLint(node, node.name);
       } else {
