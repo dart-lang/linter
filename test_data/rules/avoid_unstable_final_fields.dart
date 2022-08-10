@@ -151,7 +151,7 @@ class F11<X> implements E {
 }
 
 class F12<X> implements E {
-  Type get o => F12<X>; //OK
+  Type get o => F12<X>; //LINT
 }
 
 class F13 implements E {
@@ -387,7 +387,7 @@ enum R11<X> implements Q {
 
 enum R12<X> implements Q {
   a, b, c;
-  Type get o => F12<X>; //OK
+  Type get o => R12<X>; //LINT
 }
 
 enum R13 implements Q {

@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/diagnostic/diagnostic.dart';
 import 'package:analyzer/src/diagnostic/diagnostic.dart';
 
@@ -592,12 +593,13 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
             if (containsNonConstantType(typeArgument)) return true;
           }
         }
-        var element = typeAnnotation.type?.element?.declaration;
-        if (element is InterfaceElement) return false;
-        if (element is TypeParameterElement) {
-          var owner = element.enclosingElement3;
-          // A class type parameter is not constant, but it is stable.
-          if (owner is InterfaceElement) return false;
+        var typeAnnotationType = typeAnnotation.type;
+        if (typeAnnotationType is InterfaceType) {
+          var element = typeAnnotationType.element2.declaration;
+          if (element is InterfaceElement) return false;
+        } else if (typeAnnotationType is TypeParameterType) {
+          // We cannot rely on type parameters or parameterized types
+          // containing type parameters to be stable.
           return true;
         }
         // TODO(eernst): Handle `typedef` and other missing cases.
