@@ -210,3 +210,51 @@ class G {
 class H1 implements G {
   String get s => '${++jTop}'; //OK
 }
+
+class I {
+  final int i;
+  I(this.i);
+}
+
+mixin J1 on I {
+  int get i => ++jTop + super.i; //LINT
+}
+
+mixin J2 implements I {
+  int get i => ++jTop; //LINT
+}
+
+mixin J3 on I {
+  int get i => super.i - 1; //OK
+}
+
+mixin J4 implements I {
+  int get i => 1; //OK
+}
+
+mixin J5 on I {
+  int get i => -super.i; //OK
+}
+
+class K {
+  final Object? o;
+  K(this.o);
+}
+
+mixin K1 on K {
+  Object get o => super.o!; //OK
+}
+
+class L {
+  @Object()
+  final String s;
+  L(this.s);
+}
+
+mixin L1 on L {
+  String get s => '$jTop'; //OK
+}
+
+mixin L2 implements L {
+  String get s => '${-jTop}'; //OK
+}

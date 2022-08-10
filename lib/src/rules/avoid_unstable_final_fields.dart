@@ -116,8 +116,10 @@ bool _isLocallyStable(Element element) {
     // A tear-off of a top-level function or static method is stable,
     // local functions and function literals are not.
     return element.isStatic;
-  } else if (element is ClassElement) {
-    // A reified type of a class is stable.
+  } else if (element is EnumElement ||
+      element is MixinElement ||
+      element is ClassElement) {
+    // A reified type of a class/mixin/enum is stable.
     return true;
   } else if (element is MethodElement) {
     // An instance method tear-off is never stable,
@@ -147,9 +149,9 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   _AbstractVisitor(this.rule, this.context);
 
-  bool _inheritsStability(ClassElement classElement, Name name) {
+  bool _inheritsStability(InterfaceElement interfaceElement, Name name) {
     var overriddenList =
-        context.inheritanceManager.getOverridden2(classElement, name);
+        context.inheritanceManager.getOverridden2(interfaceElement, name);
     if (overriddenList == null) return false;
     for (var overridden in overriddenList) {
       if (_isLocallyStable(overridden)) {
@@ -654,7 +656,7 @@ class _MethodVisitor extends _AbstractVisitor {
     var declaredElement = node.declaredElement;
     if (declaredElement != null) {
       var enclosingElement = declaredElement.enclosingElement;
-      if (enclosingElement is ClassElement) {
+      if (enclosingElement is InterfaceElement) {
         var libraryUri = declaredElement.library.source.uri;
         var name = Name(libraryUri, declaredElement.name);
         if (!_inheritsStability(enclosingElement, name)) return;
