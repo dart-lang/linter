@@ -505,7 +505,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
     if (prefixDeclaration is PrefixElement) {
       var declaredElement = node.identifier.staticElement?.declaration;
       if (!_isStable(declaredElement)) isStable = false;
-    } else if (prefixDeclaration is ClassElement) {
+    } else if (prefixDeclaration is InterfaceElement) {
       var declaredElement = node.identifier.staticElement?.declaration;
       if (!_isStable(declaredElement)) isStable = false;
     }
