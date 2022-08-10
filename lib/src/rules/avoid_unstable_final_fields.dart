@@ -8,6 +8,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/diagnostic/diagnostic.dart';
+// ignore:implementation_imports
 import 'package:analyzer/src/diagnostic/diagnostic.dart';
 
 import '../analyzer.dart';
