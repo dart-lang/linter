@@ -25,6 +25,7 @@ import 'rules/avoid_field_initializers_in_const_classes.dart';
 import 'rules/avoid_final_parameters.dart';
 import 'rules/avoid_function_literals_in_foreach_calls.dart';
 import 'rules/avoid_implementing_value_types.dart';
+import 'rules/avoid_implicit_call_tearoffs.dart';
 import 'rules/avoid_init_to_null.dart';
 import 'rules/avoid_js_rounded_ints.dart';
 import 'rules/avoid_multiple_declarations_per_line.dart';
@@ -239,6 +240,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(AvoidFinalParameters())
     ..register(AvoidFunctionLiteralInForeachMethod())
     ..register(AvoidImplementingValueTypes())
+    ..register(AvoidImplicitCallTearoffs())
     ..register(AvoidInitToNull())
     ..register(AvoidJsRoundedInts())
     ..register(AvoidMultipleDeclarationsPerLine())

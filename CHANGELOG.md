@@ -1,3 +1,7 @@
+# 1.28.0
+
+- new lint: `avoid_implicit_call_tearoffs`
+
 # 1.27.0
 
 - fix `avoid_redundant_argument_values` when referencing required 
