@@ -596,11 +596,11 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
           }
         }
         var element = typeAnnotation.type?.element?.declaration;
-        if (element is ClassElement) return false;
+        if (element is InterfaceElement) return false;
         if (element is TypeParameterElement) {
           var owner = element.enclosingElement2;
           // A class type parameter is not constant, but it is stable.
-          if (owner is ClassElement) return false;
+          if (owner is InterfaceElement) return false;
           return true;
         }
         // TODO(eernst): Handle `typedef` and other missing cases.
@@ -625,7 +625,7 @@ class _FieldVisitor extends _AbstractVisitor {
   void visitFieldDeclaration(FieldDeclaration node) {
     Uri? libraryUri;
     Name? name;
-    ClassElement? classElement;
+    InterfaceElement? interfaceElement;
     for (var variable in node.fields.variables) {
       var declaredElement = variable.declaredElement2;
       if (declaredElement is FieldElement) {
@@ -633,10 +633,11 @@ class _FieldVisitor extends _AbstractVisitor {
         if (declaredElement.isFinal) continue;
         // A non-final instance variable is always a violation of stability.
         // Check if stability is required.
-        classElement ??= declaredElement.enclosingElement2 as ClassElement;
+        interfaceElement ??=
+            declaredElement.enclosingElement2 as InterfaceElement;
         libraryUri ??= declaredElement.library.source.uri;
         name ??= Name(libraryUri, declaredElement.name);
-        if (_inheritsStability(classElement, name)) {
+        if (_inheritsStability(interfaceElement, name)) {
           doReportLint(node, variable.name);
         }
       }
