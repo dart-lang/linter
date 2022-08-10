@@ -103,7 +103,7 @@ bool _isLocallyStable(Element element) {
       for (var elementAnnotation in metadata) {
         var metadataElement = elementAnnotation.element;
         if (metadataElement is ConstructorElement) {
-          var metadataOwner = metadataElement.declaration.enclosingElement;
+          var metadataOwner = metadataElement.declaration.enclosingElement2;
           if (metadataOwner.isDartCoreObject) {
             // A declaration with `@Object()` is not considered stable.
             return false;
@@ -164,7 +164,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   bool _isStable(Element? element) {
     if (element == null) return false; // This would be an error in the program.
-    var enclosingElement = element.enclosingElement;
+    var enclosingElement = element.enclosingElement2;
     if (_isLocallyStable(element)) return true;
     if (element is PropertyAccessorElement) {
       if (element.isStatic) return false;
@@ -598,7 +598,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
         var element = typeAnnotation.type?.element?.declaration;
         if (element is ClassElement) return false;
         if (element is TypeParameterElement) {
-          var owner = element.enclosingElement;
+          var owner = element.enclosingElement2;
           // A class type parameter is not constant, but it is stable.
           if (owner is ClassElement) return false;
           return true;
@@ -633,7 +633,7 @@ class _FieldVisitor extends _AbstractVisitor {
         if (declaredElement.isFinal) continue;
         // A non-final instance variable is always a violation of stability.
         // Check if stability is required.
-        classElement ??= declaredElement.enclosingElement as ClassElement;
+        classElement ??= declaredElement.enclosingElement2 as ClassElement;
         libraryUri ??= declaredElement.library.source.uri;
         name ??= Name(libraryUri, declaredElement.name);
         if (_inheritsStability(classElement, name)) {
@@ -655,7 +655,7 @@ class _MethodVisitor extends _AbstractVisitor {
     declaration = node;
     var declaredElement = node.declaredElement2;
     if (declaredElement != null) {
-      var enclosingElement = declaredElement.enclosingElement;
+      var enclosingElement = declaredElement.enclosingElement2;
       if (enclosingElement is InterfaceElement) {
         var libraryUri = declaredElement.library.source.uri;
         var name = Name(libraryUri, declaredElement.name);
