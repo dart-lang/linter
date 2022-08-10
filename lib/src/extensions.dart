@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:collection';
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -147,6 +149,44 @@ extension AstNodeExtension on AstNode? {
       }
     }
     return null;
+  }
+
+  /// Builds the list resulting from traversing the node in DFS and does not
+  /// include the node itself.
+  ///
+  /// It excludes the nodes for which the [excludeCriteria] returns true. If
+  /// [excludeCriteria] is not provided, all nodes are included.
+  Iterable<AstNode> traverseNodesInDFS({AstNodePredicate? excludeCriteria}) {
+    var self = this;
+    if (self == null) {
+      return [];
+    }
+    var nodes = <AstNode>{};
+    var nodesToVisit = List.of(self.childEntities.whereType<AstNode>());
+    if (excludeCriteria == null) {
+      while (nodesToVisit.isNotEmpty) {
+        var node = nodesToVisit.removeAt(0);
+        nodes.add(node);
+        var i = 0;
+        // Queue up child nodes in the order they appear in `childEntities`.
+        for (var child in node.childEntities) {
+          if (child is AstNode) nodesToVisit.insert(i++, child);
+        }
+      }
+    } else {
+      while (nodesToVisit.isNotEmpty) {
+        var node = nodesToVisit.removeAt(0);
+        if (excludeCriteria(node)) continue;
+        nodes.add(node);
+        var i = 0;
+        // Queue up child nodes in the order they appear in `childEntities`.
+        for (var child in node.childEntities) {
+          if (child is AstNode) nodesToVisit.insert(i++, child);
+        }
+      }
+    }
+
+    return nodes;
   }
 }
 
