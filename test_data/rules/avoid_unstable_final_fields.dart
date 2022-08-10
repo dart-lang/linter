@@ -241,20 +241,203 @@ class K {
   K(this.o);
 }
 
-mixin K1 on K {
+mixin L1 on K {
   Object get o => super.o!; //OK
 }
 
-class L {
+class M {
   @Object()
   final String s;
-  L(this.s);
+  M(this.s);
 }
 
-mixin L1 on L {
+mixin N1 on M {
   String get s => '$jTop'; //OK
 }
 
-mixin L2 implements L {
+mixin N2 implements M {
   String get s => '${-jTop}'; //OK
+}
+
+abstract class O {
+  final int i;
+  O(this.i);
+}
+
+enum P1 implements O {
+  a, b, c;
+  final int i = jTop++; //OK
+}
+
+enum P2 implements O {
+  a(10), b(12), c(14);
+  final int j;
+  int get i => j; //OK
+  const P2(this.j);
+}
+
+enum P3 implements O {
+  a, b, c;
+  int get i => 1; //OK
+}
+
+enum P4 implements O {
+  a, b, c;
+  int get i { //OK
+    return 1;
+  }
+}
+
+enum P5 implements O {
+  a, b, c;
+  int get i { //LINT
+    return jTop;
+  }
+}
+
+enum P6 implements O {
+  aa(true, 4), bb(true, 8), cc(false, 12);
+  final bool b;
+  final int j;
+  int get i => b ? j : 10; //OK
+  const P6(this.b, this.j);
+}
+
+bool bTop = true;
+
+enum P7 implements O {
+  aa(3), bb(5), cc(7);
+  final int j;
+  int get i => bTop ? 2 * j : 10; //LINT
+  const P7(this.j);
+}
+
+enum P8 implements O {
+  a, b, c;
+  int get i => throw 0; //OK
+}
+
+enum P9 implements O {
+  a, b, c;
+  int get i { //OK
+    throw 0;
+  }
+}
+
+abstract class Q {
+  abstract final Object? o;
+}
+
+enum R1 implements Q {
+  a, b, c;
+  Function get o => m; //LINT
+  void m() {}
+  static late final Function fStatic = () {};
+}
+
+enum R2 implements Q {
+  a, b, c;
+  Function get o => () {}; //LINT
+}
+
+enum R3 implements Q {
+  a, b, c;
+  Function get o => print..toString(); //OK
+}
+
+enum R4 implements Q {
+  a, b, c;
+  Function get o => math.cos; //OK
+}
+
+enum R5 implements Q {
+  a, b, c;
+  Function get o => F1.fStatic; //OK
+}
+
+enum R6 implements Q {
+  a, b, c;
+  List<int> get o => []; //LINT
+}
+
+enum R7 implements Q {
+  a, b, c;
+  Set<double> get o => const {}; //OK
+}
+
+enum R8 implements Q {
+  a, b, c;
+  Object get o => <String, String>{}; //LINT
+}
+
+enum R9 implements Q {
+  a, b, c;
+  Symbol get o => #symbol; //OK
+}
+
+enum R10 implements Q {
+  a, b, c;
+  Type get o => int; //OK
+}
+
+enum R11<X> implements Q {
+  a, b, c;
+  Type get o => X; //LINT
+}
+
+enum R12<X> implements Q {
+  a, b, c;
+  Type get o => F12<X>; //OK
+}
+
+enum R13 implements Q {
+  a(-1), b(-2), c(-3);
+  F13 get o => const F13(42); //OK
+  const R13(int whatever);
+}
+
+enum R14 implements Q {
+  a(-10), b(-20), c(-30);
+  F14 get o => F14(jTop); //LINT
+  const R14(int whatever);
+}
+
+enum R15 implements Q {
+  a, b, c;
+  String get o => 'Something $cNever, and ${1 * 1} more things'; //OK
+}
+
+enum R16 implements Q {
+  a, b, c;
+  String get o => 'Stuff, $cNever, but not $jTop'; //LINT
+}
+
+enum R17 implements Q {
+  a, b, c;
+  bool get o => this is Q; //OK
+}
+
+enum R18 implements Q {
+  a, b, c;
+  bool get o => jTop is int; //LINT
+}
+
+enum R20Helper {
+  a.named(999), b.named(-0.888), c.named(77.7);
+  const R20Helper.named(num n);
+}
+
+enum R20 implements Q {
+  a, b, c;
+  R20Helper get o => R20Helper.b; //OK
+}
+
+enum R21 implements Q {
+  a, b, c;
+  bool get o => identical(const <int>[], const <int>[]); //OK
+}
+
+enum R22 implements Q {
+  a, b, c;
+  bool get o => identical(<int>[], const <int>[]); //LINT
 }
