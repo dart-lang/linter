@@ -168,7 +168,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
     if (_isLocallyStable(element)) return true;
     if (element is PropertyAccessorElement) {
       if (element.isStatic) return false;
-      if (enclosingElement is! ClassElement) {
+      if (enclosingElement is! InterfaceElement) {
         // This should not happen, a top-level variable `isStatic`.
         // TODO(eernst): Do something like `throw Unhandled(...)`.
         return false;
