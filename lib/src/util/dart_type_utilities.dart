@@ -20,7 +20,7 @@ bool canonicalElementsAreEqual(Element? element1, Element? element2) =>
 
 /// Returns whether the canonical elements from two nodes are equal.
 ///
-/// As in, [AstNodeExtension.canonicalElement], the two nodes must be
+/// As in, [NullableAstNodeExtension.canonicalElement], the two nodes must be
 /// [Expression]s in order to be compared (otherwise `false` is returned).
 ///
 /// The two nodes must both be a [SimpleIdentifier], [PrefixedIdentifier], or
