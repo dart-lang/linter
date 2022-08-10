@@ -627,7 +627,7 @@ class _FieldVisitor extends _AbstractVisitor {
     Name? name;
     ClassElement? classElement;
     for (var variable in node.fields.variables) {
-      var declaredElement = variable.declaredElement;
+      var declaredElement = variable.declaredElement2;
       if (declaredElement is FieldElement) {
         // A final instance variable can never violate stability.
         if (declaredElement.isFinal) continue;
@@ -653,7 +653,7 @@ class _MethodVisitor extends _AbstractVisitor {
   void visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isGetter) return;
     declaration = node;
-    var declaredElement = node.declaredElement;
+    var declaredElement = node.declaredElement2;
     if (declaredElement != null) {
       var enclosingElement = declaredElement.enclosingElement;
       if (enclosingElement is InterfaceElement) {
