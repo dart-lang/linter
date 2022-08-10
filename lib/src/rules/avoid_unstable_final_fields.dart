@@ -103,8 +103,9 @@ bool _isLocallyStable(Element element) {
       for (var elementAnnotation in metadata) {
         var metadataElement = elementAnnotation.element;
         if (metadataElement is ConstructorElement) {
-          var metadataOwner = metadataElement.declaration.enclosingElement2;
-          if (metadataOwner.isDartCoreObject) {
+          var metadataOwner = metadataElement.declaration.enclosingElement3;
+          if (metadataOwner is ClassElement &&
+              metadataOwner.isDartCoreObject) {
             // A declaration with `@Object()` is not considered stable.
             return false;
           }
@@ -164,7 +165,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   bool _isStable(Element? element) {
     if (element == null) return false; // This would be an error in the program.
-    var enclosingElement = element.enclosingElement2;
+    var enclosingElement = element.enclosingElement3;
     if (_isLocallyStable(element)) return true;
     if (element is PropertyAccessorElement) {
       if (element.isStatic) return false;
@@ -191,17 +192,13 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
         DiagnosticMessageImpl(
             filePath: cause.library.source.fullName,
             message: "The declaration of '$name' that requires this "
-                "declaration to be stable is",
+                'declaration to be stable is',
             offset: offset,
             length: length,
             url: null),
       );
     }
-    rule.reportLint(
-      name,
-      contextMessages: contextMessages,
-      ignoreSyntheticNodes: true,
-    );
+    rule.reportLint(name, contextMessages: contextMessages);
   }
 
   // The following visitor methods will only be executed in the situation
@@ -324,7 +321,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
   void visitBlock(Block node) {
     // TODO(eernst): Check that only one return statement exists, and it is
     // the last statement in the body, and it returns a stable expression.
-    if (node.statements.length == 0) {
+    if (node.statements.isEmpty) {
       // This getter returns null, keep it stable.
     } else if (node.statements.length == 1) {
       var statement = node.statements.first;
@@ -598,7 +595,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
         var element = typeAnnotation.type?.element?.declaration;
         if (element is InterfaceElement) return false;
         if (element is TypeParameterElement) {
-          var owner = element.enclosingElement2;
+          var owner = element.enclosingElement3;
           // A class type parameter is not constant, but it is stable.
           if (owner is InterfaceElement) return false;
           return true;
@@ -634,7 +631,7 @@ class _FieldVisitor extends _AbstractVisitor {
         // A non-final instance variable is always a violation of stability.
         // Check if stability is required.
         interfaceElement ??=
-            declaredElement.enclosingElement2 as InterfaceElement;
+            declaredElement.enclosingElement3 as InterfaceElement;
         libraryUri ??= declaredElement.library.source.uri;
         name ??= Name(libraryUri, declaredElement.name);
         if (_inheritsStability(interfaceElement, name)) {
@@ -646,8 +643,6 @@ class _FieldVisitor extends _AbstractVisitor {
 }
 
 class _MethodVisitor extends _AbstractVisitor {
-  late MethodDeclaration declaration;
-
   _MethodVisitor(super.rule, super.context);
 
   @override
@@ -656,7 +651,7 @@ class _MethodVisitor extends _AbstractVisitor {
     declaration = node;
     var declaredElement = node.declaredElement2;
     if (declaredElement != null) {
-      var enclosingElement = declaredElement.enclosingElement2;
+      var enclosingElement = declaredElement.enclosingElement3;
       if (enclosingElement is InterfaceElement) {
         var libraryUri = declaredElement.library.source.uri;
         var name = Name(libraryUri, declaredElement.name);
