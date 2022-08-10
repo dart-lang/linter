@@ -89,7 +89,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     var declarationByElement = <Element, Declaration>{};
     for (var declaration in topDeclarations) {
-      var element = declaration.declaredElement;
+      var element = declaration.declaredElement2;
       if (element != null) {
         if (element is TopLevelVariableElement) {
           declarationByElement[element] = declaration;
@@ -144,7 +144,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     var unusedMembers = topDeclarations.difference(usedMembers).where((e) {
-      var element = e.declaredElement;
+      var element = e.declaredElement2;
       return element != null &&
           element.isPublic &&
           !element.hasVisibleForTesting;
