@@ -183,7 +183,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
     return false;
   }
 
-  void doReportLint(ClassMember node, SimpleIdentifier name) {
+  void doReportLint(ClassMember node, AstNode name) {
     var contextMessages = <DiagnosticMessage>[];
     for (var cause in causes) {
       var length = cause.nameLength;
