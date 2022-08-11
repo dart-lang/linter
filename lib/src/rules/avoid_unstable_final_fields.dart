@@ -183,7 +183,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
     return false;
   }
 
-  void doReportLint(ClassMember node, AstNode name) {
+  List<DiagnosticMessage> _computeContextMessages() {
     var contextMessages = <DiagnosticMessage>[];
     for (var cause in causes) {
       var length = cause.nameLength;
@@ -193,14 +193,18 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
       contextMessages.add(
         DiagnosticMessageImpl(
             filePath: cause.library.source.fullName,
-            message: "The declaration of '$name' that requires this "
+            message: 'The declaration that requires this '
                 'declaration to be stable is',
             offset: offset,
             length: length,
             url: null),
       );
     }
-    rule.reportLint(name, contextMessages: contextMessages);
+    return contextMessages;
+  }
+
+  void doReportLint(Token? name) {
+    rule.reportLintForToken(name, contextMessages: _computeContextMessages());
   }
 
   // The following visitor methods will only be executed in the situation
@@ -638,7 +642,7 @@ class _FieldVisitor extends _AbstractVisitor {
         libraryUri ??= declaredElement.library.source.uri;
         name ??= Name(libraryUri, declaredElement.name);
         if (_inheritsStability(interfaceElement, name)) {
-          doReportLint(node, variable.name);
+          doReportLint(variable.name2);
         }
       }
     }
@@ -660,7 +664,7 @@ class _MethodVisitor extends _AbstractVisitor {
         var name = Name(libraryUri, declaredElement.name);
         if (!_inheritsStability(enclosingElement, name)) return;
         node.body.accept(this);
-        if (!isStable) doReportLint(node, node.name);
+        if (!isStable) doReportLint(node.name2);
       } else {
         // Extensions cannot override anything.
       }
