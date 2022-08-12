@@ -45,7 +45,8 @@ bool _isFunctionExpression(AstNode node) => node is FunctionExpression;
 
 bool _isPrimitiveType(DartType type) =>
     type is InterfaceType &&
-    (type.isDartCoreBool || type.isDartCoreDouble ||
+    (type.isDartCoreBool ||
+        type.isDartCoreDouble ||
         type.isDartCoreInt ||
         type.isDartCoreNum);
 
