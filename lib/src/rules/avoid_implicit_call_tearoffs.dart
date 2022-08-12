@@ -55,7 +55,7 @@ class AvoidImplicitCallTearoffs extends LintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
-    registry.addSimpleIdentifier(this, visitor);
+    registry.addImplicitCallReference(this, visitor);
   }
 }
 
