@@ -128,6 +128,19 @@ extension ClassElementExtension on ClassElement {
   bool get isEnumLikeClass => asEnumLikeClass != null;
 }
 
+extension ConstructorElementExtension on ConstructorElement {
+  /// Returns whether `this` is the same element as the [className] constructor
+  /// named [constructorName] declared in [uri].
+  bool isSameAs({
+    required String uri,
+    required String className,
+    required String constructorName,
+  }) =>
+      library.name == uri &&
+      enclosingElement3.name == className &&
+      name == constructorName;
+}
+
 extension InterfaceElementExtension on InterfaceElement {
   /// Returns whether this element is exactly [otherName] declared in
   /// [otherLibrary].
@@ -135,7 +148,7 @@ extension InterfaceElementExtension on InterfaceElement {
       name == otherName && library.name == otherLibrary;
 }
 
-extension AstNodeExtension on AstNode? {
+extension NullableAstNodeExtension on AstNode? {
   Element? get canonicalElement {
     var self = this;
     if (self is Expression) {
@@ -148,6 +161,36 @@ extension AstNodeExtension on AstNode? {
     }
     return null;
   }
+}
+
+extension AstNodeExtension on AstNode {
+  /// Builds the list resulting from traversing the node in DFS and does not
+  /// include the node itself.
+  ///
+  /// It excludes the nodes for which the [excludeCriteria] returns true. If
+  /// [excludeCriteria] is not provided, all nodes are included.
+  Iterable<AstNode> traverseNodesInDFS({AstNodePredicate? excludeCriteria}) {
+    var nodes = <AstNode>{};
+    var nodesToVisit = List.of(childNodes);
+    if (excludeCriteria == null) {
+      while (nodesToVisit.isNotEmpty) {
+        var node = nodesToVisit.removeAt(0);
+        nodes.add(node);
+        nodesToVisit.insertAll(0, node.childNodes);
+      }
+    } else {
+      while (nodesToVisit.isNotEmpty) {
+        var node = nodesToVisit.removeAt(0);
+        if (excludeCriteria(node)) continue;
+        nodes.add(node);
+        nodesToVisit.insertAll(0, node.childNodes);
+      }
+    }
+
+    return nodes;
+  }
+
+  Iterable<AstNode> get childNodes => childEntities.whereType<AstNode>();
 }
 
 extension BlockExtension on Block {
@@ -224,6 +267,8 @@ extension InterfaceTypeExtension on InterfaceType {
 }
 
 extension MethodDeclarationExtension on MethodDeclaration {
+  bool get hasInheritedMethod => lookUpInheritedMethod() != null;
+
   /// Returns whether this method is an override of a method in any supertype.
   bool get isOverride {
     var name = declaredElement2?.name;
@@ -249,5 +294,72 @@ extension MethodDeclarationExtension on MethodDeclaration {
       return parentElement.allSupertypes
           .any((t) => t.lookUpMethod2(name, parentLibrary) != null);
     }
+  }
+
+  PropertyAccessorElement? lookUpGetter() {
+    var declaredElement = declaredElement2;
+    if (declaredElement == null) {
+      return null;
+    }
+    var parent = declaredElement.enclosingElement3;
+    if (parent is ClassElement) {
+      return parent.lookUpGetter(name2.lexeme, declaredElement.library);
+    }
+    if (parent is ExtensionElement) {
+      return parent.getGetter(name2.lexeme);
+    }
+    return null;
+  }
+
+  PropertyAccessorElement? lookUpInheritedConcreteGetter() {
+    var declaredElement = declaredElement2;
+    if (declaredElement == null) {
+      return null;
+    }
+    var parent = declaredElement.enclosingElement3;
+    if (parent is ClassElement) {
+      return parent.lookUpInheritedConcreteGetter(
+          name2.lexeme, declaredElement.library);
+    }
+    // Extensions don't inherit.
+    return null;
+  }
+
+  MethodElement? lookUpInheritedConcreteMethod() {
+    var declaredElement = declaredElement2;
+    if (declaredElement != null) {
+      var parent = declaredElement.enclosingElement3;
+      if (parent is ClassElement) {
+        return parent.lookUpInheritedConcreteMethod(
+            name2.lexeme, declaredElement.library);
+      }
+    }
+    // Extensions don't inherit.
+    return null;
+  }
+
+  PropertyAccessorElement? lookUpInheritedConcreteSetter() {
+    var declaredElement = declaredElement2;
+    if (declaredElement != null) {
+      var parent = declaredElement.enclosingElement3;
+      if (parent is ClassElement) {
+        return parent.lookUpInheritedConcreteSetter(
+            name2.lexeme, declaredElement.library);
+      }
+    }
+    // Extensions don't inherit.
+    return null;
+  }
+
+  MethodElement? lookUpInheritedMethod() {
+    var declaredElement = declaredElement2;
+    if (declaredElement != null) {
+      var parent = declaredElement.enclosingElement3;
+      if (parent is ClassElement) {
+        return parent.lookUpInheritedMethod(
+            name2.lexeme, declaredElement.library);
+      }
+    }
+    return null;
   }
 }
