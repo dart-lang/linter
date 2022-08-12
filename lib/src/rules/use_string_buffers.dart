@@ -9,7 +9,6 @@ import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 import '../extensions.dart';
-import '../util/dart_type_utilities.dart';
 
 const _desc = r'Use string buffers to compose strings.';
 
@@ -123,7 +122,7 @@ class _UseStringBufferVisitor extends SimpleAstVisitor {
 
     var left = node.leftHandSide;
     if (left is SimpleIdentifier &&
-        DartTypeUtilities.isClass(node.writeType, 'String', 'dart.core')) {
+        node.writeType.isSameAs('String', 'dart.core')) {
       if (node.operator.type == TokenType.PLUS_EQ &&
           !localElements.contains(node.writeElement?.canonicalElement)) {
         rule.reportLint(node);
