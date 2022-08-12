@@ -32,3 +32,9 @@ dev_dependencies:
   pub_semver: ^2.0.0
   test: ^1.16.1
   test_reflective_loader: ^0.2.0
+
+dependency_overrides:
+  analyzer:
+    git:
+      url: git://github.com/dart-lang/sdk
+      path: pkg/analyzer
