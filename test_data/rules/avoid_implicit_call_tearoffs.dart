@@ -15,9 +15,9 @@ void callIt(void Function() f) {
 void main() {
   final c = Callable();
   callIt(c); //LINT
-  c as Function; //LINT
-  Function f1 = c; // LINT
+  c as Function; //TODO
+  Function f1 = c; //LINT
   callIt(Callable()); //LINT
-  Callable() as Function; //LINT
+  Callable() as Function; //TODO
   Function f2 = Callable(); //LINT
 }
