@@ -106,8 +106,7 @@ bool _isLocallyStable(Element element) {
         var metadataElement = elementAnnotation.element;
         if (metadataElement is ConstructorElement) {
           var metadataOwner = metadataElement.declaration.enclosingElement3;
-          if (metadataOwner is ClassElement &&
-              metadataOwner.isDartCoreObject) {
+          if (metadataOwner is ClassElement && metadataOwner.isDartCoreObject) {
             // A declaration with `@Object()` is not considered stable.
             return false;
           }
