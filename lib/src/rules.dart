@@ -25,7 +25,6 @@ import 'rules/avoid_field_initializers_in_const_classes.dart';
 import 'rules/avoid_final_parameters.dart';
 import 'rules/avoid_function_literals_in_foreach_calls.dart';
 import 'rules/avoid_implementing_value_types.dart';
-import 'rules/avoid_implicit_call_tearoffs.dart';
 import 'rules/avoid_init_to_null.dart';
 import 'rules/avoid_js_rounded_ints.dart';
 import 'rules/avoid_multiple_declarations_per_line.dart';
@@ -80,6 +79,7 @@ import 'rules/file_names.dart';
 import 'rules/flutter_style_todos.dart';
 import 'rules/hash_and_equals.dart';
 import 'rules/implementation_imports.dart';
+import 'rules/implicit_call_tearoff.dart';
 import 'rules/invariant_booleans.dart';
 import 'rules/iterable_contains_unrelated_type.dart';
 import 'rules/join_return_with_assignment.dart';
@@ -241,7 +241,6 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(AvoidFinalParameters())
     ..register(AvoidFunctionLiteralInForeachMethod())
     ..register(AvoidImplementingValueTypes())
-    ..register(AvoidImplicitCallTearoffs())
     ..register(AvoidInitToNull())
     ..register(AvoidJsRoundedInts())
     ..register(AvoidMultipleDeclarationsPerLine())
@@ -253,11 +252,11 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(AvoidRedundantArgumentValues())
     ..register(AvoidRelativeLibImports())
     ..register(AvoidRenamingMethodParameters())
+    ..register(AvoidReturnTypesOnSetters())
     ..register(AvoidReturningNull())
     ..register(AvoidReturningNullForFuture())
     ..register(AvoidReturningNullForVoid())
     ..register(AvoidReturningThis())
-    ..register(AvoidReturnTypesOnSetters())
     ..register(AvoidSettersWithoutGetters())
     ..register(AvoidShadowingTypeParameters())
     ..register(AvoidSingleCascadeInExpressionStatements())
@@ -297,6 +296,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(FlutterStyleTodos())
     ..register(HashAndEquals())
     ..register(ImplementationImports())
+    ..register(ImplicitCallTearoff())
     ..register(InvariantBooleans())
     ..register(IterableContainsUnrelatedType())
     ..register(JoinReturnWithAssignment())

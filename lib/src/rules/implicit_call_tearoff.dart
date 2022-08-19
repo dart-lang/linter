@@ -42,14 +42,15 @@ callIt(Callable().call);
 
 ''';
 
-class AvoidImplicitCallTearoffs extends LintRule {
-  AvoidImplicitCallTearoffs()
+class ImplicitCallTearoff extends LintRule {
+  ImplicitCallTearoff()
       : super(
-            name: 'avoid_implicit_call_tearoffs',
-            description: _desc,
-            details: _details,
-            group: Group.style,
-            maturity: Maturity.experimental);
+          name: 'implicit_call_tearoff',
+          description: _desc,
+          details: _details,
+          group: Group.style,
+          maturity: Maturity.experimental,
+        );
 
   @override
   void registerNodeProcessors(
