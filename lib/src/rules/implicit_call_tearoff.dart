@@ -67,6 +67,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitImplicitCallReference(ImplicitCallReference node) {
-    rule.reportLintForToken(node.expression.endToken);
+    rule.reportLint(node);
   }
 }
