@@ -50,6 +50,7 @@ class AvoidRedundantArgumentValues extends LintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this, context);
+    registry.addEnumDeclaration(this, visitor);
     registry.addInstanceCreationExpression(this, visitor);
     registry.addFunctionExpressionInvocation(this, visitor);
     registry.addMethodInvocation(this, visitor);
@@ -90,6 +91,16 @@ class _Visitor extends SimpleAstVisitor {
       }
       if (param.isOptionalPositional) {
         break;
+      }
+    }
+  }
+
+  @override
+  void visitEnumDeclaration(EnumDeclaration node) {
+    for (var constant in node.constants) {
+      var arguments = constant.arguments?.argumentList;
+      if (arguments != null) {
+        check(arguments);
       }
     }
   }
