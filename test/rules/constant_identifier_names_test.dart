@@ -23,10 +23,16 @@ class ConstantIdentifierNamesRecordsTest extends LintRuleTest {
   @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3630')
   test_recordTypeDeclarations() async {
     await assertDiagnostics(r'''
-const r = (x: 1); //OK
-const R = (x: 1); //LINT
+const R = (x: 1);
 ''', [
-      lint('constant_identifier_names', 25, 1),
+      lint('constant_identifier_names', 6, 1),
     ]);
+  }
+
+  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3630')
+  test_recordTypeDeclarations_ok() async {
+    await assertNoDiagnostics(r'''
+const r = (x: 1);
+''');
   }
 }
