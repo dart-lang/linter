@@ -23,11 +23,16 @@ class FlutterStyleTodosTest extends LintRuleTest {
 // TODO something
 // Todo something
 // todo something
+// TODO(somebody) something
+// TODO: something
+// TODO(somebody): something
 ''',
       [
         lint('flutter_style_todos', 0, 17),
         lint('flutter_style_todos', 18, 17),
         lint('flutter_style_todos', 36, 17),
+        lint('flutter_style_todos', 54, 27),
+        lint('flutter_style_todos', 82, 18),
       ],
     );
   }
