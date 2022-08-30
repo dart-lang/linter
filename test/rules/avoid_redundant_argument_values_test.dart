@@ -36,7 +36,7 @@ class AvoidRedundantArgumentValuesTest extends LintRuleTest {
   @override
   String get lintRule => 'avoid_redundant_argument_values';
 
-  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3617')
+  /// https://github.com/dart-lang/linter/issues/3617
   test_enumDeclaration() async {
     await assertDiagnostics(r'''
 enum TestEnum {
