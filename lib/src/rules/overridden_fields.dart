@@ -87,7 +87,7 @@ Iterable<InterfaceType> _findAllSupertypesAndMixins(
   return interfaces.where((i) => i != interface);
 }
 
-Iterable<InterfaceType> _findAllSupertypesInMixin(ClassElement classElement) {
+Iterable<InterfaceType> _findAllSupertypesInMixin(MixinElement classElement) {
   var supertypes = <InterfaceType>[];
   var accumulator = <InterfaceType>[];
   for (var type in classElement.superclassConstraints) {
@@ -162,7 +162,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     Iterable<InterfaceType> interfaces;
     if (classElement is MixinElement) {
-      interfaces = _findAllSupertypesInMixin(classElement);
+      interfaces = _findAllSupertypesInMixin(classElement as MixinElement);
     } else {
       interfaces =
           _findAllSupertypesAndMixins(classElement.thisType, <InterfaceType>[]);
