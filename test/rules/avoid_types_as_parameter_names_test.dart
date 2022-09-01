@@ -9,6 +9,7 @@ import '../rule_test_support.dart';
 main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(AvoidTypesAsParameterNamesTest);
+    defineReflectiveTests(AvoidTypesAsParameterNamesRecordsTest);
   });
 }
 
@@ -28,6 +29,24 @@ class B extends A {
 }
 ''', [
       lint('avoid_types_as_parameter_names', 67, 6),
+    ]);
+  }
+}
+
+@reflectiveTest
+class AvoidTypesAsParameterNamesRecordsTest extends LintRuleTest {
+  @override
+  List<String> get experiments => ['records'];
+
+  @override
+  String get lintRule => 'avoid_types_as_parameter_names';
+
+  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3628')
+  test_records() async {
+    await assertDiagnostics(r'''
+var c = (int: 1);
+''', [
+      lint('avoid_types_as_parameter_names', 10, 3),
     ]);
   }
 }
