@@ -39,7 +39,7 @@ part '$testFileName';
 part of lib;
 ''',
       [
-        lint(1, 12),
+        lint(0, 12),
       ],
     );
   }
