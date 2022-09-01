@@ -46,7 +46,7 @@ class AvoidTypesAsParameterNamesRecordsTest extends LintRuleTest {
     await assertDiagnostics(r'''
 var c = (int: 1);
 ''', [
-      lint('avoid_types_as_parameter_names', 10, 3),
+      lint(10, 3),
     ]);
   }
 }
