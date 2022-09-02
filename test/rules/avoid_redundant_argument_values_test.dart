@@ -26,7 +26,7 @@ void f() {
   foo(0, c: true, 1);
 }
 ''', [
-      lint('avoid_redundant_argument_values', 67, 4),
+      lint(67, 4),
     ]);
   }
 }
@@ -35,6 +35,21 @@ void f() {
 class AvoidRedundantArgumentValuesTest extends LintRuleTest {
   @override
   String get lintRule => 'avoid_redundant_argument_values';
+
+  /// https://github.com/dart-lang/linter/issues/3617
+  test_enumDeclaration() async {
+    await assertDiagnostics(r'''
+enum TestEnum {
+  a(test: false);
+
+  const TestEnum({this.test = false});
+
+  final bool test;
+}
+''', [
+      lint(26, 5),
+    ]);
+  }
 
   @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3447')
   test_fromEnvironment() async {

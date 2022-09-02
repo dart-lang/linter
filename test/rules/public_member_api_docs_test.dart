@@ -25,12 +25,12 @@ enum A {
   int get y => 1;
 }
 ''', [
-      lint('public_member_api_docs', 5, 1),
-      lint('public_member_api_docs', 11, 1),
-      lint('public_member_api_docs', 13, 1),
-      lint('public_member_api_docs', 15, 1),
-      lint('public_member_api_docs', 24, 1),
-      lint('public_member_api_docs', 44, 1),
+      lint(5, 1),
+      lint(11, 1),
+      lint(13, 1),
+      lint(15, 1),
+      lint(24, 1),
+      lint(44, 1),
     ]);
   }
 
@@ -41,8 +41,27 @@ extension E on Object {
   void f() { }
 }
 ''', [
-      lint('public_member_api_docs', 10, 1),
-      lint('public_member_api_docs', 31, 1),
+      lint(10, 1),
+      lint(31, 1),
     ]);
+  }
+
+  test_mixin_method() async {
+    await assertDiagnostics(r'''
+/// A mixin M.
+mixin M {
+  String m() => '';
+}''', [
+      lint(34, 1),
+    ]);
+  }
+
+  test_mixin_overridingMethod_OK() async {
+    await assertNoDiagnostics(r'''
+/// A mixin M.
+mixin M {
+  @override
+  String toString() => '';
+}''');
   }
 }

@@ -8,34 +8,30 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(SortUnnamedConstructorsFirstTest);
+    defineReflectiveTests(UnnecessaryConstTest);
   });
 }
 
 @reflectiveTest
-class SortUnnamedConstructorsFirstTest extends LintRuleTest {
+class UnnecessaryConstTest extends LintRuleTest {
   @override
-  String get lintRule => 'sort_unnamed_constructors_first';
+  List<String> get experiments => ['records'];
 
-  test_ok() async {
+  @override
+  String get lintRule => 'unnecessary_const';
+
+  test_recordExpression_ok() async {
     await assertNoDiagnostics(r'''
-enum A {
-  a,b,c.aa();
-  const A();
-  const A.aa();
-}
+const r = (a: 1);
 ''');
   }
 
-  test_unsorted() async {
+  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3629')
+  test_recordExpression() async {
     await assertDiagnostics(r'''
-enum A {
-  a,b,c.aa();
-  const A.aa();
-  const A();
-}
+const r = const (a: 1);
 ''', [
-      lint(47, 1),
+      lint(11, 4),
     ]);
   }
 }
