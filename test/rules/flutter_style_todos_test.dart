@@ -17,7 +17,7 @@ class FlutterStyleTodosTest extends LintRuleTest {
   @override
   String get lintRule => 'flutter_style_todos';
 
-  test_main() async {
+  test_badPatterns() async {
     await assertDiagnostics(
       r'''
 // TODO something
@@ -28,18 +28,29 @@ class FlutterStyleTodosTest extends LintRuleTest {
 // Todo(somebody): something
 // todo(somebody): something
 // ToDo(somebody): something
-// TODO(somebody): something
+// TODO(somebody): something, github.com/flutter/flutter
+// ToDo(somebody): something, https://github.com/flutter/flutter
 ''',
       [
-        lint('flutter_style_todos', 0, 17),
-        lint('flutter_style_todos', 18, 17),
-        lint('flutter_style_todos', 36, 17),
-        lint('flutter_style_todos', 54, 27),
-        lint('flutter_style_todos', 82, 18),
-        lint('flutter_style_todos', 101, 28),
-        lint('flutter_style_todos', 130, 28),
-        lint('flutter_style_todos', 159, 28),
+        lint(lintRule, 0, 17),
+        lint(lintRule, 18, 17),
+        lint(lintRule, 36, 17),
+        lint(lintRule, 54, 27),
+        lint(lintRule, 82, 18),
+        lint(lintRule, 101, 28),
+        lint(lintRule, 130, 28),
+        lint(lintRule, 159, 28),
+        lint(lintRule, 245, 64),
       ],
+    );
+  }
+
+  test_goodPatterns() async {
+    await assertNoDiagnostics(
+      r'''
+// TODO(somebody): something
+// TODO(somebody): something, https://github.com/flutter/flutter
+''',
     );
   }
 }
