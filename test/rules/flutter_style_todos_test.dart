@@ -32,15 +32,15 @@ class FlutterStyleTodosTest extends LintRuleTest {
 // ToDo(somebody): something, https://github.com/flutter/flutter
 ''',
       [
-        lint(lintRule, 0, 17),
-        lint(lintRule, 18, 17),
-        lint(lintRule, 36, 17),
-        lint(lintRule, 54, 27),
-        lint(lintRule, 82, 18),
-        lint(lintRule, 101, 28),
-        lint(lintRule, 130, 28),
-        lint(lintRule, 159, 28),
-        lint(lintRule, 245, 64),
+        lint(0, 17),
+        lint(18, 17),
+        lint(36, 17),
+        lint(54, 27),
+        lint(82, 18),
+        lint(101, 28),
+        lint(130, 28),
+        lint(159, 28),
+        lint(245, 64),
       ],
     );
   }
