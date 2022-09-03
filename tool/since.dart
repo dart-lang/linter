@@ -11,14 +11,16 @@ import 'package:yaml/yaml.dart';
 
 import 'crawl.dart';
 
+// Flip to (re)generate since/linter.yaml contents.
+var regenerateLinterYaml = false;
+
 void main() async {
-// Uncomment to (re)generate since/linter.yaml contents.
-//  for (var lint in registeredLints) {
-//    var since = await findSinceLinter(lint.name);
-//    if (since != null) {
-//      print('${lint.name}: $since');
-//    }
-//  }
+  for (var lint in registeredLints) {
+    var since = await findSinceLinter(lint.name);
+    if (since != null) {
+      print('${lint.name}: $since');
+    }
+  }
 
 // Uncomment to (re)generate since/dart_sdk.yaml contents.
 //  var tags = await sdkTags;
@@ -41,6 +43,8 @@ List<String>? _linterVersions;
 
 Map<String, SinceInfo>? _sinceMap;
 
+// See: https://github.com/dart-lang/linter/issues/2824
+// ignore: unreachable_from_main
 Future<List<String>?> get linterVersions async {
   if (_linterVersions == null) {
     _linterVersions = <String>[];
@@ -51,6 +55,8 @@ Future<List<String>?> get linterVersions async {
   return _linterVersions;
 }
 
+// See: https://github.com/dart-lang/linter/issues/2824
+// ignore: unreachable_from_main
 Future<Map<String, String>?> getDartSdkMap(Authentication? auth) async {
   if (_dartSdkMap == null) {
     var dartSdkCache = await File('tool/since/dart_sdk.yaml').readAsString();

@@ -194,6 +194,7 @@ void defineSanityTests() {
 }
 
 /// Handy for debugging.
+// ignore: unreachable_from_main
 void defineSoloRuleTest(String ruleToTest) {
   for (var entry in Directory(ruleTestDir).listSync()) {
     if (entry is! File || !isDartFile(entry)) continue;
