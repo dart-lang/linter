@@ -17,6 +17,8 @@ import 'package:linter/src/rules.dart';
 
 import '../parse.dart';
 
+var shouldPrintFooter = false;
+
 void main() async {
   var scorecard = await ScoreCard.calculate();
   var details = [
@@ -34,8 +36,10 @@ void main() async {
 
   print(scorecard.asMarkdown(details, sorter: sorter));
 
-  // var footer = buildFooter(scorecard, details);
-  // print(footer);
+  if (shouldPrintFooter) {
+    var footer = buildFooter(scorecard, details);
+    print(footer);
+  }
 }
 
 const checkMark = '✅';
@@ -58,6 +62,62 @@ Iterable<LintRule>? get registeredLints {
 }
 
 List<String?> get unfixableLints => _unfixableLints ?? _getUnfixableLints();
+
+StringBuffer buildFooter(ScoreCard scorecard, List<Detail> details) {
+  var scoreLintCount = 0;
+  var scoreFixCount = 0;
+
+  var recommendLintCount = 0;
+  var recommendFixCount = 0;
+
+  var needsBulkFix = <String>[];
+  var fixable = <String>[];
+
+  for (var score in scorecard.scores) {
+    for (var ruleSet in score.ruleSets) {
+      var hasFixOrAssist = score.hasFix || score.hasAssist;
+      if (ruleSet == 'core') {
+        ++scoreLintCount;
+        if (hasFixOrAssist) {
+          ++scoreFixCount;
+        }
+      }
+      if (ruleSet == 'recommend') {
+        ++recommendLintCount;
+        if (hasFixOrAssist) {
+          ++recommendFixCount;
+        }
+      }
+      var lint = score.name;
+      if (hasFixOrAssist && !score.hasBulkFix) {
+        needsBulkFix.add(lint);
+      }
+      if (!hasFixOrAssist && !unfixableLints.contains(lint)) {
+        fixable.add(lint);
+      }
+    }
+  }
+
+  var footer = StringBuffer('\n${scorecard.lintCount} lints: ');
+  footer.write('$scoreLintCount score [$scoreFixCount fixes], ');
+  footer.write('rec $recommendLintCount [$recommendFixCount fixes]');
+
+  if (needsBulkFix.isNotEmpty) {
+    footer.writeln('\n\nTODO: add bulk fixes for');
+    for (var lint in needsBulkFix) {
+      footer.writeln('  - [ ] `$lint`');
+    }
+  }
+
+  if (fixable.isNotEmpty) {
+    footer.writeln('\n\nTODO: add fixes for');
+    for (var lint in fixable) {
+      footer.writeln('  - [ ] `$lint`');
+    }
+  }
+
+  return footer;
+}
 
 int _compareRuleSets(List<String> s1, List<String> s2) {
   if (s1.contains('core')) {
