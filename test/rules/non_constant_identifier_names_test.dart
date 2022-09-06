@@ -24,9 +24,27 @@ class NonConstantIdentifierNamesRecordsTest extends LintRuleTest {
   test_recordFields() async {
     await assertDiagnostics(r'''
 var a = (x: 1);
-var b = (XXX: 1);
+var b = (XX: 1);
 ''', [
-      lint(25, 3),
+      lint(25, 2),
+    ]);
+  }
+
+  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3622')
+  test_recordTypeAnnotation_named() async {
+    await assertDiagnostics(r'''
+(int, {String NAME, bool b})? triple;
+''', [
+      lint(14, 4),
+    ]);
+  }
+
+  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3622')
+  test_recordTypeAnnotation_positional() async {
+    await assertDiagnostics(r'''
+(int, String NAME, bool) triple = (1,'', false);
+''', [
+      lint(13, 4),
     ]);
   }
 
