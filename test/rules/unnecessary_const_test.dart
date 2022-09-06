@@ -20,7 +20,7 @@ class UnnecessaryConstTest extends LintRuleTest {
   @override
   String get lintRule => 'unnecessary_const';
 
-  test_recordExpression() async {
+  test_recordLiteral() async {
     await assertDiagnostics(r'''
 const r = const (a: 1);
 ''', [
@@ -28,7 +28,7 @@ const r = const (a: 1);
     ]);
   }
 
-  test_recordExpression_ok() async {
+  test_recordLiteral_ok() async {
     await assertNoDiagnostics(r'''
 const r = (a: 1);
 ''');
