@@ -8,23 +8,29 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(AvoidSettersWithoutGettersTest);
+    defineReflectiveTests(UnnecessaryConstTest);
   });
 }
 
 @reflectiveTest
-class AvoidSettersWithoutGettersTest extends LintRuleTest {
+class UnnecessaryConstTest extends LintRuleTest {
   @override
-  String get lintRule => 'avoid_setters_without_getters';
+  List<String> get experiments => ['records'];
 
-  test_enum() async {
+  @override
+  String get lintRule => 'unnecessary_const';
+
+  test_recordLiteral() async {
     await assertDiagnostics(r'''
-enum A {
-  a,b,c;
-  set x(int x) {}
-}
+const r = const (a: 1);
 ''', [
-      lint(24, 1),
+      lint(10, 12),
     ]);
+  }
+
+  test_recordLiteral_ok() async {
+    await assertNoDiagnostics(r'''
+const r = (a: 1);
+''');
   }
 }

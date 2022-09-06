@@ -20,16 +20,14 @@ class ConstantIdentifierNamesRecordsTest extends LintRuleTest {
   @override
   String get lintRule => 'constant_identifier_names';
 
-  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3630')
   test_recordTypeDeclarations() async {
     await assertDiagnostics(r'''
-const R = (x: 1);
+const RR = (x: 1);
 ''', [
-      lint('constant_identifier_names', 6, 1),
+      lint(6, 2),
     ]);
   }
 
-  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3630')
   test_recordTypeDeclarations_ok() async {
     await assertNoDiagnostics(r'''
 const r = (x: 1);

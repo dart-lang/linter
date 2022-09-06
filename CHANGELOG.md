@@ -1,6 +1,10 @@
 # 1.28.0
 
+- update `avoid_redundant_argument_values` to work with enum declarations
+- performance improvements for `prefer_contains`
+- new lint: `unreachable_from_main`
 - new lint: `implicit_call_tearoffs`
+- (internal): analyzer API updates and `DartTypeUtilities` refactoring
 
 # 1.27.0
 
