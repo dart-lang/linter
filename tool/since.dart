@@ -15,10 +15,12 @@ import 'crawl.dart';
 var regenerateLinterYaml = false;
 
 void main() async {
-  for (var lint in registeredLints) {
-    var since = await findSinceLinter(lint.name);
-    if (since != null) {
-      print('${lint.name}: $since');
+  if (regenerateLinterYaml) {
+    for (var lint in registeredLints) {
+      var since = await findSinceLinter(lint.name);
+      if (since != null) {
+        print('${lint.name}: $since');
+      }
     }
   }
 
