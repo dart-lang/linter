@@ -22,9 +22,9 @@ class ConstantIdentifierNamesRecordsTest extends LintRuleTest {
 
   test_recordTypeDeclarations() async {
     await assertDiagnostics(r'''
-const RRR = (x: 1);
+const RR = (x: 1);
 ''', [
-      lint(6, 3),
+      lint(6, 2),
     ]);
   }
 
