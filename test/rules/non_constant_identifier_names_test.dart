@@ -33,18 +33,18 @@ var b = (XX: 1);
   @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3622')
   test_recordTypeAnnotation_named() async {
     await assertDiagnostics(r'''
-(int, {String NAME, bool b})? triple;
+(int, {String SS, bool b})? triple;
 ''', [
-      lint(14, 4),
+      lint(14, 2),
     ]);
   }
 
   @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3622')
   test_recordTypeAnnotation_positional() async {
     await assertDiagnostics(r'''
-(int, String NAME, bool) triple = (1,'', false);
+(int, String SS, bool) triple = (1,'', false);
 ''', [
-      lint(13, 4),
+      lint(13, 2),
     ]);
   }
 
