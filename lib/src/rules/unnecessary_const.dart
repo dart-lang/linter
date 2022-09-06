@@ -71,7 +71,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitRecordLiteral(RecordLiteral node) {
-    if (node.constKeyword != null) return;
+    if (node.constKeyword == null) return;
 
     if (node.inConstantContext) {
       rule.reportLint(node);
