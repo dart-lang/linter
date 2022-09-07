@@ -29,6 +29,12 @@ final tuple = ("first", 2, true);
     ]);
   }
 
+  test_test_recordLiteral_nonConst() async {
+    await assertNoDiagnostics(r'''
+final tuple = (1, () {});
+''');
+  }
+
   test_test_recordLiteral_ok() async {
     await assertNoDiagnostics(r'''
 const record = (number: 123, name: "Main", type: "Street");
