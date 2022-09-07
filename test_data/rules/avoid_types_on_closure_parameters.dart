@@ -10,18 +10,77 @@ class Person {
 
 List<Person> people = [];
 
-var goodName1 = people.map((person) => person.name); // OK
-var badName1 = people.map((Person person) => person.name); // LINT
+void closureAsParameter() {
+  people.map((person) => person.name); // OK
+  people.map((Person person) => person.name); // LINT
+}
 
-var goodName2 = ({person}) => person.name; // OK
-var badName2 = ({required Person person}) => person.name; // LINT
+void assignmentWithSimpleParam() {
+  String Function(Person)? v;
+  v = (person) => person.name; // OK
+  v = (Person person) => person.name; // LINT
+}
 
-var goodName3 = ({person : ''}) => person; // OK
-var badName3 = ([String person = '']) => person; // LINT
+void assignmentWithOptionalParam() {
+  String? Function([Person?])? v;
+  v = ([person]) => person?.name; // OK
+  v = ([Person? person]) => person?.name; // LINT
+}
 
-var goodName4 = ([person]) => person.name; // OK
-var badName4 = ([Person? person]) => person?.name; // LINT
+void assignmentWithNamedParam() {
+  String? Function({Person? person})? v;
+  v = ({person}) => person?.name; // OK
+  v = ({Person? person}) => person?.name; // LINT
+}
 
-var goodName5 = (dynamic person) => person.name; // OK
+void assignmentToDynamic() {
+  dynamic v;
+  v = (int a) {}; // OK
+}
 
-var functionWithFunction = (int f(int x)) => f(0); // LINT
+void assignmentToFunction() {
+  Function v;
+  v = (int a) {}; // OK
+}
+
+void assignmentToObject() {
+  Object v;
+  v = (int a) {}; // OK
+}
+
+void declaration() {
+  var v1 = (Person person) => person.name; // OK
+  String Function(Person) v2 = (Person person) => person.name; // LINT
+}
+
+void usageInList() {
+  var l1 = <int Function(int)>[
+    (int a) => 1, // LINT
+  ];
+
+  var l2 = [
+    // TODO(a14n): uncomment the following line
+    // (int a) => 1, // OK
+  ];
+}
+
+// https://github.com/dart-lang/linter/issues/2131
+const unused = Object();
+void additionOfDefaultValue() {
+  void Function({String name})? f;
+  f = ({Object name = unused}) {}; // OK
+}
+
+Person Function({String name}) get g1 =>
+    ({Object name = unused}) => Person(); // OK
+Person Function({String name}) get g2 {
+  return ({Object name = unused}) => Person(); // OK
+}
+
+void futureCatch() {
+  Future? future;
+  future?.then(
+    (v) {},
+    onError: (Object err, StackTrace stack) {}, // OK
+  );
+}
