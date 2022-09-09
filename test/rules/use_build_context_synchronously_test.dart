@@ -10,18 +10,15 @@ main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(UseBuildContextSynchronouslyTest);
   });
-
-  Future.delayed(const Duration(seconds: 1));
 }
 
 @reflectiveTest
 class UseBuildContextSynchronouslyTest extends LintRuleTest {
-
   @override
   bool get addFlutterPackageDep => true;
 
   @override
-  bool get enableTestMode  => true;
+  bool get enableTestMode => true;
 
   @override
   String get lintRule => 'use_build_context_synchronously';
