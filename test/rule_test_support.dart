@@ -410,8 +410,6 @@ abstract class _ContextResolutionTest with ResourceProviderMixin {
 
   List<String> get collectionIncludedPaths;
 
-  bool get enableTestMode => false;
-
   /// The analysis errors that were computed during analysis.
   List<AnalysisError> get errors => result.errors;
 
@@ -443,7 +441,7 @@ abstract class _ContextResolutionTest with ResourceProviderMixin {
   @mustCallSuper
   void setUp() {
     if (!_lintRulesAreRegistered) {
-      registerLintRules(inTestMode: enableTestMode);
+      registerLintRules();
       _lintRulesAreRegistered = true;
     }
 

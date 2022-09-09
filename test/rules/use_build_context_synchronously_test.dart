@@ -18,10 +18,11 @@ class UseBuildContextSynchronouslyTest extends LintRuleTest {
   bool get addFlutterPackageDep => true;
 
   @override
-  bool get enableTestMode => true;
-
-  @override
   String get lintRule => 'use_build_context_synchronously';
+
+  /// Ensure we're not run in the test dir.
+  @override
+  String get testPackageRootPath => '$workspaceRootPath/lib';
 
   /// https://github.com/dart-lang/linter/issues/3676
   test_contextPassedAsNamedParam() async {
