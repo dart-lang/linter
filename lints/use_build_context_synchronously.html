@@ -33,8 +33,8 @@
 <p>Storing <code>BuildContext</code> for later usage can easily lead to difficult to diagnose
 crashes. Asynchronous gaps are implicitly storing <code>BuildContext</code> and are some of
 the easiest to overlook when writing code.</p>
-<p>When a <code>BuildContext</code> is used from a <code>StatefulWidget</code>, the <code>mounted</code> property
-must be checked after an asynchronous gap.</p>
+<p>When a <code>BuildContext</code> is used, its <code>mounted</code> property must be checked after an
+asynchronous gap.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">void onButtonTapped(BuildContext context) {
   Navigator.of(context).pop();
@@ -47,15 +47,11 @@ must be checked after an asynchronous gap.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class _MyWidgetState extends State&lt;MyWidget&gt; {
-  ...
+<pre><code class="language-dart">void onButtonTapped() async {
+  await Future.delayed(const Duration(seconds: 1));
 
-  void onButtonTapped() async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (!mounted) return;
-    Navigator.of(context).pop();
-  }
+  if (!context.mounted) return;
+  Navigator.of(context).pop();
 }
 </code></pre>
 
