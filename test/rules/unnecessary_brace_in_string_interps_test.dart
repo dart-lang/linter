@@ -17,6 +17,24 @@ class UnnecessaryBraceInStringInterpsTest extends LintRuleTest {
   @override
   String get lintRule => 'unnecessary_brace_in_string_interps';
 
+  test_simpleIdentifier() async {
+    await assertDiagnostics(r'''
+void hi(String name) {
+  print('hi: ${name}');
+}
+''', [
+      lint(36, 7),
+    ]);
+  }
+
+  test_simpleIdentifier_suffixed() async {
+    await assertNoDiagnostics(r'''
+void hi(String name) {
+  print('hi: ${name}s');
+}
+''');
+  }
+
   test_this_methodInvocation() async {
     await assertNoDiagnostics(r'''
 class A {
@@ -38,5 +56,15 @@ class A {
 ''', [
       lint(39, 7),
     ]);
+  }
+
+  test_thisExpression_suffixed() async {
+    await assertNoDiagnostics(r'''
+class A {
+  void hi() {
+    print('${this}s');
+  }
+}
+''');
   }
 }
