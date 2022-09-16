@@ -68,6 +68,8 @@ class _Visitor extends SimpleAstVisitor<void> {
             !identifier.name.contains('\$')) {
           rule.reportLint(expression);
         }
+      } else if (exp is ThisExpression) {
+        rule.reportLint(expression);
       }
     }
   }
