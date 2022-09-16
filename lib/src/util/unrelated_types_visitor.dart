@@ -4,96 +4,50 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/dart/element/type_provider.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
 
-typedef _InterfaceTypePredicate = bool Function(InterfaceType type);
-
-/// Returns a predicate which returns whether a given [InterfaceTypeDefinition]
-/// is equal to [definition].
-_InterfaceTypePredicate _buildImplementsDefinitionPredicate(
-        InterfaceTypeDefinition definition) =>
-    (InterfaceType interface) =>
-        interface.element2.name == definition.name &&
-        interface.element2.library.name == definition.library;
-
-/// Returns the first type argument on [definition], as implemented by [type].
-///
-/// In the simplest case, [type] is the same class as [definition]. For
-/// example, given the definition `List<E>` and the type `List<int>`,
-/// this function returns the DartType for `int`.
-///
-/// In a more complicated case, we must traverse [type]'s interfaces to find
-/// [definition]. For example, given the definition `Set<E>` and the type `A`
-/// where `A implements B<List, String>` and `B<E, F> implements Set<F>, C<E>`,
-/// this function returns the DartType for `String`.
-DartType? _findIterableTypeArgument(
-    InterfaceTypeDefinition definition, InterfaceType? type,
-    {List<InterfaceType> accumulator = const []}) {
-  if (type == null ||
-      type.isDartCoreObject ||
-      type.isDynamic ||
-      accumulator.contains(type)) {
-    return null;
-  }
-
-  var predicate = _buildImplementsDefinitionPredicate(definition);
-  if (predicate(type)) {
-    return type.typeArguments.first;
-  }
-
-  var implementedInterfaces = type.allSupertypes;
-  var interface = implementedInterfaces.firstWhereOrNull(predicate);
-  if (interface != null && interface.typeArguments.isNotEmpty) {
-    return interface.typeArguments.first;
-  }
-
-  return _findIterableTypeArgument(definition, type.superclass,
-      accumulator: [type, ...accumulator, ...implementedInterfaces]);
-}
-
-bool _isParameterizedMethodInvocation(
-        String methodName, MethodInvocation node) =>
-    node.methodName.name == methodName &&
-    node.argumentList.arguments.length == 1;
-
 /// Base class for visitor used in rules where we want to lint about invoking
 /// methods on generic classes where the type of the singular argument is
 /// unrelated to the singular type argument of the class. Extending this
-/// visitor is as simple as knowing the method, class and library that uniquely
-/// define the target, i.e. implement only [definition] and [methodName].
+/// visitor is as simple as knowing the methods, classes and libraries that
+/// uniquely define the target, i.e. implement only [methods].
 abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
   final LintRule rule;
   final TypeSystem typeSystem;
+  final TypeProvider typeProvider;
 
-  UnrelatedTypesProcessors(this.rule, this.typeSystem);
+  UnrelatedTypesProcessors(this.rule, this.typeSystem, this.typeProvider);
 
-  /// The type definition which this [UnrelatedTypesProcessors] is concerned
+  /// The method definitions which this [UnrelatedTypesProcessors] is concerned
   /// with.
-  InterfaceTypeDefinition get definition;
-
-  /// The name of the method which this [UnrelatedTypesProcessors] is concerned
-  /// with.
-  String get methodName;
+  List<MethodDefinition> get methods;
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    if (!_isParameterizedMethodInvocation(methodName, node)) {
+    if (node.argumentList.arguments.length != 1) {
+      return;
+    }
+    var methodDefinition = _matchingMethod(node);
+    if (methodDefinition == null) {
       return;
     }
 
     // At this point, we know that [node] is an invocation of a method which
-    // has the same name as the method that this UnrelatedTypesProcessors] is
-    // concerned with, and that the method has a single parameter.
+    // has the same name as the method that this [UnrelatedTypesProcessors] is
+    // concerned with, and that the method call has a single argument.
     //
     // We've completed the "cheap" checks, and must now continue with the
     // arduous task of determining whether the method target implements
     // [definition].
 
     DartType? targetType;
+    // TODO(srawlins): Should be `realTarget`?
     var target = node.target;
     if (target != null) {
       targetType = target.staticType;
@@ -101,22 +55,80 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
       for (AstNode? parent = node; parent != null; parent = parent.parent) {
         if (parent is ClassDeclaration) {
           targetType = parent.declaredElement2?.thisType;
+          break;
         } else if (parent is MixinDeclaration) {
           targetType = parent.declaredElement2?.thisType;
+          break;
         }
+        // TODO(srawlins): Extension? Enum?
       }
     }
-    var argument = node.argumentList.arguments.first;
+
+    if (targetType is! InterfaceType) {
+      return;
+    }
+
+    var collectionType = targetType.asInstanceOf(methodDefinition.element);
+    if (collectionType == null) {
+      return;
+    }
 
     // Finally, determine whether the type of the argument is related to the
     // type of the method target.
-    if (targetType is InterfaceType) {
-      var typeArgument = _findIterableTypeArgument(definition, targetType);
-      if (typeArgument != null &&
-          typesAreUnrelated(typeSystem, argument.staticType, typeArgument)) {
-        rule.reportLint(node,
-            arguments: [typeArgument.getDisplayString(withNullability: true)]);
-      }
+    var argumentType = node.argumentList.arguments.first.staticType;
+
+    switch (methodDefinition.expectedArgumentKind) {
+      case ExpectedArgumentKind.assignableToCollectionTypeArgument:
+        var typeArgument =
+            collectionType.typeArguments[methodDefinition.typeArgumentIndex];
+        if (typesAreUnrelated(typeSystem, argumentType, typeArgument)) {
+          rule.reportLint(node, arguments: [
+            typeArgument.getDisplayString(withNullability: true)
+          ]);
+        }
+        break;
+
+      case ExpectedArgumentKind.assignableToCollection:
+        if (argumentType != null &&
+            typeSystem.isAssignableTo(argumentType, collectionType)) {
+          rule.reportLint(node, arguments: [
+            collectionType.getDisplayString(withNullability: true)
+          ]);
+        }
     }
   }
+
+  MethodDefinition? _matchingMethod(MethodInvocation node) => methods
+      .firstWhereOrNull((method) => node.methodName.name == method.methodName);
+}
+
+/// A definition of a method and the expected characteristics of the first
+/// argument to any invocation.
+class MethodDefinition {
+  /// The element on which this method is declared.
+  final ClassElement element;
+
+  final String methodName;
+
+  /// The index of the type argument which the method argument should match.
+  final int typeArgumentIndex;
+
+  final ExpectedArgumentKind expectedArgumentKind;
+
+  const MethodDefinition(
+    this.element,
+    this.methodName,
+    this.expectedArgumentKind, {
+    this.typeArgumentIndex = 0,
+  });
+}
+
+/// The kind of the expected argument.
+enum ExpectedArgumentKind {
+  /// An argument is expected to be assignable to a type argument on the
+  /// collection type.
+  assignableToCollectionTypeArgument,
+
+  /// An argument is expected to be assignable to the collection type.
+  assignableToCollection,
 }
