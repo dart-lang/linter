@@ -86,7 +86,7 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
     }
 
     // At this point, we know that [node] is an invocation of a method which
-    // has the same name as the method that this UnrelatedTypesProcessors] is
+    // has the same name as the method that this [UnrelatedTypesProcessors] is
     // concerned with, and that the method has a single parameter.
     //
     // We've completed the "cheap" checks, and must now continue with the
@@ -94,7 +94,7 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
     // [definition].
 
     DartType? targetType;
-    var target = node.target;
+    var target = node.realTarget;
     if (target != null) {
       targetType = target.staticType;
     } else {
