@@ -42,7 +42,7 @@ Future<void> f2() async {
 
 ''';
 
-class AvoidReturningNullForVoid extends LintRule implements NodeLintRule {
+class AvoidReturningNullForVoid extends LintRule {
   AvoidReturningNullForVoid()
       : super(
             name: 'avoid_returning_null_for_void',
@@ -91,7 +91,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       type = parent.declaredElement?.returnType;
       isAsync = parent.body.isAsynchronous;
     } else if (parent is MethodDeclaration) {
-      type = parent.declaredElement?.returnType;
+      type = parent.declaredElement2?.returnType;
       isAsync = parent.body.isAsynchronous;
     } else {
       throw StateError('unexpected type');

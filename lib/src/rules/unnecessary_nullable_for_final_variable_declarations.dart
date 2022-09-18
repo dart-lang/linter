@@ -28,8 +28,7 @@ final int i = 1;
 
 ''';
 
-class UnnecessaryNullableForFinalVariableDeclarations extends LintRule
-    implements NodeLintRule {
+class UnnecessaryNullableForFinalVariableDeclarations extends LintRule {
   UnnecessaryNullableForFinalVariableDeclarations()
       : super(
             name: 'unnecessary_nullable_for_final_variable_declarations',
@@ -46,7 +45,6 @@ class UnnecessaryNullableForFinalVariableDeclarations extends LintRule
     }
 
     var visitor = _Visitor(this, context);
-    registry.addCompilationUnit(this, visitor);
     registry.addFieldDeclaration(this, visitor);
     registry.addTopLevelVariableDeclaration(this, visitor);
     registry.addVariableDeclarationStatement(this, visitor);
@@ -62,7 +60,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var variable in node.fields.variables) {
-      if (Identifier.isPrivateName(variable.name.name) || node.isStatic) {
+      if (Identifier.isPrivateName(variable.name2.lexeme) || node.isStatic) {
         _visit(variable);
       }
     }
@@ -89,7 +87,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (initializerType == null) {
       return;
     }
-    var declaredElement = variable.declaredElement;
+    var declaredElement = variable.declaredElement2;
     if (declaredElement == null || declaredElement.type.isDynamic) {
       return;
     }

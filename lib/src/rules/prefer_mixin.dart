@@ -5,9 +5,10 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _dartCollectionUri = 'dart.collection';
 const _dartConvertUri = 'dart.convert';
@@ -41,7 +42,7 @@ const _mapMixinName = 'MapMixin';
 const _setMixinName = 'SetMixin';
 const _stringConversionSinkName = 'StringConversionSinkMixin';
 
-class PreferMixin extends LintRule implements NodeLintRule {
+class PreferMixin extends LintRule {
   PreferMixin()
       : super(
             name: 'prefer_mixin',
@@ -64,31 +65,27 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitWithClause(WithClause node) {
-    for (var type in node.mixinTypes) {
-      var element = type.name.staticElement;
-      if (element is TypeAliasElement) {
-        element = element.aliasedType.element;
-      }
-      if (element is ClassElement && !element.isMixin && !isAllowed(element)) {
-        rule.reportLint(type);
+    for (var mixinNode in node.mixinTypes) {
+      var type = mixinNode.type;
+      if (type is InterfaceType) {
+        var element = type.element2;
+        if (element is! MixinElement && !isAllowed(element)) {
+          rule.reportLint(mixinNode);
+        }
       }
     }
   }
 
-  /// Check for "legacy"  classes that cannot easily be made `mixin`s for
+  /// Check for "legacy" classes that cannot easily be made `mixin`s for
   /// compatibility reasons.
   /// (See: https://github.com/dart-lang/linter/issues/2082)
-  static bool isAllowed(ClassElement element) =>
+  static bool isAllowed(InterfaceElement element) =>
       // todo (pq): remove allowlist once legacy mixins are otherwise annotated.
       // see: https://github.com/dart-lang/sdk/issues/45343
-      DartTypeUtilities.isClassElement(
-          element, _iterableMixinName, _dartCollectionUri) ||
-      DartTypeUtilities.isClassElement(
-          element, _listMixinName, _dartCollectionUri) ||
-      DartTypeUtilities.isClassElement(
-          element, _mapMixinName, _dartCollectionUri) ||
-      DartTypeUtilities.isClassElement(
-          element, _setMixinName, _dartCollectionUri) ||
-      DartTypeUtilities.isClassElement(
-          element, _stringConversionSinkName, _dartConvertUri);
+
+      element.isClass(_iterableMixinName, _dartCollectionUri) ||
+      element.isClass(_listMixinName, _dartCollectionUri) ||
+      element.isClass(_mapMixinName, _dartCollectionUri) ||
+      element.isClass(_setMixinName, _dartCollectionUri) ||
+      element.isClass(_stringConversionSinkName, _dartConvertUri);
 }

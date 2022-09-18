@@ -54,8 +54,7 @@ bool _isStaticMember(ClassMember classMember) {
   return false;
 }
 
-class AvoidClassesWithOnlyStaticMembers extends LintRule
-    implements NodeLintRule {
+class AvoidClassesWithOnlyStaticMembers extends LintRule {
   AvoidClassesWithOnlyStaticMembers()
       : super(
             name: 'avoid_classes_with_only_static_members',
@@ -79,7 +78,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    var declaredElement = node.declaredElement;
+    var declaredElement = node.declaredElement2;
     if (declaredElement == null) {
       return;
     }
@@ -87,7 +86,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var interface = context.inheritanceManager.getInterface(declaredElement);
     var map = interface.map;
     for (var member in map.values) {
-      var enclosingElement = member.enclosingElement;
+      var enclosingElement = member.enclosingElement3;
       if (enclosingElement is ClassElement &&
           !enclosingElement.isDartCoreObject) {
         return;

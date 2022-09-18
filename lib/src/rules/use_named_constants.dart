@@ -5,6 +5,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
@@ -27,7 +28,7 @@ Duration.zero;
 ''';
 const lintName = 'use_named_constants';
 
-class UseNamedConstants extends LintRule implements NodeLintRule {
+class UseNamedConstants extends LintRule {
   UseNamedConstants()
       : super(
           name: lintName,
@@ -53,10 +54,12 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (node.isConst) {
-      var element = node.staticType?.element;
+      var type = node.staticType;
+      if (type is! InterfaceType) return;
+      var element = type.element2;
       if (element is ClassElement) {
         var nodeField =
-            node.thisOrAncestorOfType<VariableDeclaration>()?.declaredElement;
+            node.thisOrAncestorOfType<VariableDeclaration>()?.declaredElement2;
 
         // avoid diagnostic for fields in the same class having the same value
         // class A {
@@ -64,19 +67,21 @@ class _Visitor extends SimpleAstVisitor<void> {
         //   static const a = A();
         //   static const b = A();
         // }
-        if (nodeField?.enclosingElement == element) return;
+        if (nodeField?.enclosingElement3 == element) return;
 
         var library = (node.root as CompilationUnit).declaredElement?.library;
+        if (library == null) return;
         var value = context.evaluateConstant(node).value;
         for (var field
             in element.fields.where((e) => e.isStatic && e.isConst)) {
-          if (field.isAccessibleIn(library) &&
+          if (field.isAccessibleIn2(library) &&
               field.computeConstantValue() == value) {
             rule.reportLint(node,
                 arguments: ['${element.name}.${field.name}'],
                 errorCode: const LintCode(lintName,
                     "The constant '{0}' should be referenced instead of duplicating its value.",
-                    correction: "Try using the predefined constant '{0}'."));
+                    correctionMessage:
+                        "Try using the predefined constant '{0}'."));
             return;
           }
         }

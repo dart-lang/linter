@@ -33,8 +33,7 @@ var s =
 
 ''';
 
-class MissingWhitespaceBetweenAdjacentStrings extends LintRule
-    implements NodeLintRule {
+class MissingWhitespaceBetweenAdjacentStrings extends LintRule {
   MissingWhitespaceBetweenAdjacentStrings()
       : super(
             name: 'missing_whitespace_between_adjacent_strings',
@@ -46,11 +45,11 @@ class MissingWhitespaceBetweenAdjacentStrings extends LintRule
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
-    registry.addCompilationUnit(this, visitor);
+    registry.addAdjacentStrings(this, visitor);
   }
 }
 
-class _Visitor extends RecursiveAstVisitor<void> {
+class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
   _Visitor(this.rule);
@@ -88,7 +87,7 @@ class _Visitor extends RecursiveAstVisitor<void> {
   static bool _isRegExpInstanceCreation(AstNode? node) {
     if (node is InstanceCreationExpression) {
       var constructorElement = node.constructorName.staticElement;
-      return constructorElement?.enclosingElement.name == 'RegExp';
+      return constructorElement?.enclosingElement3.name == 'RegExp';
     }
     return false;
   }

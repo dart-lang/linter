@@ -68,7 +68,7 @@ class Bad {
 
 ''';
 
-class TestTypesInEquals extends LintRule implements NodeLintRule {
+class TestTypesInEquals extends LintRule {
   TestTypesInEquals()
       : super(
             name: 'test_types_in_equals',
@@ -108,6 +108,6 @@ class _Visitor extends SimpleAstVisitor<void> {
   bool _isEqualsOverride(MethodDeclaration? declaration) =>
       declaration != null &&
       declaration.isOperator &&
-      declaration.name.name == '==' &&
+      declaration.name2.lexeme == '==' &&
       declaration.parameters?.parameterElements.length == 1;
 }

@@ -5,9 +5,10 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Avoid null in null-aware assignment.';
 
@@ -32,7 +33,7 @@ x ??= null;
 
 ''';
 
-class UnnecessaryNullAwareAssignments extends LintRule implements NodeLintRule {
+class UnnecessaryNullAwareAssignments extends LintRule {
   UnnecessaryNullAwareAssignments()
       : super(
             name: 'unnecessary_null_aware_assignments',
@@ -55,8 +56,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
+    if (node.readElement is PropertyAccessorElement) return;
+    if (node.writeElement is PropertyAccessorElement) return;
+
     if (node.operator.type == TokenType.QUESTION_QUESTION_EQ &&
-        DartTypeUtilities.isNullLiteral(node.rightHandSide)) {
+        node.rightHandSide.isNullLiteral) {
       rule.reportLint(node);
     }
   }

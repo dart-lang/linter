@@ -49,7 +49,7 @@ class B {
 
 ''';
 
-class DeprecatedConsistency extends LintRule implements NodeLintRule {
+class DeprecatedConsistency extends LintRule {
   DeprecatedConsistency()
       : super(
           name: 'deprecated_consistency',
@@ -74,9 +74,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    var constructorElement = node.declaredElement;
+    var constructorElement = node.declaredElement2;
     if (constructorElement != null &&
-        constructorElement.enclosingElement.hasDeprecated &&
+        constructorElement.enclosingElement3.hasDeprecated &&
         !constructorElement.hasDeprecated) {
       rule.reportLint(node);
     }

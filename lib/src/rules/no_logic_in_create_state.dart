@@ -58,7 +58,7 @@ class MyStateful extends StatefulWidget {
 ```
 ''';
 
-class NoLogicInCreateState extends LintRule implements NodeLintRule {
+class NoLogicInCreateState extends LintRule {
   NoLogicInCreateState()
       : super(
             name: 'no_logic_in_create_state',
@@ -81,13 +81,13 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (node.name.name != 'createState') {
+    if (node.name2.lexeme != 'createState') {
       return;
     }
 
     var parent = node.parent;
     if (parent is! ClassDeclaration ||
-        !isStatefulWidget(parent.declaredElement)) {
+        !isStatefulWidget(parent.declaredElement2)) {
       return;
     }
     var body = node.body;
@@ -95,7 +95,7 @@ class _Visitor extends SimpleAstVisitor {
     if (body is BlockFunctionBody) {
       var statements = body.block.statements;
       if (statements.length == 1) {
-        var statement = statements[0];
+        var statement = statements.first;
         if (statement is ReturnStatement) {
           expressionToTest = statement.expression;
         }

@@ -35,7 +35,7 @@ if (!sources.isEmpty) {
 
 ''';
 
-class PreferIsNotEmpty extends LintRule implements NodeLintRule {
+class PreferIsNotEmpty extends LintRule {
   PreferIsNotEmpty()
       : super(
             name: 'prefer_is_not_empty',
@@ -84,7 +84,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     // Element should also support "isNotEmpty".
-    var propertyTarget = propertyElement.enclosingElement;
+    var propertyTarget = propertyElement.enclosingElement3;
     if (propertyTarget == null ||
         getChildren(propertyTarget, 'isNotEmpty').isEmpty) {
       return;

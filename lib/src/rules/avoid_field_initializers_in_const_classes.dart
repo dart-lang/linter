@@ -36,8 +36,7 @@ class A {
 
 ''';
 
-class AvoidFieldInitializersInConstClasses extends LintRule
-    implements NodeLintRule {
+class AvoidFieldInitializersInConstClasses extends LintRule {
   AvoidFieldInitializersInConstClasses()
       : super(
             name: 'avoid_field_initializers_in_const_classes',
@@ -105,7 +104,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     // only const class
     var parent = node.parent;
     if (parent is ClassDeclaration) {
-      var declaredElement = parent.declaredElement;
+      var declaredElement = parent.declaredElement2;
       if (declaredElement == null) {
         return;
       }

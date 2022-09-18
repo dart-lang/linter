@@ -35,8 +35,7 @@ m({b, c, @required a}) ;
 
 ''';
 
-class AlwaysPutRequiredNamedParametersFirst extends LintRule
-    implements NodeLintRule {
+class AlwaysPutRequiredNamedParametersFirst extends LintRule {
   AlwaysPutRequiredNamedParametersFirst()
       : super(
             name: 'always_put_required_named_parameters_first',
@@ -64,9 +63,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       var element = param.declaredElement;
       if (element != null && (element.hasRequired || element.isRequiredNamed)) {
         if (nonRequiredSeen) {
-          var identifier = param.identifier;
-          if (identifier != null) {
-            rule.reportLintForToken(identifier.token);
+          var name = param.name;
+          if (name != null) {
+            rule.reportLintForToken(name);
           }
         }
       } else {

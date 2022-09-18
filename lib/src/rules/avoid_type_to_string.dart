@@ -51,7 +51,7 @@ Object baz(Thing myThing) {
 
 ''';
 
-class AvoidTypeToString extends LintRule implements NodeLintRule {
+class AvoidTypeToString extends LintRule {
   AvoidTypeToString()
       : super(
             name: 'avoid_type_to_string',
@@ -91,17 +91,17 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    thisType = node.declaredElement?.thisType;
+    thisType = node.declaredElement2?.thisType;
   }
 
   @override
   void visitMixinDeclaration(MixinDeclaration node) {
-    thisType = node.declaredElement?.thisType;
+    thisType = node.declaredElement2?.thisType;
   }
 
   @override
   void visitExtensionDeclaration(ExtensionDeclaration node) {
-    var extendedType = node.declaredElement?.extendedType;
+    var extendedType = node.declaredElement2?.extendedType;
     // Might not be InterfaceType. Ex: visiting an extension on a dynamic type.
     thisType = extendedType is InterfaceType ? extendedType : null;
   }
@@ -151,7 +151,7 @@ class _Visitor extends SimpleAstVisitor {
       typeSystem.isSubtypeOf(targetType, typeType);
 
   bool _isSimpleIdDeclByCoreObj(SimpleIdentifier simpleIdentifier) {
-    var encloser = simpleIdentifier.staticElement?.enclosingElement;
+    var encloser = simpleIdentifier.staticElement?.enclosingElement3;
     return encloser is ClassElement && encloser.isDartCoreObject;
   }
 }

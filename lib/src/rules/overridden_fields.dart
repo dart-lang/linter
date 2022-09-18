@@ -82,7 +82,7 @@ Iterable<InterfaceType> _findAllSupertypesAndMixins(
     interfaces.add(superclass);
   }
   interfaces
-    ..addAll(interface.element.mixins)
+    ..addAll(interface.element2.mixins)
     ..addAll(_findAllSupertypesAndMixins(superclass, accumulator));
   return interfaces.where((i) => i != interface);
 }
@@ -97,7 +97,7 @@ Iterable<InterfaceType> _findAllSupertypesInMixin(ClassElement classElement) {
   return supertypes;
 }
 
-class OverriddenFields extends LintRule implements NodeLintRule {
+class OverriddenFields extends LintRule {
   OverriddenFields()
       : super(
             name: 'overridden_fields',
@@ -125,11 +125,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     for (var variable in node.fields.variables) {
-      var declaredElement = variable.declaredElement;
+      var declaredElement = variable.declaredElement2;
       if (declaredElement != null) {
         var field = _getOverriddenMember(declaredElement);
         if (field != null && !field.isAbstract) {
-          rule.reportLint(variable.name);
+          rule.reportLintForToken(variable.name2);
         }
       }
     }
@@ -139,7 +139,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     var memberName = member.name;
     var library = member.library;
     bool isOverriddenMember(PropertyAccessorElement a) {
-      if (memberName != null && a.isSynthetic && a.name == memberName) {
+      if (memberName == null || a.isStatic) {
+        return false;
+      }
+      if (a.isSynthetic && a.name == memberName) {
         // Ensure that private members are overriding a member of the same library.
         if (Identifier.isPrivateName(memberName)) {
           return library == a.library;
@@ -151,14 +154,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     bool containsOverriddenMember(InterfaceType i) =>
         i.accessors.any(isOverriddenMember);
-    var enclosingElement = member.enclosingElement;
+    var enclosingElement = member.enclosingElement3;
     if (enclosingElement is! ClassElement) {
       return null;
     }
     var classElement = enclosingElement;
 
     Iterable<InterfaceType> interfaces;
-    if (classElement.isMixin) {
+    if (classElement is MixinElement) {
       interfaces = _findAllSupertypesInMixin(classElement);
     } else {
       interfaces =

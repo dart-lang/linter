@@ -9,6 +9,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
+import '../extensions.dart';
 import '../util/dart_type_utilities.dart';
 
 const _desc =
@@ -56,11 +57,10 @@ bool _isThrowable(DartType? type) {
   var typeForInterfaceCheck = type?.typeForInterfaceCheck;
   return typeForInterfaceCheck == null ||
       typeForInterfaceCheck.isDynamic ||
-      DartTypeUtilities.implementsAnyInterface(
-          typeForInterfaceCheck, _interfaceDefinitions);
+      typeForInterfaceCheck.implementsAnyInterface(_interfaceDefinitions);
 }
 
-class OnlyThrowErrors extends LintRule implements NodeLintRule {
+class OnlyThrowErrors extends LintRule {
   OnlyThrowErrors()
       : super(
             name: 'only_throw_errors',

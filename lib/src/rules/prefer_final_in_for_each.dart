@@ -43,7 +43,7 @@ for (var element in elements) {
 
 ''';
 
-class PreferFinalInForEach extends LintRule implements NodeLintRule {
+class PreferFinalInForEach extends LintRule {
   PreferFinalInForEach()
       : super(
             name: 'prefer_final_in_for_each',
@@ -79,11 +79,11 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
 
       var function = node.thisOrAncestorOfType<FunctionBody>();
-      var loopVariableElement = loopVariable.declaredElement;
+      var loopVariableElement = loopVariable.declaredElement2;
       if (function != null &&
           loopVariableElement != null &&
           !function.isPotentiallyMutatedInScope(loopVariableElement)) {
-        rule.reportLint(loopVariable.identifier);
+        rule.reportLintForToken(loopVariable.name);
       }
     }
   }

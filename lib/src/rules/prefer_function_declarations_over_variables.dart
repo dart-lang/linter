@@ -36,8 +36,7 @@ void main() {
 
 ''';
 
-class PreferFunctionDeclarationsOverVariables extends LintRule
-    implements NodeLintRule {
+class PreferFunctionDeclarationsOverVariables extends LintRule {
   PreferFunctionDeclarationsOverVariables()
       : super(
             name: 'prefer_function_declarations_over_variables',
@@ -62,11 +61,19 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitVariableDeclaration(VariableDeclaration node) {
     if (node.initializer is FunctionExpression) {
       var function = node.thisOrAncestorOfType<FunctionBody>();
-      var declaredElement = node.declaredElement;
-      if (function == null ||
-          (declaredElement != null &&
-              !function.isPotentiallyMutatedInScope(declaredElement))) {
-        rule.reportLint(node);
+      var declaredElement = node.declaredElement2;
+      if (function == null) {
+        // When there is no enclosing function body, this is a variable
+        // definition for a field or a top-level variable, which should only
+        // be reported if final.
+        if (node.isFinal) {
+          rule.reportLint(node);
+        }
+      } else {
+        if (declaredElement != null &&
+            !function.isPotentiallyMutatedInScope(declaredElement)) {
+          rule.reportLint(node);
+        }
       }
     }
   }

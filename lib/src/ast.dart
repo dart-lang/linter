@@ -4,6 +4,7 @@
 
 /// Common AST helpers.
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/syntactic_entity.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
@@ -13,6 +14,8 @@ import 'package:path/path.dart' as path;
 
 import 'analyzer.dart';
 import 'utils.dart';
+
+final List<String> reservedWords = _collectReservedWords();
 
 /// Returns direct children of [parent].
 List<Element> getChildren(Element parent, [String? name]) {
@@ -32,10 +35,10 @@ CompilationUnit? getCompilationUnit(AstNode node) =>
 
 /// Returns a field identifier with the given [name] in the given [decl]'s
 /// variable declaration list or `null` if none is found.
-SimpleIdentifier? getFieldIdentifier(FieldDeclaration decl, String name) {
+Token? getFieldName(FieldDeclaration decl, String name) {
   for (var v in decl.fields.variables) {
-    if (v.name.name == name) {
-      return v.name;
+    if (v.name2.lexeme == name) {
+      return v.name2;
     }
   }
   return null;
@@ -43,13 +46,11 @@ SimpleIdentifier? getFieldIdentifier(FieldDeclaration decl, String name) {
 
 /// Returns the value of an [IntegerLiteral] or [PrefixExpression] with a
 /// minus and then an [IntegerLiteral]. If a [context] is provided,
-/// [SimpleIdentifier]s are evaluated as as constants. For anything else,
+/// [SimpleIdentifier]s are evaluated as constants. For anything else,
 /// returns `null`.
 int? getIntValue(Expression expression, LinterContext? context) {
   if (expression is PrefixExpression) {
     var operand = expression.operand;
-    // todo(pq): remove once 1.8.0 is landed.
-    // ignore: avoid_returning_null
     if (expression.operator.type != TokenType.MINUS) return null;
     return _getIntValue(operand, context, negated: true);
   }
@@ -57,7 +58,7 @@ int? getIntValue(Expression expression, LinterContext? context) {
 }
 
 /// Returns the most specific AST node appropriate for associating errors.
-AstNode getNodeToAnnotate(Declaration node) {
+SyntacticEntity getNodeToAnnotate(Declaration node) {
   var mostSpecific = _getNodeToAnnotate(node);
   return mostSpecific ?? node;
 }
@@ -79,43 +80,29 @@ bool hasConstantError(LinterContext context, Expression node) {
 }
 
 /// Returns `true` if this [element] has a `@literal` annotation.
-bool hasLiteralAnnotation(Element element) {
-  var metadata = element.metadata;
-  for (var i = 0; i < metadata.length; i++) {
-    if (metadata[i].isLiteral) {
-      return true;
-    }
-  }
-  return false;
-}
+@Deprecated('prefer: element.hasLiteral')
+bool hasLiteralAnnotation(Element element) => element.hasLiteral;
 
 /// Returns `true` if this [element] has an `@override` annotation.
-bool hasOverrideAnnotation(Element element) {
-  var metadata = element.metadata;
-  for (var i = 0; i < metadata.length; i++) {
-    if (metadata[i].isOverride) {
-      return true;
-    }
-  }
-  return false;
-}
+@Deprecated('prefer: element.hasOverride')
+bool hasOverrideAnnotation(Element element) => element.hasOverride;
 
 /// Returns `true` if this [node] is the child of a private compilation unit
 /// member.
 bool inPrivateMember(AstNode node) {
   var parent = node.parent;
   if (parent is NamedCompilationUnitMember) {
-    return isPrivate(parent.name);
+    return isPrivate(parent.name2);
   }
   if (parent is ExtensionDeclaration) {
-    return parent.name == null || isPrivate(parent.name);
+    return parent.name2 == null || isPrivate(parent.name2);
   }
   return false;
 }
 
 /// Returns `true` if this element is the `==` method declaration.
 bool isEquals(ClassMember element) =>
-    element is MethodDeclaration && element.name.name == '==';
+    element is MethodDeclaration && element.name2.lexeme == '==';
 
 /// Returns `true` if the keyword associated with this token is `final` or
 /// `const`.
@@ -123,10 +110,10 @@ bool isFinalOrConst(Token token) =>
     isKeyword(token, Keyword.FINAL) || isKeyword(token, Keyword.CONST);
 
 /// Returns `true` if this element is a `hashCode` method or field declaration.
-bool isHashCode(ClassMember element) =>
-    (element is MethodDeclaration && element.name.name == 'hashCode') ||
-    (element is FieldDeclaration &&
-        getFieldIdentifier(element, 'hashCode') != null);
+bool isHashCode(ClassMember element) => _hasFieldOrMethod(element, 'hashCode');
+
+/// Returns `true` if this element is an `index` method or field declaration.
+bool isIndex(ClassMember element) => _hasFieldOrMethod(element, 'index');
 
 /// Return true if this compilation unit [node] is declared within the given
 /// [package]'s `lib/` directory tree.
@@ -158,20 +145,23 @@ bool isKeyword(Token token, Keyword keyword) =>
     token is KeywordToken && token.keyword == keyword;
 
 /// Returns `true` if the given [id] is a Dart keyword.
-bool isKeyWord(String id) => Keyword.keywords.keys.contains(id);
+bool isKeyWord(String id) => Keyword.keywords.containsKey(id);
 
 /// Returns `true` if the given [ClassMember] is a method.
 bool isMethod(ClassMember m) => m is MethodDeclaration;
 
 /// Check if the given identifier has a private name.
-bool isPrivate(SimpleIdentifier? identifier) =>
-    identifier != null ? Identifier.isPrivateName(identifier.name) : false;
+bool isPrivate(Token? name) =>
+    name != null ? Identifier.isPrivateName(name.lexeme) : false;
 
 /// Returns `true` if the given [ClassMember] is a public method.
 bool isPublicMethod(ClassMember m) {
-  var declaredElement = m.declaredElement;
+  var declaredElement = m.declaredElement2;
   return declaredElement != null && isMethod(m) && declaredElement.isPublic;
 }
+
+/// Check if the given word is a Dart reserved word.
+bool isReservedWord(String word) => reservedWords.contains(word);
 
 /// Returns `true` if the given method [declaration] is a "simple getter".
 ///
@@ -198,7 +188,7 @@ bool isSimpleGetter(MethodDeclaration declaration) {
   } else if (body is BlockFunctionBody) {
     var block = body.block;
     if (block.statements.length == 1) {
-      var statement = block.statements[0];
+      var statement = block.statements.first;
       if (statement is ReturnStatement) {
         return _checkForSimpleGetter(declaration, statement.expression);
       }
@@ -232,7 +222,7 @@ bool isSimpleSetter(MethodDeclaration setter) {
   } else if (body is BlockFunctionBody) {
     var block = body.block;
     if (block.statements.length == 1) {
-      var statement = block.statements[0];
+      var statement = block.statements.first;
       if (statement is ExpressionStatement) {
         return _checkForSimpleSetter(setter, statement.expression);
       }
@@ -244,6 +234,9 @@ bool isSimpleSetter(MethodDeclaration setter) {
 
 /// Returns `true` if the given [id] is a valid Dart identifier.
 bool isValidDartIdentifier(String id) => !isKeyWord(id) && isIdentifier(id);
+
+/// Returns `true` if this element is a `values` method or field declaration.
+bool isValues(ClassMember element) => _hasFieldOrMethod(element, 'values');
 
 /// Returns `true` if the keyword associated with this token is `var`.
 bool isVar(Token token) => isKeyword(token, Keyword.VAR);
@@ -264,7 +257,7 @@ File? locatePubspecFile(CompilationUnit compilationUnit) {
   var file = resourceProvider.getFile(fullName);
 
   // Look for a pubspec.yaml file.
-  for (var folder in file.parent2.withAncestors) {
+  for (var folder in file.parent.withAncestors) {
     var pubspecFile = folder.getChildAssumingFile('pubspec.yaml');
     if (pubspecFile.exists) {
       return pubspecFile;
@@ -284,10 +277,10 @@ bool _checkForSimpleGetter(MethodDeclaration getter, Expression? expression) {
   if (expression is SimpleIdentifier) {
     var staticElement = expression.staticElement;
     if (staticElement is PropertyAccessorElement) {
-      var enclosingElement = getter.declaredElement?.enclosingElement;
+      var enclosingElement = getter.declaredElement2?.enclosingElement3;
       // Skipping library level getters, test that the enclosing element is
       // the same
-      if (staticElement.enclosingElement == enclosingElement) {
+      if (staticElement.enclosingElement3 == enclosingElement) {
         return staticElement.isSynthetic && staticElement.variable.isPrivate;
       }
     }
@@ -323,11 +316,21 @@ bool _checkForSimpleSetter(MethodDeclaration setter, Expression expression) {
 
     var parameters = setter.parameters?.parameters;
     if (parameters != null && parameters.length == 1) {
-      return rightElement == parameters[0].declaredElement;
+      return rightElement == parameters.first.declaredElement;
     }
   }
 
   return false;
+}
+
+List<String> _collectReservedWords() {
+  var reserved = <String>[];
+  for (var entry in Keyword.keywords.entries) {
+    if (entry.value.isReservedWord) {
+      reserved.add(entry.key);
+    }
+  }
+  return reserved;
 }
 
 int? _getIntValue(Expression expression, LinterContext? context,
@@ -338,49 +341,50 @@ int? _getIntValue(Expression expression, LinterContext? context,
   } else if (expression is SimpleIdentifier && context != null) {
     value = context.evaluateConstant(expression).value?.toIntValue();
   }
-  // todo(pq): remove once 1.8.0 is landed.
-  // ignore: avoid_returning_null
   if (value is! int) return null;
 
   return negated ? -value : value;
 }
 
-AstNode? _getNodeToAnnotate(Declaration node) {
+SyntacticEntity? _getNodeToAnnotate(Declaration node) {
   if (node is MethodDeclaration) {
-    return node.name;
+    return node.name2;
   }
   if (node is ConstructorDeclaration) {
-    return node.name;
+    return node.name2;
   }
   if (node is FieldDeclaration) {
     return node.fields;
   }
   if (node is ClassTypeAlias) {
-    return node.name;
+    return node.name2;
   }
   if (node is FunctionTypeAlias) {
-    return node.name;
+    return node.name2;
   }
   if (node is ClassDeclaration) {
-    return node.name;
+    return node.name2;
   }
   if (node is EnumDeclaration) {
-    return node.name;
+    return node.name2;
+  }
+  if (node is ExtensionDeclaration) {
+    return node.name2;
   }
   if (node is FunctionDeclaration) {
-    return node.name;
+    return node.name2;
   }
   if (node is TopLevelVariableDeclaration) {
     return node.variables;
   }
   if (node is EnumConstantDeclaration) {
-    return node.name;
+    return node.name2;
   }
   if (node is TypeParameter) {
-    return node.name;
+    return node.name2;
   }
   if (node is VariableDeclaration) {
-    return node.name;
+    return node.name2;
   }
   return null;
 }
@@ -412,6 +416,10 @@ Element? _getWriteElement(AstNode node) {
   return null;
 }
 
+bool _hasFieldOrMethod(ClassMember element, String name) =>
+    (element is MethodDeclaration && element.name2.lexeme == name) ||
+    (element is FieldDeclaration && getFieldName(element, name) != null);
+
 /// An [Element] processor function type.
 /// If `true` is returned, children of [element] will be visited.
 typedef ElementProcessor = bool Function(Element element);
@@ -425,8 +433,18 @@ class _ElementVisitorAdapter extends GeneralizingElementVisitor {
   @override
   void visitElement(Element element) {
     var visitChildren = processor(element);
-    if (visitChildren == true) {
+    if (visitChildren) {
       element.visitChildren(this);
     }
+  }
+}
+
+extension ElementExtension on Element? {
+  // TODO(srawlins): Move to extensions.dart.
+  bool get isDartCorePrint {
+    var self = this;
+    return self is FunctionElement &&
+        self.name == 'print' &&
+        self.library.isDartCore;
   }
 }

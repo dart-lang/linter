@@ -5,7 +5,7 @@
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 import '../util/leak_detector_visitor.dart';
 
 const _desc = r'Cancel instances of dart.async.StreamSubscription.';
@@ -58,10 +58,10 @@ void someFunctionOK() {
 
 ''';
 
-bool _isSubscription(DartType type) => DartTypeUtilities.implementsInterface(
-    type, 'StreamSubscription', 'dart.async');
+bool _isSubscription(DartType type) =>
+    type.implementsInterface('StreamSubscription', 'dart.async');
 
-class CancelSubscriptions extends LintRule implements NodeLintRule {
+class CancelSubscriptions extends LintRule {
   CancelSubscriptions()
       : super(
             name: 'cancel_subscriptions',
@@ -86,5 +86,5 @@ class _Visitor extends LeakDetectorProcessors {
     _isSubscription: _cancelMethodName
   };
 
-  _Visitor(LintRule rule) : super(rule);
+  _Visitor(super.rule);
 }

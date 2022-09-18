@@ -6,7 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../util/dart_type_utilities.dart' as type_utils;
 
 const _desc = r'Join return statement with assignment when possible.';
 
@@ -44,7 +44,7 @@ Expression? _getExpressionFromAssignmentStatement(Statement node) {
 Expression? _getExpressionFromReturnStatement(Statement node) =>
     node is ReturnStatement ? node.expression : null;
 
-class JoinReturnWithAssignment extends LintRule implements NodeLintRule {
+class JoinReturnWithAssignment extends LintRule {
   JoinReturnWithAssignment()
       : super(
             name: 'join_return_with_assignment',
@@ -118,9 +118,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       thirdLastExpression =
           _getExpressionFromAssignmentStatement(thirdLastStatement);
     }
-    if (!DartTypeUtilities.canonicalElementsFromIdentifiersAreEqual(
+    if (!type_utils.canonicalElementsFromIdentifiersAreEqual(
             secondLastExpression, thirdLastExpression) &&
-        DartTypeUtilities.canonicalElementsFromIdentifiersAreEqual(
+        type_utils.canonicalElementsFromIdentifiersAreEqual(
             lastExpression, secondLastExpression)) {
       rule.reportLint(secondLastStatement);
     }

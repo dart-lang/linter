@@ -4,6 +4,8 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
@@ -45,7 +47,7 @@ for any type of map or list:
 ```
 ''';
 
-class PreferVoidToNull extends LintRule implements NodeLintRule {
+class PreferVoidToNull extends LintRule {
   PreferVoidToNull()
       : super(
             name: 'prefer_void_to_null',
@@ -56,18 +58,59 @@ class PreferVoidToNull extends LintRule implements NodeLintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this);
-    registry.addTypeName(this, visitor);
+    var visitor = _Visitor(this, context);
+    registry.addNamedType(this, visitor);
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+  final LinterContext context;
+  _Visitor(this.rule, this.context);
 
-  _Visitor(this.rule);
+  /// todo(pq): pull up to a utility.
+  ExecutableElement? getOverriddenMember(Element? member) {
+    if (member == null) {
+      return null;
+    }
+    var classElement = member.thisOrAncestorOfType<ClassElement>();
+    if (classElement == null) {
+      return null;
+    }
+    var name = member.name;
+    if (name == null) {
+      return null;
+    }
+
+    var libraryUri = classElement.library.source.uri;
+    return context.inheritanceManager.getInherited(
+      classElement.thisType,
+      Name(libraryUri, name),
+    );
+  }
+
+  bool isFutureOrVoid(DartType type) {
+    if (!type.isDartAsyncFutureOr) return false;
+    if (type is! InterfaceType) return false;
+    return type.typeArguments.first.isVoid;
+  }
+
+  bool isVoidIncompatibleOverride(MethodDeclaration parent, AstNode node) {
+    // Make sure we're checking a return type.
+    if (parent.returnType?.offset != node.offset) return false;
+
+    var member = getOverriddenMember(parent.declaredElement2);
+    if (member == null) return false;
+
+    var returnType = member.returnType;
+    if (returnType.isVoid) return false;
+    if (isFutureOrVoid(returnType)) return false;
+
+    return true;
+  }
 
   @override
-  void visitTypeName(TypeName node) {
+  void visitNamedType(NamedType node) {
     var nodeType = node.type;
     if (nodeType == null || !nodeType.isDartCoreNull) {
       return;
@@ -95,6 +138,17 @@ class _Visitor extends SimpleAstVisitor<void> {
       } else if (literal is SetOrMapLiteral && literal.elements.isEmpty) {
         return;
       }
+    }
+
+    // extension _ on Null {}
+    if (parent is ExtensionDeclaration) {
+      return;
+    }
+
+    // https://github.com/dart-lang/linter/issues/2792
+    if (parent is MethodDeclaration &&
+        isVoidIncompatibleOverride(parent, node)) {
+      return;
     }
 
     rule.reportLint(node.name);

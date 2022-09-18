@@ -5,10 +5,11 @@
 import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r"Don't explicitly initialize variables to null.";
 
@@ -57,7 +58,7 @@ class LazyId {
 
 ''';
 
-class AvoidInitToNull extends LintRule implements NodeLintRule {
+class AvoidInitToNull extends LintRule {
   AvoidInitToNull()
       : super(
             name: 'avoid_init_to_null',
@@ -83,27 +84,32 @@ class _Visitor extends SimpleAstVisitor<void> {
       : nnbdEnabled = context.isEnabled(Feature.non_nullable);
 
   bool isNullable(DartType type) =>
-      !nnbdEnabled || (context.typeSystem.isNullable(type));
+      !nnbdEnabled || context.typeSystem.isNullable(type);
 
   @override
   void visitDefaultFormalParameter(DefaultFormalParameter node) {
     var declaredElement = node.declaredElement;
-    if (declaredElement == null) {
-      return;
+    if (declaredElement == null) return;
+
+    if (declaredElement is SuperFormalParameterElement) {
+      var superConstructorParameter = declaredElement.superConstructorParameter;
+      if (superConstructorParameter is! ParameterElement) return;
+      var defaultValue = superConstructorParameter.defaultValueCode ?? 'null';
+      if (defaultValue != 'null') return;
     }
-    if (DartTypeUtilities.isNullLiteral(node.defaultValue) &&
-        isNullable(declaredElement.type)) {
+
+    if (node.defaultValue.isNullLiteral && isNullable(declaredElement.type)) {
       rule.reportLint(node);
     }
   }
 
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
-    var declaredElement = node.declaredElement;
+    var declaredElement = node.declaredElement2;
     if (declaredElement != null &&
         !node.isConst &&
         !node.isFinal &&
-        DartTypeUtilities.isNullLiteral(node.initializer) &&
+        node.initializer.isNullLiteral &&
         isNullable(declaredElement.type)) {
       rule.reportLint(node);
     }

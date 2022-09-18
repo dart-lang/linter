@@ -16,7 +16,7 @@ corresponding parameter.
 
 **BAD:**
 ```dart
-void f({bool valWithDefault = true, bool val}) {
+void f({bool valWithDefault = true, bool? val}) {
   ...
 }
 
@@ -27,7 +27,7 @@ void main() {
 
 **GOOD:**
 ```dart
-void f({bool valWithDefault = true, bool val}) {
+void f({bool valWithDefault = true, bool? val}) {
   ...
 }
 
@@ -38,7 +38,7 @@ void main() {
 ```
 ''';
 
-class AvoidRedundantArgumentValues extends LintRule implements NodeLintRule {
+class AvoidRedundantArgumentValues extends LintRule {
   AvoidRedundantArgumentValues()
       : super(
             name: 'avoid_redundant_argument_values',
@@ -51,6 +51,7 @@ class AvoidRedundantArgumentValues extends LintRule implements NodeLintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this, context);
     registry.addInstanceCreationExpression(this, visitor);
+    registry.addFunctionExpressionInvocation(this, visitor);
     registry.addMethodInvocation(this, visitor);
   }
 }
@@ -70,18 +71,20 @@ class _Visitor extends SimpleAstVisitor {
     for (var i = arguments.length - 1; i >= 0; --i) {
       var arg = arguments[i];
       var param = arg.staticParameterElement;
-      if (param == null || param.hasRequired || param.isRequiredNamed) {
+      if (param == null ||
+          param.declaration.isRequired ||
+          param.hasRequired ||
+          !param.isOptional) {
         continue;
-      } else if (param.isRequiredPositional) {
-        break;
       }
       var value = param.computeConstantValue();
-      if (value != null) {
+      if (value != null && value.hasKnownValue) {
         if (arg is NamedExpression) {
           arg = arg.expression;
         }
-        var expressionValue = context.evaluateConstant(arg);
-        if (expressionValue.value == value) {
+        var expressionValue = context.evaluateConstant(arg).value;
+        if ((expressionValue?.hasKnownValue ?? false) &&
+            expressionValue == value) {
           rule.reportLint(arg);
         }
       }
@@ -93,6 +96,11 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
+    check(node.argumentList);
+  }
+
+  @override
+  visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
     check(node.argumentList);
   }
 

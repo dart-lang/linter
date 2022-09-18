@@ -49,8 +49,7 @@ bool _isImmutable(Element? element) =>
     element.name == _immutableVarName &&
     element.library.name == _metaLibName;
 
-class PreferConstConstructorsInImmutables extends LintRule
-    implements NodeLintRule {
+class PreferConstConstructorsInImmutables extends LintRule {
   PreferConstConstructorsInImmutables()
       : super(
             name: 'prefer_const_constructors_in_immutables',
@@ -75,7 +74,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    var element = node.declaredElement;
+    var element = node.declaredElement2;
     if (element == null) {
       return;
     }
@@ -83,8 +82,8 @@ class _Visitor extends SimpleAstVisitor<void> {
         element.isFactory && element.redirectedConstructor != null;
     if (node.body is EmptyFunctionBody &&
         !element.isConst &&
-        !_hasMixin(element.enclosingElement) &&
-        _hasImmutableAnnotation(element.enclosingElement) &&
+        !_hasMixin(element.enclosingElement3) &&
+        _hasImmutableAnnotation(element.enclosingElement3) &&
         (isRedirected && (element.redirectedConstructor?.isConst ?? false) ||
             (!isRedirected &&
                 _hasConstConstructorInvocation(node) &&
@@ -94,11 +93,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _hasConstConstructorInvocation(ConstructorDeclaration node) {
-    var declaredElement = node.declaredElement;
+    var declaredElement = node.declaredElement2;
     if (declaredElement == null) {
       return false;
     }
-    var clazz = declaredElement.enclosingElement;
+    var clazz = declaredElement.enclosingElement3;
     // construct with super
     var superInvocation = node.initializers
             .firstWhereOrNull((e) => e is SuperConstructorInvocation)
@@ -119,22 +118,22 @@ class _Visitor extends SimpleAstVisitor<void> {
         supertype.constructors.firstWhere((e) => e.name.isEmpty).isConst;
   }
 
-  bool _hasImmutableAnnotation(ClassElement clazz) {
-    var selfAndInheritedClasses = _getSelfAndInheritedClasses(clazz);
-    var selfAndInheritedAnnotations =
-        selfAndInheritedClasses.expand((c) => c.metadata).map((m) => m.element);
-    return selfAndInheritedAnnotations.any(_isImmutable);
+  bool _hasImmutableAnnotation(InterfaceElement clazz) {
+    var selfAndInheritedClasses = _getSelfAndSuperClasses(clazz);
+    for (var cls in selfAndInheritedClasses) {
+      if (cls.metadata.any((m) => _isImmutable(m.element))) return true;
+    }
+    return false;
   }
 
-  bool _hasMixin(ClassElement clazz) => clazz.mixins.isNotEmpty;
+  bool _hasMixin(InterfaceElement clazz) => clazz.mixins.isNotEmpty;
 
-  static Iterable<ClassElement> _getSelfAndInheritedClasses(
-      ClassElement self) sync* {
-    ClassElement? current = self;
-    var seenElements = <ClassElement>{};
+  static List<InterfaceElement> _getSelfAndSuperClasses(InterfaceElement self) {
+    InterfaceElement? current = self;
+    var seenElements = <InterfaceElement>{};
     while (current != null && seenElements.add(current)) {
-      yield current;
-      current = current.supertype?.element;
+      current = current.supertype?.element2;
     }
+    return seenElements.toList();
   }
 }

@@ -24,7 +24,6 @@ void main() async {
     Detail.sdk,
     Detail.fix,
     Detail.pedantic,
-    Detail.effectiveDart,
     Detail.flutterUser,
     Detail.flutterRepo,
     Detail.status,
@@ -123,7 +122,6 @@ class Detail {
 
   static const Detail fix = Detail('fix');
   static const Detail pedantic = Detail('pedantic');
-  static const Detail effectiveDart = Detail('effective_dart');
   static const Detail flutterUser = Detail('flutter user');
   static const Detail flutterRepo = Detail('flutter repo');
   static const Detail status = Detail('status');
@@ -159,7 +157,7 @@ class LintScore {
       this.bugReferences,
       this.since});
 
-  String get _ruleSets => ruleSets!.isNotEmpty ? ' ${ruleSets.toString()}' : '';
+  String get _ruleSets => ruleSets!.isNotEmpty ? ' $ruleSets' : '';
 
   String toMarkdown(List<Detail> details) {
     var sb = StringBuffer('| ');
@@ -173,17 +171,15 @@ class LintScore {
           sb.write(' ${since!.sinceLinter} |');
           break;
         case Detail.sdk:
-          sb.write(' ${since!.sinceDartSdk} |');
+          // See: https://github.com/dart-lang/linter/issues/2824
+          //sb.write(' ${since!.sinceDartSdk} |');
+          sb.write('*untracked*');
           break;
         case Detail.fix:
           sb.write('${hasFix! ? " $bulb" : ""} |');
           break;
         case Detail.pedantic:
           sb.write('${ruleSets!.contains('pedantic') ? " $checkMark" : ""} |');
-          break;
-        case Detail.effectiveDart:
-          sb.write(
-              '${ruleSets!.contains('effective_dart') ? " $checkMark" : ""} |');
           break;
         case Detail.flutterUser:
           sb.write('${ruleSets!.contains('flutter') ? " $checkMark" : ""} |');
@@ -247,7 +243,6 @@ class ScoreCard {
     var flutterRuleset = await flutterRules;
     var flutterRepoRuleset = await flutterRepoRules;
     var pedanticRuleset = await pedanticRules;
-    var effectiveDartRuleset = await effectiveDartRules;
 
     var issues = await getLinterIssues();
     var bugs = issues.where(isBug).toList();
@@ -265,14 +260,12 @@ class ScoreCard {
       if (pedanticRuleset.contains(lint.name)) {
         ruleSets.add('pedantic');
       }
-      if (effectiveDartRuleset.contains(lint.name)) {
-        ruleSets.add('effective_dart');
-      }
+
       var bugReferences = <String>[];
       for (var bug in bugs) {
         var title = bug.title;
         if (title.contains(lint.name)) {
-          bugReferences.add('#${bug.number.toString()}');
+          bugReferences.add('#${bug.number}');
         }
       }
 
@@ -292,11 +285,11 @@ class ScoreCard {
   static Future<List<String>> _getLintsWithAssists() async {
     var client = http.Client();
     var req = await client.get(Uri.parse(
-        'https://raw.githubusercontent.com/dart-lang/sdk/master/pkg/analysis_server/lib/src/services/correction/assist.dart'));
+        'https://raw.githubusercontent.com/dart-lang/sdk/main/pkg/analysis_server/lib/src/services/correction/assist.dart'));
     var parser = CompilationUnitParser();
     var cu = parser.parse(contents: req.body, name: 'assist.dart');
     var assistKindClass = cu.declarations.firstWhere(
-        (m) => m is ClassDeclaration && m.name.name == 'DartAssistKind');
+        (m) => m is ClassDeclaration && m.name2.lexeme == 'DartAssistKind');
 
     var collector = _AssistCollector();
     assistKindClass.accept(collector);
@@ -306,12 +299,12 @@ class ScoreCard {
   static Future<List<String>> _getLintsWithFixes() async {
     var client = http.Client();
     var req = await client.get(Uri.parse(
-        'https://raw.githubusercontent.com/dart-lang/sdk/master/pkg/analysis_server/lib/src/services/linter/lint_names.dart'));
+        'https://raw.githubusercontent.com/dart-lang/sdk/main/pkg/analysis_server/lib/src/services/linter/lint_names.dart'));
 
     var parser = CompilationUnitParser();
     var cu = parser.parse(contents: req.body, name: 'lint_names.dart');
-    var lintNamesClass = cu.declarations
-        .firstWhere((m) => m is ClassDeclaration && m.name.name == 'LintNames');
+    var lintNamesClass = cu.declarations.firstWhere(
+        (m) => m is ClassDeclaration && m.name2.lexeme == 'LintNames');
 
     var collector = _FixCollector();
     lintNamesClass.accept(collector);
@@ -344,7 +337,7 @@ class _FixCollector extends GeneralizingAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var v in node.fields.variables) {
-      var name = v.name.name;
+      var name = v.name2.lexeme;
       lintNames.add(name);
       if (!registeredLintNames.contains(name)) {
         print('WARNING: unrecognized lint in fixes: $name');

@@ -8,7 +8,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../utils.dart';
+import '../util/ascii_utils.dart';
 
 const _desc = r'Specify type annotations.';
 
@@ -59,24 +59,7 @@ main() {
 
 ''';
 
-/// The name of `meta` library, used to define analysis annotations.
-String _metaLibName = 'meta';
-
-/// The name of the top-level variable used to mark a Class as having optional
-/// type args.
-String _optionalTypeArgsVarName = 'optionalTypeArgs';
-
-bool _isOptionallyParameterized(TypeParameterizedElement element) {
-  var metadata = element.metadata;
-  return metadata.any((ElementAnnotation a) => _isOptionalTypeArgs(a.element));
-}
-
-bool _isOptionalTypeArgs(Element? element) =>
-    element is PropertyAccessorElement &&
-    element.name == _optionalTypeArgsVarName &&
-    element.library.name == _metaLibName;
-
-class AlwaysSpecifyTypes extends LintRule implements NodeLintRule {
+class AlwaysSpecifyTypes extends LintRule {
   AlwaysSpecifyTypes()
       : super(
             name: 'always_specify_types',
@@ -96,7 +79,7 @@ class AlwaysSpecifyTypes extends LintRule implements NodeLintRule {
     registry.addListLiteral(this, visitor);
     registry.addSetOrMapLiteral(this, visitor);
     registry.addSimpleFormalParameter(this, visitor);
-    registry.addTypeName(this, visitor);
+    registry.addNamedType(this, visitor);
     registry.addVariableDeclarationList(this, visitor);
   }
 }
@@ -124,14 +107,16 @@ class _Visitor extends SimpleAstVisitor<void> {
     checkLiteral(literal);
   }
 
+  @override
   void visitNamedType(NamedType namedType) {
     var type = namedType.type;
     if (type is InterfaceType) {
-      var element = type.aliasElement ?? type.element;
-      if (element.typeParameters.isNotEmpty &&
+      var element = namedType.name.staticElement;
+      if (element is TypeParameterizedElement &&
+          element.typeParameters.isNotEmpty &&
           namedType.typeArguments == null &&
           namedType.parent is! IsExpression &&
-          !_isOptionallyParameterized(element)) {
+          !element.hasOptionalTypeArgs) {
         rule.reportLint(namedType);
       }
     }
@@ -144,21 +129,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitSimpleFormalParameter(SimpleFormalParameter param) {
-    var identifier = param.identifier;
-    if (identifier != null &&
-        param.type == null &&
-        !isJustUnderscores(identifier.name)) {
+    var name = param.name;
+    if (name != null && param.type == null && !name.lexeme.isJustUnderscores) {
       if (param.keyword != null) {
         rule.reportLintForToken(param.keyword);
       } else {
         rule.reportLint(param);
       }
     }
-  }
-
-  @override
-  void visitTypeName(NamedType typeName) {
-    visitNamedType(typeName);
   }
 
   @override

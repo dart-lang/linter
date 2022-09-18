@@ -36,7 +36,7 @@ abstract class Predicate {
 
 ''';
 
-class OneMemberAbstracts extends LintRule implements NodeLintRule {
+class OneMemberAbstracts extends LintRule {
   OneMemberAbstracts()
       : super(
             name: 'one_member_abstracts',
@@ -59,7 +59,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    var declaredElement = node.declaredElement;
+    var declaredElement = node.declaredElement2;
     if (declaredElement == null) {
       return;
     }
@@ -69,15 +69,15 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (declaredElement.mixins.isNotEmpty) {
       return;
     }
-    if (node.isAbstract &&
+    if (node.abstractKeyword != null &&
         node.extendsClause == null &&
         node.members.length == 1) {
-      var member = node.members[0];
+      var member = node.members.first;
       if (member is MethodDeclaration &&
           member.isAbstract &&
           !member.isGetter &&
           !member.isSetter) {
-        rule.reportLint(node.name);
+        rule.reportLintForToken(node.name2);
       }
     }
   }

@@ -17,8 +17,8 @@ typedef _InterfaceTypePredicate = bool Function(InterfaceType type);
 _InterfaceTypePredicate _buildImplementsDefinitionPredicate(
         InterfaceTypeDefinition definition) =>
     (InterfaceType interface) =>
-        interface.element.name == definition.name &&
-        interface.element.library.name == definition.library;
+        interface.element2.name == definition.name &&
+        interface.element2.library.name == definition.library;
 
 /// Returns the first type argument on [definition], as implemented by [type].
 ///
@@ -98,24 +98,25 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
     if (target != null) {
       targetType = target.staticType;
     } else {
-      var classDeclaration =
-          node.thisOrAncestorOfType<ClassOrMixinDeclaration>();
-      if (classDeclaration == null) {
-        targetType = null;
-      } else if (classDeclaration is ClassDeclaration) {
-        targetType = classDeclaration.declaredElement?.thisType;
-      } else if (classDeclaration is MixinDeclaration) {
-        targetType = classDeclaration.declaredElement?.thisType;
+      for (AstNode? parent = node; parent != null; parent = parent.parent) {
+        if (parent is ClassDeclaration) {
+          targetType = parent.declaredElement2?.thisType;
+        } else if (parent is MixinDeclaration) {
+          targetType = parent.declaredElement2?.thisType;
+        }
       }
     }
     var argument = node.argumentList.arguments.first;
 
     // Finally, determine whether the type of the argument is related to the
     // type of the method target.
-    if (targetType is InterfaceType &&
-        DartTypeUtilities.unrelatedTypes(typeSystem, argument.staticType,
-            _findIterableTypeArgument(definition, targetType))) {
-      rule.reportLint(node);
+    if (targetType is InterfaceType) {
+      var typeArgument = _findIterableTypeArgument(definition, targetType);
+      if (typeArgument != null &&
+          typesAreUnrelated(typeSystem, argument.staticType, typeArgument)) {
+        rule.reportLint(node,
+            arguments: [typeArgument.getDisplayString(withNullability: true)]);
+      }
     }
   }
 }

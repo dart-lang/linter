@@ -17,17 +17,17 @@ Declare elements in list literals inline, rather than using `add` and
 **BAD:**
 ```dart
 var l = ['a']..add('b')..add('c');
-var l2 = ['a']..addAll(['b', 'c'])
+var l2 = ['a']..addAll(['b', 'c']);
 ```
 
 **GOOD:**
 ```dart
 var l = ['a', 'b', 'c'];
-var 2 = ['a', 'b', 'c'];
+var l2 = ['a', 'b', 'c'];
 ```
 ''';
 
-class PreferInlinedAdds extends LintRule implements NodeLintRule {
+class PreferInlinedAdds extends LintRule {
   PreferInlinedAdds()
       : super(
             name: 'prefer_inlined_adds',
@@ -61,12 +61,12 @@ class _Visitor extends SimpleAstVisitor {
     var sections = cascade?.cascadeSections;
     var target = cascade?.target;
     if (target is! ListLiteral ||
-        (sections != null && sections[0] != invocation)) {
+        (sections != null && sections.first != invocation)) {
       // todo (pq): consider extending to handle set literals.
       return;
     }
 
-    if (addAll && invocation.argumentList.arguments[0] is! ListLiteral) {
+    if (addAll && invocation.argumentList.arguments.first is! ListLiteral) {
       // Handled by: prefer_spread_collections
       return;
     }
