@@ -105,8 +105,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitCommentReference(CommentReference node) {
     var expression = node.expression;
     if (expression.isSynthetic) return;
-    if (expression is Identifier && expression.staticElement == null
-        &&
+    if (expression is Identifier &&
+        expression.staticElement == null &&
         !links.contains(expression.name)) {
       rule.reportLint(expression);
     }
