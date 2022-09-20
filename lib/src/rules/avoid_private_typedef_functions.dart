@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -27,7 +28,7 @@ m(void Function() f);
 
 ''';
 
-class AvoidPrivateTypedefFunctions extends LintRule implements NodeLintRule {
+class AvoidPrivateTypedefFunctions extends LintRule {
   AvoidPrivateTypedefFunctions()
       : super(
             name: 'avoid_private_typedef_functions',
@@ -50,9 +51,9 @@ class _CountVisitor extends RecursiveAstVisitor {
   _CountVisitor(this.type);
 
   @override
-  void visitTypeName(TypeName node) {
+  void visitNamedType(NamedType node) {
     if (node.name.name == type) count++;
-    super.visitTypeName(node);
+    super.visitNamedType(node);
   }
 }
 
@@ -65,7 +66,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
-    _countAndReport(node.name);
+    _countAndReport(node.name2);
   }
 
   @override
@@ -73,11 +74,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.typeParameters != null) {
       return;
     }
-    _countAndReport(node.name);
+    _countAndReport(node.name2);
   }
 
-  void _countAndReport(SimpleIdentifier identifier) {
-    var name = identifier.name;
+  void _countAndReport(Token identifier) {
+    var name = identifier.lexeme;
     if (!Identifier.isPrivateName(name)) {
       return;
     }
@@ -86,7 +87,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       unit.unit.accept(visitor);
     }
     if (visitor.count <= 1) {
-      rule.reportLint(identifier);
+      rule.reportLintForToken(identifier);
     }
   }
 }

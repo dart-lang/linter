@@ -21,8 +21,8 @@ Storing `BuildContext` for later usage can easily lead to difficult to diagnose
 crashes. Asynchronous gaps are implicitly storing `BuildContext` and are some of
 the easiest to overlook when writing code.
 
-When a `BuildContext` is used from a `StatefulWidget`, the `mounted` property
-must be checked after an asynchronous gap.
+When a `BuildContext` is used, its `mounted` property must be checked after an
+asynchronous gap.
 
 **GOOD:**
 ```dart
@@ -41,20 +41,16 @@ void onButtonTapped(BuildContext context) async {
 
 **GOOD:**
 ```dart
-class _MyWidgetState extends State<MyWidget> {
-  ...
+void onButtonTapped() async {
+  await Future.delayed(const Duration(seconds: 1));
 
-  void onButtonTapped() async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (!mounted) return;
-    Navigator.of(context).pop();
-  }
+  if (!context.mounted) return;
+  Navigator.of(context).pop();
 }
 ```
 ''';
 
-class UseBuildContextSynchronously extends LintRule implements NodeLintRule {
+class UseBuildContextSynchronously extends LintRule {
   /// Flag to short-circuit `inTestDir` checking when running tests.
   final bool inTestMode;
 
@@ -86,6 +82,17 @@ class _AwaitVisitor extends RecursiveAstVisitor {
   void visitAwaitExpression(AwaitExpression node) {
     hasAwait = true;
   }
+
+  @override
+  visitBlockFunctionBody(BlockFunctionBody node) {
+    // Stop visiting if it's a function body block.
+    // Awaits inside it shouldn't matter
+  }
+
+  @override
+  visitExpressionFunctionBody(ExpressionFunctionBody node) {
+    // Stopping following the same logic as function body blocks
+  }
 }
 
 class _Visitor extends SimpleAstVisitor {
@@ -95,6 +102,9 @@ class _Visitor extends SimpleAstVisitor {
 
   bool accessesContext(ArgumentList argumentList) {
     for (var argument in argumentList.arguments) {
+      if (argument is NamedExpression) {
+        argument = argument.expression;
+      }
       if (argument is Identifier) {
         var element = argument.staticElement;
         if (element == null) {
@@ -150,6 +160,10 @@ class _Visitor extends SimpleAstVisitor {
           return;
         }
       } else if (parent is IfStatement) {
+        if (parent.hasAsyncInCondition) {
+          rule.reportLint(node);
+        }
+
         // if (mounted) { ... do ... }
         if (isMountedCheck(parent, positiveCheck: true)) {
           return;
@@ -162,6 +176,7 @@ class _Visitor extends SimpleAstVisitor {
 
   bool isAsync(Statement statement) {
     if (statement is IfStatement) {
+      if (statement.hasAsyncInCondition) return true;
       if (terminatesControl(statement.thenStatement)) {
         var elseStatement = statement.elseStatement;
         if (elseStatement == null || terminatesControl(elseStatement)) {
@@ -184,7 +199,7 @@ class _Visitor extends SimpleAstVisitor {
 
       Expression check;
       if (condition is PrefixExpression) {
-        if (positiveCheck && condition.operator.type == TokenType.BANG) {
+        if (positiveCheck && condition.isNot) {
           return false;
         }
         check = condition.operand;
@@ -192,29 +207,59 @@ class _Visitor extends SimpleAstVisitor {
         check = condition;
       }
 
-      // stateContext.mounted => mounted
-      if (check is PrefixedIdentifier) {
-        check = check.identifier;
-      }
-      if (check is SimpleIdentifier) {
-        if (check.name == 'mounted') {
-          // In the positive case it's sufficient to know we're in a positively
-          // guarded block.
+      bool checksMounted(Expression check) {
+        if (check is BinaryExpression) {
+          // (condition && context.mounted)
           if (positiveCheck) {
-            return true;
+            if (check.isAnd) {
+              return checksMounted(check.leftOperand) ||
+                  checksMounted(check.rightOperand);
+            }
+          } else {
+            // (condition || !mounted)
+            if (check.isOr) {
+              return checksMounted(check.leftOperand) ||
+                  checksMounted(check.rightOperand);
+            }
           }
-          var then = statement.thenStatement;
-          return terminatesControl(then);
         }
+
+        // stateContext.mounted => mounted
+        if (check is PrefixedIdentifier) {
+          // ignore: parameter_assignments
+          check = check.identifier;
+        }
+        if (check is SimpleIdentifier) {
+          return check.name == 'mounted';
+        }
+        if (check is PrefixExpression) {
+          // (condition || !mounted)
+          if (!positiveCheck && check.isNot) {
+            return checksMounted(check.operand);
+          }
+        }
+
+        return false;
+      }
+
+      if (checksMounted(check)) {
+        // In the positive case it's sufficient to know we're in a positively
+        // guarded block.
+        if (positiveCheck) {
+          return true;
+        }
+        var then = statement.thenStatement;
+        return terminatesControl(then);
       }
     } else if (statement is TryStatement) {
       var statements = statement.finallyBlock?.statements;
-      if (statements != null) {
-        for (var i = statements.length - 1; i >= 0; i--) {
-          var s = statements[i];
-          if (isMountedCheck(s)) {
-            return true;
-          }
+      if (statements == null) {
+        return false;
+      }
+      for (var i = statements.length - 1; i >= 0; i--) {
+        var s = statements[i];
+        if (isMountedCheck(s)) {
+          return true;
         }
       }
     }
@@ -250,5 +295,22 @@ class _Visitor extends SimpleAstVisitor {
         accessesContext(node.argumentList)) {
       check(node);
     }
+  }
+}
+
+extension on PrefixExpression {
+  bool get isNot => operator.type == TokenType.BANG;
+}
+
+extension on BinaryExpression {
+  bool get isAnd => operator.type == TokenType.AMPERSAND_AMPERSAND;
+  bool get isOr => operator.type == TokenType.BAR_BAR;
+}
+
+extension on IfStatement {
+  bool get hasAsyncInCondition {
+    var visitor = _AwaitVisitor();
+    condition.accept(visitor);
+    return visitor.hasAwait;
   }
 }

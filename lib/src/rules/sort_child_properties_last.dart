@@ -81,7 +81,7 @@ Exception: It's allowed to have parameter with a function expression after the
 
 ''';
 
-class SortChildPropertiesLast extends LintRule implements NodeLintRule {
+class SortChildPropertiesLast extends LintRule {
   SortChildPropertiesLast()
       : super(
             name: 'sort_child_properties_last',

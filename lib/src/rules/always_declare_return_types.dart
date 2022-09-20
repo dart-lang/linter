@@ -45,7 +45,7 @@ typedef predicate = bool Function(Object o);
 
 ''';
 
-class AlwaysDeclareReturnTypes extends LintRule implements NodeLintRule {
+class AlwaysDeclareReturnTypes extends LintRule {
   AlwaysDeclareReturnTypes()
       : super(
             name: 'always_declare_return_types',
@@ -66,14 +66,14 @@ class AlwaysDeclareReturnTypes extends LintRule implements NodeLintRule {
 class _Visitor extends SimpleAstVisitor<void> {
   static const LintCode functionCode = LintCode(
       "always_declare_return_types", // ignore: prefer_single_quotes
-      "The function {0} should have a return type but doesn't.",
-      correction:
+      "The function '{0}' should have a return type but doesn't.",
+      correctionMessage:
           "Try adding a return type to the function."); // ignore: prefer_single_quotes
 
   static const LintCode methodCode = LintCode(
       "always_declare_return_types", // ignore: prefer_single_quotes
-      "The method {0} should have a return type but doesn't.",
-      correction:
+      "The method '{0}' should have a return type but doesn't.",
+      correctionMessage:
           "Try adding a return type to the method."); // ignore: prefer_single_quotes
 
   final LintRule rule;
@@ -83,16 +83,16 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     if (!node.isSetter && node.returnType == null) {
-      rule.reportLint(node.name,
-          arguments: [node.name.name], errorCode: functionCode);
+      rule.reportLintForToken(node.name2,
+          arguments: [node.name2.lexeme], errorCode: functionCode);
     }
   }
 
   @override
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
     if (node.returnType == null) {
-      rule.reportLint(node.name,
-          arguments: [node.name.name], errorCode: functionCode);
+      rule.reportLintForToken(node.name2,
+          arguments: [node.name2.lexeme], errorCode: functionCode);
     }
   }
 
@@ -100,9 +100,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isSetter &&
         node.returnType == null &&
-        node.name.token.type != TokenType.INDEX_EQ) {
-      rule.reportLint(node.name,
-          arguments: [node.name.name], errorCode: methodCode);
+        node.name2.type != TokenType.INDEX_EQ) {
+      rule.reportLintForToken(node.name2,
+          arguments: [node.name2.lexeme], errorCode: methodCode);
     }
   }
 }

@@ -34,7 +34,7 @@ m(){
 
 ''';
 
-class UnnecessaryConst extends LintRule implements NodeLintRule {
+class UnnecessaryConst extends LintRule {
   UnnecessaryConst()
       : super(
             name: 'unnecessary_const',
@@ -48,6 +48,7 @@ class UnnecessaryConst extends LintRule implements NodeLintRule {
     var visitor = _Visitor(this);
     registry.addInstanceCreationExpression(this, visitor);
     registry.addListLiteral(this, visitor);
+    registry.addRecordLiteral(this, visitor);
     registry.addSetOrMapLiteral(this, visitor);
   }
 }
@@ -67,6 +68,15 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitListLiteral(ListLiteral node) => _visitTypedLiteral(node);
+
+  @override
+  void visitRecordLiteral(RecordLiteral node) {
+    if (node.constKeyword == null) return;
+
+    if (node.inConstantContext) {
+      rule.reportLint(node);
+    }
+  }
 
   @override
   void visitSetOrMapLiteral(SetOrMapLiteral node) {

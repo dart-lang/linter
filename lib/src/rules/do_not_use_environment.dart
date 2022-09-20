@@ -23,7 +23,7 @@ const loggingLevel =
 ```
 ''';
 
-class DoNotUseEnvironment extends LintRule implements NodeLintRule {
+class DoNotUseEnvironment extends LintRule {
   DoNotUseEnvironment()
       : super(
             name: 'do_not_use_environment',

@@ -14,7 +14,7 @@ const _details = r'''
 **DO** reference only in scope identifiers in doc comments.
 
 If you surround things like variable, method, or type names in square brackets,
-then [dartdoc](https://dart.dev/guides/language/effective-dart/documentation) will look
+then [`dart doc`](https://dart.dev/tools/dart-doc) will look
 up the name and link to its docs.  For this all to work, ensure that all
 identifiers in docs wrapped in brackets are in scope.
 
@@ -46,7 +46,7 @@ references within square brackets can consist of either
 
 ''';
 
-class CommentReferences extends LintRule implements NodeLintRule {
+class CommentReferences extends LintRule {
   CommentReferences()
       : super(
             name: 'comment_references',
@@ -95,9 +95,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCommentReference(CommentReference node) {
-    var identifier = node.identifier;
-    if (!identifier.isSynthetic && identifier.staticElement == null) {
-      rule.reportLint(identifier);
+    var expression = node.expression;
+    if (expression.isSynthetic) return;
+    if (expression is Identifier && expression.staticElement == null) {
+      rule.reportLint(expression);
     }
   }
 

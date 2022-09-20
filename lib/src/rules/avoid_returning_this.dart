@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc =
     r'Avoid returning this from methods just to enable a fluent interface.';
@@ -51,7 +51,7 @@ bool _isReturnStatement(AstNode node) => node is ReturnStatement;
 bool _returnsThis(AstNode node) =>
     (node as ReturnStatement).expression is ThisExpression;
 
-class AvoidReturningThis extends LintRule implements NodeLintRule {
+class AvoidReturningThis extends LintRule {
   AvoidReturningThis()
       : super(
             name: 'avoid_returning_this',
@@ -77,14 +77,17 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.isOperator) return;
 
     var parent = node.parent;
-    if (parent is ClassOrMixinDeclaration) {
-      if (DartTypeUtilities.overridesMethod(node)) {
+    if (parent is ClassDeclaration ||
+        parent is EnumDeclaration ||
+        parent is MixinDeclaration) {
+      if (node.isOverride) {
         return;
       }
 
-      var returnType = node.declaredElement?.returnType;
+      var returnType = node.declaredElement2?.returnType;
       if (returnType is InterfaceType &&
-          returnType.element == parent.declaredElement) {
+          // ignore: cast_nullable_to_non_nullable
+          returnType.element2 == (parent as Declaration).declaredElement2) {
       } else {
         return;
       }
@@ -95,15 +98,15 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     var body = node.body;
     if (body is BlockFunctionBody) {
-      var returnStatements = DartTypeUtilities.traverseNodesInDFS(body.block,
-              excludeCriteria: _isFunctionExpression)
+      var returnStatements = body.block
+          .traverseNodesInDFS(excludeCriteria: _isFunctionExpression)
           .where(_isReturnStatement);
       if (returnStatements.isNotEmpty && returnStatements.every(_returnsThis)) {
-        rule.reportLint(node.name);
+        rule.reportLintForToken(node.name2);
       }
     } else if (body is ExpressionFunctionBody) {
       if (body.expression is ThisExpression) {
-        rule.reportLint(node.name);
+        rule.reportLintForToken(node.name2);
       }
     }
   }

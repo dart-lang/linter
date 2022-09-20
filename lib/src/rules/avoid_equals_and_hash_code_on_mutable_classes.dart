@@ -75,8 +75,7 @@ bool _isImmutable(Element? element) =>
     element.name == _immutableVarName &&
     element.library.name == _metaLibName;
 
-class AvoidOperatorEqualsOnMutableClasses extends LintRule
-    implements NodeLintRule {
+class AvoidOperatorEqualsOnMutableClasses extends LintRule {
   AvoidOperatorEqualsOnMutableClasses()
       : super(
             name: 'avoid_equals_and_hash_code_on_mutable_classes',
@@ -87,7 +86,7 @@ class AvoidOperatorEqualsOnMutableClasses extends LintRule
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this, context);
+    var visitor = _Visitor(this);
     registry.addMethodDeclaration(this, visitor);
   }
 }
@@ -95,13 +94,11 @@ class AvoidOperatorEqualsOnMutableClasses extends LintRule
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
-  final LinterContext context;
-
-  _Visitor(this.rule, this.context);
+  _Visitor(this.rule);
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (node.name.token.type == TokenType.EQ_EQ || isHashCode(node)) {
+    if (node.name2.type == TokenType.EQ_EQ || isHashCode(node)) {
       var classElement = _getClassForMethod(node);
       if (classElement != null && !_hasImmutableAnnotation(classElement)) {
         rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);
@@ -111,11 +108,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   ClassElement? _getClassForMethod(MethodDeclaration node) =>
       // todo (pq): should this be ClassOrMixinDeclaration ?
-      node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
+      node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement2;
 
   bool _hasImmutableAnnotation(ClassElement clazz) {
-    var inheritedAndSelfElements = <ClassElement>[
-      ...clazz.allSupertypes.map((t) => t.element),
+    var inheritedAndSelfElements = <InterfaceElement>[
+      ...clazz.allSupertypes.map((t) => t.element2),
       clazz,
     ];
     var inheritedAndSelfAnnotations = inheritedAndSelfElements

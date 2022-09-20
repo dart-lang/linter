@@ -8,7 +8,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _descPrefix = r'Avoid unsafe HTML APIs';
 const _desc = '$_descPrefix.';
@@ -18,8 +18,8 @@ const _details = r'''
 **AVOID**
 
 * assigning directly to the `href` field of an AnchorElement
-* assigning directly to the `src` field of an EmbedElement, IFrameElement,
-  ImageElement, or ScriptElement
+* assigning directly to the `src` field of an EmbedElement, IFrameElement, or
+  ScriptElement
 * assigning directly to the `srcdoc` field of an IFrameElement
 * calling the `createFragment` method of Element
 * calling the `open` method of Window
@@ -37,10 +37,10 @@ var script = ScriptElement()..src = 'foo.js';
 extension on DartType? {
   /// Returns whether this type extends [className] from the dart:html library.
   bool extendsDartHtmlClass(String className) =>
-      DartTypeUtilities.extendsClass(this, className, 'dart.dom.html');
+      extendsClass(className, 'dart.dom.html');
 }
 
-class UnsafeHtml extends LintRule implements NodeLintRule {
+class UnsafeHtml extends LintRule {
   UnsafeHtml()
       : super(
             name: 'unsafe_html',
@@ -54,7 +54,6 @@ class UnsafeHtml extends LintRule implements NodeLintRule {
     var visitor = _Visitor(this);
     registry.addAssignmentExpression(this, visitor);
     registry.addInstanceCreationExpression(this, visitor);
-    registry.addFunctionExpressionInvocation(this, visitor);
     registry.addMethodInvocation(this, visitor);
   }
 
@@ -97,7 +96,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (leftPart is SimpleIdentifier) {
       var leftPartElement = node.writeElement;
       if (leftPartElement == null) return;
-      var enclosingElement = leftPartElement.enclosingElement;
+      var enclosingElement = leftPartElement.enclosingElement3;
       if (enclosingElement is ClassElement) {
         _checkAssignment(enclosingElement.thisType, leftPart, node);
       }
@@ -124,7 +123,6 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (type.isDynamic ||
           type.extendsDartHtmlClass('EmbedElement') ||
           type.extendsDartHtmlClass('IFrameElement') ||
-          type.extendsDartHtmlClass('ImageElement') ||
           type.extendsDartHtmlClass('ScriptElement')) {
         rule.reportLint(assignment,
             arguments: ['src'], errorCode: unsafeAttributeCode);
@@ -165,7 +163,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       // Implicit `this` target.
       var methodElement = node.methodName.staticElement;
       if (methodElement == null) return;
-      var enclosingElement = methodElement.enclosingElement;
+      var enclosingElement = methodElement.enclosingElement3;
       if (enclosingElement is ClassElement) {
         type = enclosingElement.thisType;
       } else {

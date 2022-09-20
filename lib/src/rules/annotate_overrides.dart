@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
@@ -45,7 +46,7 @@ class Lucky extends Cat {
 
 ''';
 
-class AnnotateOverrides extends LintRule implements NodeLintRule {
+class AnnotateOverrides extends LintRule {
   AnnotateOverrides()
       : super(
             name: 'annotate_overrides',
@@ -57,7 +58,6 @@ class AnnotateOverrides extends LintRule implements NodeLintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this, context);
-    registry.addCompilationUnit(this, visitor);
     registry.addFieldDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
   }
@@ -69,8 +69,17 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule, this.context);
 
+  void check(Element? element, Token target) {
+    if (element == null || element.hasOverride) return;
+
+    var member = getOverriddenMember(element);
+    if (member != null) {
+      rule.reportLintForToken(target);
+    }
+  }
+
   Element? getOverriddenMember(Element member) {
-    var classElement = member.thisOrAncestorOfType<ClassElement>();
+    var classElement = member.thisOrAncestorOfType<InterfaceElement>();
     if (classElement == null) {
       return null;
     }
@@ -88,25 +97,17 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
+    if (node.isStatic) return;
+
     for (var field in node.fields.variables) {
-      var element = field.declaredElement;
-      if (element != null && !element.hasOverride) {
-        var member = getOverriddenMember(element);
-        if (member != null) {
-          rule.reportLint(field);
-        }
-      }
+      check(field.declaredElement2, field.name2);
     }
   }
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    var element = node.declaredElement;
-    if (element != null && !element.hasOverride) {
-      var member = getOverriddenMember(element);
-      if (member != null) {
-        rule.reportLint(node.name);
-      }
-    }
+    if (node.isStatic) return;
+
+    check(node.declaredElement2, node.name2);
   }
 }

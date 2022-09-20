@@ -8,13 +8,13 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Cascade consecutive method invocations on the same reference.';
 
 const _details = r'''
 
-**DO** Use the cascading style when succesively invoking methods on the same
+**DO** Use the cascading style when successively invoking methods on the same
 reference.
 
 **BAD:**
@@ -66,7 +66,7 @@ Element? _getElementFromVariableDeclarationStatement(
       // In such a case, we should not return any cascadable element here.
       return null;
     }
-    return variable.declaredElement;
+    return variable.declaredElement2;
   }
   return null;
 }
@@ -74,8 +74,7 @@ Element? _getElementFromVariableDeclarationStatement(
 ExecutableElement? _getExecutableElementFromMethodInvocation(
     MethodInvocation node) {
   if (_isInvokedWithoutNullAwareOperator(node.operator)) {
-    var executableElement =
-        DartTypeUtilities.getCanonicalElementFromIdentifier(node.methodName);
+    var executableElement = node.methodName.canonicalElement;
     if (executableElement is ExecutableElement) {
       return executableElement;
     }
@@ -86,29 +85,27 @@ ExecutableElement? _getExecutableElementFromMethodInvocation(
 Element? _getPrefixElementFromExpression(Expression rawExpression) {
   var expression = rawExpression.unParenthesized;
   if (expression is PrefixedIdentifier) {
-    return DartTypeUtilities.getCanonicalElementFromIdentifier(
-        expression.prefix);
+    return expression.prefix.canonicalElement;
   } else if (expression is PropertyAccess &&
       _isInvokedWithoutNullAwareOperator(expression.operator) &&
       expression.target is SimpleIdentifier) {
-    return DartTypeUtilities.getCanonicalElementFromIdentifier(
-        expression.target);
+    return expression.target.canonicalElement;
   }
   return null;
 }
 
 Element? _getTargetElementFromCascadeExpression(CascadeExpression node) =>
-    DartTypeUtilities.getCanonicalElementFromIdentifier(node.target);
+    node.target.canonicalElement;
 
 Element? _getTargetElementFromMethodInvocation(MethodInvocation node) =>
-    DartTypeUtilities.getCanonicalElementFromIdentifier(node.target);
+    node.target.canonicalElement;
 
 bool _isInvokedWithoutNullAwareOperator(Token? token) =>
     token?.type == TokenType.PERIOD;
 
 /// Rule to lint consecutive invocations of methods or getters on the same
 /// reference that could be done with the cascade operator.
-class CascadeInvocations extends LintRule implements NodeLintRule {
+class CascadeInvocations extends LintRule {
   /// Default constructor.
   CascadeInvocations()
       : super(
@@ -184,8 +181,7 @@ class _CascadableExpression {
     var leftExpression = node.leftHandSide.unParenthesized;
     if (leftExpression is SimpleIdentifier) {
       return _CascadableExpression._internal(
-          DartTypeUtilities.getCanonicalElement(leftExpression.staticElement),
-          [node.rightHandSide],
+          leftExpression.staticElement?.canonicalElement, [node.rightHandSide],
           canReceive: node.operator.type != TokenType.QUESTION_QUESTION_EQ,
           isCritical: true);
     }
@@ -220,14 +216,12 @@ class _CascadableExpression {
 
   factory _CascadableExpression._fromPrefixedIdentifier(
           PrefixedIdentifier node) =>
-      _CascadableExpression._internal(
-          DartTypeUtilities.getCanonicalElementFromIdentifier(node.prefix), [],
+      _CascadableExpression._internal(node.prefix.canonicalElement, [],
           canJoin: true, canReceive: true, canBeCascaded: true);
 
   factory _CascadableExpression._fromPropertyAccess(PropertyAccess node) {
     var targetIsSimple = node.target is SimpleIdentifier;
-    return _CascadableExpression._internal(
-        DartTypeUtilities.getCanonicalElementFromIdentifier(node.target), [],
+    return _CascadableExpression._internal(node.target.canonicalElement, [],
         // If the target is something like `(a + b).x`, then node can neither
         // join, nor receive.
         //
@@ -273,13 +267,12 @@ class _CascadableExpression {
       !_hasCriticalDependencies(expressionBox);
 
   bool _hasCriticalDependencies(_CascadableExpression expressionBox) {
-    bool _isCriticalNode(AstNode node) =>
-        DartTypeUtilities.getCanonicalElementFromIdentifier(node) ==
-        expressionBox.element;
+    bool isCriticalNode(AstNode node) =>
+        node.canonicalElement == expressionBox.element;
     return expressionBox.isCritical &&
         criticalNodes.any((node) =>
-            _isCriticalNode(node) ||
-            DartTypeUtilities.traverseNodesInDFS(node).any(_isCriticalNode));
+            isCriticalNode(node) ||
+            node.traverseNodesInDFS().any(isCriticalNode));
   }
 }
 

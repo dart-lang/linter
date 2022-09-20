@@ -29,13 +29,20 @@ print(RegExp(r'\(').hasMatch('foo()'));
 
 ''';
 
-class ValidRegExps extends LintRule implements NodeLintRule {
+class ValidRegExps extends LintRule {
+  static const LintCode code = LintCode(
+      'valid_regexps', 'Invalid regular expression syntax.',
+      correctionMessage: 'Try correcting the regular expression.');
+
   ValidRegExps()
       : super(
             name: 'valid_regexps',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -52,14 +59,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    var element = node.constructorName.staticElement?.enclosingElement;
+    var element = node.constructorName.staticElement?.enclosingElement3;
     if (element?.name == 'RegExp' && element?.library.name == 'dart.core') {
       var args = node.argumentList.arguments;
       if (args.isEmpty) {
         return;
       }
 
-      bool isTrue(Expression e) => e is BooleanLiteral && e.value == true;
+      bool isTrue(Expression e) => e is BooleanLiteral && e.value;
 
       var unicode = args.any((arg) =>
           arg is NamedExpression &&

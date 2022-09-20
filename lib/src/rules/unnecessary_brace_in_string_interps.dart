@@ -29,12 +29,12 @@ print("Hi, ${name}!");
 
 ''';
 
-final RegExp identifierPart = RegExp(r'^[a-zA-Z0-9_]');
+final RegExp identifierPart = RegExp('[a-zA-Z0-9_]');
 
 bool isIdentifierPart(Token? token) =>
     token is StringToken && token.lexeme.startsWith(identifierPart);
 
-class UnnecessaryBraceInStringInterps extends LintRule implements NodeLintRule {
+class UnnecessaryBraceInStringInterps extends LintRule {
   UnnecessaryBraceInStringInterps()
       : super(
             name: 'unnecessary_brace_in_string_interps',
@@ -62,13 +62,19 @@ class _Visitor extends SimpleAstVisitor<void> {
       var exp = expression.expression;
       if (exp is SimpleIdentifier) {
         var identifier = exp;
-        var bracket = expression.rightBracket;
-        if (bracket != null &&
-            !isIdentifierPart(bracket.next) &&
-            !identifier.name.contains('\$')) {
-          rule.reportLint(expression);
+        if (!identifier.name.contains('\$')) {
+          _check(expression);
         }
+      } else if (exp is ThisExpression) {
+        _check(expression);
       }
+    }
+  }
+
+  void _check(InterpolationExpression expression) {
+    var bracket = expression.rightBracket;
+    if (bracket != null && !isIdentifierPart(bracket.next)) {
+      rule.reportLint(expression);
     }
   }
 }

@@ -119,13 +119,19 @@ class DerivedClass3 extends ClassBase implements Mixin {}
 
 ''';
 
-class ListRemoveUnrelatedType extends LintRule implements NodeLintRule {
+class ListRemoveUnrelatedType extends LintRule {
+  static const LintCode code = LintCode('list_remove_unrelated_type',
+      "The type of the argument of 'List<{0}>.remove' isn't a subtype of '{0}'.");
+
   ListRemoveUnrelatedType()
       : super(
             name: 'list_remove_unrelated_type',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -138,7 +144,7 @@ class ListRemoveUnrelatedType extends LintRule implements NodeLintRule {
 class _Visitor extends UnrelatedTypesProcessors {
   static final _definition = InterfaceTypeDefinition('List', 'dart.core');
 
-  _Visitor(LintRule rule, TypeSystem typeSystem) : super(rule, typeSystem);
+  _Visitor(super.rule, super.typeSystem);
 
   @override
   InterfaceTypeDefinition get definition => _definition;

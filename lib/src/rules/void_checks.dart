@@ -30,7 +30,7 @@ void main() {
 ```
 ''';
 
-class VoidChecks extends LintRule implements NodeLintRule {
+class VoidChecks extends LintRule {
   VoidChecks()
       : super(
             name: 'void_checks',
@@ -52,10 +52,9 @@ class VoidChecks extends LintRule implements NodeLintRule {
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
-  final LinterContext context;
   final TypeSystem typeSystem;
 
-  _Visitor(this.rule, this.context) : typeSystem = context.typeSystem;
+  _Visitor(this.rule, LinterContext context) : typeSystem = context.typeSystem;
 
   bool isTypeAcceptableWhenExpectingVoid(DartType type) {
     if (type.isVoid) return true;
@@ -119,12 +118,12 @@ class _Visitor extends SimpleAstVisitor<void> {
             checkedNode: node.expression);
       }
     } else if (parent is MethodDeclaration) {
-      _check(
-          parent.declaredElement?.returnType, node.expression?.staticType, node,
+      _check(parent.declaredElement2?.returnType, node.expression?.staticType,
+          node,
           checkedNode: node.expression);
     } else if (parent is FunctionDeclaration) {
-      _check(
-          parent.declaredElement?.returnType, node.expression?.staticType, node,
+      _check(parent.declaredElement2?.returnType, node.expression?.staticType,
+          node,
           checkedNode: node.expression);
     }
   }
@@ -133,6 +132,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       {AstNode? checkedNode}) {
     checkedNode ??= node;
     if (expectedType == null || type == null) {
+      return;
+    }
+    if (expectedType.isVoid && !type.isDynamic && node is ReturnStatement) {
       return;
     }
     if (expectedType.isVoid && !isTypeAcceptableWhenExpectingVoid(type)) {

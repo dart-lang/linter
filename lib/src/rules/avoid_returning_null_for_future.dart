@@ -20,7 +20,7 @@ developer simply forgot to put an `async` keyword on the function.
 
 ''';
 
-class AvoidReturningNullForFuture extends LintRule implements NodeLintRule {
+class AvoidReturningNullForFuture extends LintRule {
   AvoidReturningNullForFuture()
       : super(
             name: 'avoid_returning_null_for_future',
@@ -74,7 +74,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       returnType = parent.declaredElement?.returnType;
       isAsync = parent.body.isAsynchronous;
     } else if (parent is MethodDeclaration) {
-      returnType = parent.declaredElement?.returnType;
+      returnType = parent.declaredElement2?.returnType;
       isAsync = parent.body.isAsynchronous;
     } else {
       throw StateError('unexpected type');
