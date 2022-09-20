@@ -487,7 +487,7 @@
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsEvaluation",
+    "fixStatus": "needsFix",
     "details": "\n**DO** specify `required` on named parameter before other named parameters.\n\n**GOOD:**\n```dart\nm({required a, b, c}) ;\n```\n\n**BAD:**\n```dart\nm({b, c, required a}) ;\n```\n\n**GOOD:**\n```dart\nm({@required a, b, c}) ;\n```\n\n**BAD:**\n```dart\nm({b, c, @required a}) ;\n```\n\n"
   },
   {
@@ -548,7 +548,7 @@
     "maturity": "deprecated",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsEvaluation",
+    "fixStatus": "noFix",
     "details": "\n**AVOID** using `as`.\n\nIf you know the type is correct, use an assertion or assign to a more\nnarrowly-typed variable (this avoids the type check in release mode; `as` is not\ncompiled out in release mode).  If you don't know whether the type is\ncorrect, check using `is` (this avoids the exception that `as` raises).\n\n**BAD:**\n```dart\n(pm as Person).firstName = 'Seth';\n```\n\n**GOOD:**\n```dart\nif (pm is Person)\n  pm.firstName = 'Seth';\n```\n\nbut certainly not\n\n**BAD:**\n```dart\ntry {\n   (pm as Person).firstName = 'Seth';\n} on CastError { }\n```\n\nNote that an exception is made in the case of `dynamic` since the cast has no\nperformance impact.\n\n**OK:**\n```dart\nHasScrollDirection scrollable = renderObject as dynamic;\n```\n\n\n**DEPRECATED:** This advice is no longer recommended.\n \nThe rule will be removed in a future Linter release.\n"
   },
   {
@@ -558,7 +558,7 @@
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsEvaluation",
+    "fixStatus": "needsFix",
     "details": "\n**AVOID** bool literals in conditional expressions.\n\n**BAD:**\n```dart\ncondition ? true : boolExpression\ncondition ? false : boolExpression\ncondition ? boolExpression : true\ncondition ? boolExpression : false\n```\n\n**GOOD:**\n```dart\ncondition || boolExpression\n!condition && boolExpression\n!condition || boolExpression\ncondition && boolExpression\n```\n\n"
   },
   {
