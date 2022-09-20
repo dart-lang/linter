@@ -20,8 +20,8 @@ Storing `BuildContext` for later usage can easily lead to difficult to diagnose
 crashes. Asynchronous gaps are implicitly storing `BuildContext` and are some of
 the easiest to overlook when writing code.
 
-When a `BuildContext` is used from a `StatefulWidget`, the `mounted` property
-must be checked after an asynchronous gap.
+When a `BuildContext` is used, its `mounted` property must be checked after an
+asynchronous gap.
 
 **GOOD:**
 ```dart
@@ -40,15 +40,11 @@ void onButtonTapped(BuildContext context) async {
 
 **GOOD:**
 ```dart
-class _MyWidgetState extends State<MyWidget> {
-  ...
+void onButtonTapped() async {
+  await Future.delayed(const Duration(seconds: 1));
 
-  void onButtonTapped() async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (!mounted) return;
-    Navigator.of(context).pop();
-  }
+  if (!context.mounted) return;
+  Navigator.of(context).pop();
 }
 ```
 ''';
@@ -74,6 +70,7 @@ class UseBuildContextSynchronously extends LintRule {
       registry.addMethodInvocation(this, visitor);
       registry.addInstanceCreationExpression(this, visitor);
       registry.addFunctionExpressionInvocation(this, visitor);
+      registry.addPrefixedIdentifier(this, visitor);
     }
   }
 }
@@ -105,6 +102,9 @@ class _Visitor extends SimpleAstVisitor {
 
   bool accessesContext(ArgumentList argumentList) {
     for (var argument in argumentList.arguments) {
+      if (argument is NamedExpression) {
+        argument = argument.expression;
+      }
       if (argument is Identifier) {
         var element = argument.staticElement;
         if (element == null) {
@@ -293,6 +293,14 @@ class _Visitor extends SimpleAstVisitor {
   void visitMethodInvocation(MethodInvocation node) {
     if (isBuildContext(node.target?.staticType, skipNullable: true) ||
         accessesContext(node.argumentList)) {
+      check(node);
+    }
+  }
+
+  @override
+  visitPrefixedIdentifier(PrefixedIdentifier node) {
+    // Getter access.
+    if (isBuildContext(node.prefix.staticType, skipNullable: true)) {
       check(node);
     }
   }

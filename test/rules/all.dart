@@ -7,6 +7,7 @@ import 'avoid_annotating_with_dynamic_test.dart'
     as avoid_annotating_with_dynamic;
 import 'avoid_equals_and_hash_code_on_mutable_classes_test.dart'
     as avoid_equals_and_hash_code_on_mutable_classes;
+import 'avoid_final_parameters_test.dart' as avoid_final_parameters;
 import 'avoid_function_literals_in_foreach_calls_test.dart'
     as avoid_function_literals_in_foreach_calls;
 import 'avoid_init_to_null_test.dart' as avoid_init_to_null;
@@ -30,6 +31,7 @@ import 'constant_identifier_names_test.dart' as constant_identifier_names;
 import 'deprecated_consistency_test.dart' as deprecated_consistency;
 import 'discarded_futures_test.dart' as discarded_futures;
 import 'file_names_test.dart' as file_names;
+import 'flutter_style_todos_test.dart' as flutter_style_todos;
 import 'hash_and_equals_test.dart' as hash_and_equals;
 import 'library_private_types_in_public_api_test.dart'
     as library_private_types_in_public_api;
@@ -48,27 +50,33 @@ import 'prefer_collection_literals_test.dart' as prefer_collection_literals;
 import 'prefer_const_constructors_in_immutables_test.dart'
     as prefer_const_constructors_in_immutables;
 import 'prefer_const_constructors_test.dart' as prefer_const_constructors;
+import 'prefer_const_declarations_test.dart' as prefer_const_declarations;
 import 'prefer_const_literals_to_create_immutables_test.dart'
     as prefer_const_literals_to_create_immutables;
 import 'prefer_contains_test.dart' as prefer_contains;
 import 'prefer_equal_for_default_values_test.dart'
     as prefer_equal_for_default_values;
 import 'prefer_final_fields_test.dart' as prefer_final_fields;
+import 'prefer_final_parameters_test.dart' as prefer_final_parameters;
 import 'prefer_generic_function_type_aliases_test.dart'
     as prefer_generic_function_type_aliases;
 import 'prefer_spread_collections_test.dart' as prefer_spread_collections;
 import 'public_member_api_docs_test.dart' as public_member_api_docs;
-import 'sort_constructors_first.dart' as sort_constructors_first;
-import 'sort_unnamed_constructors_first.dart'
+import 'sort_constructors_first_test.dart' as sort_constructors_first;
+import 'sort_unnamed_constructors_first_test.dart'
     as sort_unnamed_constructors_first;
 import 'super_goes_last_test.dart' as super_goes_last;
 import 'tighten_type_of_initializing_formals_test.dart'
     as tighten_type_of_initializing_formals;
 import 'type_init_formals_test.dart' as type_init_formals;
 import 'unawaited_futures_test.dart' as unawaited_futures;
+import 'unnecessary_brace_in_string_interps_test.dart'
+    as unnecessary_brace_in_string_interps;
 import 'unnecessary_const_test.dart' as unnecessary_const;
 import 'unnecessary_null_checks_test.dart' as unnecessary_null_checks;
 import 'unnecessary_overrides_test.dart' as unnecessary_overrides;
+import 'use_build_context_synchronously_test.dart'
+    as use_build_context_synchronously;
 import 'use_enums_test.dart' as use_enums;
 import 'use_is_even_rather_than_modulo_test.dart'
     as use_is_even_rather_than_modulo;
@@ -81,6 +89,7 @@ void main() {
   avoid_equals_and_hash_code_on_mutable_classes.main();
   avoid_function_literals_in_foreach_calls.main();
   avoid_setters_without_getters.main();
+  avoid_final_parameters.main();
   avoid_init_to_null.main();
   avoid_redundant_argument_values.main();
   avoid_renaming_method_parameters.main();
@@ -94,6 +103,7 @@ void main() {
   deprecated_consistency.main();
   discarded_futures.main();
   file_names.main();
+  flutter_style_todos.main();
   hash_and_equals.main();
   library_private_types_in_public_api.main();
   literal_only_boolean_expressions.main();
@@ -106,10 +116,12 @@ void main() {
   prefer_collection_literals.main();
   prefer_const_constructors.main();
   prefer_const_constructors_in_immutables.main();
+  prefer_const_declarations.main();
   prefer_const_literals_to_create_immutables.main();
   prefer_contains.main();
   prefer_equal_for_default_values.main();
   prefer_final_fields.main();
+  prefer_final_parameters.main();
   prefer_generic_function_type_aliases.main();
   prefer_spread_collections.main();
   public_member_api_docs.main();
@@ -119,9 +131,11 @@ void main() {
   tighten_type_of_initializing_formals.main();
   type_init_formals.main();
   unawaited_futures.main();
+  unnecessary_brace_in_string_interps.main();
   unnecessary_const.main();
   unnecessary_null_checks.main();
   unnecessary_overrides.main();
+  use_build_context_synchronously.main();
   use_enums.main();
   use_is_even_rather_than_modulo.main();
   use_super_parameters.main();
