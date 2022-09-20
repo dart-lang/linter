@@ -16,6 +16,7 @@ const _desc =
     r'Conditions should not unconditionally evaluate to `true` or to `false`.';
 
 const _details = r'''
+
 **DEPRECATED:** This rule is unmaintained and will be removed in a future Linter
 release.
 

@@ -13,6 +13,7 @@ import '../analyzer.dart';
 const _desc = r'Use super-initializer parameters where possible.';
 
 const _details = r'''
+
 "Forwarding constructor"s, that do nothing except forward parameters to their 
 superclass constructors should take advantage of super-initializer parameters 
 rather than repeating the names of parameters when passing them to the 

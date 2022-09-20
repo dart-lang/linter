@@ -15,6 +15,7 @@ const _desc = r'Use enums rather than classes that behave like enums.';
 // todo(pq): add a link to any docs describing enhanced-enums once published
 
 const _details = r'''
+
 Classes that look like enumerations should be declared as `enum`s.
 
 **DO** use enums where appropriate.
