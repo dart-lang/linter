@@ -10,8 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid redundant argument values.';
 
 const _details = r'''
-Avoid redundant argument values.
-
 **DON'T** declare arguments with values that match the defaults for the
 corresponding parameter.
 
