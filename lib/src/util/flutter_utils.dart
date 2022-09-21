@@ -29,6 +29,8 @@ bool isBuildContext(DartType? type, {bool skipNullable = false}) =>
 
 bool isExactWidget(ClassElement element) => _flutter.isExactWidget(element);
 
+bool isExactState(ClassElement element) => _flutter.isExactState(element);
+
 bool isExactWidgetTypeContainer(DartType? type) =>
     _flutter.isExactWidgetTypeContainer(type);
 
@@ -59,6 +61,7 @@ class _Flutter {
   static const _nameBuildContext = 'BuildContext';
   static const _nameStatefulWidget = 'StatefulWidget';
   static const _nameWidget = 'Widget';
+  static const _nameState = 'State';
   static const _nameContainer = 'Container';
   static const _nameSizedBox = 'SizedBox';
 
@@ -101,6 +104,9 @@ class _Flutter {
 
   bool isExactWidget(ClassElement element) =>
       _isExactWidget(element, _nameWidget, _uriFramework);
+
+  bool isExactState(ClassElement element) =>
+      _isExactWidget(element, _nameState, _uriFramework);
 
   bool isExactWidgetTypeContainer(DartType? type) =>
       type is InterfaceType &&

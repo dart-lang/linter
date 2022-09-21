@@ -28,19 +28,19 @@ abstract class State<T extends StatefulWidget> {
 }
 
 abstract class StatefulWidget extends Widget {
-  const StatefulWidget({Key key}) : super(key: key);
+  const StatefulWidget({Key? key}) : super(key: key);
 
   State createState() => null;
 }
 
 abstract class StatelessWidget extends Widget {
-  const StatelessWidget({Key key}) : super(key: key);
+  const StatelessWidget({Key? key}) : super(key: key);
 
   Widget build(BuildContext context) => null;
 }
 
 class Widget {
-  final Key key;
+  final Key? key;
 
   const Widget({this.key});
 }
