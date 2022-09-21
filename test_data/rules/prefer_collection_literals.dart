@@ -64,7 +64,6 @@ void main() {
   var sss = Set.from(iter); // OK
 
   LinkedHashSet<String> sss1 = <int, LinkedHashSet<String>>{}.putIfAbsent(3, () => LinkedHashSet<String>()); // OK
-  var sss2 = <int, Set<String>>{}.putIfAbsent(0, () => LinkedHashSet()); // LINT
 
   var lhs = LinkedHashSet(equals: (a, b) => false, hashCode: (o) => 13)..addAll({}); // OK
 
