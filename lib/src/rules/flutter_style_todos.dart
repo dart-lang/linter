@@ -12,7 +12,6 @@ const _desc = r'Use Flutter TODO format: '
     '// TODO(username): message, https://URL-to-issue.';
 
 const _details = r'''
-
 **DO** use Flutter TODO format.
 
 From the [Flutter docs](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#comments):

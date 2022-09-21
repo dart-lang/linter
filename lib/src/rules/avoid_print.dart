@@ -13,7 +13,6 @@ import '../util/flutter_utils.dart';
 const _desc = r'Avoid `print` calls in production code.';
 
 const _details = r'''
-
 **DO** avoid `print` calls in production code.
 
 For production code, consider using a logging framework.

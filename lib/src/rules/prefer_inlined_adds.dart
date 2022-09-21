@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Inline list item declarations where possible.';
 
 const _details = r'''
-
 Declare elements in list literals inline, rather than using `add` and 
 `addAll` methods where possible.
 

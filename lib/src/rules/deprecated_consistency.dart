@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Missing deprecated annotation.';
 
 const _details = r'''
-
 **DO** apply `@Deprecated()` consistently:
 
 - if a class is deprecated, its constructors should also be deprecated.

@@ -11,7 +11,6 @@ import '../ast.dart';
 const _desc = r'Depend on referenced packages.';
 
 const _details = r'''
-
 **DO** depend on referenced packages.
 
 When importing a package, add a dependency on it to your pubspec.

@@ -11,7 +11,6 @@ import '../util/flutter_utils.dart';
 const _desc = r'SizedBox for whitespace.';
 
 const _details = r'''
-
 Use SizedBox to add whitespace to a layout.
 
 A `Container` is a heavier Widget than a `SizedBox`, and as bonus, `SizedBox`

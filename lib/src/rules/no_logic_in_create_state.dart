@@ -11,7 +11,6 @@ import '../util/flutter_utils.dart';
 const _desc = r"Don't put any logic in createState.";
 
 const _details = r'''
-
 **DON'T** put any logic in `createState()`.
 
 Implementations of  `createState()` should return a new instance

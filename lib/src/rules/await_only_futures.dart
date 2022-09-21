@@ -11,7 +11,6 @@ import '../extensions.dart';
 const _desc = r'Await only futures.';
 
 const _details = r'''
-
 **AVOID** using await on anything which is not a future.
 
 Await is allowed on the types: `Future<X>`, `FutureOr<X>`, `Future<X>?`, 

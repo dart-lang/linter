@@ -9,7 +9,6 @@ import '../../analyzer.dart';
 const _desc = r'Use secure urls in `pubspec.yaml`.';
 
 const _details = r'''
-
 **DO** Use secure urls in `pubspec.yaml`.
 
 Use `https` instead of `http` or `git:`.

@@ -12,7 +12,6 @@ import '../analyzer.dart';
 const _desc = r"Don't implement classes that override `==`.";
 
 const _details = r'''
-
 **DON'T** implement classes that override `==`.
 
 The `==` operator is contractually required to be an equivalence relation;

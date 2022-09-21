@@ -12,7 +12,6 @@ import '../ast.dart';
 const _desc = r'Prefer putting asserts in initializer lists.';
 
 const _details = r'''
-
 **DO** put asserts in initializer lists.
 
 **GOOD:**

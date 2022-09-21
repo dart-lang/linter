@@ -12,7 +12,6 @@ import '../analyzer.dart';
 const _desc = r"Don't assign to void.";
 
 const _details = r'''
-
 **DON'T** assign to void.
 
 **BAD:**

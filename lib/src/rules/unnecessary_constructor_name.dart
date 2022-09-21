@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Unnecessary `.new` constructor name.';
 
 const _details = r'''
-
 **PREFER** using the default unnamed Constructor over `.new`.
 
 Given a class `C`, the named unnamed constructor `C.new` refers to the same

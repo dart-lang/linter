@@ -13,7 +13,6 @@ import '../extensions.dart';
 const _desc = r'Define case clauses for all constants in enum-like classes.';
 
 const _details = r'''
-
 Switching on instances of enum-like classes should be exhaustive.
 
 Enum-like classes are defined as concrete (non-abstract) classes that have:

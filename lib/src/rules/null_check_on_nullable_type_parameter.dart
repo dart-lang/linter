@@ -14,7 +14,6 @@ import 'unnecessary_null_checks.dart';
 const _desc = r"Don't use null check on a potentially nullable type parameter.";
 
 const _details = r'''
-
 **DON'T** use null check on a potentially nullable type parameter.
 
 Given a generic type parameter `T` which has a nullable bound (e.g. the default

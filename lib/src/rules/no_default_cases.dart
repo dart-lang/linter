@@ -13,7 +13,6 @@ import '../extensions.dart';
 const _desc = r'No default cases.';
 
 const _details = r'''
-
 Switches on enums and enum-like classes should not use a `default` clause.
 
 Enum-like classes are defined as concrete (non-abstract) classes that have:

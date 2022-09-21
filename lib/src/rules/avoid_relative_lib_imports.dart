@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid relative imports for files in `lib/`.';
 
 const _details = r'''
-
 **DO** avoid relative imports for files in `lib/`.
 
 When mixing relative and absolute imports it's possible to create confusion

@@ -13,7 +13,6 @@ import '../extensions.dart';
 const _desc = r'Do not pass `null` as an argument where a closure is expected.';
 
 const _details = r'''
-
 **DON'T** pass `null` as an argument where a closure is expected.
 
 Often a closure that is passed to a method will only be called conditionally,
