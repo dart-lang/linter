@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Only reference in scope identifiers in doc comments.';
 
 const _details = r'''
-
 **DO** reference only in scope identifiers in doc comments.
 
 If you surround things like variable, method, or type names in square brackets,
@@ -65,11 +64,15 @@ class CommentReferences extends LintRule {
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+  final links = <String>[];
 
   _Visitor(this.rule);
 
   @override
   void visitComment(Comment node) {
+    // clear links of previous comments
+    links.clear();
+
     // Check for keywords that are not treated as references by the parser
     // but should be flagged by the linter.
     // Note that no special care is taken to handle embedded code blocks.
@@ -86,6 +89,10 @@ class _Visitor extends SimpleAstVisitor<void> {
               rule.reporter.reportErrorForOffset(
                   rule.lintCode, nameOffset, reference.length);
             }
+            if (rightIndex + 1 < comment.length &&
+                comment[rightIndex + 1] == ':') {
+              links.add(reference);
+            }
           }
           leftIndex = rightIndex < 0 ? -1 : comment.indexOf('[', rightIndex);
         }
@@ -97,7 +104,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitCommentReference(CommentReference node) {
     var expression = node.expression;
     if (expression.isSynthetic) return;
-    if (expression is Identifier && expression.staticElement == null) {
+    if (expression is Identifier &&
+        expression.staticElement == null &&
+        !links.contains(expression.name)) {
       rule.reportLint(expression);
     }
   }

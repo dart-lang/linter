@@ -7,10 +7,9 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Avoid final for parameter declarations';
+const _desc = r'Avoid final for parameter declarations.';
 
 const _details = r'''
-
 **AVOID** declaring parameters as final.
 
 Declaring parameters as final can lead to unecessarily verbose code, especially

@@ -14,7 +14,7 @@ import '../util/flutter_utils.dart';
 const _desc = r'Do not use BuildContexts across async gaps.';
 
 const _details = r'''
-**DO NOT** use BuildContext across asynchronous gaps.
+**DON'T** use BuildContext across asynchronous gaps.
 
 Storing `BuildContext` for later usage can easily lead to difficult to diagnose
 crashes. Asynchronous gaps are implicitly storing `BuildContext` and are some of
@@ -70,6 +70,7 @@ class UseBuildContextSynchronously extends LintRule {
       registry.addMethodInvocation(this, visitor);
       registry.addInstanceCreationExpression(this, visitor);
       registry.addFunctionExpressionInvocation(this, visitor);
+      registry.addPrefixedIdentifier(this, visitor);
     }
   }
 }
@@ -292,6 +293,14 @@ class _Visitor extends SimpleAstVisitor {
   void visitMethodInvocation(MethodInvocation node) {
     if (isBuildContext(node.target?.staticType, skipNullable: true) ||
         accessesContext(node.argumentList)) {
+      check(node);
+    }
+  }
+
+  @override
+  visitPrefixedIdentifier(PrefixedIdentifier node) {
+    // Getter access.
+    if (isBuildContext(node.prefix.staticType, skipNullable: true)) {
       check(node);
     }
   }

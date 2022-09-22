@@ -62,6 +62,7 @@ import 'prefer_generic_function_type_aliases_test.dart'
     as prefer_generic_function_type_aliases;
 import 'prefer_spread_collections_test.dart' as prefer_spread_collections;
 import 'public_member_api_docs_test.dart' as public_member_api_docs;
+import 'recursive_getters_test.dart' as recursive_getters;
 import 'sort_constructors_first_test.dart' as sort_constructors_first;
 import 'sort_unnamed_constructors_first_test.dart'
     as sort_unnamed_constructors_first;
@@ -70,6 +71,8 @@ import 'tighten_type_of_initializing_formals_test.dart'
     as tighten_type_of_initializing_formals;
 import 'type_init_formals_test.dart' as type_init_formals;
 import 'unawaited_futures_test.dart' as unawaited_futures;
+import 'unnecessary_brace_in_string_interps_test.dart'
+    as unnecessary_brace_in_string_interps;
 import 'unnecessary_const_test.dart' as unnecessary_const;
 import 'unnecessary_null_checks_test.dart' as unnecessary_null_checks;
 import 'unnecessary_overrides_test.dart' as unnecessary_overrides;
@@ -123,12 +126,14 @@ void main() {
   prefer_generic_function_type_aliases.main();
   prefer_spread_collections.main();
   public_member_api_docs.main();
+  recursive_getters.main();
   sort_constructors_first.main();
   sort_unnamed_constructors_first.main();
   super_goes_last.main();
   tighten_type_of_initializing_formals.main();
   type_init_formals.main();
   unawaited_futures.main();
+  unnecessary_brace_in_string_interps.main();
   unnecessary_const.main();
   unnecessary_null_checks.main();
   unnecessary_overrides.main();
