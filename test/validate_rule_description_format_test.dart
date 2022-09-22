@@ -10,8 +10,15 @@ import 'package:analyzer/src/lint/registry.dart';
 
 void main() {
   group('rule doc format', () {
+    var rules = Registry.ruleRegistry.rules;
+    test('(setup)', () {
+      expect(rules, isNotEmpty,
+          reason:
+              'Ensure `registerLintRules()` is called before running this suite.');
+    });
+
     group('description - trailing periods', () {
-      for (var rule in Registry.ruleRegistry.rules) {
+      for (var rule in rules) {
         test('`${rule.name}` description', () {
           expect(rule.description.endsWith('.'), isTrue,
               reason:
@@ -20,14 +27,13 @@ void main() {
       }
     });
     group('details - no leading whitespace', () {
-      for (var rule in Registry.ruleRegistry.rules) {
+      for (var rule in rules) {
         test('`${rule.name}` details', () {
           expect(rule.details.startsWith(RegExp(r'\s+')), isFalse,
               reason:
-              'Rule details for ${rule.name} should not have leading whitespace.');
+                  'Rule details for ${rule.name} should not have leading whitespace.');
         });
       }
     });
-
   });
 }
