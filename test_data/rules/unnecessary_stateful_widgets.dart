@@ -31,7 +31,7 @@ class GoodWidget extends StatelessWidget // OK
   }
 }
 
-// State with mixin
+// State with setState
 class MyWidget2 extends StatefulWidget // OK
 {
   const MyWidget2({super.key});
@@ -44,6 +44,24 @@ class _MyWidget2State extends State<MyWidget2> {
   @override
   Widget build(BuildContext context) {
     setState(() {});
+    return Container();
+  }
+}
+
+// State with field
+class MyWidget3 extends StatefulWidget // OK
+{
+  const MyWidget3({super.key});
+
+  @override
+  State<MyWidget3> createState() => _MyWidget3State();
+}
+
+class _MyWidget3State extends State<MyWidget3> {
+  final int i = 2;
+
+  @override
+  Widget build(BuildContext context) {
     return Container();
   }
 }

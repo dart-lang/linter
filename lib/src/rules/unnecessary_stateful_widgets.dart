@@ -101,6 +101,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (extendsClause == null) continue;
       var parent = extendsClause.superclass.name.staticElement;
       if (parent is! ClassElement || !isExactState(parent)) continue;
+      // check no field
+      if (stateDeclaration.fields.isNotEmpty) continue;
       // check no overriden methods except `build`
       for (var method in stateDeclaration.methods) {
         if (method.name2.lexeme == 'build') continue;
@@ -130,6 +132,8 @@ class _StateUsageVisitor extends RecursiveAstVisitor<void> {
 }
 
 extension on ClassDeclaration {
+  Iterable<FieldDeclaration> get fields =>
+      members.whereType<FieldDeclaration>();
   Iterable<MethodDeclaration> get methods =>
       members.whereType<MethodDeclaration>();
 }
