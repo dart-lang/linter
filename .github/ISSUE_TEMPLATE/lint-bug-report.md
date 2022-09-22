@@ -1,6 +1,6 @@
 ---
 name: Lint bug report
-about: Report a bug with or propose a modification to, an existing lint.
+about: Report a bug with, or propose a modification to, an existing lint.
 title: ''
 labels: ''
 assignees: ''
