@@ -80,8 +80,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitCompilationUnit(CompilationUnit node) {
     var classes = node.declarations.whereType<ClassDeclaration>().toList();
     widgetLoop:
-    for (var statefulWidget
-        in classes.where((e) => isStatefulWidget(e.declaredElement2))) {
+    for (var statefulWidget in classes
+        .where((e) => isExactStatefulWidget(e.declaredElement2?.supertype))) {
       var createState = statefulWidget.members
           .whereType<MethodDeclaration>()
           .firstWhereOrNull((e) => e.name2.lexeme == 'createState');

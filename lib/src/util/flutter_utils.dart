@@ -42,6 +42,9 @@ bool isKDebugMode(Element? element) => _flutter.isKDebugMode(element);
 bool isStatefulWidget(ClassElement? element) =>
     _flutter.isStatefulWidget(element);
 
+bool isExactStatefulWidget(DartType? type) =>
+    _flutter.isExactStatefulWidget(type);
+
 bool isWidgetProperty(DartType? type) {
   if (isWidgetType(type)) {
     return true;
@@ -135,6 +138,10 @@ class _Flutter {
     }
     return false;
   }
+
+  bool isExactStatefulWidget(type) =>
+      type is InterfaceType &&
+      _isExactWidget(type.element2, _nameStatefulWidget, _uriFramework);
 
   bool isWidget(InterfaceElement element) {
     if (_isExactWidget(element, _nameWidget, _uriFramework)) {
