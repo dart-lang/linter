@@ -12,7 +12,6 @@ main() {
   });
 }
 
-
 @reflectiveTest
 class ParameterAssignmentsTest extends LintRuleTest {
   @override
@@ -31,7 +30,6 @@ void f() {
     ]);
   }
 
-
   test_function_assignment() async {
     await assertDiagnostics(r'''
 void f(int p) {
@@ -39,18 +37,6 @@ void f(int p) {
 }
 ''', [
       lint(18, 5),
-     ]);
-  }
-
-  test_member_setter() async {
-    await assertDiagnostics(r'''
-class A {
-  set x(int v) {
-    v = 5;
-  }
-}
-''', [
-      lint(31, 5),
     ]);
   }
 
@@ -61,16 +47,6 @@ void f(int p) {
 }
 ''', [
       lint(18, 6),
-    ]);
-  }
-
-  test_function_prefix() async {
-    await assertDiagnostics(r'''
-void f(int p) {
-  ++p;
-}
-''', [
-      lint(18, 3),
     ]);
   }
 
@@ -92,12 +68,26 @@ void f({int? optional}) {
 ''');
   }
 
-  test_function_positional_optional_ok() async {
+  test_function_ok() async {
     await assertNoDiagnostics(r'''
-void f([int? optional]) {
-  optional ??= 8;
+void f(String p) {
+  print(p);
 }
 ''');
+  }
+
+  test_function_ok_shadow() async {
+    await assertDiagnostics(r'''
+void f(String? p) {
+  if (p == null) {
+    int p = 2;
+    p = 3;
+  }
+}
+''', [
+      // No lint.
+      error(HintCode.UNUSED_LOCAL_VARIABLE, 47, 1),
+    ]);
   }
 
   test_function_positional_optional_assignedTwice() async {
@@ -107,8 +97,27 @@ void f([int? optional]) {
   optional ??= 16;
 }
 ''', [
-    error(StaticWarningCode.DEAD_NULL_AWARE_EXPRESSION, 59, 2),
+      error(StaticWarningCode.DEAD_NULL_AWARE_EXPRESSION, 59, 2),
       lint(46, 15),
+    ]);
+  }
+
+  test_function_positional_optional_ok() async {
+    await assertNoDiagnostics(r'''
+void f([int? optional]) {
+  optional ??= 8;
+}
+''');
+  }
+
+  test_function_positional_optional_re_incremented() async {
+    await assertDiagnostics(r'''
+void f([int? optional]) {
+  optional ??= 8;
+  optional += 16;
+}
+''', [
+      lint(46, 14),
     ]);
   }
 
@@ -123,17 +132,6 @@ void f([int? optional]) {
     ]);
   }
 
-  test_function_positional_optional_re_incremented() async {
-    await assertDiagnostics(r'''
-void f([int? optional]) {
-  optional ??= 8;
-  optional += 16;
-}
-''', [
-      lint(46, 14),
-    ]);
-  }
-
   test_function_postfix() async {
     await assertDiagnostics(r'''
 void f(int p) {
@@ -144,25 +142,25 @@ void f(int p) {
     ]);
   }
 
-  test_function_ok_shadow() async {
+  test_function_prefix() async {
     await assertDiagnostics(r'''
-void f(String? p) {
-  if (p == null) {
-    int p = 2;
-    p = 3;
-  }
+void f(int p) {
+  ++p;
 }
 ''', [
-  // No lint.
-      error(HintCode.UNUSED_LOCAL_VARIABLE, 47, 1),
+      lint(18, 3),
     ]);
   }
 
-  test_function_ok() async {
-    await assertNoDiagnostics(r'''
-void f(String p) {
-  print(p);
+  test_member_setter() async {
+    await assertDiagnostics(r'''
+class A {
+  set x(int v) {
+    v = 5;
+  }
 }
-''');
+''', [
+      lint(31, 5),
+    ]);
   }
 }
