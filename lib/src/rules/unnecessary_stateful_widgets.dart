@@ -96,6 +96,8 @@ class _Visitor extends SimpleAstVisitor<void> {
           classes.where((e) => e.name2.lexeme == stateName).singleOrNull;
       if (stateDeclaration == null) continue;
       if (stateDeclaration.withClause != null) continue;
+      // check state is private
+      if (stateDeclaration.declaredElement2?.isPublic ?? true) continue;
       // check `extends State`
       var extendsClause = stateDeclaration.extendsClause;
       if (extendsClause == null) continue;

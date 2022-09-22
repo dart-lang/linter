@@ -65,3 +65,19 @@ class _MyWidget3State extends State<MyWidget3> {
     return Container();
   }
 }
+
+// State public
+class MyWidget4 extends StatefulWidget // OK
+{
+  const MyWidget4({super.key});
+
+  @override
+  State<MyWidget4> createState() => MyWidget4State();
+}
+
+class MyWidget4State extends State<MyWidget4> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
