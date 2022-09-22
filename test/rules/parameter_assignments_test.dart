@@ -17,7 +17,7 @@ class ParameterAssignmentsTest extends LintRuleTest {
   @override
   String get lintRule => 'parameter_assignments';
 
-  @FailingTest(reason: 'Closures implemented')
+  @FailingTest(reason: 'Closures not implemented')
   test_closure_assignment() async {
     await assertDiagnostics(r'''
 void f() {
