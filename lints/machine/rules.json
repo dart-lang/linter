@@ -633,7 +633,7 @@
   },
   {
     "name": "avoid_final_parameters",
-    "description": "Avoid final for parameter declarations",
+    "description": "Avoid final for parameter declarations.",
     "group": "style",
     "maturity": "stable",
     "incompatible": [
@@ -1136,7 +1136,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "hasFix",
-    "details": "\nMultiline strings are easier to read when they start with a newline (a newline\nstarting a multiline string is ignored).\n\n**BAD:**\n```dart\nvar s1 = '''{\n  \"a\": 1,\n  \"b\": 2\n}''';\n```\n\n**GOOD:**\n```dart\nvar s1 = '''\n{\n  \"a\": 1,\n  \"b\": 2\n}''';\n\nvar s2 = '''This one-liner multiline string is ok. It usually allows to escape both ' and \" in the string.''';\n```\n\n"
+    "details": "Multiline strings are easier to read when they start with a newline (a newline\nstarting a multiline string is ignored).\n\n**BAD:**\n```dart\nvar s1 = '''{\n  \"a\": 1,\n  \"b\": 2\n}''';\n```\n\n**GOOD:**\n```dart\nvar s1 = '''\n{\n  \"a\": 1,\n  \"b\": 2\n}''';\n\nvar s2 = '''This one-liner multiline string is ok. It usually allows to escape both ' and \" in the string.''';\n```\n\n"
   },
   {
     "name": "library_names",
@@ -1496,7 +1496,7 @@
       "flutter"
     ],
     "fixStatus": "hasFix",
-    "details": "\n**PREFER** using `const` for instantiating list, map and set literals used as\nparameters in immutable class instantiations.\n\n**BAD:**\n```dart\n@immutable\nclass A {\n  A(this.v);\n  final v;\n}\n\nA a1 = new A([1]);\nA a2 = new A({});\n```\n\n**GOOD:**\n```dart\nA a1 = new A(const [1]);\nA a2 = new A(const {});\n```\n\n"
+    "details": "**PREFER** using `const` for instantiating list, map and set literals used as\nparameters in immutable class instantiations.\n\n**BAD:**\n```dart\n@immutable\nclass A {\n  A(this.v);\n  final v;\n}\n\nA a1 = new A([1]);\nA a2 = new A({});\n```\n\n**GOOD:**\n```dart\nA a1 = new A(const [1]);\nA a2 = new A(const {});\n```\n\n"
   },
   {
     "name": "prefer_constructors_over_static_methods",
@@ -1532,7 +1532,7 @@
     ],
     "sets": [],
     "fixStatus": "hasFix",
-    "details": "\n**DO** use double quotes where they wouldn't require additional escapes.\n\nThat means strings with a double quote may use apostrophes so that the double\nquote isn't escaped (note: we don't lint the other way around, ie, a double\nquoted string with an escaped double quote is not flagged).\n\nIt's also rare, but possible, to have strings within string interpolations.  In\nthis case, its much more readable to use a single quote somewhere.  So single\nquotes are allowed either within, or containing, an interpolated string literal.\nArguably strings within string interpolations should be its own type of lint.\n\n**BAD:**\n```dart\nuseStrings(\n    'should be double quote',\n    r'should be double quote',\n    r'''should be double quotes''')\n```\n\n**GOOD:**\n```dart\nuseStrings(\n    \"should be double quote\",\n    r\"should be double quote\",\n    r\"\"\"should be double quotes\"\"\",\n    'ok with \" inside',\n    'nested ${a ? \"strings\" : \"can\"} be wrapped by a double quote',\n    \"and nested ${a ? 'strings' : 'can be double quoted themselves'}\");\n```\n\n"
+    "details": "**DO** use double quotes where they wouldn't require additional escapes.\n\nThat means strings with a double quote may use apostrophes so that the double\nquote isn't escaped (note: we don't lint the other way around, ie, a double\nquoted string with an escaped double quote is not flagged).\n\nIt's also rare, but possible, to have strings within string interpolations.  In\nthis case, its much more readable to use a single quote somewhere.  So single\nquotes are allowed either within, or containing, an interpolated string literal.\nArguably strings within string interpolations should be its own type of lint.\n\n**BAD:**\n```dart\nuseStrings(\n    'should be double quote',\n    r'should be double quote',\n    r'''should be double quotes''')\n```\n\n**GOOD:**\n```dart\nuseStrings(\n    \"should be double quote\",\n    r\"should be double quote\",\n    r\"\"\"should be double quotes\"\"\",\n    'ok with \" inside',\n    'nested ${a ? \"strings\" : \"can\"} be wrapped by a double quote',\n    \"and nested ${a ? 'strings' : 'can be double quoted themselves'}\");\n```\n\n"
   },
   {
     "name": "prefer_equal_for_default_values",
@@ -1718,7 +1718,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "hasFix",
-    "details": "\n**DO** use int literals rather than the corresponding double literal.\n\n**BAD:**\n```dart\nconst double myDouble = 8.0;\nfinal anotherDouble = myDouble + 7.0e2;\nmain() {\n  someMethod(6.0);\n}\n```\n\n**GOOD:**\n```dart\nconst double myDouble = 8;\nfinal anotherDouble = myDouble + 700;\nmain() {\n  someMethod(6);\n}\n```\n\n"
+    "details": "**DO** use int literals rather than the corresponding double literal.\n\n**BAD:**\n```dart\nconst double myDouble = 8.0;\nfinal anotherDouble = myDouble + 7.0e2;\nmain() {\n  someMethod(6.0);\n}\n```\n\n**GOOD:**\n```dart\nconst double myDouble = 8;\nfinal anotherDouble = myDouble + 700;\nmain() {\n  someMethod(6);\n}\n```\n\n"
   },
   {
     "name": "prefer_interpolation_to_compose_strings",
@@ -1836,7 +1836,7 @@
       "pedantic"
     ],
     "fixStatus": "hasFix",
-    "details": "\n**DO** use single quotes where they wouldn't require additional escapes.\n\nThat means strings with an apostrophe may use double quotes so that the\napostrophe isn't escaped (note: we don't lint the other way around, ie, a single\nquoted string with an escaped apostrophe is not flagged).\n\nIt's also rare, but possible, to have strings within string interpolations.  In\nthis case, its much more readable to use a double quote somewhere.  So double\nquotes are allowed either within, or containing, an interpolated string literal.\nArguably strings within string interpolations should be its own type of lint.\n\n**BAD:**\n```dart\nuseStrings(\n    \"should be single quote\",\n    r\"should be single quote\",\n    r\"\"\"should be single quotes\"\"\")\n```\n\n**GOOD:**\n```dart\nuseStrings(\n    'should be single quote',\n    r'should be single quote',\n    r'''should be single quotes''',\n    \"here's ok\",\n    \"nested ${a ? 'strings' : 'can'} be wrapped by a double quote\",\n    'and nested ${a ? \"strings\" : \"can be double quoted themselves\"}');\n```\n\n"
+    "details": "**DO** use single quotes where they wouldn't require additional escapes.\n\nThat means strings with an apostrophe may use double quotes so that the\napostrophe isn't escaped (note: we don't lint the other way around, ie, a single\nquoted string with an escaped apostrophe is not flagged).\n\nIt's also rare, but possible, to have strings within string interpolations.  In\nthis case, its much more readable to use a double quote somewhere.  So double\nquotes are allowed either within, or containing, an interpolated string literal.\nArguably strings within string interpolations should be its own type of lint.\n\n**BAD:**\n```dart\nuseStrings(\n    \"should be single quote\",\n    r\"should be single quote\",\n    r\"\"\"should be single quotes\"\"\")\n```\n\n**GOOD:**\n```dart\nuseStrings(\n    'should be single quote',\n    r'should be single quote',\n    r'''should be single quotes''',\n    \"here's ok\",\n    \"nested ${a ? 'strings' : 'can'} be wrapped by a double quote\",\n    'and nested ${a ? \"strings\" : \"can be double quoted themselves\"}');\n```\n\n"
   },
   {
     "name": "prefer_spread_collections",
@@ -2169,7 +2169,7 @@
   },
   {
     "name": "unnecessary_null_aware_operator_on_extension_on_nullable",
-    "description": "Unnecessary null aware operator on extension on a nullable type",
+    "description": "Unnecessary null aware operator on extension on a nullable type.",
     "group": "style",
     "maturity": "stable",
     "incompatible": [],
