@@ -29,13 +29,29 @@
          </header>
          <section>
 
-            <p><strong>AVOID</strong> using parenthesis when not needed.</p>
+            <p><strong>AVOID</strong> using parentheses when not needed.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">a = b;
 </code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">a = (b);
 </code></pre>
+<p>Parentheses are considered unnecessary if they do not change the meaning of the
+code and they do not improve the readability of the code. The goal is not to
+force all developers to maintain the expression precedence table in their heads,
+which is why the second condition is included. Examples of this condition
+include:</p>
+<ul>
+<li>cascade expressions - it is sometimes not clear what the target of a cascade
+expression is, especially with assignments, or nested cascades. For example,
+the expression <code>a.b = (c..d)</code>.</li>
+<li>expressions with whitespace between tokens - it can look very strange to see
+an expression like <code>!await foo</code> which is valid and equivalent to
+<code>!(await foo)</code>.</li>
+<li>logical expressions - parentheses can improve the readability of the implicit
+grouping defined by precedence. For example, the expression
+<code>(a &amp;&amp; b) || c &amp;&amp; d</code>.</li>
+</ul>
 
             
          </section>

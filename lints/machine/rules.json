@@ -2230,13 +2230,13 @@
   },
   {
     "name": "unnecessary_parenthesis",
-    "description": "Unnecessary parenthesis can be removed.",
+    "description": "Unnecessary parentheses can be removed.",
     "group": "style",
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
     "fixStatus": "hasFix",
-    "details": "**AVOID** using parenthesis when not needed.\n\n**GOOD:**\n```dart\na = b;\n```\n\n**BAD:**\n```dart\na = (b);\n```\n\n"
+    "details": "**AVOID** using parentheses when not needed.\n\n**GOOD:**\n```dart\na = b;\n```\n\n**BAD:**\n```dart\na = (b);\n```\n\nParentheses are considered unnecessary if they do not change the meaning of the\ncode and they do not improve the readability of the code. The goal is not to\nforce all developers to maintain the expression precedence table in their heads,\nwhich is why the second condition is included. Examples of this condition\ninclude:\n\n* cascade expressions - it is sometimes not clear what the target of a cascade\n  expression is, especially with assignments, or nested cascades. For example,\n  the expression `a.b = (c..d)`.\n* expressions with whitespace between tokens - it can look very strange to see\n  an expression like `!await foo` which is valid and equivalent to\n  `!(await foo)`.\n* logical expressions - parentheses can improve the readability of the implicit\n  grouping defined by precedence. For example, the expression\n  `(a && b) || c && d`.\n"
   },
   {
     "name": "unnecessary_raw_strings",
