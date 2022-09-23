@@ -59,11 +59,15 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitStringInterpolation(StringInterpolation node) {
     if (node.isRaw || node.isMultiline) return;
 
-    var text = node.elements
-        .whereType<InterpolationString>()
-        .map((e) => e.value)
-        .reduce((a, b) => '$a$b');
-    if (isChangeable(text, isSingleQuoted: node.isSingleQuoted)) {
+    var text = StringBuffer();
+    for (var element in node.elements) {
+      if (element is InterpolationString) {
+        var value = element.value;
+        text.write(value);
+      }
+    }
+
+    if (isChangeable(text.toString(), isSingleQuoted: node.isSingleQuoted)) {
       rule.reportLint(node);
     }
   }
