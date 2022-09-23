@@ -42,10 +42,8 @@ bool _containsNullAwareInvocationInChain(AstNode? node) =>
         (node is IndexExpression &&
             _containsNullAwareInvocationInChain(node.target)));
 
-Iterable<Element?> _extractElementsOfSimpleIdentifiers(AstNode node) => node
-    .traverseNodesInDFS()
-    .whereType<SimpleIdentifier>()
-    .map((e) => e.staticElement);
+Iterable<Element?> _extractElementsOfSimpleIdentifiers(AstNode node) =>
+    _IdentifierVisitor().extractElements(node);
 
 class UnnecessaryLambdas extends LintRule {
   UnnecessaryLambdas()
@@ -108,6 +106,23 @@ class _FinalExpressionChecker {
     }
 
     return false;
+  }
+}
+
+class _IdentifierVisitor extends RecursiveAstVisitor {
+  final _elements = <Element?>[];
+
+  _IdentifierVisitor();
+
+  List<Element?> extractElements(AstNode node) {
+    node.accept(this);
+    return _elements;
+  }
+
+  @override
+  visitSimpleIdentifier(SimpleIdentifier node) {
+    _elements.add(node.staticElement);
+    super.visitSimpleIdentifier(node);
   }
 }
 
