@@ -62,8 +62,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var text = StringBuffer();
     for (var element in node.elements) {
       if (element is InterpolationString) {
-        var value = element.value;
-        text.write(value);
+        text.write(element.value);
       }
     }
 
