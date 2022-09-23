@@ -226,7 +226,9 @@ class _UnnecessaryGetterOverrideVisitor
 
   @override
   void visitPropertyAccess(PropertyAccess node) {
-    node.target?.accept(this);
+    if (node.propertyName.name == _inheritedMethod.name) {
+      node.target?.accept(this);
+    }
   }
 }
 
@@ -251,6 +253,7 @@ class _UnnecessaryMethodOverrideVisitor
   void visitMethodInvocation(MethodInvocation node) {
     var declarationParameters = declaration.parameters;
     if (declarationParameters != null &&
+        node.methodName.name == _inheritedMethod.name &&
         argumentsMatchParameters(
             node.argumentList.arguments, declarationParameters.parameters)) {
       node.target?.accept(this);
@@ -330,7 +333,9 @@ class _UnnecessarySetterOverrideVisitor
             node.rightHandSide.canonicalElement) {
       var leftPart = node.leftHandSide.unParenthesized;
       if (leftPart is PropertyAccess) {
-        leftPart.target?.accept(this);
+        if (node.writeElement?.name == _inheritedMethod.name) {
+          leftPart.target?.accept(this);
+        }
       }
     }
   }

@@ -21,6 +21,7 @@ class Base {
   int m1({int a = 0, int b = 0}) => 0;
   int m2({int a = 0, int b = 0}) => 0;
   int m3({int a = 0, int b = 0}) => 0;
+  int m4({int a = 0, int b = 0}) => 0;
   int operator +(other) => 0;
   Base operator ~() => Base();
   @override
@@ -50,6 +51,9 @@ class Parent extends Base {
 
   @override
   int m3({int a = 0, int b = 0}) => super.m3(b: a, a: b); // OK
+
+  @override
+  int m4({int a = 0, int b = 0}) => super.m1(a: a, b: b); // OK
 
   @override
   int operator +(other) => super + other; // LINT
