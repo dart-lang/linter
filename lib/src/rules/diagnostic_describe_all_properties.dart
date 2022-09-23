@@ -101,10 +101,10 @@ class _IdentifierVisitor extends RecursiveAstVisitor {
     } else {
       name = node.name;
       debugName =
-      '$debugPrefix${node.name[0].toUpperCase()}${node.name.substring(1)}';
+          '$debugPrefix${node.name[0].toUpperCase()}${node.name.substring(1)}';
     }
-    properties.removeWhere((property) =>
-    property.lexeme == debugName || property.lexeme == name);
+    properties.removeWhere(
+        (property) => property.lexeme == debugName || property.lexeme == name);
 
     super.visitSimpleIdentifier(node);
   }
