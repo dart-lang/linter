@@ -98,7 +98,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           .traverseNodesInDFS(excludeCriteria: _isFunctionExpression)
           .whereType<ReturnStatement>();
       if (returnStatements.isNotEmpty && returnStatements.every(_returnsThis)) {
-        rule.reportLint(returnStatements.first);
+        rule.reportLint(returnStatements.first.expression);
       }
     } else if (body is ExpressionFunctionBody) {
       if (body.expression is ThisExpression) {
