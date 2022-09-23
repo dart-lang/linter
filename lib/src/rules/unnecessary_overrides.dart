@@ -5,6 +5,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 import '../extensions.dart';
@@ -211,14 +212,21 @@ class _UnnecessaryGetterOverrideVisitor
   _UnnecessaryGetterOverrideVisitor(super.rule);
 
   @override
-  ExecutableElement? getInheritedElement(MethodDeclaration node) =>
-      node.lookUpInheritedConcreteGetter();
+  ExecutableElement? getInheritedElement(MethodDeclaration node) {
+    var inheritedGetter = node.lookUpInheritedConcreteGetter();
+    if (inheritedGetter == null) return null;
+    var enclosingTypeAsInstanceOfInheritedEnclosingType =
+        node.enclosingTypeAsInstanceOfInheritedEnclosingType(inheritedGetter);
+    if (enclosingTypeAsInstanceOfInheritedEnclosingType == null) {
+      return inheritedGetter;
+    }
+    return enclosingTypeAsInstanceOfInheritedEnclosingType
+        .getGetter(inheritedGetter.name);
+  }
 
   @override
   void visitPropertyAccess(PropertyAccess node) {
-    if (node.propertyName.staticElement == _inheritedMethod) {
-      node.target?.accept(this);
-    }
+    node.target?.accept(this);
   }
 }
 
@@ -227,13 +235,22 @@ class _UnnecessaryMethodOverrideVisitor
   _UnnecessaryMethodOverrideVisitor(super.rule);
 
   @override
-  ExecutableElement? getInheritedElement(node) => node.lookUpInheritedMethod();
+  ExecutableElement? getInheritedElement(node) {
+    var inheritedMethod = node.lookUpInheritedMethod();
+    if (inheritedMethod == null) return null;
+    var enclosingTypeAsInstanceOfInheritedEnclosingType =
+        node.enclosingTypeAsInstanceOfInheritedEnclosingType(inheritedMethod);
+    if (enclosingTypeAsInstanceOfInheritedEnclosingType == null) {
+      return inheritedMethod;
+    }
+    return enclosingTypeAsInstanceOfInheritedEnclosingType
+        .getMethod(inheritedMethod.name);
+  }
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
     var declarationParameters = declaration.parameters;
     if (declarationParameters != null &&
-        node.methodName.staticElement == _inheritedMethod &&
         argumentsMatchParameters(
             node.argumentList.arguments, declarationParameters.parameters)) {
       node.target?.accept(this);
@@ -246,8 +263,17 @@ class _UnnecessaryOperatorOverrideVisitor
   _UnnecessaryOperatorOverrideVisitor(super.rule);
 
   @override
-  ExecutableElement? getInheritedElement(node) =>
-      node.lookUpInheritedConcreteMethod();
+  ExecutableElement? getInheritedElement(node) {
+    var inheritedOperator = node.lookUpInheritedConcreteMethod();
+    if (inheritedOperator == null) return null;
+    var enclosingTypeAsInstanceOfInheritedEnclosingType =
+        node.enclosingTypeAsInstanceOfInheritedEnclosingType(inheritedOperator);
+    if (enclosingTypeAsInstanceOfInheritedEnclosingType == null) {
+      return inheritedOperator;
+    }
+    return enclosingTypeAsInstanceOfInheritedEnclosingType
+        .getMethod(inheritedOperator.name);
+  }
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
@@ -283,8 +309,17 @@ class _UnnecessarySetterOverrideVisitor
   _UnnecessarySetterOverrideVisitor(super.rule);
 
   @override
-  ExecutableElement? getInheritedElement(node) =>
-      node.lookUpInheritedConcreteSetter();
+  ExecutableElement? getInheritedElement(node) {
+    var inheritedSetter = node.lookUpInheritedConcreteSetter();
+    if (inheritedSetter == null) return null;
+    var enclosingTypeAsInstanceOfInheritedEnclosingType =
+        node.enclosingTypeAsInstanceOfInheritedEnclosingType(inheritedSetter);
+    if (enclosingTypeAsInstanceOfInheritedEnclosingType == null) {
+      return inheritedSetter;
+    }
+    return enclosingTypeAsInstanceOfInheritedEnclosingType
+        .getSetter(inheritedSetter.name);
+  }
 
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
@@ -295,9 +330,7 @@ class _UnnecessarySetterOverrideVisitor
             node.rightHandSide.canonicalElement) {
       var leftPart = node.leftHandSide.unParenthesized;
       if (leftPart is PropertyAccess) {
-        if (node.writeElement == _inheritedMethod) {
-          leftPart.target?.accept(this);
-        }
+        leftPart.target?.accept(this);
       }
     }
   }
@@ -326,5 +359,21 @@ class _Visitor extends SimpleAstVisitor<void> {
       var visitor = _UnnecessaryMethodOverrideVisitor(rule);
       visitor.visitMethodDeclaration(node);
     }
+  }
+}
+
+extension on MethodDeclaration {
+  /// Returns the enclosing type of this method declaration, as an instance of
+  /// the enclosing type of [inheritedMethod].
+  ///
+  /// Returns null in cases where it cannot be determined.
+  InterfaceType? enclosingTypeAsInstanceOfInheritedEnclosingType(
+      ExecutableElement? inheritedMethod) {
+    var enclosingElement = declaredElement2?.enclosingElement3;
+    var inheritedEnclosingElement = inheritedMethod?.enclosingElement3;
+    if (enclosingElement is! InterfaceElement) return null;
+    if (inheritedEnclosingElement is! InterfaceElement) return null;
+
+    return enclosingElement.thisType.asInstanceOf(inheritedEnclosingElement);
   }
 }

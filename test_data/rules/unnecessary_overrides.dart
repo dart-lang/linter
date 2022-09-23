@@ -22,7 +22,7 @@ class Base {
   int m2({int a = 0, int b = 0}) => 0;
   int m3({int a = 0, int b = 0}) => 0;
   int operator +(other) => 0;
-  Base operator ~()=> Base();
+  Base operator ~() => Base();
   @override
   int get hashCode => 13;
 }
@@ -55,7 +55,7 @@ class Parent extends Base {
   int operator +(other) => super + other; // LINT
 
   @override
-  Base operator ~()=> ~super; // LINT
+  Base operator ~() => ~super; // LINT
 
   @override
   @myAnnotation
@@ -208,4 +208,28 @@ class E extends C {
   /// it's ok to override to provide better documentation
   @override
   num get g => super.g; // OK
+}
+
+class F<T> {
+  T m1() => throw 42;
+
+  T get g1 => throw 42;
+
+  void set s1(T value) => throw 42;
+
+  T operator +(T other) => throw 42;
+}
+
+class G extends F<int> {
+  @override
+  int m1() => super.m1(); // LINT
+
+  @override
+  int get g1 => super.g1; // LINT
+
+  @override
+  void set s1(int value) => super.s1 = value; // LINT
+
+  @override
+  int operator +(int other) => super + other; // LINT
 }
