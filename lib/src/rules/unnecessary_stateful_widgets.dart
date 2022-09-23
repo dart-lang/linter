@@ -13,7 +13,6 @@ import '../util/flutter_utils.dart';
 const _desc = r'Unnecessary StatefulWidget.';
 
 const _details = r'''
-
 Don't use `StatefulWidget` when a `StatelessWidget` is sufficient. Using a
 `StatelessWidget` where appropriate leads to more compact, concise, and readable
 code and is more idiomatic.
