@@ -81,6 +81,9 @@ class _Visitor extends SimpleAstVisitor<void> {
     widgetLoop:
     for (var statefulWidget in classes
         .where((e) => isExactStatefulWidget(e.declaredElement2?.supertype))) {
+      // if Stateful is used in name, we ignore it
+      if (statefulWidget.name2.lexeme.contains('Stateful')) continue;
+
       var createState = statefulWidget.members
           .whereType<MethodDeclaration>()
           .firstWhereOrNull((e) => e.name2.lexeme == 'createState');

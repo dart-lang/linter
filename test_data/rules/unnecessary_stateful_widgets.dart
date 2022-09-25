@@ -111,3 +111,19 @@ class _MyWidget5State extends State<MyWidget5> {
     return Container();
   }
 }
+
+// Stateful in the widget name
+class MyStatefulWidget6 extends StatefulWidget // OK
+{
+  const MyStatefulWidget6({super.key});
+
+  @override
+  State<MyStatefulWidget6> createState() => _MyStatefulWidget6State();
+}
+
+class _MyStatefulWidget6State extends State<MyStatefulWidget6> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
