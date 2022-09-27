@@ -127,3 +127,38 @@ class _MyStatefulWidget6State extends State<MyStatefulWidget6> {
     return Container();
   }
 }
+
+// State with mounted
+class MyWidget7 extends StatefulWidget // OK
+{
+  const MyWidget7({super.key});
+
+  @override
+  State<MyWidget7> createState() => _MyWidget7State();
+}
+
+class _MyWidget7State extends State<MyWidget7> {
+  @override
+  Widget build(BuildContext context) {
+    if (mounted) {}
+    return Container();
+  }
+}
+
+// State with widget access
+class MyWidget8 extends StatefulWidget // LINT
+{
+  const MyWidget8({super.key});
+  final bool b = true;
+
+  @override
+  State<MyWidget8> createState() => _MyWidget8State();
+}
+
+class _MyWidget8State extends State<MyWidget8> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.b) {}
+    return Container();
+  }
+}

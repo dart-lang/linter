@@ -8,6 +8,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 
 import '../analyzer.dart';
+import '../extensions.dart';
 import '../util/flutter_utils.dart';
 
 const _desc = r'Unnecessary StatefulWidget.';
@@ -80,13 +81,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     var classes = node.declarations.whereType<ClassDeclaration>().toList();
     widgetLoop:
     for (var statefulWidget in classes
-        .where((e) => isExactStatefulWidget(e.declaredElement2?.supertype))) {
+        .where((e) => isExactStatefulWidget(e.declaredElement?.supertype))) {
       // if Stateful is used in name, we ignore it
-      if (statefulWidget.name2.lexeme.contains('Stateful')) continue;
+      if (statefulWidget.name.lexeme.contains('Stateful')) continue;
 
       var createState = statefulWidget.members
           .whereType<MethodDeclaration>()
-          .firstWhereOrNull((e) => e.name2.lexeme == 'createState');
+          .firstWhereOrNull((e) => e.name.lexeme == 'createState');
       if (createState == null) continue;
       var createStateBody = createState.body;
       if (createStateBody is! ExpressionFunctionBody) continue;
@@ -95,11 +96,11 @@ class _Visitor extends SimpleAstVisitor<void> {
       var stateName = stateElement.name;
 
       var stateDeclaration =
-          classes.where((e) => e.name2.lexeme == stateName).singleOrNull;
+          classes.where((e) => e.name.lexeme == stateName).singleOrNull;
       if (stateDeclaration == null) continue;
       if (stateDeclaration.withClause != null) continue;
       // check state is private
-      if (stateDeclaration.declaredElement2?.isPublic ?? true) continue;
+      if (stateDeclaration.declaredElement?.isPublic ?? true) continue;
       // check `extends State`
       var extendsClause = stateDeclaration.extendsClause;
       if (extendsClause == null) continue;
@@ -109,29 +110,57 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (stateDeclaration.fields.isNotEmpty) continue;
       // check no overriden methods except `build`
       for (var method in stateDeclaration.methods) {
-        if (method.name2.lexeme == 'build') continue;
-        if (method.declaredElement2?.hasOverride ?? false) {
+        if (method.name.lexeme == 'build') continue;
+        if (method.declaredElement?.hasOverride ?? false) {
           continue widgetLoop;
         }
       }
-      // check no `setState` usage
+      // check no `State` usage
       var visitor = _StateUsageVisitor();
       stateDeclaration.accept(visitor);
-      if (visitor.usedSetState) continue;
+      if (visitor.hasStateUsage) continue;
 
-      rule.reportLintForToken(statefulWidget.name2);
+      rule.reportLintForToken(statefulWidget.name);
     }
   }
 }
 
 class _StateUsageVisitor extends RecursiveAstVisitor<void> {
-  bool usedSetState = false;
+  bool hasStateUsage = false;
+
+  late ClassElement _stateElement;
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    var stateElement = node.declaredElement;
+    if (stateElement == null) return;
+    _stateElement = stateElement;
+    super.visitClassDeclaration(node);
+  }
+
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    if (node.realTarget == null && node.methodName.name == 'setState') {
-      usedSetState = true;
+    if (!_visit(node.canonicalElement)) {
+      super.visitMethodInvocation(node);
     }
-    super.visitMethodInvocation(node);
+  }
+
+  @override
+  void visitSimpleIdentifier(SimpleIdentifier node) {
+    if (node.name == 'widget' || !_visit(node.canonicalElement)) {
+      super.visitSimpleIdentifier(node);
+    }
+  }
+
+  bool _visit(Element? methodElement) {
+    if (methodElement is ClassMemberElement &&
+        _stateElement.allSupertypes
+            .whereNot((type) => type == _stateElement.thisType)
+            .any((type) => type.element2 == methodElement.enclosingElement3)) {
+      hasStateUsage = true;
+      return true;
+    }
+    return false;
   }
 }
 
