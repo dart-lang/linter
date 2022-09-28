@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Declare method return types.';
 
 const _details = r'''
-
 **DO** declare method return types.
 
 When declaring a method or function *always* specify a return type.
@@ -83,16 +82,16 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     if (!node.isSetter && node.returnType == null) {
-      rule.reportLintForToken(node.name2,
-          arguments: [node.name2.lexeme], errorCode: functionCode);
+      rule.reportLintForToken(node.name,
+          arguments: [node.name.lexeme], errorCode: functionCode);
     }
   }
 
   @override
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
     if (node.returnType == null) {
-      rule.reportLintForToken(node.name2,
-          arguments: [node.name2.lexeme], errorCode: functionCode);
+      rule.reportLintForToken(node.name,
+          arguments: [node.name.lexeme], errorCode: functionCode);
     }
   }
 
@@ -100,9 +99,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isSetter &&
         node.returnType == null &&
-        node.name2.type != TokenType.INDEX_EQ) {
-      rule.reportLintForToken(node.name2,
-          arguments: [node.name2.lexeme], errorCode: methodCode);
+        node.name.type != TokenType.INDEX_EQ) {
+      rule.reportLintForToken(node.name,
+          arguments: [node.name.lexeme], errorCode: methodCode);
     }
   }
 }

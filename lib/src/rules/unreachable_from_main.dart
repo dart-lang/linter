@@ -14,7 +14,6 @@ import '../analyzer.dart';
 const _desc = 'Unreachable top-level members in executable libraries.';
 
 const _details = r'''
-
 Top-level members in an executable library should be used directly inside this
 library.  An executable library is a library that contains a `main` top-level
 function or that contains a top-level function annotated with
@@ -87,7 +86,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     var declarationByElement = <Element, Declaration>{};
     for (var declaration in topDeclarations) {
-      var element = declaration.declaredElement2;
+      var element = declaration.declaredElement;
       if (element != null) {
         if (element is TopLevelVariableElement) {
           declarationByElement[element] = declaration;
@@ -126,7 +125,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     var unusedMembers = topDeclarations.difference(usedMembers).where((e) {
-      var element = e.declaredElement2;
+      var element = e.declaredElement;
       return element != null &&
           element.isPublic &&
           !element.hasVisibleForTesting;
@@ -134,12 +133,12 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     for (var member in unusedMembers) {
       if (member is NamedCompilationUnitMember) {
-        rule.reportLintForToken(member.name2);
+        rule.reportLintForToken(member.name);
       } else if (member is VariableDeclaration) {
-        rule.reportLintForToken(member.name2);
+        rule.reportLintForToken(member.name);
       } else if (member is ExtensionDeclaration) {
         rule.reportLintForToken(
-            member.name2 ?? member.firstTokenAfterCommentAndMetadata);
+            member.name ?? member.firstTokenAfterCommentAndMetadata);
       } else {
         rule.reportLintForToken(member.firstTokenAfterCommentAndMetadata);
       }
@@ -148,7 +147,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool _isEntryPoint(Declaration e) =>
       e is FunctionDeclaration &&
-      (e.name2.lexeme == 'main' || e.metadata.any(_isPragmaVmEntry));
+      (e.name.lexeme == 'main' || e.metadata.any(_isPragmaVmEntry));
 
   bool _isPragmaVmEntry(Annotation annotation) {
     if (!annotation.isPragma) return false;

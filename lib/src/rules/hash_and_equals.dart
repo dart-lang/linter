@@ -11,7 +11,6 @@ import '../ast.dart';
 const _desc = r'Always override `hashCode` if overriding `==`.';
 
 const _details = r'''
-
 **DO** override `hashCode` if overriding `==` and prefer overriding `==` if
 overriding `hashCode`.
 
@@ -95,11 +94,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     if (eq != null && hash == null) {
-      rule.reportLintForToken(eq.name2, arguments: ['hashCode', '==']);
+      rule.reportLintForToken(eq.name, arguments: ['hashCode', '==']);
     }
     if (hash != null && eq == null) {
       if (hash is MethodDeclaration) {
-        rule.reportLintForToken(hash.name2, arguments: ['==', 'hashCode']);
+        rule.reportLintForToken(hash.name, arguments: ['==', 'hashCode']);
       } else if (hash is FieldDeclaration) {
         rule.reportLintForToken(getFieldName(hash, 'hashCode'),
             arguments: ['==', 'hashCode']);

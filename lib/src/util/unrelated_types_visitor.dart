@@ -33,6 +33,7 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
     if (node.argumentList.arguments.length != 1) {
       return;
     }
+
     var methodDefinition = _matchingMethod(node);
     if (methodDefinition == null) {
       return;
@@ -47,17 +48,23 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
     // [definition].
 
     DartType? targetType;
-    // TODO(srawlins): Should be `realTarget`?
-    var target = node.target;
+    var target = node.realTarget;
+
     if (target != null) {
       targetType = target.staticType;
     } else {
       for (AstNode? parent = node; parent != null; parent = parent.parent) {
         if (parent is ClassDeclaration) {
-          targetType = parent.declaredElement2?.thisType;
+          targetType = parent.declaredElement?.thisType;
           break;
         } else if (parent is MixinDeclaration) {
-          targetType = parent.declaredElement2?.thisType;
+          targetType = parent.declaredElement?.thisType;
+          break;
+        } else if (parent is EnumDeclaration) {
+          targetType = parent.declaredElement?.thisType;
+          break;
+        } else if (parent is ExtensionDeclaration) {
+          targetType = parent.extendedType.type;
           break;
         }
         // TODO(srawlins): Extension? Enum?
@@ -69,6 +76,7 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
     }
 
     var collectionType = targetType.asInstanceOf(methodDefinition.element);
+
     if (collectionType == null) {
       return;
     }

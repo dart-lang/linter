@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid using braces in interpolation when not needed.';
 
 const _details = r'''
-
 **AVOID** using braces in interpolation when not needed.
 
 If you're just interpolating a simple identifier, and it's not immediately
@@ -62,13 +61,19 @@ class _Visitor extends SimpleAstVisitor<void> {
       var exp = expression.expression;
       if (exp is SimpleIdentifier) {
         var identifier = exp;
-        var bracket = expression.rightBracket;
-        if (bracket != null &&
-            !isIdentifierPart(bracket.next) &&
-            !identifier.name.contains('\$')) {
-          rule.reportLint(expression);
+        if (!identifier.name.contains('\$')) {
+          _check(expression);
         }
+      } else if (exp is ThisExpression) {
+        _check(expression);
       }
+    }
+  }
+
+  void _check(InterpolationExpression expression) {
+    var bracket = expression.rightBracket;
+    if (bracket != null && !isIdentifierPart(bracket.next)) {
+      rule.reportLint(expression);
     }
   }
 }

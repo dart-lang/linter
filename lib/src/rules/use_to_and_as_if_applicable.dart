@@ -12,7 +12,6 @@ const _desc =
     r'Start the name of the method with to/_to or as/_as if applicable.';
 
 const _details = r'''
-
 From the [design guide](https://dart.dev/guides/language/effective-dart/design):
 
 **PREFER** naming a method to___() if it copies the object's state to a new object.
@@ -84,10 +83,10 @@ class _Visitor extends SimpleAstVisitor<void> {
         nodeParameters != null &&
         nodeParameters.parameters.isEmpty &&
         !_isVoid(node.returnType) &&
-        !_beginsWithAsOrTo(node.name2.lexeme) &&
+        !_beginsWithAsOrTo(node.name.lexeme) &&
         !node.hasInheritedMethod &&
         _checkBody(node.body)) {
-      rule.reportLintForToken(node.name2);
+      rule.reportLintForToken(node.name);
     }
   }
 

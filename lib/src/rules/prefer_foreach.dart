@@ -12,7 +12,6 @@ import '../extensions.dart';
 const _desc = r'Use `forEach` to only apply a function to all the elements.';
 
 const _details = r'''
-
 **DO** use `forEach` if you are only going to apply a function or a method
 to all the elements of an iterable.
 
@@ -83,7 +82,7 @@ class _PreferForEachVisitor extends SimpleAstVisitor {
   void visitForStatement(ForStatement node) {
     var loopParts = node.forLoopParts;
     if (loopParts is ForEachPartsWithDeclaration) {
-      var element = loopParts.loopVariable.declaredElement2;
+      var element = loopParts.loopVariable.declaredElement;
       if (element != null) {
         forEachStatement = node;
         this.element = element;

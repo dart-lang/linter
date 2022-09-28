@@ -11,7 +11,6 @@ import '../extensions.dart';
 const _desc = r'Avoid setters without getters.';
 
 const _details = r'''
-
 **DON'T** define a setter without a corresponding getter.
 
 Defining a setter without defining a corresponding getter can lead to logical
@@ -82,7 +81,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (member.isSetter &&
           member.lookUpInheritedConcreteSetter() == null &&
           member.lookUpGetter() == null) {
-        rule.reportLintForToken(member.name2);
+        rule.reportLintForToken(member.name);
       }
     }
   }

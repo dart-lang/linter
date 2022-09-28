@@ -14,7 +14,6 @@ const _desc =
     r'Use a setter for operations that conceptually change a property.';
 
 const _details = r'''
-
 **DO** use a setter for operations that conceptually change a property.
 
 **BAD:**
@@ -67,9 +66,9 @@ class _Visitor extends SimpleAstVisitor<void> {
           expression.operator.type == TokenType.EQ) {
         var leftOperand = expression.writeElement?.canonicalElement;
         var rightOperand = expression.rightHandSide.canonicalElement;
-        var parameterElement = node.declaredElement2?.parameters.first;
+        var parameterElement = node.declaredElement?.parameters.first;
         if (rightOperand == parameterElement && leftOperand is FieldElement) {
-          rule.reportLintForToken(node.name2);
+          rule.reportLintForToken(node.name);
         }
       }
     }

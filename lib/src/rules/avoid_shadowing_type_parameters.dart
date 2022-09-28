@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid shadowing type parameters.';
 
 const _details = r'''
-
 **AVOID** shadowing type parameters.
 
 **BAD:**
@@ -119,13 +118,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     var ancestorTypeParameterNames = ancestorTypeParameters.typeParameters
-        .map((tp) => tp.name2.lexeme)
+        .map((tp) => tp.name.lexeme)
         .toSet();
 
     for (var parameter in typeParameters.typeParameters) {
-      if (ancestorTypeParameterNames.contains(parameter.name2.lexeme)) {
+      if (ancestorTypeParameterNames.contains(parameter.name.lexeme)) {
         rule.reportLint(parameter,
-            arguments: [parameter.name2.lexeme, ancestorKind]);
+            arguments: [parameter.name.lexeme, ancestorKind]);
       }
     }
   }

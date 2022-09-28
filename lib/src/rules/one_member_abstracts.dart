@@ -11,7 +11,6 @@ const _desc =
     r'Avoid defining a one-member abstract class when a simple function will do.';
 
 const _details = r'''
-
 From the [style guide](https://dart.dev/guides/language/effective-dart/style/):
 
 **AVOID** defining a one-member abstract class when a simple function will do.
@@ -59,7 +58,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    var declaredElement = node.declaredElement2;
+    var declaredElement = node.declaredElement;
     if (declaredElement == null) {
       return;
     }
@@ -77,7 +76,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           member.isAbstract &&
           !member.isGetter &&
           !member.isSetter) {
-        rule.reportLintForToken(node.name2);
+        rule.reportLintForToken(node.name);
       }
     }
   }

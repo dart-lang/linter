@@ -12,7 +12,6 @@ import '../analyzer.dart';
 const _desc = r'Prefer declaring const constructors on `@immutable` classes.';
 
 const _details = r'''
-
 **PREFER** declaring const constructors on `@immutable` classes.
 
 If a class is immutable, it is usually a good idea to make its constructor a
@@ -74,7 +73,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    var element = node.declaredElement2;
+    var element = node.declaredElement;
     if (element == null) {
       return;
     }
@@ -93,7 +92,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _hasConstConstructorInvocation(ConstructorDeclaration node) {
-    var declaredElement = node.declaredElement2;
+    var declaredElement = node.declaredElement;
     if (declaredElement == null) {
       return false;
     }

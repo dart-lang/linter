@@ -11,7 +11,6 @@ const _desc =
     r'Prefer final for variable declarations if they are not reassigned.';
 
 const _details = r'''
-
 **DO** prefer declaring variables as final if they are not reassigned later in
 the code.
 
@@ -81,7 +80,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (variable.equals == null || variable.initializer == null) {
         return;
       }
-      var declaredElement = variable.declaredElement2;
+      var declaredElement = variable.declaredElement;
       if (declaredElement != null &&
           function.isPotentiallyMutatedInScope(declaredElement)) {
         return;

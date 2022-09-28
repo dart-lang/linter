@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid async functions that return void.';
 
 const _details = r'''
-
 **DO** mark async functions as returning Future<void>.
 
 When declaring an async method or function which does not return a value,
@@ -68,17 +67,17 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    if (_isAsync(node.declaredElement2) &&
+    if (_isAsync(node.declaredElement) &&
         _isVoid(node.returnType) &&
-        node.name2.lexeme != 'main') {
-      rule.reportLintForToken(node.name2);
+        node.name.lexeme != 'main') {
+      rule.reportLintForToken(node.name);
     }
   }
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (_isAsync(node.declaredElement2) && _isVoid(node.returnType)) {
-      rule.reportLintForToken(node.name2);
+    if (_isAsync(node.declaredElement) && _isVoid(node.returnType)) {
+      rule.reportLintForToken(node.name);
     }
   }
 

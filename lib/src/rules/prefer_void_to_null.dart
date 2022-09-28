@@ -13,8 +13,7 @@ const _desc =
     r"Don't use the Null type, unless you are positive that you don't want void.";
 
 const _details = r'''
-
-**DO NOT** use the type Null where void would work.
+**DON'T** use the type Null where void would work.
 
 **BAD:**
 ```dart
@@ -99,7 +98,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     // Make sure we're checking a return type.
     if (parent.returnType?.offset != node.offset) return false;
 
-    var member = getOverriddenMember(parent.declaredElement2);
+    var member = getOverriddenMember(parent.declaredElement);
     if (member == null) return false;
 
     var returnType = member.returnType;

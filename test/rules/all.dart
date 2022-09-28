@@ -33,6 +33,7 @@ import 'discarded_futures_test.dart' as discarded_futures;
 import 'file_names_test.dart' as file_names;
 import 'flutter_style_todos_test.dart' as flutter_style_todos;
 import 'hash_and_equals_test.dart' as hash_and_equals;
+import 'library_names_test.dart' as library_names;
 import 'library_private_types_in_public_api_test.dart'
     as library_private_types_in_public_api;
 import 'literal_only_boolean_expressions_test.dart'
@@ -62,6 +63,7 @@ import 'prefer_generic_function_type_aliases_test.dart'
     as prefer_generic_function_type_aliases;
 import 'prefer_spread_collections_test.dart' as prefer_spread_collections;
 import 'public_member_api_docs_test.dart' as public_member_api_docs;
+import 'recursive_getters_test.dart' as recursive_getters;
 import 'sort_constructors_first_test.dart' as sort_constructors_first;
 import 'sort_unnamed_constructors_first_test.dart'
     as sort_unnamed_constructors_first;
@@ -70,6 +72,8 @@ import 'tighten_type_of_initializing_formals_test.dart'
     as tighten_type_of_initializing_formals;
 import 'type_init_formals_test.dart' as type_init_formals;
 import 'unawaited_futures_test.dart' as unawaited_futures;
+import 'unnecessary_brace_in_string_interps_test.dart'
+    as unnecessary_brace_in_string_interps;
 import 'unnecessary_const_test.dart' as unnecessary_const;
 import 'unnecessary_null_checks_test.dart' as unnecessary_null_checks;
 import 'unnecessary_overrides_test.dart' as unnecessary_overrides;
@@ -78,6 +82,8 @@ import 'use_build_context_synchronously_test.dart'
 import 'use_enums_test.dart' as use_enums;
 import 'use_is_even_rather_than_modulo_test.dart'
     as use_is_even_rather_than_modulo;
+import 'use_late_for_private_fields_and_variables_test.dart'
+    as use_late_for_private_fields_and_variables;
 import 'use_super_parameters_test.dart' as use_super_parameters;
 import 'void_checks_test.dart' as void_checks;
 
@@ -103,6 +109,7 @@ void main() {
   file_names.main();
   flutter_style_todos.main();
   hash_and_equals.main();
+  library_names.main();
   library_private_types_in_public_api.main();
   literal_only_boolean_expressions.main();
   missing_whitespace_between_adjacent_strings.main();
@@ -123,18 +130,21 @@ void main() {
   prefer_generic_function_type_aliases.main();
   prefer_spread_collections.main();
   public_member_api_docs.main();
+  recursive_getters.main();
   sort_constructors_first.main();
   sort_unnamed_constructors_first.main();
   super_goes_last.main();
   tighten_type_of_initializing_formals.main();
   type_init_formals.main();
   unawaited_futures.main();
+  unnecessary_brace_in_string_interps.main();
   unnecessary_const.main();
   unnecessary_null_checks.main();
   unnecessary_overrides.main();
   use_build_context_synchronously.main();
   use_enums.main();
   use_is_even_rather_than_modulo.main();
+  use_late_for_private_fields_and_variables.main();
   use_super_parameters.main();
   void_checks.main();
 }

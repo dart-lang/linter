@@ -13,7 +13,6 @@ import '../utils.dart';
 const _desc = r'Name non-constant identifiers using lowerCamelCase.';
 
 const _details = r'''
-
 **DO** name non-constant identifiers using lowerCamelCase.
 
 Class members, top-level definitions, variables, parameters, named parameters
@@ -85,7 +84,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitConstructorDeclaration(ConstructorDeclaration node) {
     // For rationale on accepting underscores, see:
     // https://github.com/dart-lang/linter/issues/1854
-    checkIdentifier(node.name2, underscoresOk: true);
+    checkIdentifier(node.name, underscoresOk: true);
   }
 
   @override
@@ -104,13 +103,13 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    checkIdentifier(node.name2);
+    checkIdentifier(node.name);
   }
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isOperator) {
-      checkIdentifier(node.name2);
+      checkIdentifier(node.name);
     }
   }
 
@@ -140,7 +139,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
     if (!node.isConst) {
-      checkIdentifier(node.name2);
+      checkIdentifier(node.name);
     }
   }
 
@@ -148,7 +147,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitVariableDeclarationStatement(VariableDeclarationStatement node) {
     for (var variable in node.variables.variables) {
       if (!variable.isConst) {
-        checkIdentifier(variable.name2);
+        checkIdentifier(variable.name);
       }
     }
   }
