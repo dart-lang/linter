@@ -42,7 +42,7 @@ class A {
   @override
   operator ==(other) =&gt; other is A &amp;&amp; other.key == key;
   @override
-  int hashCode() =&gt; key.hashCode;
+  int get hashCode =&gt; key.hashCode;
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
@@ -52,7 +52,7 @@ class A {
   @override
   operator ==(other) =&gt; other is B &amp;&amp; other.key == key;
   @override
-  int hashCode() =&gt; key.hashCode;
+  int get hashCode =&gt; key.hashCode;
 }
 </code></pre>
 <p>NOTE: The lint checks the use of the @immutable annotation, and will trigger
@@ -62,9 +62,9 @@ even if the class is otherwise not mutable. Thus:</p>
   final String key;
   const C(this.key);
   @override
-  operator ==(other) =&gt; other is B &amp;&amp; other.key == key;
+  operator ==(other) =&gt; other is C &amp;&amp; other.key == key;
   @override
-  int hashCode() =&gt; key.hashCode;
+  int get hashCode =&gt; key.hashCode;
 }
 </code></pre>
 
