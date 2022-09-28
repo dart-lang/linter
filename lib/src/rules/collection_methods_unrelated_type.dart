@@ -10,10 +10,29 @@ const _desc = 'Invocation of various collection methods with arguments of '
 
 const _details = r'''
 
-**DON'T** invoke `contains` on `Iterable` with an instance of different type
-than the parameter type.
+**DON'T** invoke certain collection method with an argument with an unrelated
+type.
 
-Doing this will invoke `==` on its elements and most likely will return `false`.
+Doing this will invoke `==` on the collection's elements and most likely will
+return `false`.
+
+An argument passed to a collection method should relate to the collection type
+as follows:
+
+* an argument to `Iterable<E>.contains` should be related to `E`
+* an argument to `List<E>.remove` should be related to `E`
+* an argument to `Map<K, V>.containsKey` should be related to `K`
+* an argument to `Map<K, V>.containsValue` should be related to `V`
+* an argument to `Map<K, V>.remove` should be related to `K`
+* an argument to `Map<K, V>.[]` should be related to `K`
+* an argument to `Queue<E>.remove` should be related to `E`
+* an argument to `Set<E>.containsAll` should be related to `Iterable<E>`
+* an argument to `Set<E>.difference` should be related to `Set<E>`
+* an argument to `Set<E>.intersection` should be related to `Set<E>`
+* an argument to `Set<E>.lookup` should be related to `E`
+* an argument to `Set<E>.remove` should be related to `E`
+* an argument to `Set<E>.removeAll` should be related to `Iterable<E>`
+* an argument to `Set<E>.retainAll` should be related to `Iterable<E>`
 
 **BAD:**
 ```dart
@@ -25,101 +44,34 @@ void someFunction() {
 
 **BAD:**
 ```dart
-void someFunction3() {
-  List<int> list = <int>[];
-  if (list.contains('1')) print('someFunction3'); // LINT
-}
-```
-
-**BAD:**
-```dart
-void someFunction8() {
-  List<DerivedClass2> list = <DerivedClass2>[];
-  DerivedClass3 instance;
-  if (list.contains(instance)) print('someFunction8'); // LINT
-}
-```
-
-**BAD:**
-```dart
-abstract class SomeIterable<E> implements Iterable<E> {}
-
-abstract class MyClass implements SomeIterable<int> {
-  bool badMethod(String thing) => this.contains(thing); // LINT
+void someFunction() {
+  var set = <int>{};
+  set.removeAll({'1'}); // LINT
 }
 ```
 
 **GOOD:**
 ```dart
-void someFunction10() {
-  var list = [];
-  if (list.contains(1)) print('someFunction10'); // OK
-}
-```
-
-**GOOD:**
-```dart
-void someFunction1() {
+void someFunction() {
   var list = <int>[];
-  if (list.contains(1)) print('someFunction1'); // OK
+  if (list.contains(1)) print('someFunction'); // OK
 }
 ```
 
 **GOOD:**
 ```dart
-void someFunction4() {
-  List<int> list = <int>[];
-  if (list.contains(1)) print('someFunction4'); // OK
+void someFunction() {
+  var set = <int>{};
+  set.removeAll({1}); // OK
 }
-```
-
-**GOOD:**
-```dart
-void someFunction5() {
-  List<ClassBase> list = <ClassBase>[];
-  DerivedClass1 instance;
-  if (list.contains(instance)) print('someFunction5'); // OK
-}
-
-abstract class ClassBase {}
-
-class DerivedClass1 extends ClassBase {}
-```
-
-**GOOD:**
-```dart
-void someFunction6() {
-  List<Mixin> list = <Mixin>[];
-  DerivedClass2 instance;
-  if (list.contains(instance)) print('someFunction6'); // OK
-}
-
-abstract class ClassBase {}
-
-abstract class Mixin {}
-
-class DerivedClass2 extends ClassBase with Mixin {}
-```
-
-**GOOD:**
-```dart
-void someFunction7() {
-  List<Mixin> list = <Mixin>[];
-  DerivedClass3 instance;
-  if (list.contains(instance)) print('someFunction7'); // OK
-}
-
-abstract class ClassBase {}
-
-abstract class Mixin {}
-
-class DerivedClass3 extends ClassBase implements Mixin {}
 ```
 
 ''';
 
 class CollectionMethodsUnrelatedType extends LintRule {
-  static const LintCode code = LintCode('collection_methods_unrelated_type',
+  static const LintCode code = LintCode(
+      'collection_methods_unrelated_type',
+      // TODO
       "The type of the argument of 'Iterable<{0}>.contains' isn't a subtype of '{0}'.");
 
   CollectionMethodsUnrelatedType()
@@ -146,83 +98,89 @@ class _Visitor extends UnrelatedTypesProcessors {
   @override
   List<MethodDefinition> get methods => [
         // Argument to `Iterable<E>.contains` should be assignable to `E`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.iterableElement,
           'contains',
           ExpectedArgumentKind.assignableToCollectionTypeArgument,
         ),
         // Argument to `List<E>.remove` should be assignable to `E`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.listElement,
           'remove',
           ExpectedArgumentKind.assignableToCollectionTypeArgument,
         ),
         // Argument to `Map<K, V>.containsKey` should be assignable to `K`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.mapElement,
           'containsKey',
           ExpectedArgumentKind.assignableToCollectionTypeArgument,
         ),
         // Argument to `Map<K, V>.containsValue` should be assignable to `V`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.mapElement,
           'containsValue',
           ExpectedArgumentKind.assignableToCollectionTypeArgument,
           typeArgumentIndex: 1,
         ),
         // Argument to `Map<K, V>.remove` should be assignable to `K`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.mapElement,
           'remove',
           ExpectedArgumentKind.assignableToCollectionTypeArgument,
         ),
-        // TODO(srawlins): Queue? It's not in mock SDK or [TypeProvider].
         // Argument to `Queue<E>.remove` should be assignable to `E`.
-        /*MethodDefinition(
-          typeProvider.queueElement,
+        MethodDefinitionForName(
+          'dart.collection',
+          'Queue',
           'remove',
           ExpectedArgumentKind.assignableToCollectionTypeArgument,
-        ),*/
+        ),
         // Argument to `Set<E>.containsAll` should be assignable to `Set<E>`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.setElement,
           'containsAll',
-          ExpectedArgumentKind.assignableToCollection,
+          ExpectedArgumentKind.assignableToIterableOfTypeArgument,
         ),
         // Argument to `Set<E>.difference` should be assignable to `Set<E>`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.setElement,
           'difference',
           ExpectedArgumentKind.assignableToCollection,
         ),
         // Argument to `Set<E>.intersection` should be assignable to `Set<E>`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.setElement,
           'intersection',
           ExpectedArgumentKind.assignableToCollection,
         ),
         // Argument to `Set<E>.lookup` should be assignable to `E`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.setElement,
           'lookup',
           ExpectedArgumentKind.assignableToCollectionTypeArgument,
         ),
         // Argument to `Set<E>.remove` should be assignable to `E`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.setElement,
           'remove',
           ExpectedArgumentKind.assignableToCollectionTypeArgument,
         ),
         // Argument to `Set<E>.removeAll` should be assignable to `Set<E>`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.setElement,
           'removeAll',
-          ExpectedArgumentKind.assignableToCollectionTypeArgument,
+          ExpectedArgumentKind.assignableToIterableOfTypeArgument,
         ),
         // Argument to `Set<E>.retainAll` should be assignable to `Set<E>`.
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.setElement,
           'retainAll',
+          ExpectedArgumentKind.assignableToIterableOfTypeArgument,
+        ),
+        // Argument to `Map<K, V>.[]` should be assignable to `K`.
+        MethodDefinitionForElement(
+          typeProvider.mapElement,
+          '[]',
           ExpectedArgumentKind.assignableToCollectionTypeArgument,
         ),
       ];

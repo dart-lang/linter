@@ -144,7 +144,7 @@ class _Visitor extends UnrelatedTypesProcessors {
 
   @override
   List<MethodDefinition> get methods => [
-        MethodDefinition(
+        MethodDefinitionForElement(
           typeProvider.iterableElement,
           'contains',
           ExpectedArgumentKind.assignableToCollectionTypeArgument,

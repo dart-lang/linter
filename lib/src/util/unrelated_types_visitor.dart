@@ -7,7 +7,6 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_provider.dart';
-import 'package:collection/collection.dart' show IterableExtension;
 
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
@@ -34,8 +33,9 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
       return;
     }
 
-    var methodDefinition = _matchingMethod(node);
-    if (methodDefinition == null) {
+    var matchingMethods =
+        methods.where((method) => node.methodName.name == method.methodName);
+    if (matchingMethods.isEmpty) {
       return;
     }
 
@@ -46,51 +46,54 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
     // We've completed the "cheap" checks, and must now continue with the
     // arduous task of determining whether the method target implements
     // [definition].
-
-    DartType? targetType;
-    var target = node.realTarget;
-
-    if (target != null) {
-      targetType = target.staticType;
-    } else {
-      for (AstNode? parent = node; parent != null; parent = parent.parent) {
-        if (parent is ClassDeclaration) {
-          targetType = parent.declaredElement?.thisType;
-          break;
-        } else if (parent is MixinDeclaration) {
-          targetType = parent.declaredElement?.thisType;
-          break;
-        } else if (parent is EnumDeclaration) {
-          targetType = parent.declaredElement?.thisType;
-          break;
-        } else if (parent is ExtensionDeclaration) {
-          targetType = parent.extendedType.type;
-          break;
-        }
-        // TODO(srawlins): Extension? Enum?
-      }
-    }
-
+    var targetType = _getTargetType(node);
     if (targetType is! InterfaceType) {
       return;
     }
 
-    var collectionType = targetType.asInstanceOf(methodDefinition.element);
+    for (var methodDefinition in matchingMethods) {
+      var collectionType = methodDefinition.collectionTypeFor(targetType);
+      if (collectionType != null) {
+        _checkMethod(node, methodDefinition, collectionType);
+        return;
+      }
+    }
+  }
 
-    if (collectionType == null) {
-      return;
+  DartType? _getTargetType(MethodInvocation node) {
+    var target = node.realTarget;
+
+    if (target != null) {
+      return target.staticType;
     }
 
+    for (AstNode? parent = node; parent != null; parent = parent.parent) {
+      if (parent is ClassDeclaration) {
+        return parent.declaredElement?.thisType;
+      } else if (parent is MixinDeclaration) {
+        return parent.declaredElement?.thisType;
+      } else if (parent is EnumDeclaration) {
+        return parent.declaredElement?.thisType;
+      } else if (parent is ExtensionDeclaration) {
+        return parent.extendedType.type;
+      }
+    }
+    return null;
+  }
+
+  void _checkMethod(MethodInvocation node, MethodDefinition methodDefinition,
+      InterfaceType collectionType) {
     // Finally, determine whether the type of the argument is related to the
     // type of the method target.
-    var argumentType = node.argumentList.arguments.first.staticType;
+    var argument = node.argumentList.arguments.first;
+    var argumentType = argument.staticType;
 
     switch (methodDefinition.expectedArgumentKind) {
       case ExpectedArgumentKind.assignableToCollectionTypeArgument:
         var typeArgument =
             collectionType.typeArguments[methodDefinition.typeArgumentIndex];
         if (typesAreUnrelated(typeSystem, argumentType, typeArgument)) {
-          rule.reportLint(node, arguments: [
+          rule.reportLint(argument, arguments: [
             typeArgument.getDisplayString(withNullability: true)
           ]);
         }
@@ -98,24 +101,30 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
 
       case ExpectedArgumentKind.assignableToCollection:
         if (argumentType != null &&
-            typeSystem.isAssignableTo(argumentType, collectionType)) {
-          rule.reportLint(node, arguments: [
+            !typeSystem.isAssignableTo(argumentType, collectionType)) {
+          rule.reportLint(argument, arguments: [
+            collectionType.getDisplayString(withNullability: true)
+          ]);
+        }
+        break;
+
+      case ExpectedArgumentKind.assignableToIterableOfTypeArgument:
+        var iterableType =
+            collectionType.asInstanceOf(typeProvider.iterableElement);
+        if (argumentType != null &&
+            iterableType != null &&
+            !typeSystem.isAssignableTo(argumentType, iterableType)) {
+          rule.reportLint(argument, arguments: [
             collectionType.getDisplayString(withNullability: true)
           ]);
         }
     }
   }
-
-  MethodDefinition? _matchingMethod(MethodInvocation node) => methods
-      .firstWhereOrNull((method) => node.methodName.name == method.methodName);
 }
 
 /// A definition of a method and the expected characteristics of the first
 /// argument to any invocation.
-class MethodDefinition {
-  /// The element on which this method is declared.
-  final ClassElement element;
-
+abstract class MethodDefinition {
   final String methodName;
 
   /// The index of the type argument which the method argument should match.
@@ -123,12 +132,55 @@ class MethodDefinition {
 
   final ExpectedArgumentKind expectedArgumentKind;
 
-  const MethodDefinition(
-    this.element,
+  MethodDefinition(
     this.methodName,
     this.expectedArgumentKind, {
     this.typeArgumentIndex = 0,
   });
+
+  InterfaceType? collectionTypeFor(InterfaceType targetType);
+}
+
+class MethodDefinitionForElement extends MethodDefinition {
+  /// The element on which this method is declared.
+  final ClassElement element;
+
+  MethodDefinitionForElement(
+    this.element,
+    super.methodName,
+    super.expectedArgumentKind, {
+    super.typeArgumentIndex = 0,
+  });
+
+  @override
+  InterfaceType? collectionTypeFor(InterfaceType targetType) =>
+      targetType.asInstanceOf(element);
+}
+
+class MethodDefinitionForName extends MethodDefinition {
+  final String libraryName;
+
+  final String interfaceName;
+
+  MethodDefinitionForName(
+    this.libraryName,
+    this.interfaceName,
+    super.methodName,
+    super.expectedArgumentKind, {
+    super.typeArgumentIndex = 0,
+  });
+
+  @override
+  InterfaceType? collectionTypeFor(InterfaceType targetType) {
+    for (var supertype in [targetType, ...targetType.allSupertypes]) {
+      var element = supertype.element2;
+      if (element.name == interfaceName &&
+          element.library.name == libraryName) {
+        return targetType.asInstanceOf(element);
+      }
+    }
+    return null;
+  }
 }
 
 /// The kind of the expected argument.
@@ -139,4 +191,8 @@ enum ExpectedArgumentKind {
 
   /// An argument is expected to be assignable to the collection type.
   assignableToCollection,
+
+  /// An argument is expected to be assignable to `Iterable<E>` where `E` is the
+  /// (only) type argument on the collection type.
+  assignableToIterableOfTypeArgument,
 }
