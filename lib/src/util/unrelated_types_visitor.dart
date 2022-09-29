@@ -27,9 +27,12 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
   /// with.
   List<MethodDefinition> get methods;
 
+  List<MethodDefinition> get indexOperators => [];
+
   @override
   void visitIndexExpression(IndexExpression node) {
-    var matchingMethods = methods.where((method) => '[]' == method.methodName);
+    var matchingMethods =
+        indexOperators.where((method) => '[]' == method.methodName);
     if (matchingMethods.isEmpty) {
       return;
     }
@@ -87,7 +90,10 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
       return target.staticType;
     }
 
-    for (AstNode? parent = node; parent != null; parent = parent.parent) {
+    // Look for an implicit receiver, starting with [node]'s parent's parent.
+    for (AstNode? parent = node.parent?.parent;
+        parent != null;
+        parent = parent.parent) {
       if (parent is ClassDeclaration) {
         return parent.declaredElement?.thisType;
       } else if (parent is MixinDeclaration) {

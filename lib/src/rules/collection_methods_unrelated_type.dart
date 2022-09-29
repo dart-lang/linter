@@ -175,6 +175,10 @@ class _Visitor extends UnrelatedTypesProcessors {
           'retainAll',
           ExpectedArgumentKind.assignableToIterableOfTypeArgument,
         ),
+      ];
+
+  @override
+  List<MethodDefinition> get indexOperators => [
         // Argument to `Map<K, V>.[]` should be assignable to `K`.
         MethodDefinitionForElement(
           typeProvider.mapElement,
