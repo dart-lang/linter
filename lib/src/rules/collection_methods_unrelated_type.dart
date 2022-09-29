@@ -9,7 +9,6 @@ const _desc = 'Invocation of various collection methods with arguments of '
     'unrelated types.';
 
 const _details = r'''
-
 **DON'T** invoke certain collection method with an argument with an unrelated
 type.
 
