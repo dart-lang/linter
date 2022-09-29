@@ -119,7 +119,7 @@ class DerivedClass3 extends ClassBase implements Mixin {}
 
 class IterableContainsUnrelatedType extends LintRule {
   static const LintCode code = LintCode('iterable_contains_unrelated_type',
-      "The type of the argument of 'Iterable<{0}>.contains' isn't a subtype of '{0}'.");
+      "The argument type '{0}' isn't related to '{1}'.");
 
   IterableContainsUnrelatedType()
       : super(

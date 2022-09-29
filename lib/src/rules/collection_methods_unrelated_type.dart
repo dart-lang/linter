@@ -69,10 +69,8 @@ void someFunction() {
 ''';
 
 class CollectionMethodsUnrelatedType extends LintRule {
-  static const LintCode code = LintCode(
-      'collection_methods_unrelated_type',
-      // TODO
-      "The type of the argument of 'Iterable<{0}>.contains' isn't a subtype of '{0}'.");
+  static const LintCode code = LintCode('collection_methods_unrelated_type',
+      "The argument type '{0}' isn't related to '{1}'.");
 
   CollectionMethodsUnrelatedType()
       : super(
@@ -88,6 +86,7 @@ class CollectionMethodsUnrelatedType extends LintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this, context.typeSystem, context.typeProvider);
+    registry.addIndexExpression(this, visitor);
     registry.addMethodInvocation(this, visitor);
   }
 }

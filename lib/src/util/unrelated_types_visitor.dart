@@ -28,6 +28,27 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
   List<MethodDefinition> get methods;
 
   @override
+  void visitIndexExpression(IndexExpression node) {
+    var matchingMethods = methods.where((method) => '[]' == method.methodName);
+    if (matchingMethods.isEmpty) {
+      return;
+    }
+
+    var targetType = _getTargetType(node, node.realTarget);
+    if (targetType is! InterfaceType) {
+      return;
+    }
+
+    for (var methodDefinition in matchingMethods) {
+      var collectionType = methodDefinition.collectionTypeFor(targetType);
+      if (collectionType != null) {
+        _checkMethod(node.index, methodDefinition, collectionType);
+        return;
+      }
+    }
+  }
+
+  @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.argumentList.arguments.length != 1) {
       return;
@@ -46,7 +67,7 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
     // We've completed the "cheap" checks, and must now continue with the
     // arduous task of determining whether the method target implements
     // [definition].
-    var targetType = _getTargetType(node);
+    var targetType = _getTargetType(node, node.realTarget);
     if (targetType is! InterfaceType) {
       return;
     }
@@ -54,15 +75,14 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
     for (var methodDefinition in matchingMethods) {
       var collectionType = methodDefinition.collectionTypeFor(targetType);
       if (collectionType != null) {
-        _checkMethod(node, methodDefinition, collectionType);
+        _checkMethod(node.argumentList.arguments.first, methodDefinition,
+            collectionType);
         return;
       }
     }
   }
 
-  DartType? _getTargetType(MethodInvocation node) {
-    var target = node.realTarget;
-
+  DartType? _getTargetType(Expression node, Expression? target) {
     if (target != null) {
       return target.staticType;
     }
@@ -81,12 +101,15 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
     return null;
   }
 
-  void _checkMethod(MethodInvocation node, MethodDefinition methodDefinition,
+  /// Checks a [MethodInvocation] or [IndexExpression] which has a singular
+  /// [argument] and matches [methodDefinition], with a target with a static
+  /// type of [collectionType].
+  void _checkMethod(Expression argument, MethodDefinition methodDefinition,
       InterfaceType collectionType) {
     // Finally, determine whether the type of the argument is related to the
     // type of the method target.
-    var argument = node.argumentList.arguments.first;
     var argumentType = argument.staticType;
+    if (argumentType == null) return;
 
     switch (methodDefinition.expectedArgumentKind) {
       case ExpectedArgumentKind.assignableToCollectionTypeArgument:
@@ -94,16 +117,17 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
             collectionType.typeArguments[methodDefinition.typeArgumentIndex];
         if (typesAreUnrelated(typeSystem, argumentType, typeArgument)) {
           rule.reportLint(argument, arguments: [
-            typeArgument.getDisplayString(withNullability: true)
+            argumentType.getDisplayString(withNullability: true),
+            typeArgument.getDisplayString(withNullability: true),
           ]);
         }
         break;
 
       case ExpectedArgumentKind.assignableToCollection:
-        if (argumentType != null &&
-            !typeSystem.isAssignableTo(argumentType, collectionType)) {
+        if (!typeSystem.isAssignableTo(argumentType, collectionType)) {
           rule.reportLint(argument, arguments: [
-            collectionType.getDisplayString(withNullability: true)
+            argumentType.getDisplayString(withNullability: true),
+            collectionType.getDisplayString(withNullability: true),
           ]);
         }
         break;
@@ -111,11 +135,11 @@ abstract class UnrelatedTypesProcessors extends SimpleAstVisitor<void> {
       case ExpectedArgumentKind.assignableToIterableOfTypeArgument:
         var iterableType =
             collectionType.asInstanceOf(typeProvider.iterableElement);
-        if (argumentType != null &&
-            iterableType != null &&
+        if (iterableType != null &&
             !typeSystem.isAssignableTo(argumentType, iterableType)) {
           rule.reportLint(argument, arguments: [
-            collectionType.getDisplayString(withNullability: true)
+            argumentType.getDisplayString(withNullability: true),
+            iterableType.getDisplayString(withNullability: true),
           ]);
         }
     }

@@ -109,41 +109,32 @@ abstract class C implements List<num> {
   }
 
   test_contains_unrelated_implicitTarget() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnostics('''
 abstract class C implements List<num> {
   void f() {
     contains('1');
   }
 }
-''',
-      [lint(66, 3)],
-    );
+''', [lint(66, 3)]);
   }
 
   test_contains_unrelated_subclassOfList() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnostics('''
 abstract class C implements List<num> {}
 void f(C c) {
   c.contains('1');
 }
-''',
-      [lint(68, 3)],
-    );
+''', [lint(68, 3)]);
   }
 
   test_contains_unrelated_thisTarget() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnostics('''
 abstract class C implements List<num> {
   void f() {
     this.contains('1');
   }
 }
-''',
-      [lint(71, 3)],
-    );
+''', [lint(71, 3)]);
   }
 }
 
@@ -180,17 +171,6 @@ class CollectionMethodsUnrelatedTypeMapTest extends LintRuleTest {
     );
   }
 
-  test_index_related_subtype() async {
-    await assertNoDiagnostics('var x = <num, String>{}[1];');
-  }
-
-  test_index_unrelated() async {
-    await assertDiagnostics(
-      '''var x = <num, String>{}['1'];''',
-      [lint(36, 3)],
-    );
-  }
-
   test_containsValue_related_subtype() async {
     await assertNoDiagnostics('var x = <String, num>{}.containsValue(1);');
   }
@@ -199,6 +179,17 @@ class CollectionMethodsUnrelatedTypeMapTest extends LintRuleTest {
     await assertDiagnostics(
       '''var x = <String, num>{}.containsValue('1');''',
       [lint(38, 3)],
+    );
+  }
+
+  test_index_related_subtype() async {
+    await assertNoDiagnostics('var x = <num, String>{}[1];');
+  }
+
+  test_index_unrelated() async {
+    await assertDiagnostics(
+      '''var x = <num, String>{}['1'];''',
+      [lint(24, 3)],
     );
   }
 
@@ -229,15 +220,12 @@ void f(Queue<num> queue) {
   }
 
   test_remove_unrelated() async {
-    await assertDiagnostics(
-      '''
+    await assertDiagnostics('''
 import 'dart:collection';
 void f(Queue<num> queue) {
   queue.remove('1');
 }
-''',
-      [lint(68, 3)],
-    );
+''', [lint(68, 3)]);
   }
 }
 
@@ -247,36 +235,53 @@ class CollectionMethodsUnrelatedTypeSetTest extends LintRuleTest {
   String get lintRule => 'collection_methods_unrelated_type';
 
   test_containsAll_related_subtype() async {
-    await assertNoDiagnostics('var x = <num>{}.containsAll(<int>{1});');
+    await assertNoDiagnostics('''
+void f(Set<num> set, Set<int> other) {
+  set.containsAll(other);
+}
+''');
   }
 
   test_containsAll_unrelated() async {
-    await assertDiagnostics(
-      '''var x = <num>{}.containsAll({'1'});''',
-      [lint(28, 5)],
-    );
+    await assertDiagnostics('''
+void f(Set<num> set, Set<String> other) {
+  set.containsAll(other);
+}
+''', [lint(60, 5)]);
   }
 
   test_difference_related_subtype() async {
-    await assertNoDiagnostics('var x = <num>{}.difference(<int>{1});');
+    await assertNoDiagnostics(
+      '''
+void f(Set<num> set, Set<int> other) {
+  set.difference(other);
+}
+''',
+    );
   }
 
   test_difference_unrelated() async {
-    await assertDiagnostics(
-      '''var x = <num>{}.difference({'1'});''',
-      [lint(27, 5)],
-    );
+    await assertDiagnostics('''
+void f(Set<num> set, Set<String> other) {
+  set.difference(other);
+}
+''', [lint(59, 5)]);
   }
 
   test_intersection_related_subtype() async {
-    await assertNoDiagnostics('var x = <num>{}.intersection(<int>{1});');
+    await assertNoDiagnostics('''
+void f(Set<num> set, Set<int> other) {
+  set.intersection(other);
+}
+''');
   }
 
   test_intersection_unrelated() async {
-    await assertDiagnostics(
-      '''var x = <num>{}.intersection({'1'});''',
-      [lint(29, 5)],
-    );
+    await assertDiagnostics('''
+void f(Set<num> set, Set<String> other) {
+  set.intersection(other);
+}
+''', [lint(61, 5)]);
   }
 
   test_lookup_related_subtype() async {
@@ -302,24 +307,34 @@ class CollectionMethodsUnrelatedTypeSetTest extends LintRuleTest {
   }
 
   test_removeAll_related_subtype() async {
-    await assertNoDiagnostics('var x = <num>{}.removeAll(<int>[1]);');
+    await assertNoDiagnostics('''
+void f(Set<num> set, List<int> other) {
+  set.removeAll(other);
+}
+''');
   }
 
   test_removeAll_unrelated() async {
-    await assertDiagnostics(
-      '''var x = <num>{}.removeAll(<String>['1']);''',
-      [lint(26, 13)],
-    );
+    await assertDiagnostics('''
+void f(Set<num> set, List<String> other) {
+  set.removeAll(other);
+}
+''', [lint(59, 5)]);
   }
 
   test_retainAll_related_subtype() async {
-    await assertNoDiagnostics('var x = <num>{}.retainAll(<int>[1]);');
+    await assertNoDiagnostics('''
+void f(Set<num> set, List<int> other) {
+  set.retainAll(other);
+}
+''');
   }
 
   test_retainAll_unrelated() async {
-    await assertDiagnostics(
-      '''var x = <num>{}.retainAll(<String>['1']);''',
-      [lint(26, 13)],
-    );
+    await assertDiagnostics('''
+void f(Set<num> set, List<String> other) {
+  set.retainAll(other);
+}
+''', [lint(59, 5)]);
   }
 }

@@ -119,7 +119,7 @@ class DerivedClass3 extends ClassBase implements Mixin {}
 
 class ListRemoveUnrelatedType extends LintRule {
   static const LintCode code = LintCode('list_remove_unrelated_type',
-      "The type of the argument of 'List<{0}>.remove' isn't a subtype of '{0}'.");
+      "The argument type '{0}' isn't related to '{1}'.");
 
   ListRemoveUnrelatedType()
       : super(
