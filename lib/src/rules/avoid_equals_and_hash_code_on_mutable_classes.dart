@@ -71,16 +71,16 @@ String _metaLibName = 'meta';
 
 bool _isImmutable(Element? element) =>
     element is PropertyAccessorElement &&
-        element.name == _immutableVarName &&
-        element.library.name == _metaLibName;
+    element.name == _immutableVarName &&
+    element.library.name == _metaLibName;
 
 class AvoidOperatorEqualsOnMutableClasses extends LintRule {
   AvoidOperatorEqualsOnMutableClasses()
       : super(
-      name: 'avoid_equals_and_hash_code_on_mutable_classes',
-      description: _desc,
-      details: _details,
-      group: Group.style);
+            name: 'avoid_equals_and_hash_code_on_mutable_classes',
+            description: _desc,
+            details: _details,
+            group: Group.style);
 
   @override
   void registerNodeProcessors(
@@ -107,7 +107,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   ClassElement? _getClassForMethod(MethodDeclaration node) =>
       // todo (pq): should this be ClassOrMixinDeclaration ?
-  node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
+      node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
 
   bool _hasImmutableAnnotation(ClassElement clazz) {
     var inheritedAndSelfElements = <InterfaceElement>[
