@@ -42,7 +42,19 @@ class A {
   @override
   operator ==(other) => other is A && other.key == key;
   @override
-  int hashCode() => key.hashCode;
+  int get hashCode => key.hashCode;
+}
+```
+
+**BAD:**
+```dart
+class B {
+  String key;
+  const B(this.key);
+  @override
+  operator ==(other) => other is B && other.key == key;
+  @override
+  int get hashCode => key.hashCode;
 }
 ```
 
@@ -55,9 +67,9 @@ class C {
   final String key;
   const C(this.key);
   @override
-  operator ==(other) => other is B && other.key == key;
+  operator ==(other) => other is C && other.key == key;
   @override
-  int hashCode() => key.hashCode;
+  int get hashCode => key.hashCode;
 }
 ```
 
@@ -97,7 +109,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (node.name2.type == TokenType.EQ_EQ || isHashCode(node)) {
+    if (node.name.type == TokenType.EQ_EQ || isHashCode(node)) {
       var classElement = _getClassForMethod(node);
       if (classElement != null && !_hasImmutableAnnotation(classElement)) {
         rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);
@@ -107,7 +119,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   ClassElement? _getClassForMethod(MethodDeclaration node) =>
       // todo (pq): should this be ClassOrMixinDeclaration ?
-      node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement2;
+      node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
 
   bool _hasImmutableAnnotation(ClassElement clazz) {
     var inheritedAndSelfElements = <InterfaceElement>[
