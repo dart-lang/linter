@@ -116,7 +116,7 @@ class _PreferForEachVisitor extends SimpleAstVisitor {
   }
 }
 
-class _ReferenceFinder extends GeneralizingAstVisitor {
+class _ReferenceFinder extends UnifyingAstVisitor {
   bool found = false;
   final LocalVariableElement? element;
   _ReferenceFinder(this.element);
