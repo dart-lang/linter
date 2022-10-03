@@ -8,7 +8,7 @@
 import 'package:flutter/widgets.dart';
 
 class MyState extends State {
-  int field;
+  int field = 0;
 }
 
 class MyStatefulOK extends StatefulWidget {
@@ -24,7 +24,7 @@ class MyStatefulOK2 extends StatefulWidget {
 }
 
 
-MyState global;
+MyState global = MyState();
 
 class MyStatefulBad extends StatefulWidget {
   @override
@@ -64,4 +64,9 @@ class MyState2 extends State {
 class MyStatefulBad5 extends StatefulWidget {
   @override
   MyState2 createState() => MyState2(1); // LINT
+}
+
+abstract class MyAbstractStateful extends StatefulWidget {
+  @override
+  MyState createState(); // OK
 }

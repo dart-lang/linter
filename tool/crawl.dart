@@ -17,42 +17,28 @@ import 'package:yaml/yaml.dart';
 /// todo (pq): reign in the nullable types
 
 const _allPathSuffix = '/example/all.yaml';
-final _effectiveDartOptionsRootUrl = Uri.https(
-    'raw.githubusercontent.com', '/tenhobi/effective_dart/master/lib/');
-final _effectiveDartOptionsUrl =
-    _effectiveDartOptionsRootUrl.resolve('analysis_options.yaml');
-
-final _flutterOptionsUrl = Uri.https('raw.githubusercontent.com',
-    '/flutter/packages/master/packages/flutter_lints/lib/flutter.yaml');
-final _flutterRepoOptionsUrl = Uri.https('raw.githubusercontent.com',
-    '/flutter/flutter/master/analysis_options.yaml');
-final _repoPathPrefix =
-    Uri.https('raw.githubusercontent.com', '/dart-lang/linter/');
-final _rulePathPrefix =
-    Uri.https('raw.githubusercontent.com', '/dart-lang/linter/');
-final _stagehandOptionsUrl = Uri.https('raw.githubusercontent.com',
-    '/dart-lang/stagehand/master/templates/analysis_options.yaml');
 
 /// We don't care about SDKs previous to this bottom.
 final Version bottomDartSdk = Version(2, 0, 0);
-
 Map<String, String?> _dartSdkToLinterMap = <String, String?>{};
 
-List<String>? _effectiveDartRules;
-List<String>? _flutterRepoRules;
-List<String>? _flutterRules;
-int? _latestMinor;
+final _flutterOptionsUrl = Uri.https('raw.githubusercontent.com',
+    '/flutter/packages/main/packages/flutter_lints/lib/flutter.yaml');
+final _flutterRepoOptionsUrl = Uri.https(
+    'raw.githubusercontent.com', '/flutter/flutter/main/analysis_options.yaml');
 
+List<String>? _flutterRepoRules;
+
+List<String>? _flutterRules;
+
+int? _latestMinor;
 Iterable<LintRule>? _registeredLints;
+final _repoPathPrefix =
+    Uri.https('raw.githubusercontent.com', '/dart-lang/linter/');
 
 List<String>? _sdkTags;
 
 Map<String, List<String?>> _sinceMap = <String, List<String>>{};
-
-List<String>? _stagehandRules;
-
-Future<List<String>> get effectiveDartRules async =>
-    _effectiveDartRules ??= await _fetchEffectiveDartRules();
 
 Future<List<String>> get flutterRepoRules async =>
     _flutterRepoRules ??= await score_utils.fetchRules(_flutterRepoOptionsUrl);
@@ -73,14 +59,9 @@ Iterable<LintRule> get registeredLints {
   return _registeredLints!;
 }
 
-Future<List<String>> get sdkTags async => _sdkTags ??= await _fetchSdkTags();
-
-Future<List<String>> get stagehandRules async =>
-    _stagehandRules ??= await score_utils.fetchRules(_stagehandOptionsUrl);
-
-Future<String?> dartSdkForLinter(String version) async {
+Future<String?> dartSdkForLinter(String version, Authentication? auth) async {
   var sdkVersions = <String>[];
-  var sdks = await sdkTags;
+  var sdks = await getSdkTags(auth);
   for (var sdk in sdks) {
     var linterVersion = await linterForDartSdk(sdk);
     if (linterVersion == version) {
@@ -95,57 +76,34 @@ Future<String?> dartSdkForLinter(String version) async {
 Future<List<String>> fetchRulesForVersion(String version) async =>
     score_utils.fetchRules(_repoPathPrefix.resolve('$version$_allPathSuffix'));
 
-Future<String?> findSinceDartSdk(String linterVersion) async =>
-    await dartSdkForLinter(linterVersion);
+Future<String?> findSinceDartSdk(String linterVersion,
+        {Authentication? auth}) async =>
+    await dartSdkForLinter(linterVersion, auth);
 
-Future<String?> findSinceLinter(String lint) async {
-  // History recorded in `all.yaml` starts in minor 31.
-  var rules_31 = await rulesForVersion(31);
-  if (rules_31 != null) {
-    if (rules_31.contains(lint)) {
-      var version = await _crawlForVersion(lint);
-      if (version != null) {
-        return version;
-      }
-    }
-  }
-
+Future<String?> findSinceLinter(String lint, {Authentication? auth}) async {
   var latest = await latestMinor;
-  for (var minor = 31; minor <= latest; ++minor) {
+  for (var minor = 0; minor <= latest; ++minor) {
     var rules = await rulesForVersion(minor);
     if (rules != null) {
       if (rules.contains(lint)) {
-        return '0.1.$minor';
+        return '1.$minor';
       }
     }
   }
 
   return null;
 }
+
+Future<List<String>> getSdkTags(Authentication? auth) async =>
+    _sdkTags ??= await _fetchSdkTags(auth);
 
 Future<String?> linterForDartSdk(String sdk) async =>
     _dartSdkToLinterMap[sdk] ??= await _fetchLinterForVersion(sdk);
 
 Future<List<String?>?> rulesForVersion(int minor) async {
-  var version = '0.1.$minor';
-  if (minor >= 31) {
-    var rules = await fetchRulesForVersion(version);
-    return _sinceMap[version] ??= rules;
-  }
-  return null;
-}
-
-Future<String?> _crawlForVersion(String lint) async {
-  var client = http.Client();
-  for (var minor = 1; minor < 31; ++minor) {
-    var version = '0.1.$minor';
-    var req = await client
-        .get(_rulePathPrefix.resolve('$version/lib/src/rules/$lint.dart'));
-    if (req.statusCode == 200) {
-      return version;
-    }
-  }
-  return null;
+  var version = '1.$minor.0';
+  var rules = await fetchRulesForVersion(version);
+  return _sinceMap[version] ??= rules;
 }
 
 Future<String> _fetchDEPSforVersion(String version) async {
@@ -154,15 +112,6 @@ Future<String> _fetchDEPSforVersion(String version) async {
   var req = await client.get(
       Uri.https('raw.githubusercontent.com', '/dart-lang/sdk/$version/DEPS'));
   return req.body;
-}
-
-Future<List<String>> _fetchEffectiveDartRules() async {
-  var client = http.Client();
-  var req = await client.get(_effectiveDartOptionsUrl);
-  var includedOptions =
-      req.body.split('include: package:effective_dart/')[1].trim();
-  return score_utils
-      .fetchRules(_effectiveDartOptionsRootUrl.resolve(includedOptions));
 }
 
 Future<String?> _fetchLinterForVersion(String version) async {
@@ -180,11 +129,12 @@ Future<String?> _fetchLinterForVersion(String version) async {
   return null;
 }
 
-Future<List<String>> _fetchSdkTags() async {
-  var github = GitHub();
+Future<List<String>> _fetchSdkTags(Authentication? auth) async {
+  var github = GitHub(auth: auth);
   var slug = RepositorySlug('dart-lang', 'sdk');
 
   print('list repository tags: $slug');
+  print('authentication:  ${auth != null ? "(token)" : "(anonymous)"}');
 
   var tags = await github.repositories
       .listTags(slug)
@@ -216,12 +166,7 @@ Future<List<String>> _fetchSdkTags() async {
 Future<int> _readLatestMinorVersion() async {
   var contents = await File('pubspec.yaml').readAsString();
   var pubspec = loadYamlNode(contents) as YamlMap;
-  // 0.1.79 or 0.1.79-dev or 0.1.97+1
-  return int.parse((pubspec['version'] as String)
-      .split('.')
-      .last
-      .split('-')
-      .first
-      .split('+')
-      .first);
+  var version = pubspec['version'] as String;
+  // 1.15.0
+  return int.parse(version.split('.')[1]);
 }

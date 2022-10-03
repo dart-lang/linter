@@ -12,7 +12,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid returning null for Future.';
 
 const _details = r'''
-
 **AVOID** returning null for Future.
 
 It is almost always wrong to return `null` for a `Future`.  Most of the time the
@@ -20,7 +19,7 @@ developer simply forgot to put an `async` keyword on the function.
 
 ''';
 
-class AvoidReturningNullForFuture extends LintRule implements NodeLintRule {
+class AvoidReturningNullForFuture extends LintRule {
   AvoidReturningNullForFuture()
       : super(
             name: 'avoid_returning_null_for_future',

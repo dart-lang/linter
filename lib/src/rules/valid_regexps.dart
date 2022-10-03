@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Use valid regular expression syntax.';
 
 const _details = r'''
-
 **DO** use valid regular expression syntax when creating regular expression
 instances.
 
@@ -29,13 +28,20 @@ print(RegExp(r'\(').hasMatch('foo()'));
 
 ''';
 
-class ValidRegExps extends LintRule implements NodeLintRule {
+class ValidRegExps extends LintRule {
+  static const LintCode code = LintCode(
+      'valid_regexps', 'Invalid regular expression syntax.',
+      correctionMessage: 'Try correcting the regular expression.');
+
   ValidRegExps()
       : super(
             name: 'valid_regexps',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -52,19 +58,26 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    var element = node.constructorName.staticElement?.enclosingElement;
+    var element = node.constructorName.staticElement?.enclosingElement3;
     if (element?.name == 'RegExp' && element?.library.name == 'dart.core') {
       var args = node.argumentList.arguments;
       if (args.isEmpty) {
         return;
       }
 
+      bool isTrue(Expression e) => e is BooleanLiteral && e.value;
+
+      var unicode = args.any((arg) =>
+          arg is NamedExpression &&
+          arg.name.label.name == 'unicode' &&
+          isTrue(arg.expression));
+
       var sourceExpression = args.first;
       if (sourceExpression is StringLiteral) {
         var source = sourceExpression.stringValue;
         if (source != null) {
           try {
-            RegExp(source);
+            RegExp(source, unicode: unicode);
           } on FormatException {
             rule.reportLint(sourceExpression);
           }

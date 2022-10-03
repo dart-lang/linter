@@ -4,14 +4,14 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 
 import '../analyzer.dart';
 
 const _desc = r'Unnecessary string interpolation.';
 
 const _details = r'''
-
-Don't use string interpolation if there's only a string expression in it.
+**DON'T** use string interpolation if there's only a string expression in it.
 
 **BAD:**
 ```dart
@@ -27,7 +27,7 @@ String o = message;
 
 ''';
 
-class UnnecessaryStringInterpolations extends LintRule implements NodeLintRule {
+class UnnecessaryStringInterpolations extends LintRule {
   UnnecessaryStringInterpolations()
       : super(
             name: 'unnecessary_string_interpolations',
@@ -52,12 +52,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitStringInterpolation(StringInterpolation node) {
     if (node.parent is AdjacentStrings) return;
     if (node.elements.length == 3) {
-      var start = node.elements[0] as InterpolationString;
+      var start = node.elements.first as InterpolationString;
       var interpolation = node.elements[1] as InterpolationExpression;
       var end = node.elements[2] as InterpolationString;
       if (start.value.isEmpty && end.value.isEmpty) {
         var staticType = interpolation.expression.staticType;
-        if (staticType != null && staticType.isDartCoreString) {
+        if (staticType != null &&
+            staticType.isDartCoreString &&
+            staticType.nullabilitySuffix != NullabilitySuffix.question) {
           rule.reportLint(node);
         }
       }

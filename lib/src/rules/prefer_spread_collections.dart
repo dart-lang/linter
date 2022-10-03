@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Use spread collections when possible.';
 
 const _details = r'''
-
 Use spread collections when possible.
 
 Collection literals are excellent when you want to create a new collection out 
@@ -69,7 +68,7 @@ var l = ['a', ...?things];
 ```
 ''';
 
-class PreferSpreadCollections extends LintRule implements NodeLintRule {
+class PreferSpreadCollections extends LintRule {
   PreferSpreadCollections()
       : super(
             name: 'prefer_spread_collections',
@@ -104,11 +103,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     // todo (pq): add support for Set literals.
     if (target is! ListLiteral ||
         (target is ListLiteralImpl && target.inConstantContext) ||
-        (sections != null && sections[0] != invocation)) {
+        (sections != null && sections.first != invocation)) {
       return;
     }
 
-    var argument = invocation.argumentList.arguments[0];
+    var argument = invocation.argumentList.arguments.first;
     if (argument is ListLiteral) {
       // Handled by: prefer_inlined_adds
       return;

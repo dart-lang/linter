@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid using `as`.';
 
 const _details = r'''
-
 **AVOID** using `as`.
 
 If you know the type is correct, use an assertion or assign to a more
@@ -52,7 +51,7 @@ HasScrollDirection scrollable = renderObject as dynamic;
 The rule will be removed in a future Linter release.
 ''';
 
-class AvoidAs extends LintRule implements NodeLintRule {
+class AvoidAs extends LintRule {
   AvoidAs()
       : super(
           name: 'avoid_as',

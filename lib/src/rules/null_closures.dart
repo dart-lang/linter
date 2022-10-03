@@ -6,16 +6,14 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/src/generated/utilities_general.dart'; // ignore: implementation_imports
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Do not pass `null` as an argument where a closure is expected.';
 
 const _details = r'''
-
-**DO NOT** pass null as an argument where a closure is expected.
+**DON'T** pass `null` as an argument where a closure is expected.
 
 Often a closure that is passed to a method will only be called conditionally,
 so that tests and "happy path" production calls do not reveal that `null` will
@@ -185,7 +183,7 @@ List<NonNullableFunction> _staticFunctionsWithNonNullableArguments =
 
 /// Function with closure parameters that cannot accept null arguments.
 class NonNullableFunction {
-  final String? library;
+  final String library;
   final String? type;
   final String? name;
   final List<int> positional;
@@ -196,7 +194,7 @@ class NonNullableFunction {
 
   @override
   int get hashCode =>
-      JenkinsSmiHash.hash3(library.hashCode, type.hashCode, name.hashCode);
+      Object.hash(library.hashCode, type.hashCode, name.hashCode);
 
   /// Two [NonNullableFunction] objects are equal if their [library], [type],
   /// and [name] are equal, for the purpose of discovering whether a function
@@ -206,7 +204,7 @@ class NonNullableFunction {
       other is NonNullableFunction && other.hashCode == hashCode;
 }
 
-class NullClosures extends LintRule implements NodeLintRule {
+class NullClosures extends LintRule {
   NullClosures()
       : super(
             name: 'null_closures',
@@ -234,8 +232,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var type = node.staticType;
     for (var constructor in _constructorsWithNonNullableArguments) {
       if (constructorName.name?.name == constructor.name) {
-        if (DartTypeUtilities.extendsClass(
-            type, constructor.type, constructor.library)) {
+        if (type.extendsClass(constructor.type, constructor.library)) {
           _checkNullArgForClosure(
               node.argumentList, constructor.positional, constructor.named);
         }
@@ -299,22 +296,23 @@ class _Visitor extends SimpleAstVisitor<void> {
       return null;
     }
 
-    NonNullableFunction? getMethod(String? library, String? className) =>
+    NonNullableFunction? getMethod(String library, String className) =>
         possibleMethods
             .lookup(NonNullableFunction(library, className, methodName));
 
-    var method = getMethod(type.element.library.name, type.element.name);
+    var element = type.element2;
+    if (element.isSynthetic) {
+      return null;
+    }
+
+    var method = getMethod(element.library.name, element.name);
     if (method != null) {
       return method;
     }
 
-    var element = type.element;
-    if (element.isSynthetic) {
-      return null;
-    }
     for (var supertype in element.allSupertypes) {
-      method =
-          getMethod(supertype.element.library.name, supertype.element.name);
+      var superElement = supertype.element2;
+      method = getMethod(superElement.library.name, superElement.name);
       if (method != null) {
         return method;
       }

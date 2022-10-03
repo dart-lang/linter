@@ -12,7 +12,6 @@ import '../ast.dart';
 const _desc = r"Don't access members with `this` unless avoiding shadowing.";
 
 const _details = r'''
-
 From the [style guide](https://dart.dev/guides/language/effective-dart/style/):
 
 **DON'T** use `this` when not needed to avoid shadowing.
@@ -49,7 +48,7 @@ class Box {
 
 ''';
 
-class UnnecessaryThis extends LintRule implements NodeLintRule {
+class UnnecessaryThis extends LintRule {
   UnnecessaryThis()
       : super(
             name: 'unnecessary_this',
@@ -125,7 +124,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     //  - prevents us from going up to the library scope;
     //  - the requested element must be inherited, or from an extension.
     if (result.isDifferentName) {
-      var enclosing = result.element?.enclosingElement;
+      var enclosing = result.element?.enclosingElement3;
       return enclosing is ClassElement;
     }
 

@@ -12,7 +12,6 @@ const _desc =
     r'Use `lowercase_with_underscores` when specifying a library prefix.';
 
 const _details = r'''
-
 **DO** use `lowercase_with_underscores` when specifying a library prefix.
 
 **GOOD:**
@@ -33,7 +32,7 @@ import 'package:javascript_utils/javascript_utils.dart' as jsUtils;
 
 ''';
 
-class LibraryPrefixes extends LintRule implements NodeLintRule {
+class LibraryPrefixes extends LintRule {
   LibraryPrefixes()
       : super(
             name: 'library_prefixes',

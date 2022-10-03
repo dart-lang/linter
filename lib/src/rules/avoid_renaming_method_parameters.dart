@@ -13,12 +13,13 @@ import '../ast.dart';
 
 const _desc = r"Don't rename parameters of overridden methods.";
 
-const _details = r'''**DON'T** rename parameters of overridden methods.
+const _details = r'''
+**DON'T** rename parameters of overridden methods.
 
 Methods that override another method, but do not have their own documentation
-comment, will inherit the overridden method's comment when dartdoc produces
+comment, will inherit the overridden method's comment when `dart doc` produces
 documentation. If the inherited method contains the name of the parameter (in
-square brackets), then dartdoc cannot link it correctly.
+square brackets), then `dart doc` cannot link it correctly.
 
 **BAD:**
 ```dart
@@ -44,7 +45,7 @@ abstract class B extends A {
 
 ''';
 
-class AvoidRenamingMethodParameters extends LintRule implements NodeLintRule {
+class AvoidRenamingMethodParameters extends LintRule {
   AvoidRenamingMethodParameters()
       : super(
             name: 'avoid_renaming_method_parameters',
@@ -59,16 +60,21 @@ class AvoidRenamingMethodParameters extends LintRule implements NodeLintRule {
       return;
     }
 
-    var visitor = _Visitor(this, context);
+    var visitor = _Visitor(this);
     registry.addMethodDeclaration(this, visitor);
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  final LintRule rule;
-  final LinterContext context;
+  static const LintCode parameterCode = LintCode(
+      "avoid_renaming_method_parameters", // ignore: prefer_single_quotes
+      "The parameter '{0}' should have the name '{1}' to match the name used in the overridden method.",
+      correctionMessage:
+          "Try renaming the parameter."); // ignore: prefer_single_quotes
 
-  _Visitor(this.rule, this.context);
+  final LintRule rule;
+
+  _Visitor(this.rule);
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
@@ -81,7 +87,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
     var parentElement = parentNode.declaredElement;
     // Note: there are no override semantics with extension methods.
-    if (parentElement is! ClassElement) {
+    if (parentElement is! InterfaceElement) {
       return;
     }
 
@@ -90,7 +96,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (classElement.isPrivate) return;
 
     var parentMethod = classElement.lookUpInheritedMethod(
-        node.name.name, classElement.library);
+        node.name.lexeme, classElement.library);
 
     if (parentMethod == null) return;
 
@@ -105,10 +111,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     var count = math.min(parameters.length, parentParameters.length);
     for (var i = 0; i < count; i++) {
       if (parentParameters.length <= i) break;
-      var paramIdentifier = parameters[i].identifier;
+      var paramIdentifier = parameters[i].name;
       if (paramIdentifier != null &&
-          paramIdentifier.name != parentParameters[i].name) {
-        rule.reportLint(parameters[i].identifier);
+          paramIdentifier.lexeme != parentParameters[i].name) {
+        rule.reportLintForToken(paramIdentifier,
+            arguments: [paramIdentifier.lexeme, parentParameters[i].name],
+            errorCode: parameterCode);
       }
     }
   }

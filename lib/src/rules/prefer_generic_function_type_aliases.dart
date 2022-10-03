@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Prefer generic function type aliases.';
 
 const _details = r'''
-
 **PREFER** generic function type aliases.
 
 With the introduction of generic functions, function type aliases
@@ -33,8 +32,7 @@ typedef F = void Function();
 
 ''';
 
-class PreferGenericFunctionTypeAliases extends LintRule
-    implements NodeLintRule {
+class PreferGenericFunctionTypeAliases extends LintRule {
   PreferGenericFunctionTypeAliases()
       : super(
             name: 'prefer_generic_function_type_aliases',
@@ -57,6 +55,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
-    rule.reportLint(node.name);
+    //https://github.com/dart-lang/linter/issues/2777
+    if (node.semicolon.isSynthetic) return;
+
+    rule.reportLintForToken(node.name);
   }
 }

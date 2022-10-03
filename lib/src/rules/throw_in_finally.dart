@@ -11,7 +11,6 @@ import '../rules/control_flow_in_finally.dart';
 const _desc = r'Avoid `throw` in finally block.';
 
 const _details = r'''
-
 **AVOID** throwing exceptions in finally blocks.
 
 Throwing exceptions in finally blocks will inevitably cause unexpected behavior
@@ -49,7 +48,7 @@ class BadThrow {
 
 ''';
 
-class ThrowInFinally extends LintRule implements NodeLintRule {
+class ThrowInFinally extends LintRule {
   ThrowInFinally()
       : super(
             name: 'throw_in_finally',

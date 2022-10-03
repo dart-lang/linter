@@ -7,12 +7,11 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Avoid using `null` in `if null` operators.';
 
 const _details = r'''
-
 **AVOID** using `null` as an operand in `if null` operators.
 
 Using `null` in an `if null` operator is redundant, regardless of which side
@@ -31,8 +30,7 @@ var y = null ?? 1;
 
 ''';
 
-class UnnecessaryNullInIfNullOperators extends LintRule
-    implements NodeLintRule {
+class UnnecessaryNullInIfNullOperators extends LintRule {
   UnnecessaryNullInIfNullOperators()
       : super(
             name: 'unnecessary_null_in_if_null_operators',
@@ -56,8 +54,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitBinaryExpression(BinaryExpression node) {
     if (node.operator.type == TokenType.QUESTION_QUESTION &&
-        (DartTypeUtilities.isNullLiteral(node.rightOperand) ||
-            DartTypeUtilities.isNullLiteral(node.leftOperand))) {
+        (node.rightOperand.isNullLiteral || node.leftOperand.isNullLiteral)) {
       rule.reportLint(node);
     }
   }

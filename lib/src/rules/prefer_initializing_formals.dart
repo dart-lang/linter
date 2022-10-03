@@ -7,12 +7,11 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Use initializing formals when possible.';
 
 const _details = r'''
-
 **DO** use initializing formals when possible.
 
 Using initializing formals when possible makes your code more terse.
@@ -66,22 +65,40 @@ the following will not generate a lint:
 class Point {
   bool isEnabled;
   Point({bool enabled}) {
-    this.isEnabled = enable; // OK
+    this.isEnabled = enabled; // OK
   }
 }
 ```
 
+**NOTE**
+Also note that it is possible to enforce a type that is stricter than the
+initialized field with an initializing formal parameter.  In the following
+example the unnamed `Bid` constructor requires a non-null `int` despite
+`amount` being declared nullable (`int?`).
+
+```dart
+class Bid {
+ final int? amount;
+ Bid(int this.amount);
+ Bid.pass() : amount = null;
+}
+```
 ''';
 
 Iterable<AssignmentExpression> _getAssignmentExpressionsInConstructorBody(
     ConstructorDeclaration node) {
   var body = node.body;
-  var statements =
-      (body is BlockFunctionBody) ? body.block.statements : <Statement>[];
-  return statements
-      .whereType<ExpressionStatement>()
-      .map((e) => e.expression)
-      .whereType<AssignmentExpression>();
+  if (body is! BlockFunctionBody) return [];
+  var assignments = <AssignmentExpression>[];
+  for (var statement in body.block.statements) {
+    if (statement is ExpressionStatement) {
+      var expression = statement.expression;
+      if (expression is AssignmentExpression) {
+        assignments.add(expression);
+      }
+    }
+  }
+  return assignments;
 }
 
 Iterable<ConstructorFieldInitializer>
@@ -90,16 +107,15 @@ Iterable<ConstructorFieldInitializer>
         node.initializers.whereType<ConstructorFieldInitializer>();
 
 Element? _getLeftElement(AssignmentExpression assignment) =>
-    DartTypeUtilities.getCanonicalElement(assignment.writeElement);
+    assignment.writeElement?.canonicalElement;
 
 Iterable<Element?> _getParameters(ConstructorDeclaration node) =>
-    node.parameters.parameters.map((e) => e.identifier?.staticElement);
+    node.parameters.parameters.map((e) => e.declaredElement);
 
 Element? _getRightElement(AssignmentExpression assignment) =>
-    DartTypeUtilities.getCanonicalElementFromIdentifier(
-        assignment.rightHandSide);
+    assignment.rightHandSide.canonicalElement;
 
-class PreferInitializingFormals extends LintRule implements NodeLintRule {
+class PreferInitializingFormals extends LintRule {
   PreferInitializingFormals()
       : super(
             name: 'prefer_initializing_formals',
@@ -122,6 +138,12 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
+    // Skip factory constructors.
+    // https://github.com/dart-lang/linter/issues/2441
+    if (node.factoryKeyword != null) {
+      return;
+    }
+
     var parameters = _getParameters(node);
     var parametersUsedOnce = <Element?>{};
     var parametersUsedMoreThanOnce = <Element?>{};
@@ -135,8 +157,8 @@ class _Visitor extends SimpleAstVisitor<void> {
           !leftElement.isPrivate &&
           leftElement is FieldElement &&
           !leftElement.isSynthetic &&
-          leftElement.enclosingElement ==
-              node.declaredElement?.enclosingElement &&
+          leftElement.enclosingElement3 ==
+              node.declaredElement?.enclosingElement3 &&
           parameters.contains(rightElement) &&
           (!parametersUsedMoreThanOnce.contains(rightElement) &&
                   !(rightElement as ParameterElement).isNamed ||
@@ -170,26 +192,38 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     }
 
-    node.parameters.parameterElements
-        .where((p) => p != null && p.isInitializingFormal)
-        .forEach(processElement);
+    var parameterElements = node.parameters.parameterElements;
+    for (var parameter in parameterElements) {
+      if (parameter?.isInitializingFormal ?? false) {
+        processElement(parameter);
+      }
+    }
 
-    _getAssignmentExpressionsInConstructorBody(node)
-        .where(isAssignmentExpressionToLint)
-        .map(_getRightElement)
-        .forEach(processElement);
+    var assignments = _getAssignmentExpressionsInConstructorBody(node);
+    for (var assignment in assignments) {
+      if (isAssignmentExpressionToLint(assignment)) {
+        processElement(_getRightElement(assignment));
+      }
+    }
 
-    _getConstructorFieldInitializersInInitializers(node)
-        .where(isConstructorFieldInitializerToLint)
-        .map((e) => (e.expression as SimpleIdentifier).staticElement)
-        .forEach(processElement);
+    var initializers = _getConstructorFieldInitializersInInitializers(node);
+    for (var initializer in initializers) {
+      if (isConstructorFieldInitializerToLint(initializer)) {
+        processElement(
+            (initializer.expression as SimpleIdentifier).staticElement);
+      }
+    }
 
-    _getAssignmentExpressionsInConstructorBody(node)
-        .where(isAssignmentExpressionToLint)
-        .forEach(rule.reportLint);
+    for (var assignment in assignments) {
+      if (isAssignmentExpressionToLint(assignment)) {
+        rule.reportLint(assignment);
+      }
+    }
 
-    _getConstructorFieldInitializersInInitializers(node)
-        .where(isConstructorFieldInitializerToLint)
-        .forEach(rule.reportLint);
+    for (var initializer in initializers) {
+      if (isConstructorFieldInitializerToLint(initializer)) {
+        rule.reportLint(initializer);
+      }
+    }
   }
 }

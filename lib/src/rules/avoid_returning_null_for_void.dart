@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid returning null for void.';
 
 const _details = r'''
-
 **AVOID** returning null for void.
 
 In a large variety of languages `void` as return type is used to indicate that
@@ -42,7 +41,7 @@ Future<void> f2() async {
 
 ''';
 
-class AvoidReturningNullForVoid extends LintRule implements NodeLintRule {
+class AvoidReturningNullForVoid extends LintRule {
   AvoidReturningNullForVoid()
       : super(
             name: 'avoid_returning_null_for_void',

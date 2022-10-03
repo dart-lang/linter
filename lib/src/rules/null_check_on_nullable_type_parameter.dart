@@ -14,8 +14,7 @@ import 'unnecessary_null_checks.dart';
 const _desc = r"Don't use null check on a potentially nullable type parameter.";
 
 const _details = r'''
-
-Don't use null check on a potentially nullable type parameter.
+**DON'T** use null check on a potentially nullable type parameter.
 
 Given a generic type parameter `T` which has a nullable bound (e.g. the default
 bound of `Object?`), it is very easy to introduce erroneous null checks when
@@ -44,14 +43,13 @@ T run<T>(T callback()) {
 
 ''';
 
-class NullCheckOnNullableTypeParameter extends LintRule
-    implements NodeLintRule {
+class NullCheckOnNullableTypeParameter extends LintRule {
   NullCheckOnNullableTypeParameter()
       : super(
           name: 'null_check_on_nullable_type_parameter',
           description: _desc,
           details: _details,
-          maturity: Maturity.experimental,
+          maturity: Maturity.stable,
           group: Group.style,
         );
 
@@ -63,7 +61,6 @@ class NullCheckOnNullableTypeParameter extends LintRule
     }
 
     var visitor = _Visitor(this, context);
-    registry.addCompilationUnit(this, visitor);
     registry.addPostfixExpression(this, visitor);
   }
 }

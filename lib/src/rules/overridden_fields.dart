@@ -13,7 +13,6 @@ import '../analyzer.dart';
 const _desc = r"Don't override fields.";
 
 const _details = r'''
-
 **DON'T** override fields.
 
 Overriding fields is almost always done unintentionally.  Regardless, it is a
@@ -82,22 +81,22 @@ Iterable<InterfaceType> _findAllSupertypesAndMixins(
     interfaces.add(superclass);
   }
   interfaces
-    ..addAll(interface.element.mixins)
+    ..addAll(interface.element2.mixins)
     ..addAll(_findAllSupertypesAndMixins(superclass, accumulator));
   return interfaces.where((i) => i != interface);
 }
 
-Iterable<InterfaceType> _findAllSupertypesInMixin(ClassElement classElement) {
+Iterable<InterfaceType> _findAllSupertypesInMixin(MixinElement mixinElement) {
   var supertypes = <InterfaceType>[];
   var accumulator = <InterfaceType>[];
-  for (var type in classElement.superclassConstraints) {
+  for (var type in mixinElement.superclassConstraints) {
     supertypes.add(type);
     supertypes.addAll(_findAllSupertypesAndMixins(type, accumulator));
   }
   return supertypes;
 }
 
-class OverriddenFields extends LintRule implements NodeLintRule {
+class OverriddenFields extends LintRule {
   OverriddenFields()
       : super(
             name: 'overridden_fields',
@@ -129,7 +128,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (declaredElement != null) {
         var field = _getOverriddenMember(declaredElement);
         if (field != null && !field.isAbstract) {
-          rule.reportLint(variable.name);
+          rule.reportLintForToken(variable.name);
         }
       }
     }
@@ -139,7 +138,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     var memberName = member.name;
     var library = member.library;
     bool isOverriddenMember(PropertyAccessorElement a) {
-      if (memberName != null && a.isSynthetic && a.name == memberName) {
+      if (memberName == null || a.isStatic) {
+        return false;
+      }
+      if (a.isSynthetic && a.name == memberName) {
         // Ensure that private members are overriding a member of the same library.
         if (Identifier.isPrivateName(memberName)) {
           return library == a.library;
@@ -151,14 +153,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     bool containsOverriddenMember(InterfaceType i) =>
         i.accessors.any(isOverriddenMember);
-    var enclosingElement = member.enclosingElement;
-    if (enclosingElement is! ClassElement) {
+    var enclosingElement = member.enclosingElement3;
+    if (enclosingElement is! InterfaceElement) {
       return null;
     }
     var classElement = enclosingElement;
 
     Iterable<InterfaceType> interfaces;
-    if (classElement.isMixin) {
+    if (classElement is MixinElement) {
       interfaces = _findAllSupertypesInMixin(classElement);
     } else {
       interfaces =

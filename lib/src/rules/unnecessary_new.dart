@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Unnecessary new keyword.';
 
 const _details = r'''
-
 **AVOID** new keyword to create instances.
 
 **BAD:**
@@ -32,7 +31,7 @@ m(){
 
 ''';
 
-class UnnecessaryNew extends LintRule implements NodeLintRule {
+class UnnecessaryNew extends LintRule {
   UnnecessaryNew()
       : super(
             name: 'unnecessary_new',

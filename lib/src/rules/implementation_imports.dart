@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r"Don't import implementation files from another package.";
 
 const _details = r'''
-
 From the the [pub package layout doc](https://dart.dev/tools/pub/package-layout#implementation-files):
 
 **DON'T** import implementation files from another package.
@@ -56,10 +55,10 @@ bool samePackage(Uri? uri1, Uri? uri2) {
   if (segments1.isEmpty || segments2.isEmpty) {
     return false;
   }
-  return segments1[0] == segments2[0];
+  return segments1.first == segments2.first;
 }
 
-class ImplementationImports extends LintRule implements NodeLintRule {
+class ImplementationImports extends LintRule {
   ImplementationImports()
       : super(
             name: 'implementation_imports',
@@ -82,8 +81,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitImportDirective(ImportDirective node) {
-    var importUri = node.uriSource?.uri;
-    var sourceUri = node.element?.source.uri;
+    var importUri = node.element2?.importedLibrary?.source.uri;
+    var sourceUri = node.element2?.source.uri;
 
     // Test for 'package:*/src/'.
     if (!isImplementation(importUri)) {

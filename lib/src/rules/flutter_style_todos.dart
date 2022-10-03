@@ -12,8 +12,7 @@ const _desc = r'Use Flutter TODO format: '
     '// TODO(username): message, https://URL-to-issue.';
 
 const _details = r'''
-
-**DO** Use Flutter TODO format.
+**DO** use Flutter TODO format.
 
 From the [Flutter docs](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#comments):
 
@@ -27,7 +26,7 @@ From the [Flutter docs](https://github.com/flutter/flutter/wiki/Style-guide-for-
 
 ''';
 
-class FlutterStyleTodos extends LintRule implements NodeLintRule {
+class FlutterStyleTodos extends LintRule {
   FlutterStyleTodos()
       : super(
             name: 'flutter_style_todos',
@@ -44,10 +43,10 @@ class FlutterStyleTodos extends LintRule implements NodeLintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  static final _todoRegExp = RegExp(r'//+(.* )?TODO\b');
+  static final _todoRegExp = RegExp(r'//+(.* )?TODO\b', caseSensitive: false);
 
   static final _todoExpectedRegExp =
-      RegExp(r'// TODO\([a-zA-Z][-a-zA-Z0-9]*\): ');
+      RegExp(r'// TODO\([a-zA-Z0-9][-a-zA-Z0-9]*\): ');
 
   final LintRule rule;
 

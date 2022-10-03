@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid single cascade in expression statements.';
 
 const _details = r'''
-
 **AVOID** single cascade in expression statements.
 
 **BAD:**
@@ -25,8 +24,7 @@ o.m();
 
 ''';
 
-class AvoidSingleCascadeInExpressionStatements extends LintRule
-    implements NodeLintRule {
+class AvoidSingleCascadeInExpressionStatements extends LintRule {
   AvoidSingleCascadeInExpressionStatements()
       : super(
             name: 'avoid_single_cascade_in_expression_statements',

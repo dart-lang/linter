@@ -18,13 +18,22 @@ f(o) {
   f('long line\t' 'is long'); // OK
 
   f(RegExp('(\n)+' '(\n)+' '(\n)+')); // OK
-  new Unresolved('aaa' 'bbb'); // OK
   matches('(\n)+' '(\n)+' '(\n)+'); // OK
 
   f('Hello' // OK
     '${1 == 2 ? ', world' : ''}');
   f('${1 == 2 ? 'Hello ' : ''}' // OK
     'world');
+
+  f('${1 + 1}(' // OK
+    'long line)');
+
+  f('a $o' // OK
+    'b');
+  f('a' // OK
+    '$o b');
+  f("a $o b" // OK
+    " c$o");
 }
 
 void matches(String value) {}

@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid return types on setters.';
 
 const _details = r'''
-
 **AVOID** return types on setters.
 
 As setters do not return a value, declaring the return type of one is redundant.
@@ -27,7 +26,7 @@ void set speed(int ms);
 
 ''';
 
-class AvoidReturnTypesOnSetters extends LintRule implements NodeLintRule {
+class AvoidReturnTypesOnSetters extends LintRule {
   AvoidReturnTypesOnSetters()
       : super(
             name: 'avoid_return_types_on_setters',

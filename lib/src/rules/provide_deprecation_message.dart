@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Provide a deprecation message, via @Deprecated("message").';
 
 const _details = r'''
-
 **DO** specify a deprecation message (with migration instructions and/or a
 removal schedule) in the Deprecation constructor.
 
@@ -32,7 +31,7 @@ void oldFunction(arg1, arg2) {}
 
 ''';
 
-class ProvideDeprecationMessage extends LintRule implements NodeLintRule {
+class ProvideDeprecationMessage extends LintRule {
   ProvideDeprecationMessage()
       : super(
             name: 'provide_deprecation_message',

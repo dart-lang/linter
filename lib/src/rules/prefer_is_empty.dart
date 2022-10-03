@@ -8,17 +8,11 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../ast.dart';
+import '../extensions.dart';
 
-const alwaysFalse = 'Always false because length is always greater or equal 0.';
-
-const alwaysTrue = 'Always true because length is always greater or equal 0.';
-
-const useIsEmpty = 'Use isEmpty instead of length';
-const useIsNotEmpty = 'Use isNotEmpty instead of length';
 const _desc = r'Use `isEmpty` for Iterables and Maps.';
 const _details = r'''
-
 **DON'T** use `length` to see if a collection is empty.
 
 The `Iterable` contract does not require that a collection know its length or be
@@ -42,7 +36,19 @@ if (words.length != 0) return words.join(' ');
 
 ''';
 
-class PreferIsEmpty extends LintRule implements NodeLintRule {
+class PreferIsEmpty extends LintRule {
+  static const LintCode alwaysFalse = LintCode('prefer_is_empty',
+      'Always false because length is always greater or equal 0.');
+
+  static const LintCode alwaysTrue = LintCode('prefer_is_empty',
+      'Always true because length is always greater or equal 0.');
+
+  static const LintCode useIsEmpty =
+      LintCode('prefer_is_empty', 'Use isEmpty instead of length');
+
+  static const LintCode useIsNotEmpty =
+      LintCode('prefer_is_empty', 'Use isNotEmpty instead of length');
+
   PreferIsEmpty()
       : super(
             name: 'prefer_is_empty',
@@ -56,19 +62,6 @@ class PreferIsEmpty extends LintRule implements NodeLintRule {
     var visitor = _Visitor(this, context);
     registry.addBinaryExpression(this, visitor);
   }
-
-  void reportLintWithDescription(AstNode node, String description) {
-    reporter.reportErrorForNode(_LintCode(name, description), node, []);
-  }
-}
-
-class _LintCode extends LintCode {
-  static final registry = <String, _LintCode>{};
-
-  factory _LintCode(String name, String message) =>
-      registry.putIfAbsent(name + message, () => _LintCode._(name, message));
-
-  _LintCode._(String name, String message) : super(name, message);
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
@@ -80,13 +73,15 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
-    var value = _getIntValue(node.rightOperand);
+    // todo(pq): not evaluating constants deliberately but we *should*.
+    // see: https://github.com/dart-lang/linter/issues/2818
+    var value = getIntValue(node.rightOperand, null);
     if (value != null) {
       if (_isLengthAccess(node.leftOperand)) {
         _check(node, value, constantOnRight: true);
       }
     } else {
-      value = _getIntValue(node.leftOperand);
+      value = getIntValue(node.leftOperand, null);
       // ignore: invariant_booleans
       if (value != null) {
         if (_isLengthAccess(node.rightOperand)) {
@@ -119,31 +114,31 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (value == 0) {
       if (operator.type == TokenType.EQ_EQ ||
           operator.type == TokenType.LT_EQ) {
-        rule.reportLintWithDescription(expression, useIsEmpty);
+        rule.reportLint(expression, errorCode: PreferIsEmpty.useIsEmpty);
       } else if (operator.type == TokenType.GT ||
           operator.type == TokenType.BANG_EQ) {
-        rule.reportLintWithDescription(expression, useIsNotEmpty);
+        rule.reportLint(expression, errorCode: PreferIsEmpty.useIsNotEmpty);
       } else if (operator.type == TokenType.LT) {
-        rule.reportLintWithDescription(expression, alwaysFalse);
+        rule.reportLint(expression, errorCode: PreferIsEmpty.alwaysFalse);
       } else if (operator.type == TokenType.GT_EQ) {
-        rule.reportLintWithDescription(expression, alwaysTrue);
+        rule.reportLint(expression, errorCode: PreferIsEmpty.alwaysTrue);
       }
     } else if (value == 1) {
       if (constantOnRight) {
         // 'length >= 1' is same as 'isNotEmpty',
         // and 'length < 1' is same as 'isEmpty'
         if (operator.type == TokenType.GT_EQ) {
-          rule.reportLintWithDescription(expression, useIsNotEmpty);
+          rule.reportLint(expression, errorCode: PreferIsEmpty.useIsNotEmpty);
         } else if (operator.type == TokenType.LT) {
-          rule.reportLintWithDescription(expression, useIsEmpty);
+          rule.reportLint(expression, errorCode: PreferIsEmpty.useIsEmpty);
         }
       } else {
         // '1 <= length' is same as 'isNotEmpty',
         // and '1 > length' is same as 'isEmpty'
         if (operator.type == TokenType.LT_EQ) {
-          rule.reportLintWithDescription(expression, useIsNotEmpty);
+          rule.reportLint(expression, errorCode: PreferIsEmpty.useIsNotEmpty);
         } else if (operator.type == TokenType.GT) {
-          rule.reportLintWithDescription(expression, useIsEmpty);
+          rule.reportLint(expression, errorCode: PreferIsEmpty.useIsEmpty);
         }
       }
     } else if (value < 0) {
@@ -152,22 +147,22 @@ class _Visitor extends SimpleAstVisitor<void> {
         if (operator.type == TokenType.EQ_EQ ||
             operator.type == TokenType.LT_EQ ||
             operator.type == TokenType.LT) {
-          rule.reportLintWithDescription(expression, alwaysFalse);
+          rule.reportLint(expression, errorCode: PreferIsEmpty.alwaysFalse);
         } else if (operator.type == TokenType.BANG_EQ ||
             operator.type == TokenType.GT_EQ ||
             operator.type == TokenType.GT) {
-          rule.reportLintWithDescription(expression, alwaysTrue);
+          rule.reportLint(expression, errorCode: PreferIsEmpty.alwaysTrue);
         }
       } else {
         // 'length' is always >= 0, so comparing with negative makes no sense.
         if (operator.type == TokenType.EQ_EQ ||
             operator.type == TokenType.GT_EQ ||
             operator.type == TokenType.GT) {
-          rule.reportLintWithDescription(expression, alwaysFalse);
+          rule.reportLint(expression, errorCode: PreferIsEmpty.alwaysFalse);
         } else if (operator.type == TokenType.BANG_EQ ||
             operator.type == TokenType.LT_EQ ||
             operator.type == TokenType.LT) {
-          rule.reportLintWithDescription(expression, alwaysTrue);
+          rule.reportLint(expression, errorCode: PreferIsEmpty.alwaysTrue);
         }
       }
     }
@@ -189,25 +184,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     return search is T ? search : null;
-  }
-
-  /// Returns the value of an [IntegerLiteral] or [PrefixExpression] with a
-  /// minus and then an [IntegerLiteral]. For anything else, returns `null`.
-  int? _getIntValue(Expression expressions) {
-    if (expressions is IntegerLiteral) {
-      return expressions.value;
-    } else if (expressions is PrefixExpression) {
-      var operand = expressions.operand;
-      if (expressions.operator.type == TokenType.MINUS &&
-          operand is IntegerLiteral) {
-        var value = operand.value;
-        if (value != null) {
-          return -value;
-        }
-      }
-    }
-    // ignore: avoid_returning_null
-    return null;
   }
 
   bool _isLengthAccess(Expression operand) {
@@ -239,8 +215,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     // Should be subtype of Iterable, Map or String.
     if (type == null ||
-        !DartTypeUtilities.implementsInterface(type, 'Iterable', 'dart.core') &&
-            !DartTypeUtilities.implementsInterface(type, 'Map', 'dart.core') &&
+        !type.implementsInterface('Iterable', 'dart.core') &&
+            !type.implementsInterface('Map', 'dart.core') &&
             !type.isDartCoreString) {
       return false;
     }

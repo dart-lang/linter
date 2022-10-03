@@ -7,13 +7,12 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc =
     r'Prefer defining constructors instead of static methods to create instances.';
 
 const _details = r'''
-
 **PREFER** defining constructors instead of static methods to create instances.
 
 In most cases, it makes more sense to use a named constructor rather than a
@@ -44,15 +43,13 @@ class Point {
 ''';
 
 bool _hasNewInvocation(DartType returnType, FunctionBody body) {
-  bool _isInstanceCreationExpression(AstNode node) =>
+  bool isInstanceCreationExpression(AstNode node) =>
       node is InstanceCreationExpression && node.staticType == returnType;
 
-  return DartTypeUtilities.traverseNodesInDFS(body)
-      .any(_isInstanceCreationExpression);
+  return body.traverseNodesInDFS().any(isInstanceCreationExpression);
 }
 
-class PreferConstructorsInsteadOfStaticMethods extends LintRule
-    implements NodeLintRule {
+class PreferConstructorsInsteadOfStaticMethods extends LintRule {
   PreferConstructorsInsteadOfStaticMethods()
       : super(
             name: 'prefer_constructors_over_static_methods',
@@ -79,7 +76,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var returnType = node.returnType?.type;
     var parent = node.parent;
     if (node.isStatic &&
-        parent is ClassOrMixinDeclaration &&
+        parent is ClassDeclaration &&
         returnType is InterfaceType &&
         parent.typeParameters == null &&
         node.typeParameters == null) {
@@ -90,7 +87,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           return;
         }
         if (_hasNewInvocation(returnType, node.body)) {
-          rule.reportLint(node.name);
+          rule.reportLintForToken(node.name);
         }
       }
     }

@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid field initializers in const classes.';
 
 const _details = r'''
-
 **AVOID** field initializers in const classes.
 
 Instead of `final x = const expr;`, you should write `get x => const expr;` and
@@ -36,8 +35,7 @@ class A {
 
 ''';
 
-class AvoidFieldInitializersInConstClasses extends LintRule
-    implements NodeLintRule {
+class AvoidFieldInitializersInConstClasses extends LintRule {
   AvoidFieldInitializersInConstClasses()
       : super(
             name: 'avoid_field_initializers_in_const_classes',

@@ -7,11 +7,17 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
+import '../ast.dart';
+import '../util/flutter_utils.dart';
 
 const _desc = r'Avoid `print` calls in production code.';
 
 const _details = r'''
 **DO** avoid `print` calls in production code.
+
+For production code, consider using a logging framework.
+If you are using Flutter, you can use `debugPrint`
+or surround `print` calls with a check for `kDebugMode`
 
 **BAD:**
 ```dart
@@ -20,9 +26,38 @@ void f(int x) {
   ...
 }
 ```
+
+
+**GOOD:**
+```dart
+void f(int x) {
+  debugPrint('debug: $x');
+  ...
+}
+```
+
+
+**GOOD:**
+```dart
+void f(int x) {
+  log('log: $x');
+  ...
+}
+```
+
+
+**GOOD:**
+```dart
+void f(int x) {
+  if (kDebugMode) {
+      print('debug: $x');
+  }
+  ...
+}
+```
 ''';
 
-class AvoidPrint extends LintRule implements NodeLintRule {
+class AvoidPrint extends LintRule {
   AvoidPrint()
       : super(
             name: 'avoid_print',
@@ -43,6 +78,33 @@ class _Visitor extends SimpleAstVisitor {
 
   _Visitor(this.rule);
 
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (node.methodName.staticElement.isDartCorePrint && !_isDebugOnly(node)) {
+      rule.reportLint(node.methodName);
+    }
+
+    node.argumentList.arguments.forEach(_validateArgument);
+  }
+
+  bool _isDebugOnly(Expression expression) {
+    AstNode? node = expression;
+    while (node != null) {
+      var parent = node.parent;
+      if (parent is IfStatement && node == parent.thenStatement) {
+        var condition = parent.condition;
+        if (condition is SimpleIdentifier &&
+            isKDebugMode(condition.staticElement)) {
+          return true;
+        }
+      } else if (parent is FunctionBody) {
+        return false;
+      }
+      node = parent;
+    }
+    return false;
+  }
+
   void _validateArgument(Expression expression) {
     if (expression is SimpleIdentifier) {
       var element = expression.staticElement;
@@ -52,17 +114,5 @@ class _Visitor extends SimpleAstVisitor {
         rule.reportLint(expression);
       }
     }
-  }
-
-  @override
-  void visitMethodInvocation(MethodInvocation node) {
-    bool isDartCore(MethodInvocation node) =>
-        node.methodName.staticElement?.library?.name == 'dart.core';
-
-    if (node.methodName.name == 'print' && isDartCore(node)) {
-      rule.reportLint(node.methodName);
-    }
-
-    node.argumentList.arguments.forEach(_validateArgument);
   }
 }

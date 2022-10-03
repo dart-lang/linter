@@ -12,7 +12,6 @@ const _desc = r'Use a non-nullable type for a final variable initialized '
     'with a non-nullable value.';
 
 const _details = r'''
-
 Use a non-nullable type for a final variable initialized with a non-nullable
 value.
 
@@ -28,8 +27,7 @@ final int i = 1;
 
 ''';
 
-class UnnecessaryNullableForFinalVariableDeclarations extends LintRule
-    implements NodeLintRule {
+class UnnecessaryNullableForFinalVariableDeclarations extends LintRule {
   UnnecessaryNullableForFinalVariableDeclarations()
       : super(
             name: 'unnecessary_nullable_for_final_variable_declarations',
@@ -46,7 +44,6 @@ class UnnecessaryNullableForFinalVariableDeclarations extends LintRule
     }
 
     var visitor = _Visitor(this, context);
-    registry.addCompilationUnit(this, visitor);
     registry.addFieldDeclaration(this, visitor);
     registry.addTopLevelVariableDeclaration(this, visitor);
     registry.addVariableDeclarationStatement(this, visitor);
@@ -62,7 +59,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var variable in node.fields.variables) {
-      if (Identifier.isPrivateName(variable.name.name) || node.isStatic) {
+      if (Identifier.isPrivateName(variable.name.lexeme) || node.isStatic) {
         _visit(variable);
       }
     }

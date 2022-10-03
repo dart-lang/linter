@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Remove unnecessary backslashes in strings.';
 
 const _details = r'''
-
 Remove unnecessary backslashes in strings.
 
 **BAD:**
@@ -28,7 +27,7 @@ Remove unnecessary backslashes in strings.
 
 ''';
 
-class UnnecessaryStringEscapes extends LintRule implements NodeLintRule {
+class UnnecessaryStringEscapes extends LintRule {
   UnnecessaryStringEscapes()
       : super(
             name: 'unnecessary_string_escapes',

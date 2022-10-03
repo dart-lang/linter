@@ -7,13 +7,12 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc =
     r"Don't reassign references to parameters of functions or methods.";
 
 const _details = r'''
-
 **DON'T** assign new values to parameters of methods or functions.
 
 Assigning new values to parameters is generally a bad practice unless an
@@ -108,7 +107,7 @@ bool _preOrPostFixExpressionMutation(FormalParameter parameter, AstNode n) =>
         (n.operand as SimpleIdentifier).staticElement ==
             parameter.declaredElement;
 
-class ParameterAssignments extends LintRule implements NodeLintRule {
+class ParameterAssignments extends LintRule {
   ParameterAssignments()
       : super(
             name: 'parameter_assignments',
@@ -163,8 +162,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void _reportIfSimpleParameterOrWithDefaultValue(
       FormalParameter parameter, AstNode functionOrMethodDeclaration) {
-    var nodes =
-        DartTypeUtilities.traverseNodesInDFS(functionOrMethodDeclaration);
+    var nodes = functionOrMethodDeclaration.traverseNodesInDFS();
 
     if (parameter is SimpleFormalParameter ||
         _isDefaultFormalParameterWithDefaultValue(parameter)) {

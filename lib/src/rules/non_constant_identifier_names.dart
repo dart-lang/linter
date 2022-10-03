@@ -3,15 +3,16 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
+import '../util/ascii_utils.dart';
 import '../utils.dart';
 
 const _desc = r'Name non-constant identifiers using lowerCamelCase.';
 
 const _details = r'''
-
 **DO** name non-constant identifiers using lowerCamelCase.
 
 Class members, top-level definitions, variables, parameters, named parameters
@@ -31,7 +32,7 @@ align(clearItems) {
 
 ''';
 
-class NonConstantIdentifierNames extends LintRule implements NodeLintRule {
+class NonConstantIdentifierNames extends LintRule {
   NonConstantIdentifierNames()
       : super(
             name: 'non_constant_identifier_names',
@@ -49,6 +50,8 @@ class NonConstantIdentifierNames extends LintRule implements NodeLintRule {
     registry.addFormalParameterList(this, visitor);
     registry.addFunctionDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
+    registry.addRecordLiteral(this, visitor);
+    registry.addRecordTypeAnnotation(this, visitor);
     registry.addVariableDeclaration(this, visitor);
     registry.addVariableDeclarationStatement(this, visitor);
   }
@@ -59,22 +62,22 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  void checkIdentifier(SimpleIdentifier? id, {bool underscoresOk = false}) {
+  void checkIdentifier(Token? id, {bool underscoresOk = false}) {
     if (id == null) {
       return;
     }
-    if (underscoresOk && isJustUnderscores(id.name)) {
+    if (underscoresOk && id.lexeme.isJustUnderscores) {
       // For example, `___` is OK in a callback.
       return;
     }
-    if (!isLowerCamelCase(id.name)) {
-      rule.reportLint(id);
+    if (!isLowerCamelCase(id.lexeme)) {
+      rule.reportLintForToken(id);
     }
   }
 
   @override
   void visitCatchClause(CatchClause node) {
-    checkIdentifier(node.exceptionParameter, underscoresOk: true);
+    checkIdentifier(node.exceptionParameter2?.name, underscoresOk: true);
   }
 
   @override
@@ -86,14 +89,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitForEachPartsWithDeclaration(ForEachPartsWithDeclaration node) {
-    checkIdentifier(node.loopVariable.identifier);
+    checkIdentifier(node.loopVariable.name);
   }
 
   @override
   void visitFormalParameterList(FormalParameterList node) {
     for (var p in node.parameters) {
       if (p is! FieldFormalParameter) {
-        checkIdentifier(p.identifier, underscoresOk: true);
+        checkIdentifier(p.name, underscoresOk: true);
       }
     }
   }
@@ -107,6 +110,29 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isOperator) {
       checkIdentifier(node.name);
+    }
+  }
+
+  @override
+  void visitRecordLiteral(RecordLiteral node) {
+    for (var fieldExpression in node.fields) {
+      if (fieldExpression is NamedExpression) {
+        checkIdentifier(fieldExpression.name.label.token);
+      }
+    }
+  }
+
+  @override
+  void visitRecordTypeAnnotation(RecordTypeAnnotation node) {
+    var positionalFields = node.positionalFields;
+    for (var field in positionalFields) {
+      checkIdentifier(field.name);
+    }
+
+    var namedFields = node.namedFields;
+    if (namedFields == null) return;
+    for (var field in namedFields.fields) {
+      checkIdentifier(field.name);
     }
   }
 

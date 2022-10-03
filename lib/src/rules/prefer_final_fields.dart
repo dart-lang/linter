@@ -10,12 +10,11 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Private field could be final.';
 
 const _details = r'''
-
 **DO** prefer declaring private fields as final if they are not reassigned later
 in the library.
 
@@ -85,7 +84,7 @@ class NotAssignedInAllConstructors {
 ''';
 
 bool _containedInFormal(Element element, FormalParameter formal) {
-  var formalField = formal.identifier?.staticElement;
+  var formalField = formal.declaredElement;
   return formalField is FieldFormalParameterElement &&
       formalField.field == element;
 }
@@ -93,11 +92,9 @@ bool _containedInFormal(Element element, FormalParameter formal) {
 bool _containedInInitializer(
         Element element, ConstructorInitializer initializer) =>
     initializer is ConstructorFieldInitializer &&
-    DartTypeUtilities.getCanonicalElementFromIdentifier(
-            initializer.fieldName) ==
-        element;
+    initializer.fieldName.canonicalElement == element;
 
-class PreferFinalFields extends LintRule implements NodeLintRule {
+class PreferFinalFields extends LintRule {
   PreferFinalFields()
       : super(
             name: 'prefer_final_fields',
@@ -142,8 +139,7 @@ class _MutatedFieldsCollector extends RecursiveAstVisitor<void> {
   }
 
   void _addMutatedFieldElement(CompoundAssignmentExpression assignment) {
-    var element =
-        DartTypeUtilities.getCanonicalElement(assignment.writeElement);
+    var element = assignment.writeElement?.canonicalElement;
     if (element is FieldElement) {
       _mutatedFields.add(element);
     }
@@ -164,6 +160,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
+    if (node.parent is EnumDeclaration) return;
+
     var fields = node.fields;
     if (fields.isFinal || fields.isConst) {
       return;

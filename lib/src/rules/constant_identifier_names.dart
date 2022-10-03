@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -11,7 +12,6 @@ import '../utils.dart';
 const _desc = r'Prefer using lowerCamelCase for constant names.';
 
 const _details = r'''
-
 **PREFER** using lowerCamelCase for constant names.
 
 In new code, use `lowerCamelCase` for constant variables, including enum values.
@@ -44,7 +44,7 @@ class Dice {
 
 ''';
 
-class ConstantIdentifierNames extends LintRule implements NodeLintRule {
+class ConstantIdentifierNames extends LintRule {
   ConstantIdentifierNames()
       : super(
             name: 'constant_identifier_names',
@@ -67,9 +67,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  void checkIdentifier(SimpleIdentifier id) {
-    if (!isLowerCamelCase(id.name)) {
-      rule.reportLint(id);
+  void checkIdentifier(Token id) {
+    if (!isLowerCamelCase(id.lexeme)) {
+      rule.reportLintForToken(id);
     }
   }
 

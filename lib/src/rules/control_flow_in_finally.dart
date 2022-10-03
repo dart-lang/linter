@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid control flow in finally blocks.';
 
 const _details = r'''
-
 **AVOID** control flow leaving finally blocks.
 
 Using control flow in finally blocks will inevitably cause unexpected behavior
@@ -84,7 +83,7 @@ class BadBreak {
 
 ''';
 
-class ControlFlowInFinally extends LintRule implements NodeLintRule {
+class ControlFlowInFinally extends LintRule {
   ControlFlowInFinally()
       : super(
             name: 'control_flow_in_finally',

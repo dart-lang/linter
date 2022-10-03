@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid defining a class that contains only static members.';
 
 const _details = r'''
-
 **AVOID** defining a class that contains only static members.
 
 Creating classes with the sole purpose of providing utility or otherwise static
@@ -54,8 +53,7 @@ bool _isStaticMember(ClassMember classMember) {
   return false;
 }
 
-class AvoidClassesWithOnlyStaticMembers extends LintRule
-    implements NodeLintRule {
+class AvoidClassesWithOnlyStaticMembers extends LintRule {
   AvoidClassesWithOnlyStaticMembers()
       : super(
             name: 'avoid_classes_with_only_static_members',
@@ -66,23 +64,38 @@ class AvoidClassesWithOnlyStaticMembers extends LintRule
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this);
+    var visitor = _Visitor(this, context);
     registry.addClassDeclaration(this, visitor);
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+  LinterContext context;
 
-  _Visitor(this.rule);
+  _Visitor(this.rule, this.context);
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     var declaredElement = node.declaredElement;
-    if (declaredElement != null &&
-        node.members.isNotEmpty &&
+    if (declaredElement == null) {
+      return;
+    }
+
+    var interface = context.inheritanceManager.getInterface(declaredElement);
+    var map = interface.map;
+    for (var member in map.values) {
+      var enclosingElement = member.enclosingElement3;
+      if (enclosingElement is ClassElement &&
+          !enclosingElement.isDartCoreObject) {
+        return;
+      }
+    }
+
+    if (node.members.isNotEmpty &&
         node.members.every(_isStaticMember) &&
-        declaredElement.fields.any(_isNonConst)) {
+        (declaredElement.methods.isNotEmpty ||
+            declaredElement.fields.any(_isNonConst))) {
       rule.reportLint(node);
     }
   }

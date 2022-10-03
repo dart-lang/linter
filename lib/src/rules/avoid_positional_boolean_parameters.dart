@@ -5,14 +5,14 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Avoid positional boolean parameters.';
 
 const _details = r'''
-
 **AVOID** positional boolean parameters.
 
 Positional boolean parameters are a bad practice because they are very
@@ -37,8 +37,7 @@ Button(ButtonState.enabled);
 
 ''';
 
-class AvoidPositionalBooleanParameters extends LintRule
-    implements NodeLintRule {
+class AvoidPositionalBooleanParameters extends LintRule {
   AvoidPositionalBooleanParameters()
       : super(
             name: 'avoid_positional_boolean_parameters',
@@ -50,7 +49,6 @@ class AvoidPositionalBooleanParameters extends LintRule
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this, context);
-    registry.addCompilationUnit(this, visitor);
     registry.addConstructorDeclaration(this, visitor);
     registry.addFunctionDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
@@ -69,7 +67,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (declaredElement != null && !declaredElement.isPrivate) {
       var parametersToLint =
           node.parameters.parameters.where(_isFormalParameterToLint);
-      if (parametersToLint.isNotEmpty == true) {
+      if (parametersToLint.isNotEmpty) {
         rule.reportLint(parametersToLint.first);
       }
     }
@@ -94,7 +92,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         !node.isSetter &&
         !declaredElement.isPrivate &&
         !node.isOperator &&
-        !DartTypeUtilities.hasInheritedMethod(node) &&
+        !node.hasInheritedMethod &&
         !_isOverridingMember(declaredElement)) {
       var parametersToLint =
           node.parameters?.parameters.where(_isFormalParameterToLint);
@@ -104,16 +102,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  bool _isFormalParameterToLint(FormalParameter node) =>
-      !node.isNamed &&
-      DartTypeUtilities.isClass(
-          node.declaredElement?.type, 'bool', 'dart.core');
+  bool _isFormalParameterToLint(FormalParameter node) {
+    var type = node.declaredElement?.type;
+    return !node.isNamed && type is InterfaceType && type.isDartCoreBool;
+  }
 
-  bool _isOverridingMember(Element? member) {
-    if (member == null) {
-      return false;
-    }
-
+  bool _isOverridingMember(Element member) {
     var classElement = member.thisOrAncestorOfType<ClassElement>();
     if (classElement == null) {
       return false;
