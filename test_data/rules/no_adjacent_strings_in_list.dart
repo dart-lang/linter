@@ -26,6 +26,12 @@ void bad() {
     for (var v in []) 'a' // LINT
     'b'
   ];
+
+  var set = {
+    'a' // LINT
+    'b',
+    'c',
+  };
 }
 
 void good() {
@@ -34,4 +40,10 @@ void good() {
     'b',
     'c',
   ];
+
+  var set = {
+    'a' + // OK
+    'b',
+    'c',
+  };
 }

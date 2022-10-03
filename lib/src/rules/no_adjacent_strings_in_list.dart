@@ -49,6 +49,7 @@ class NoAdjacentStringsInList extends LintRule {
     registry.addForElement(this, visitor);
     registry.addIfElement(this, visitor);
     registry.addListLiteral(this, visitor);
+    registry.addSetOrMapLiteral(this, visitor);
   }
 }
 
@@ -73,6 +74,16 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitListLiteral(ListLiteral node) {
+    for (var e in node.elements) {
+      if (e is AdjacentStrings) {
+        rule.reportLint(e);
+      }
+    }
+  }
+
+  @override
+  void visitSetOrMapLiteral(SetOrMapLiteral node) {
+    if (node.isMap) return;
     for (var e in node.elements) {
       if (e is AdjacentStrings) {
         rule.reportLint(e);
