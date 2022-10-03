@@ -77,7 +77,7 @@ class _BodyVisitor extends UnifyingAstVisitor {
   @override
   visitReturnStatement(ReturnStatement node) {
     // Short-circuit if not returning this.
-    if (_returnsThis(node)) return;
+    if (!_returnsThis(node)) return;
 
     returnStatements.add(node);
     super.visitReturnStatement(node);
