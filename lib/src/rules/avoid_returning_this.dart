@@ -61,7 +61,7 @@ class AvoidReturningThis extends LintRule {
   }
 }
 
-class _BodyVisitor extends UnifyingAstVisitor {
+class _BodyVisitor extends RecursiveAstVisitor {
   List<ReturnStatement> returnStatements = [];
 
   List<ReturnStatement> collectReturns(BlockFunctionBody body) {
