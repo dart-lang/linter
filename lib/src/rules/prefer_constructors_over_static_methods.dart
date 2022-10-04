@@ -7,7 +7,6 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../extensions.dart';
 
 const _desc =
     r'Prefer defining constructors instead of static methods to create instances.';
@@ -42,11 +41,25 @@ class Point {
 ```
 ''';
 
-bool _hasNewInvocation(DartType returnType, FunctionBody body) {
-  bool isInstanceCreationExpression(AstNode node) =>
-      node is InstanceCreationExpression && node.staticType == returnType;
+bool _hasNewInvocation(DartType returnType, FunctionBody body) =>
+    _BodyVisitor(returnType).containsInstanceCreation(body);
 
-  return body.traverseNodesInDFS().any(isInstanceCreationExpression);
+class _BodyVisitor extends RecursiveAstVisitor {
+  bool found = false;
+  final DartType returnType;
+  _BodyVisitor(this.returnType);
+  @override
+  visitInstanceCreationExpression(InstanceCreationExpression node) {
+    found = node.staticType == returnType;
+    if (!found) {
+      super.visitInstanceCreationExpression(node);
+    }
+  }
+
+  bool containsInstanceCreation(FunctionBody body) {
+    body.accept(this);
+    return found;
+  }
 }
 
 class PreferConstructorsInsteadOfStaticMethods extends LintRule {
