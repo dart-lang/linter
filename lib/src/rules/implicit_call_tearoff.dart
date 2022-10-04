@@ -8,7 +8,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 
 const _desc =
-    r'Explicitly tear-off `call` methods when using an object as a Function';
+    r'Explicitly tear-off `call` methods when using an object as a Function.';
 
 const _details = r'''
 
