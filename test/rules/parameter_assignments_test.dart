@@ -68,7 +68,7 @@ void f({int? optional}) {
 ''');
   }
 
-  test_function_ok() async {
+  test_function_ok_noAssignment() async {
     await assertNoDiagnostics(r'''
 void f(String p) {
   print(p);
@@ -149,6 +149,19 @@ void f(int p) {
 }
 ''', [
       lint(18, 3),
+    ]);
+  }
+
+  test_localFunction() async {
+    await assertDiagnostics(r'''
+void f(int p) {
+  void g() {
+    p = 3;
+  }
+  g();
+}
+''', [
+      lint(33, 5),
     ]);
   }
 

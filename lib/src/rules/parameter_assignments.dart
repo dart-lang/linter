@@ -113,11 +113,9 @@ class _DeclarationVisitor extends RecursiveAstVisitor {
   final bool paramDefaultsToNull;
   bool hasBeenAssigned = false;
 
-  _DeclarationVisitor(this.parameter, this.rule)
-      : paramIsNotNullByDefault = parameter is SimpleFormalParameter ||
-            _isDefaultFormalParameterWithDefaultValue(parameter),
-        paramDefaultsToNull = parameter is DefaultFormalParameter &&
-            parameter.defaultValue == null;
+  _DeclarationVisitor(this.parameter, this.rule,
+      {required this.paramIsNotNullByDefault,
+      required this.paramDefaultsToNull});
 
   @override
   visitAssignmentExpression(AssignmentExpression node) {
@@ -125,14 +123,12 @@ class _DeclarationVisitor extends RecursiveAstVisitor {
       if (_isFormalParameterReassigned(parameter, node)) {
         rule.reportLint(node);
       }
-    } else {
-      if (paramDefaultsToNull) {
-        if (_isFormalParameterReassigned(parameter, node)) {
-          if (hasBeenAssigned) {
-            rule.reportLint(node);
-          }
-          hasBeenAssigned = true;
+    } else if (paramDefaultsToNull) {
+      if (_isFormalParameterReassigned(parameter, node)) {
+        if (hasBeenAssigned) {
+          rule.reportLint(node);
         }
+        hasBeenAssigned = true;
       }
     }
 
@@ -173,27 +169,31 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    var parameterList = node.functionExpression.parameters;
-    if (parameterList == null) return;
-    for (var e in parameterList.parameters) {
-      var declaredElement = e.declaredElement;
-      if (declaredElement != null &&
-          node.functionExpression.body
-              .isPotentiallyMutatedInScope(declaredElement)) {
-        node.accept(_DeclarationVisitor(e, rule));
-      }
-    }
+    _checkParameters(
+        node.functionExpression.parameters, node.functionExpression.body);
   }
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    var parameterList = node.parameters;
+    _checkParameters(node.parameters, node.body);
+  }
+
+  void _checkParameters(FormalParameterList? parameterList, FunctionBody body) {
     if (parameterList == null) return;
-    for (var e in parameterList.parameters) {
-      var declaredElement = e.declaredElement;
+
+    for (var parameter in parameterList.parameters) {
+      var declaredElement = parameter.declaredElement;
       if (declaredElement != null &&
-          node.body.isPotentiallyMutatedInScope(declaredElement)) {
-        node.accept(_DeclarationVisitor(e, rule));
+          body.isPotentiallyMutatedInScope(declaredElement)) {
+        var paramIsNotNullByDefault = parameter is SimpleFormalParameter ||
+            _isDefaultFormalParameterWithDefaultValue(parameter);
+        var paramDefaultsToNull = parameter is DefaultFormalParameter &&
+            parameter.defaultValue == null;
+        if (paramDefaultsToNull || paramIsNotNullByDefault) {
+          body.accept(_DeclarationVisitor(parameter, rule,
+              paramDefaultsToNull: paramDefaultsToNull,
+              paramIsNotNullByDefault: paramIsNotNullByDefault));
+        }
       }
     }
   }
