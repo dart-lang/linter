@@ -11,7 +11,6 @@ const _desc =
     r'Explicitly tear-off `call` methods when using an object as a Function.';
 
 const _details = r'''
-
 **DO** ...
 Explicitly tear off `.call` methods from objects when assigning to a Function
 type.
