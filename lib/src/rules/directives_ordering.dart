@@ -233,39 +233,66 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void _checkDartDirectiveGoFirst(
       Set<AstNode> lintedNodes, CompilationUnit node) {
-    void reportImport(NamespaceDirective directive) {
-      if (lintedNodes.add(directive)) {
-        rule._reportLintWithDartDirectiveGoFirstMessage(
-            directive, _importKeyword);
+    var seenNonDartImport = false;
+    var seenNonDartExport = false;
+
+    for (var directive in node.directives) {
+      if (directive is ImportDirective) {
+        if (_isDartDirective(directive)) {
+          if (seenNonDartImport && lintedNodes.add(directive)) {
+            rule._reportLintWithDartDirectiveGoFirstMessage(
+                directive, _importKeyword);
+          }
+        } else {
+          seenNonDartImport = true;
+        }
+      } else if (directive is ExportDirective) {
+        if (_isDartDirective(directive)) {
+          if (seenNonDartExport && lintedNodes.add(directive)) {
+            rule._reportLintWithDartDirectiveGoFirstMessage(
+                directive, _exportKeyword);
+          }
+        } else {
+          seenNonDartExport = true;
+        }
       }
     }
-
-    void reportExport(NamespaceDirective directive) {
-      if (lintedNodes.add(directive)) {
-        rule._reportLintWithDartDirectiveGoFirstMessage(
-            directive, _exportKeyword);
-      }
-    }
-
-    Iterable<NamespaceDirective> getNodesToLint(
-            Iterable<NamespaceDirective> directives) =>
-        directives.skipWhile(_isDartDirective).where(_isDartDirective);
-
-    getNodesToLint(_getImportDirectives(node)).forEach(reportImport);
-
-    getNodesToLint(_getExportDirectives(node)).forEach(reportExport);
   }
 
   void _checkDirectiveSectionOrderedAlphabetically(
       Set<AstNode> lintedNodes, CompilationUnit node) {
-    var importDirectives = _getImportDirectives(node);
-    var exportDirectives = _getExportDirectives(node);
+    var dartImports = <ImportDirective>[];
+    var dartExports = <ExportDirective>[];
 
-    var dartImports = importDirectives.where(_isDartDirective);
-    var dartExports = exportDirectives.where(_isDartDirective);
+    var relativeImports = <ImportDirective>[];
+    var relativeExports = <ExportDirective>[];
 
-    var relativeImports = importDirectives.where(_isRelativeDirective);
-    var relativeExports = exportDirectives.where(_isRelativeDirective);
+    var packageExports = <ExportDirective>[];
+    var packageImports = <ImportDirective>[];
+
+    for (var directive in node.directives) {
+      if (directive is ImportDirective) {
+        if (_isDartDirective(directive)) {
+          dartImports.add(directive);
+        }
+        if (_isRelativeDirective(directive)) {
+          relativeImports.add(directive);
+        }
+        if (_isPackageDirective(directive)) {
+          packageImports.add(directive);
+        }
+      } else if (directive is ExportDirective) {
+        if (_isDartDirective(directive)) {
+          dartExports.add(directive);
+        }
+        if (_isRelativeDirective(directive)) {
+          relativeExports.add(directive);
+        }
+        if (_isPackageDirective(directive)) {
+          packageExports.add(directive);
+        }
+      }
+    }
 
     _checkSectionInOrder(lintedNodes, dartImports);
     _checkSectionInOrder(lintedNodes, dartExports);
@@ -280,9 +307,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     // will have ecosystem impact.
 
     // Not a pub package. Package directives should be sorted in one block.
-    var packageImports = importDirectives.where(_isPackageDirective);
-    var packageExports = exportDirectives.where(_isPackageDirective);
-
     _checkSectionInOrder(lintedNodes, packageImports);
     _checkSectionInOrder(lintedNodes, packageExports);
 
