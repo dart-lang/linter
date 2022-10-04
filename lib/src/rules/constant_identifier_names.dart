@@ -12,7 +12,6 @@ import '../utils.dart';
 const _desc = r'Prefer using lowerCamelCase for constant names.';
 
 const _details = r'''
-
 **PREFER** using lowerCamelCase for constant names.
 
 In new code, use `lowerCamelCase` for constant variables, including enum values.
@@ -76,7 +75,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitEnumConstantDeclaration(EnumConstantDeclaration node) {
-    checkIdentifier(node.name2);
+    checkIdentifier(node.name);
   }
 
   @override
@@ -88,7 +87,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitVariableDeclarationList(VariableDeclarationList node) {
     for (var v in node.variables) {
       if (v.isConst) {
-        checkIdentifier(v.name2);
+        checkIdentifier(v.name);
       }
     }
   }

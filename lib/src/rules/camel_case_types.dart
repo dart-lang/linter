@@ -12,7 +12,6 @@ import '../utils.dart';
 const _desc = r'Name types using UpperCamelCase.';
 
 const _details = r'''
-
 From the [style guide](https://dart.dev/guides/language/effective-dart/style/):
 
 **DO** name types using UpperCamelCase.
@@ -77,26 +76,26 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    check(node.name2);
+    check(node.name);
   }
 
   @override
   void visitClassTypeAlias(ClassTypeAlias node) {
-    check(node.name2);
+    check(node.name);
   }
 
   @override
   void visitEnumDeclaration(EnumDeclaration node) {
-    check(node.name2);
+    check(node.name);
   }
 
   @override
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
-    check(node.name2);
+    check(node.name);
   }
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    check(node.name2);
+    check(node.name);
   }
 }

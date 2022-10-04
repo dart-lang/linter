@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Sort unnamed constructor declarations first.';
 
 const _details = r'''
-
 **DO** sort unnamed constructor declarations first, before named ones.
 
 **GOOD:**
@@ -60,7 +59,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     // Members are sorted by source position in the AST.
     for (var member in members) {
       if (member is ConstructorDeclaration) {
-        if (member.name2 == null) {
+        if (member.name == null) {
           if (seenConstructor) {
             rule.reportLint(member.returnType);
           }

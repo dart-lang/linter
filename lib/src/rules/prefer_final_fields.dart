@@ -15,7 +15,6 @@ import '../extensions.dart';
 const _desc = r'Private field could be final.';
 
 const _details = r'''
-
 **DO** prefer declaring private fields as final if they are not reassigned later
 in the library.
 
@@ -169,7 +168,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     for (var variable in fields.variables) {
-      var element = variable.declaredElement2;
+      var element = variable.declaredElement;
 
       if (element is PropertyInducingElement &&
           element.isPrivate &&

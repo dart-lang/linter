@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:analyzer/dart/element/element.dart';
-
 import '../analyzer.dart';
 import '../util/unrelated_types_visitor.dart';
 
@@ -11,7 +9,6 @@ const _desc = r'Invocation of Iterable<E>.contains with references of unrelated'
     r' types.';
 
 const _details = r'''
-
 **DON'T** invoke `contains` on `Iterable` with an instance of different type
 than the parameter type.
 
@@ -122,7 +119,7 @@ class DerivedClass3 extends ClassBase implements Mixin {}
 
 class IterableContainsUnrelatedType extends LintRule {
   static const LintCode code = LintCode('iterable_contains_unrelated_type',
-      "The type of the argument of 'Iterable<{0}>.contains' isn't a subtype of '{0}'.");
+      "The argument type '{0}' isn't related to '{1}'.");
 
   IterableContainsUnrelatedType()
       : super(
@@ -146,8 +143,11 @@ class _Visitor extends UnrelatedTypesProcessors {
   _Visitor(super.rule, super.typeSystem, super.typeProvider);
 
   @override
-  InterfaceElement get interface => typeProvider.iterableElement;
-
-  @override
-  String get methodName => 'contains';
+  List<MethodDefinition> get methods => [
+        MethodDefinitionForElement(
+          typeProvider.iterableElement,
+          'contains',
+          ExpectedArgumentKind.assignableToCollectionTypeArgument,
+        )
+      ];
 }

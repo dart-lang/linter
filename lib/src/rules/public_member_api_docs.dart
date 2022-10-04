@@ -13,7 +13,6 @@ import '../ast.dart';
 const _desc = r'Document all public members.';
 
 const _details = r'''
-
 **DO** document all public members.
 
 All non-overriding public members should be documented with `///` doc-style
@@ -125,9 +124,9 @@ class _Visitor extends SimpleAstVisitor {
 
     // Identify getter/setter pairs.
     for (var member in members) {
-      if (member is MethodDeclaration && !isPrivate(member.name2)) {
+      if (member is MethodDeclaration && !isPrivate(member.name)) {
         if (member.isGetter) {
-          getters[member.name2.lexeme] = member;
+          getters[member.name.lexeme] = member;
         } else if (member.isSetter) {
           setters.add(member);
         } else {
@@ -146,7 +145,7 @@ class _Visitor extends SimpleAstVisitor {
 
     // But only setters whose getter is missing a doc.
     for (var setter in setters) {
-      var getter = getters[setter.name2.lexeme];
+      var getter = getters[setter.name.lexeme];
       if (getter != null && missingDocs.contains(getter)) {
         check(setter);
       }
@@ -178,16 +177,16 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   bool isOverridingMember(Declaration node) =>
-      getOverriddenMember(node.declaredElement2) != null;
+      getOverriddenMember(node.declaredElement) != null;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    _visitMembers(node, node.name2, node.members);
+    _visitMembers(node, node.name, node.members);
   }
 
   @override
   void visitClassTypeAlias(ClassTypeAlias node) {
-    if (!isPrivate(node.name2)) {
+    if (!isPrivate(node.name)) {
       check(node);
     }
   }
@@ -205,10 +204,10 @@ class _Visitor extends SimpleAstVisitor {
     // Identify getter/setter pairs.
     for (var member in node.declarations) {
       if (member is FunctionDeclaration) {
-        var name = member.name2;
+        var name = member.name;
         if (!isPrivate(name) && name.lexeme != 'main') {
           if (member.isGetter) {
-            getters[member.name2.lexeme] = member;
+            getters[member.name.lexeme] = member;
           } else if (member.isSetter) {
             setters.add(member);
           } else {
@@ -228,7 +227,7 @@ class _Visitor extends SimpleAstVisitor {
 
     // But only setters whose getter is missing a doc.
     for (var setter in setters) {
-      var getter = getters[setter.name2.lexeme];
+      var getter = getters[setter.name.lexeme];
       if (getter != null && missingDocs.contains(getter)) {
         check(setter);
       }
@@ -242,21 +241,21 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    if (!inPrivateMember(node) && !isPrivate(node.name2)) {
+    if (!inPrivateMember(node) && !isPrivate(node.name)) {
       check(node);
     }
   }
 
   @override
   void visitEnumConstantDeclaration(EnumConstantDeclaration node) {
-    if (!inPrivateMember(node) && !isPrivate(node.name2)) {
+    if (!inPrivateMember(node) && !isPrivate(node.name)) {
       check(node);
     }
   }
 
   @override
   void visitEnumDeclaration(EnumDeclaration node) {
-    if (isPrivate(node.name2)) return;
+    if (isPrivate(node.name)) return;
 
     check(node);
     checkMethods(node.members);
@@ -264,7 +263,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitExtensionDeclaration(ExtensionDeclaration node) {
-    if (node.name2 == null || isPrivate(node.name2)) {
+    if (node.name == null || isPrivate(node.name)) {
       return;
     }
 
@@ -276,7 +275,7 @@ class _Visitor extends SimpleAstVisitor {
   void visitFieldDeclaration(FieldDeclaration node) {
     if (!inPrivateMember(node)) {
       for (var field in node.fields.variables) {
-        if (!isPrivate(field.name2)) {
+        if (!isPrivate(field.name)) {
           check(field);
         }
       }
@@ -285,27 +284,27 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
-    if (!isPrivate(node.name2)) {
+    if (!isPrivate(node.name)) {
       check(node);
     }
   }
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    if (!isPrivate(node.name2)) {
+    if (!isPrivate(node.name)) {
       check(node);
     }
   }
 
   @override
   void visitMixinDeclaration(MixinDeclaration node) {
-    _visitMembers(node, node.name2, node.members);
+    _visitMembers(node, node.name, node.members);
   }
 
   @override
   void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
     for (var decl in node.variables.variables) {
-      if (!isPrivate(decl.name2)) {
+      if (!isPrivate(decl.name)) {
         check(decl);
       }
     }

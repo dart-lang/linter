@@ -11,8 +11,7 @@ import '../analyzer.dart';
 const _desc = r'Missing deprecated annotation.';
 
 const _details = r'''
-
-Do apply `@Deprecated()` consistently:
+**DO** apply `@Deprecated()` consistently:
 
 - if a class is deprecated, its constructors should also be deprecated.
 - if a field is deprecated, the constructor parameter pointing to it should also be deprecated.
@@ -74,7 +73,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    var constructorElement = node.declaredElement2;
+    var constructorElement = node.declaredElement;
     if (constructorElement != null &&
         constructorElement.enclosingElement3.hasDeprecated &&
         !constructorElement.hasDeprecated) {

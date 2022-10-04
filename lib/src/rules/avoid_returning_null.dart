@@ -15,7 +15,6 @@ const _desc =
     r' or num.';
 
 const _details = r'''
-
 **AVOID** returning null from members whose return type is bool, double, int,
 or num.
 
@@ -41,17 +40,12 @@ double getDouble() => -1.0;
 
 ''';
 
-bool _isFunctionExpression(AstNode node) => node is FunctionExpression;
-
 bool _isPrimitiveType(DartType type) =>
     type is InterfaceType &&
     (type.isDartCoreBool ||
         type.isDartCoreDouble ||
         type.isDartCoreInt ||
         type.isDartCoreNum);
-
-bool _isReturnNull(AstNode node) =>
-    node is ReturnStatement && node.expression.isNullLiteral;
 
 class AvoidReturningNull extends LintRule {
   AvoidReturningNull()
@@ -75,6 +69,25 @@ class AvoidReturningNull extends LintRule {
   }
 }
 
+class _BodyVisitor extends RecursiveAstVisitor {
+  final LintRule rule;
+  _BodyVisitor(this.rule);
+
+  @override
+  visitFunctionExpression(FunctionExpression node) {
+    // Skip Function expressions.
+  }
+
+  @override
+  visitReturnStatement(ReturnStatement node) {
+    if (node.expression.isNullLiteral) {
+      rule.reportLint(node);
+    }
+
+    super.visitReturnStatement(node);
+  }
+}
+
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
@@ -91,7 +104,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    var declaredElement = node.declaredElement2;
+    var declaredElement = node.declaredElement;
     if (declaredElement != null &&
         _isPrimitiveType(declaredElement.returnType)) {
       _visitFunctionBody(node.body);
@@ -103,9 +116,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       rule.reportLint(node);
       return;
     }
-    node
-        .traverseNodesInDFS(excludeCriteria: _isFunctionExpression)
-        .where(_isReturnNull)
-        .forEach(rule.reportLint);
+
+    node.accept(_BodyVisitor(rule));
   }
 }

@@ -11,7 +11,6 @@ import '../utils.dart';
 const _desc = r'Name libraries using `lowercase_with_underscores`.';
 
 const _details = r'''
-
 **DO** name libraries using `lowercase_with_underscores`.
 
 Some file systems are not case-sensitive, so many projects require filenames to
@@ -58,8 +57,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitLibraryDirective(LibraryDirective node) {
-    if (!isLowerCaseUnderScoreWithDots(node.name.toString())) {
-      rule.reportLint(node.name);
+    var name = node.name2;
+    if (name != null && !isLowerCaseUnderScoreWithDots(name.toString())) {
+      rule.reportLint(name);
     }
   }
 }

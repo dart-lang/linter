@@ -12,8 +12,7 @@ import '../analyzer.dart';
 const _desc = r"Don't assign to void.";
 
 const _details = r'''
-
-**DO NOT** assign to void.
+**DON'T** assign to void.
 
 **BAD:**
 ```dart
@@ -118,12 +117,12 @@ class _Visitor extends SimpleAstVisitor<void> {
             checkedNode: node.expression);
       }
     } else if (parent is MethodDeclaration) {
-      _check(parent.declaredElement2?.returnType, node.expression?.staticType,
-          node,
+      _check(
+          parent.declaredElement?.returnType, node.expression?.staticType, node,
           checkedNode: node.expression);
     } else if (parent is FunctionDeclaration) {
-      _check(parent.declaredElement2?.returnType, node.expression?.staticType,
-          node,
+      _check(
+          parent.declaredElement?.returnType, node.expression?.staticType, node,
           checkedNode: node.expression);
     }
   }

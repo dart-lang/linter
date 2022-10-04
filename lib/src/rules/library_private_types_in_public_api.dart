@@ -12,7 +12,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid using private types in public APIs.';
 
 const _details = r'''
-
 **AVOID** using library private types in public APIs.
 
 For the purposes of this lint, a public API is considered to be any top-level or
@@ -64,7 +63,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    if (Identifier.isPrivateName(node.name2.lexeme)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.typeParameters?.accept(this);
@@ -73,7 +72,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitEnumDeclaration(EnumDeclaration node) {
-    if (Identifier.isPrivateName(node.name2.lexeme)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.typeParameters?.accept(this);
@@ -82,7 +81,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitClassTypeAlias(ClassTypeAlias node) {
-    if (Identifier.isPrivateName(node.name2.lexeme)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.superclass.accept(this);
@@ -91,7 +90,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    var name = node.name2;
+    var name = node.name;
     if (name != null && Identifier.isPrivateName(name.lexeme)) {
       return;
     }
@@ -105,7 +104,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitExtensionDeclaration(ExtensionDeclaration node) {
-    var name = node.name2;
+    var name = node.name;
     if (name == null || Identifier.isPrivateName(name.lexeme)) {
       return;
     }
@@ -117,7 +116,7 @@ class Validator extends SimpleAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     if (node.fields.variables
-        .any((field) => !Identifier.isPrivateName(field.name2.lexeme))) {
+        .any((field) => !Identifier.isPrivateName(field.name.lexeme))) {
       node.fields.type?.accept(this);
     }
   }
@@ -151,7 +150,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    if (Identifier.isPrivateName(node.name2.lexeme)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.returnType?.accept(this);
@@ -161,7 +160,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
-    if (Identifier.isPrivateName(node.name2.lexeme)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.returnType?.accept(this);
@@ -188,7 +187,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    if (Identifier.isPrivateName(node.name2.lexeme)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.typeParameters?.accept(this);
@@ -197,7 +196,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (Identifier.isPrivateName(node.name2.lexeme)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.returnType?.accept(this);
@@ -207,7 +206,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitMixinDeclaration(MixinDeclaration node) {
-    if (Identifier.isPrivateName(node.name2.lexeme)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.onClause?.superclassConstraints.accept(this);
@@ -259,7 +258,7 @@ class Validator extends SimpleAstVisitor<void> {
   @override
   void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
     if (node.variables.variables
-        .any((field) => !Identifier.isPrivateName(field.name2.lexeme))) {
+        .any((field) => !Identifier.isPrivateName(field.name.lexeme))) {
       node.variables.type?.accept(this);
     }
   }

@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid returning null for void.';
 
 const _details = r'''
-
 **AVOID** returning null for void.
 
 In a large variety of languages `void` as return type is used to indicate that
@@ -91,7 +90,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       type = parent.declaredElement?.returnType;
       isAsync = parent.body.isAsynchronous;
     } else if (parent is MethodDeclaration) {
-      type = parent.declaredElement2?.returnType;
+      type = parent.declaredElement?.returnType;
       isAsync = parent.body.isAsynchronous;
     } else {
       throw StateError('unexpected type');

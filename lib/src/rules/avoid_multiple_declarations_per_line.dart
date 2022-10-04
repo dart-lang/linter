@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r"Don't declare multiple variables on a single line.";
 
 const _details = r'''
-
 **DON'T** declare multiple variables on a single line.
 
 **BAD:**
@@ -56,7 +55,7 @@ class _Visitor extends SimpleAstVisitor {
     var variables = node.variables;
     if (variables.length > 1) {
       var secondVariable = variables[1];
-      rule.reportLintForToken(secondVariable.name2);
+      rule.reportLintForToken(secondVariable.name);
     }
   }
 }

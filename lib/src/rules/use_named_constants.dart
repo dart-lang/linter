@@ -12,7 +12,6 @@ import '../analyzer.dart';
 const _desc = r'Use predefined named constants.';
 
 const _details = r'''
-
 Where possible, use already defined const values.
 
 **BAD:**
@@ -59,7 +58,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       var element = type.element2;
       if (element is ClassElement) {
         var nodeField =
-            node.thisOrAncestorOfType<VariableDeclaration>()?.declaredElement2;
+            node.thisOrAncestorOfType<VariableDeclaration>()?.declaredElement;
 
         // avoid diagnostic for fields in the same class having the same value
         // class A {

@@ -84,6 +84,32 @@ class DiagnosticsDescribeAllProperties extends LintRule {
   }
 }
 
+class _IdentifierVisitor extends RecursiveAstVisitor {
+  final List<Token> properties;
+  _IdentifierVisitor(this.properties);
+
+  @override
+  visitSimpleIdentifier(SimpleIdentifier node) {
+    String debugName;
+    String name;
+    const debugPrefix = 'debug';
+    if (node.name.startsWith(debugPrefix) &&
+        node.name.length > debugPrefix.length) {
+      debugName = node.name;
+      name = '${node.name[debugPrefix.length].toLowerCase()}'
+          '${node.name.substring(debugPrefix.length + 1)}';
+    } else {
+      name = node.name;
+      debugName =
+          '$debugPrefix${node.name[0].toUpperCase()}${node.name.substring(1)}';
+    }
+    properties.removeWhere(
+        (property) => property.lexeme == debugName || property.lexeme == name);
+
+    super.visitSimpleIdentifier(node);
+  }
+}
+
 class _Visitor extends SimpleAstVisitor {
   final LintRule rule;
   final LinterContext context;
@@ -91,27 +117,7 @@ class _Visitor extends SimpleAstVisitor {
   _Visitor(this.rule, this.context);
 
   void removeReferences(MethodDeclaration? method, List<Token> properties) {
-    if (method == null) {
-      return;
-    }
-    for (var p
-        in method.body.traverseNodesInDFS().whereType<SimpleIdentifier>()) {
-      String debugName;
-      String name;
-      const debugPrefix = 'debug';
-      if (p.name.startsWith(debugPrefix) &&
-          p.name.length > debugPrefix.length) {
-        debugName = p.name;
-        name = '${p.name[debugPrefix.length].toLowerCase()}'
-            '${p.name.substring(debugPrefix.length + 1)}';
-      } else {
-        name = p.name;
-        debugName =
-            '$debugPrefix${p.name[0].toUpperCase()}${p.name.substring(1)}';
-      }
-      properties.removeWhere((property) =>
-          property.lexeme == debugName || property.lexeme == name);
-    }
+    method?.body.accept(_IdentifierVisitor(properties));
   }
 
   bool skipForDiagnostic({Element? element, DartType? type, Token? name}) =>
@@ -120,7 +126,7 @@ class _Visitor extends SimpleAstVisitor {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     // We only care about Diagnosticables.
-    var type = node.declaredElement2?.thisType;
+    var type = node.declaredElement?.thisType;
     if (!type.implementsInterface('Diagnosticable', '')) {
       return;
     }
@@ -130,23 +136,23 @@ class _Visitor extends SimpleAstVisitor {
       if (member is MethodDeclaration && member.isGetter) {
         if (!member.isStatic &&
             !skipForDiagnostic(
-              element: member.declaredElement2,
-              name: member.name2,
+              element: member.declaredElement,
+              name: member.name,
               type: member.returnType?.type,
             )) {
-          properties.add(member.name2);
+          properties.add(member.name);
         }
       } else if (member is FieldDeclaration) {
         for (var v in member.fields.variables) {
-          var declaredElement = v.declaredElement2;
+          var declaredElement = v.declaredElement;
           if (declaredElement != null &&
               !declaredElement.isStatic &&
               !skipForDiagnostic(
                 element: declaredElement,
-                name: v.name2,
+                name: v.name,
                 type: declaredElement.type,
               )) {
-            properties.add(v.name2);
+            properties.add(v.name);
           }
         }
       }

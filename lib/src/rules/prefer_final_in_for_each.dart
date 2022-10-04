@@ -11,7 +11,6 @@ const _desc =
     r'Prefer final in for-each loop variable if reference is not reassigned.';
 
 const _details = r'''
-
 **DO** prefer declaring for-each loop variables as final if they are not
 reassigned later in the code.
 
@@ -79,7 +78,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
 
       var function = node.thisOrAncestorOfType<FunctionBody>();
-      var loopVariableElement = loopVariable.declaredElement2;
+      var loopVariableElement = loopVariable.declaredElement;
       if (function != null &&
           loopVariableElement != null &&
           !function.isPotentiallyMutatedInScope(loopVariableElement)) {

@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Unnecessary await keyword in return.';
 
 const _details = r'''
-
 Avoid returning an awaited expression when the expression type is assignable to
 the function's return type.
 
@@ -90,7 +89,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (parent is FunctionExpression) {
       returnType = parent.declaredElement?.returnType;
     } else if (parent is MethodDeclaration) {
-      returnType = parent.declaredElement2?.returnType;
+      returnType = parent.declaredElement?.returnType;
     } else if (parent is Block) {
       // removing await in try block changes the behaviour
       return;

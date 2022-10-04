@@ -13,7 +13,6 @@ import '../extensions.dart';
 const _desc = r'Cascade consecutive method invocations on the same reference.';
 
 const _details = r'''
-
 **DO** Use the cascading style when successively invoking methods on the same
 reference.
 
@@ -66,7 +65,7 @@ Element? _getElementFromVariableDeclarationStatement(
       // In such a case, we should not return any cascadable element here.
       return null;
     }
-    return variable.declaredElement2;
+    return variable.declaredElement;
   }
   return null;
 }
@@ -267,12 +266,40 @@ class _CascadableExpression {
       !_hasCriticalDependencies(expressionBox);
 
   bool _hasCriticalDependencies(_CascadableExpression expressionBox) {
-    bool isCriticalNode(AstNode node) =>
-        node.canonicalElement == expressionBox.element;
-    return expressionBox.isCritical &&
-        criticalNodes.any((node) =>
-            isCriticalNode(node) ||
-            node.traverseNodesInDFS().any(isCriticalNode));
+    if (!expressionBox.isCritical) return false;
+
+    for (var node in criticalNodes) {
+      if (_NodeVisitor(expressionBox).isOrHasCriticalNode(node)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
+
+class _NodeVisitor extends UnifyingAstVisitor {
+  final _CascadableExpression expressionBox;
+
+  bool foundCriticalNode = false;
+  _NodeVisitor(this.expressionBox);
+
+  bool isCriticalNode(AstNode node) =>
+      node.canonicalElement == expressionBox.element;
+
+  bool isOrHasCriticalNode(AstNode node) {
+    node.accept(this);
+    return foundCriticalNode;
+  }
+
+  @override
+  visitNode(AstNode node) {
+    if (foundCriticalNode) return;
+    foundCriticalNode = isCriticalNode(node);
+
+    if (!foundCriticalNode) {
+      super.visitNode(node);
+    }
   }
 }
 

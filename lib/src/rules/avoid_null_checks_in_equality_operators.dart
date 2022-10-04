@@ -15,7 +15,6 @@ import '../extensions.dart';
 const _desc = r"Don't check for null in custom == operators.";
 
 const _details = r'''
-
 **DON'T** check for null in custom == operators.
 
 As null is a special type, no class can be equivalent to it.  Thus, it is
@@ -57,14 +56,6 @@ bool _isComparingParameterWithNull(BinaryExpression node, Element? parameter) =>
 bool _isParameter(Expression expression, Element? parameter) =>
     expression.canonicalElement == parameter;
 
-bool _isParameterWithQuestion(AstNode node, Element? parameter) =>
-    (node is PropertyAccess &&
-        node.operator.type == TokenType.QUESTION_PERIOD &&
-        node.target.canonicalElement == parameter) ||
-    (node is MethodInvocation &&
-        node.operator?.type == TokenType.QUESTION_PERIOD &&
-        node.target.canonicalElement == parameter);
-
 bool _isParameterWithQuestionQuestion(
         BinaryExpression node, Element? parameter) =>
     node.operator.type == TokenType.QUESTION_QUESTION &&
@@ -87,6 +78,39 @@ class AvoidNullChecksInEqualityOperators extends LintRule {
   }
 }
 
+class _BodyVisitor extends RecursiveAstVisitor {
+  final Element? parameter;
+  final LintRule rule;
+  _BodyVisitor(this.parameter, this.rule);
+
+  @override
+  visitBinaryExpression(BinaryExpression node) {
+    if (_isParameterWithQuestionQuestion(node, parameter) ||
+        _isComparingParameterWithNull(node, parameter)) {
+      rule.reportLint(node);
+    }
+    super.visitBinaryExpression(node);
+  }
+
+  @override
+  visitMethodInvocation(MethodInvocation node) {
+    if (node.operator?.type == TokenType.QUESTION_PERIOD &&
+        node.target.canonicalElement == parameter) {
+      rule.reportLint(node);
+    }
+    super.visitMethodInvocation(node);
+  }
+
+  @override
+  visitPropertyAccess(PropertyAccess node) {
+    if (node.operator.type == TokenType.QUESTION_PERIOD &&
+        node.target.canonicalElement == parameter) {
+      rule.reportLint(node);
+    }
+    super.visitPropertyAccess(node);
+  }
+}
+
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   final bool nnbdEnabled;
@@ -100,7 +124,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    if (node.name2.type != TokenType.EQ_EQ || parameters.length != 1) {
+    if (node.name.type != TokenType.EQ_EQ || parameters.length != 1) {
       return;
     }
 
@@ -114,15 +138,6 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    bool checkIfParameterIsNull(AstNode node) =>
-        _isParameterWithQuestion(node, parameter) ||
-        (node is BinaryExpression &&
-            (_isParameterWithQuestionQuestion(node, parameter) ||
-                _isComparingParameterWithNull(node, parameter)));
-
-    node.body
-        .traverseNodesInDFS()
-        .where(checkIfParameterIsNull)
-        .forEach(rule.reportLint);
+    node.body.accept(_BodyVisitor(parameter, rule));
   }
 }

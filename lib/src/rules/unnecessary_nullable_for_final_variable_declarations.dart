@@ -12,7 +12,6 @@ const _desc = r'Use a non-nullable type for a final variable initialized '
     'with a non-nullable value.';
 
 const _details = r'''
-
 Use a non-nullable type for a final variable initialized with a non-nullable
 value.
 
@@ -60,7 +59,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var variable in node.fields.variables) {
-      if (Identifier.isPrivateName(variable.name2.lexeme) || node.isStatic) {
+      if (Identifier.isPrivateName(variable.name.lexeme) || node.isStatic) {
         _visit(variable);
       }
     }
@@ -87,7 +86,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (initializerType == null) {
       return;
     }
-    var declaredElement = variable.declaredElement2;
+    var declaredElement = variable.declaredElement;
     if (declaredElement == null || declaredElement.type.isDynamic) {
       return;
     }

@@ -13,7 +13,6 @@ import '../analyzer.dart';
 const _desc = r'Tighten type of initializing formal.';
 
 const _details = r'''
-
 Tighten the type of an initializing formal if a non-null assert exists. This
 allows the type system to catch problems rather than have them only be caught at
 run-time.
@@ -75,28 +74,41 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    var parameterElements = node.initializers
-        .whereType<AssertInitializer>()
-        .map((e) => e.condition)
-        .whereType<BinaryExpression>()
-        .where((e) => e.operator.type == TokenType.BANG_EQ)
-        .map((e) => e.rightOperand is NullLiteral
-            ? e.leftOperand
-            : e.leftOperand is NullLiteral
-                ? e.rightOperand
-                : null)
-        .whereType<Identifier>()
-        .where((e) {
-      var staticType = e.staticType;
-      return staticType != null && context.typeSystem.isNullable(staticType);
-    }).map((e) => e.staticElement);
+    for (var initializer in node.initializers) {
+      if (initializer is! AssertInitializer) continue;
 
-    for (var parameterElement in parameterElements) {
-      if (parameterElement is FieldFormalParameterElement ||
-          parameterElement is SuperFormalParameterElement) {
-        rule.reportLint(node.parameters.parameters
-            .firstWhere((p) => p.declaredElement == parameterElement));
+      var condition = initializer.condition;
+      if (condition is! BinaryExpression) continue;
+
+      if (condition.operator.type == TokenType.BANG_EQ) {
+        if (condition.rightOperand is NullLiteral) {
+          var leftOperand = condition.leftOperand;
+          if (leftOperand is Identifier) {
+            var staticType = leftOperand.staticType;
+            if (staticType != null &&
+                context.typeSystem.isNullable(staticType)) {
+              _check(leftOperand.staticElement, node);
+            }
+          }
+        } else if (condition.leftOperand is NullLiteral) {
+          var rightOperand = condition.rightOperand;
+          if (rightOperand is Identifier) {
+            var staticType = rightOperand.staticType;
+            if (staticType != null &&
+                context.typeSystem.isNullable(staticType)) {
+              _check(rightOperand.staticElement, node);
+            }
+          }
+        }
       }
+    }
+  }
+
+  void _check(Element? element, ConstructorDeclaration node) {
+    if (element is FieldFormalParameterElement ||
+        element is SuperFormalParameterElement) {
+      rule.reportLint(node.parameters.parameters
+          .firstWhere((p) => p.declaredElement == element));
     }
   }
 }
