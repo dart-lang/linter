@@ -44,24 +44,6 @@ class Point {
 bool _hasNewInvocation(DartType returnType, FunctionBody body) =>
     _BodyVisitor(returnType).containsInstanceCreation(body);
 
-class _BodyVisitor extends RecursiveAstVisitor {
-  bool found = false;
-  final DartType returnType;
-  _BodyVisitor(this.returnType);
-  @override
-  visitInstanceCreationExpression(InstanceCreationExpression node) {
-    found = node.staticType == returnType;
-    if (!found) {
-      super.visitInstanceCreationExpression(node);
-    }
-  }
-
-  bool containsInstanceCreation(FunctionBody body) {
-    body.accept(this);
-    return found;
-  }
-}
-
 class PreferConstructorsInsteadOfStaticMethods extends LintRule {
   PreferConstructorsInsteadOfStaticMethods()
       : super(
@@ -75,6 +57,26 @@ class PreferConstructorsInsteadOfStaticMethods extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this, context);
     registry.addMethodDeclaration(this, visitor);
+  }
+}
+
+class _BodyVisitor extends RecursiveAstVisitor {
+  bool found = false;
+
+  final DartType returnType;
+  _BodyVisitor(this.returnType);
+
+  bool containsInstanceCreation(FunctionBody body) {
+    body.accept(this);
+    return found;
+  }
+
+  @override
+  visitInstanceCreationExpression(InstanceCreationExpression node) {
+    found = node.staticType == returnType;
+    if (!found) {
+      super.visitInstanceCreationExpression(node);
+    }
   }
 }
 
