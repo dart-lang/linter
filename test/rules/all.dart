@@ -25,6 +25,8 @@ import 'avoid_types_as_parameter_names_test.dart'
 import 'avoid_unused_constructor_parameters_test.dart'
     as avoid_unused_constructor_parameters;
 import 'avoid_void_async_test.dart' as avoid_void_async;
+import 'collection_methods_unrelated_type_test.dart'
+    as collection_methods_unrelated_type;
 import 'conditional_uri_does_not_exist_test.dart'
     as conditional_uri_does_not_exist;
 import 'constant_identifier_names_test.dart' as constant_identifier_names;
@@ -33,6 +35,7 @@ import 'discarded_futures_test.dart' as discarded_futures;
 import 'file_names_test.dart' as file_names;
 import 'flutter_style_todos_test.dart' as flutter_style_todos;
 import 'hash_and_equals_test.dart' as hash_and_equals;
+import 'library_names_test.dart' as library_names;
 import 'library_private_types_in_public_api_test.dart'
     as library_private_types_in_public_api;
 import 'literal_only_boolean_expressions_test.dart'
@@ -81,6 +84,8 @@ import 'use_build_context_synchronously_test.dart'
 import 'use_enums_test.dart' as use_enums;
 import 'use_is_even_rather_than_modulo_test.dart'
     as use_is_even_rather_than_modulo;
+import 'use_late_for_private_fields_and_variables_test.dart'
+    as use_late_for_private_fields_and_variables;
 import 'use_super_parameters_test.dart' as use_super_parameters;
 import 'void_checks_test.dart' as void_checks;
 
@@ -99,6 +104,7 @@ void main() {
   avoid_types_as_parameter_names.main();
   avoid_unused_constructor_parameters.main();
   avoid_void_async.main();
+  collection_methods_unrelated_type.main();
   conditional_uri_does_not_exist.main();
   constant_identifier_names.main();
   deprecated_consistency.main();
@@ -106,6 +112,7 @@ void main() {
   file_names.main();
   flutter_style_todos.main();
   hash_and_equals.main();
+  library_names.main();
   library_private_types_in_public_api.main();
   literal_only_boolean_expressions.main();
   missing_whitespace_between_adjacent_strings.main();
@@ -140,6 +147,7 @@ void main() {
   use_build_context_synchronously.main();
   use_enums.main();
   use_is_even_rather_than_modulo.main();
+  use_late_for_private_fields_and_variables.main();
   use_super_parameters.main();
   void_checks.main();
 }
