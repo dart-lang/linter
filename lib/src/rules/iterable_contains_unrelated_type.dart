@@ -3,14 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
 import '../util/unrelated_types_visitor.dart';
 
 const _desc = r'Invocation of Iterable<E>.contains with references of unrelated'
     r' types.';
 
 const _details = r'''
-
 **DON'T** invoke `contains` on `Iterable` with an instance of different type
 than the parameter type.
 
@@ -121,7 +119,7 @@ class DerivedClass3 extends ClassBase implements Mixin {}
 
 class IterableContainsUnrelatedType extends LintRule {
   static const LintCode code = LintCode('iterable_contains_unrelated_type',
-      "The type of the argument of 'Iterable<{0}>.contains' isn't a subtype of '{0}'.");
+      "The argument type '{0}' isn't related to '{1}'.");
 
   IterableContainsUnrelatedType()
       : super(
@@ -136,19 +134,20 @@ class IterableContainsUnrelatedType extends LintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this, context.typeSystem);
+    var visitor = _Visitor(this, context.typeSystem, context.typeProvider);
     registry.addMethodInvocation(this, visitor);
   }
 }
 
 class _Visitor extends UnrelatedTypesProcessors {
-  static final _definition = InterfaceTypeDefinition('Iterable', 'dart.core');
-
-  _Visitor(super.rule, super.typeSystem);
+  _Visitor(super.rule, super.typeSystem, super.typeProvider);
 
   @override
-  InterfaceTypeDefinition get definition => _definition;
-
-  @override
-  String get methodName => 'contains';
+  List<MethodDefinition> get methods => [
+        MethodDefinitionForElement(
+          typeProvider.iterableElement,
+          'contains',
+          ExpectedArgumentKind.assignableToCollectionTypeArgument,
+        )
+      ];
 }

@@ -11,7 +11,6 @@ import '../util/dart_type_utilities.dart' as type_utils;
 const _desc = r'Join return statement with assignment when possible.';
 
 const _details = r'''
-
 **DO** join return statement with assignment when possible.
 
 **BAD:**
@@ -36,9 +35,17 @@ class A {
 ''';
 
 Expression? _getExpressionFromAssignmentStatement(Statement node) {
-  var visitor = _AssignmentStatementVisitor();
-  node.accept(visitor);
-  return visitor.expression;
+  if (node is ExpressionStatement) {
+    var expression = node.expression.unParenthesized;
+    if (expression is AssignmentExpression) {
+      return expression.leftHandSide;
+    } else if (expression is PostfixExpression) {
+      return expression.operand;
+    } else if (expression is PrefixExpression) {
+      return expression.operand;
+    }
+  }
+  return null;
 }
 
 Expression? _getExpressionFromReturnStatement(Statement node) =>
@@ -60,34 +67,6 @@ class JoinReturnWithAssignment extends LintRule {
   }
 }
 
-class _AssignmentStatementVisitor extends SimpleAstVisitor {
-  Expression? expression;
-  @override
-  void visitAssignmentExpression(AssignmentExpression node) {
-    expression = node.leftHandSide;
-  }
-
-  @override
-  void visitExpressionStatement(ExpressionStatement statement) {
-    statement.expression.accept(this);
-  }
-
-  @override
-  void visitParenthesizedExpression(ParenthesizedExpression node) {
-    node.unParenthesized.accept(this);
-  }
-
-  @override
-  void visitPostfixExpression(PostfixExpression node) {
-    expression = node.operand;
-  }
-
-  @override
-  void visitPrefixExpression(PrefixExpression node) {
-    expression = node.operand;
-  }
-}
-
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
@@ -100,15 +79,19 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (length < 2) {
       return;
     }
-    var secondLastStatement = statements[length - 2];
-    var lastStatement = statements.last;
-    var secondLastExpression =
-        _getExpressionFromAssignmentStatement(secondLastStatement);
-    var lastExpression = _getExpressionFromReturnStatement(lastStatement);
+    var lastExpression = _getExpressionFromReturnStatement(statements.last);
 
     // In this case, the last statement was not a return statement with a
     // simple target.
     if (lastExpression == null) {
+      return;
+    }
+
+    var secondLastStatement = statements[length - 2];
+    var secondLastExpression =
+        _getExpressionFromAssignmentStatement(secondLastStatement);
+    // Return if the second-to-last statement was not an assignment.
+    if (secondLastExpression == null) {
       return;
     }
 

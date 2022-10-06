@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid field initializers in const classes.';
 
 const _details = r'''
-
 **AVOID** field initializers in const classes.
 
 Instead of `final x = const expr;`, you should write `get x => const expr;` and
@@ -104,7 +103,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     // only const class
     var parent = node.parent;
     if (parent is ClassDeclaration) {
-      var declaredElement = parent.declaredElement2;
+      var declaredElement = parent.declaredElement;
       if (declaredElement == null) {
         return;
       }

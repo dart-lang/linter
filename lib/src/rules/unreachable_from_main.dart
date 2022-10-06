@@ -14,7 +14,6 @@ import '../analyzer.dart';
 const _desc = 'Unreachable top-level members in executable libraries.';
 
 const _details = r'''
-
 Top-level members in an executable library should be used directly inside this
 library.  An executable library is a library that contains a `main` top-level
 function or that contains a top-level function annotated with
@@ -78,13 +77,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     void addStaticMember(ClassMember member) {
       if (member is FieldDeclaration && member.isStatic) {
         for (var field in member.fields.variables) {
-          var e = field.declaredElement2;
+          var e = field.declaredElement;
           if (e != null && e.isPublic) {
             declarations.add(field);
           }
         }
       } else if (member is MethodDeclaration && member.isStatic) {
-        var e = member.declaredElement2;
+        var e = member.declaredElement;
         if (e != null && e.isPublic) {
           declarations.add(member);
         }
@@ -98,7 +97,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         declarations.addAll(declaration.variables.variables);
       } else {
         declarations.add(declaration);
-        var declaredElement = declaration.declaredElement2;
+        var declaredElement = declaration.declaredElement;
         if (declaredElement == null || declaredElement.isPrivate) {
           continue;
         }
@@ -121,7 +120,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     // each declares.
     var declarationByElement = <Element, Declaration>{};
     for (var declaration in declarations) {
-      var element = declaration.declaredElement2;
+      var element = declaration.declaredElement;
       if (element != null) {
         declarationByElement[element] = declaration;
         if (element is TopLevelVariableElement) {
@@ -166,7 +165,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     var unusedMembers = declarations.difference(usedMembers).where((e) {
-      var element = e.declaredElement2;
+      var element = e.declaredElement;
       return element != null &&
           element.isPublic &&
           !element.hasVisibleForTesting;
@@ -174,12 +173,12 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     for (var member in unusedMembers) {
       if (member is NamedCompilationUnitMember) {
-        rule.reportLintForToken(member.name2);
+        rule.reportLintForToken(member.name);
       } else if (member is VariableDeclaration) {
-        rule.reportLintForToken(member.name2);
+        rule.reportLintForToken(member.name);
       } else if (member is ExtensionDeclaration) {
         rule.reportLintForToken(
-            member.name2 ?? member.firstTokenAfterCommentAndMetadata);
+            member.name ?? member.firstTokenAfterCommentAndMetadata);
       } else {
         rule.reportLintForToken(member.firstTokenAfterCommentAndMetadata);
       }
@@ -188,7 +187,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool _isEntryPoint(Declaration e) =>
       e is FunctionDeclaration &&
-      (e.name2.lexeme == 'main' || e.metadata.any(_isPragmaVmEntry));
+      (e.name.lexeme == 'main' || e.metadata.any(_isPragmaVmEntry));
 
   bool _isPragmaVmEntry(Annotation annotation) {
     if (!annotation.isPragma) return false;

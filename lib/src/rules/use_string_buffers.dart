@@ -14,7 +14,6 @@ import '../extensions.dart';
 const _desc = r'Use string buffers to compose strings.';
 
 const _details = r'''
-
 **DO** use string buffers to compose strings.
 
 In most cases, using a string buffer is preferred for composing strings due to
@@ -155,7 +154,7 @@ class _UseStringBufferVisitor extends SimpleAstVisitor {
   @override
   void visitVariableDeclarationStatement(VariableDeclarationStatement node) {
     for (var variable in node.variables.variables) {
-      localElements.add(variable.declaredElement2);
+      localElements.add(variable.declaredElement);
     }
   }
 }

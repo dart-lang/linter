@@ -13,7 +13,6 @@ import '../extensions.dart';
 const _desc = r'Avoid positional boolean parameters.';
 
 const _details = r'''
-
 **AVOID** positional boolean parameters.
 
 Positional boolean parameters are a bad practice because they are very
@@ -64,7 +63,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    var declaredElement = node.declaredElement2;
+    var declaredElement = node.declaredElement;
     if (declaredElement != null && !declaredElement.isPrivate) {
       var parametersToLint =
           node.parameters.parameters.where(_isFormalParameterToLint);
@@ -76,7 +75,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    var declaredElement = node.declaredElement2;
+    var declaredElement = node.declaredElement;
     if (declaredElement != null && !declaredElement.isPrivate) {
       var parametersToLint = node.functionExpression.parameters?.parameters
           .where(_isFormalParameterToLint);
@@ -88,7 +87,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    var declaredElement = node.declaredElement2;
+    var declaredElement = node.declaredElement;
     if (declaredElement != null &&
         !node.isSetter &&
         !declaredElement.isPrivate &&

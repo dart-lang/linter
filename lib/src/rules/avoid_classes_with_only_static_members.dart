@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid defining a class that contains only static members.';
 
 const _details = r'''
-
 **AVOID** defining a class that contains only static members.
 
 Creating classes with the sole purpose of providing utility or otherwise static
@@ -78,7 +77,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    var declaredElement = node.declaredElement2;
+    var declaredElement = node.declaredElement;
     if (declaredElement == null) {
       return;
     }

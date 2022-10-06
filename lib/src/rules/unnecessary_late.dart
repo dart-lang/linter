@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r"Don't specify the `late` modifier when it is not needed.";
 
 const _details = r'''
-
 **DO** not specify the `late` modifier for top-level and static variables
 when the declaration contains an initializer. 
 
@@ -83,7 +82,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     for (var variable in node.variables) {
       if (variable.initializer != null) {
-        rule.reportLintForToken(variable.name2);
+        rule.reportLintForToken(variable.name);
       }
     }
   }

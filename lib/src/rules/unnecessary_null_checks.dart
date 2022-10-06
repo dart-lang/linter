@@ -12,8 +12,7 @@ import '../analyzer.dart';
 const _desc = r'Unnecessary null checks.';
 
 const _details = r'''
-
-Don't apply a null check when a nullable value is accepted.
+**DON'T** apply a null check when a nullable value is accepted.
 
 **BAD:**
 ```dart
@@ -90,7 +89,7 @@ DartType? getExpectedType(PostfixExpression node) {
   }
   // in variable declaration
   if (parent is VariableDeclaration) {
-    return parent.declaredElement2?.type;
+    return parent.declaredElement?.type;
   }
   // as right member of binary operator
   if (parent is BinaryExpression && parent.rightOperand == realNode) {

@@ -14,7 +14,6 @@ import '../extensions.dart';
 const _desc = r"Don't explicitly initialize variables to null.";
 
 const _details = r'''
-
 From [effective dart](https://dart.dev/guides/language/effective-dart/usage#dont-explicitly-initialize-variables-to-null):
 
 **DON'T** explicitly initialize variables to null.
@@ -105,7 +104,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
-    var declaredElement = node.declaredElement2;
+    var declaredElement = node.declaredElement;
     if (declaredElement != null &&
         !node.isConst &&
         !node.isFinal &&

@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid private typedef functions.';
 
 const _details = r'''
-
 **AVOID** private typedef functions used only once. Prefer inline function
 syntax.
 
@@ -66,7 +65,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
-    _countAndReport(node.name2);
+    _countAndReport(node.name);
   }
 
   @override
@@ -74,7 +73,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.typeParameters != null) {
       return;
     }
-    _countAndReport(node.name2);
+    _countAndReport(node.name);
   }
 
   void _countAndReport(Token identifier) {

@@ -15,7 +15,6 @@ import '../extensions.dart';
 const _desc = r'Use late for private members with a non-nullable type.';
 
 const _details = r'''
-
 Use `late` for private members with non-nullable types that are always expected
 to be non-null. Thus it's clear that the field is not expected to be `null`
 and it avoids null checks.
@@ -51,7 +50,7 @@ bool _isPrivateExtension(AstNode parent) {
   if (parent is! ExtensionDeclaration) {
     return false;
   }
-  var parentName = parent.name2?.lexeme;
+  var parentName = parent.name?.lexeme;
   return parentName == null || Identifier.isPrivateName(parentName);
 }
 
@@ -165,7 +164,7 @@ class _Visitor extends RecursiveAstVisitor<void> {
         // enclosing class or any subclass of the enclosing class that are ever
         // accessible outside this library.
         if (parentIsPrivateExtension ||
-            Identifier.isPrivateName(variable.name2.lexeme)) {
+            Identifier.isPrivateName(variable.name.lexeme)) {
           _visit(variable);
         }
       }
@@ -197,7 +196,7 @@ class _Visitor extends RecursiveAstVisitor<void> {
   @override
   void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
     for (var variable in node.variables.variables) {
-      if (Identifier.isPrivateName(variable.name2.lexeme)) {
+      if (Identifier.isPrivateName(variable.name.lexeme)) {
         _visit(variable);
       }
     }
@@ -209,7 +208,7 @@ class _Visitor extends RecursiveAstVisitor<void> {
         units.expand((unit) => nullableAccess[unit] ?? const {}).toSet();
     for (var unit in units) {
       for (var variable in lateables[unit] ?? const <VariableDeclaration>[]) {
-        if (!allNullableAccess.contains(variable.declaredElement2)) {
+        if (!allNullableAccess.contains(variable.declaredElement)) {
           rule.reporter.reportError(AnalysisError(
               unit.source, variable.offset, variable.length, rule.lintCode));
         }
@@ -224,7 +223,7 @@ class _Visitor extends RecursiveAstVisitor<void> {
     if (variable.isSynthetic) {
       return;
     }
-    var declaredElement = variable.declaredElement2;
+    var declaredElement = variable.declaredElement;
     if (declaredElement == null ||
         context.typeSystem.isNonNullable(declaredElement.type)) {
       return;

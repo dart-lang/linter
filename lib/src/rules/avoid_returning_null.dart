@@ -15,7 +15,6 @@ const _desc =
     r' or num.';
 
 const _details = r'''
-
 **AVOID** returning null from members whose return type is bool, double, int,
 or num.
 
@@ -91,7 +90,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    var declaredElement = node.declaredElement2;
+    var declaredElement = node.declaredElement;
     if (declaredElement != null &&
         _isPrimitiveType(declaredElement.returnType)) {
       _visitFunctionBody(node.body);

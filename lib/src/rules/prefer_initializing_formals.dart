@@ -12,7 +12,6 @@ import '../extensions.dart';
 const _desc = r'Use initializing formals when possible.';
 
 const _details = r'''
-
 **DO** use initializing formals when possible.
 
 Using initializing formals when possible makes your code more terse.
@@ -159,7 +158,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           leftElement is FieldElement &&
           !leftElement.isSynthetic &&
           leftElement.enclosingElement3 ==
-              node.declaredElement2?.enclosingElement3 &&
+              node.declaredElement?.enclosingElement3 &&
           parameters.contains(rightElement) &&
           (!parametersUsedMoreThanOnce.contains(rightElement) &&
                   !(rightElement as ParameterElement).isNamed ||
