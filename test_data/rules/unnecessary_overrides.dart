@@ -237,3 +237,7 @@ class G extends F<int> {
   @override
   int operator +(int other) => super + other; // LINT
 }
+
+extension on int {
+  int m1() => 7;
+}

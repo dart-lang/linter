@@ -5,7 +5,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 import '../extensions.dart';
@@ -213,15 +212,16 @@ class _UnnecessaryGetterOverrideVisitor
 
   @override
   ExecutableElement? getInheritedElement(MethodDeclaration node) {
-    var inheritedGetter = node.lookUpInheritedConcreteGetter();
-    if (inheritedGetter == null) return null;
-    var enclosingTypeAsInstanceOfInheritedEnclosingType =
-        node.enclosingTypeAsInstanceOfInheritedEnclosingType(inheritedGetter);
-    if (enclosingTypeAsInstanceOfInheritedEnclosingType == null) {
-      return inheritedGetter;
-    }
-    return enclosingTypeAsInstanceOfInheritedEnclosingType
-        .getGetter(inheritedGetter.name);
+    var element = node.declaredElement;
+    if (element == null) return null;
+    var enclosingElement = element.enclosingElement3;
+    if (enclosingElement is! InterfaceElement) return null;
+    return enclosingElement.thisType.lookUpGetter2(
+      element.name,
+      element.library,
+      concrete: true,
+      inherited: true,
+    );
   }
 
   @override
@@ -238,15 +238,16 @@ class _UnnecessaryMethodOverrideVisitor
 
   @override
   ExecutableElement? getInheritedElement(node) {
-    var inheritedMethod = node.lookUpInheritedMethod();
-    if (inheritedMethod == null) return null;
-    var enclosingTypeAsInstanceOfInheritedEnclosingType =
-        node.enclosingTypeAsInstanceOfInheritedEnclosingType(inheritedMethod);
-    if (enclosingTypeAsInstanceOfInheritedEnclosingType == null) {
-      return inheritedMethod;
-    }
-    return enclosingTypeAsInstanceOfInheritedEnclosingType
-        .getMethod(inheritedMethod.name);
+    var element = node.declaredElement;
+    if (element == null) return null;
+    var enclosingElement = element.enclosingElement3;
+    if (enclosingElement is! InterfaceElement) return null;
+    return enclosingElement.thisType.lookUpMethod2(
+      node.name.lexeme,
+      element.library,
+      concrete: true,
+      inherited: true,
+    );
   }
 
   @override
@@ -267,15 +268,16 @@ class _UnnecessaryOperatorOverrideVisitor
 
   @override
   ExecutableElement? getInheritedElement(node) {
-    var inheritedOperator = node.lookUpInheritedConcreteMethod();
-    if (inheritedOperator == null) return null;
-    var enclosingTypeAsInstanceOfInheritedEnclosingType =
-        node.enclosingTypeAsInstanceOfInheritedEnclosingType(inheritedOperator);
-    if (enclosingTypeAsInstanceOfInheritedEnclosingType == null) {
-      return inheritedOperator;
-    }
-    return enclosingTypeAsInstanceOfInheritedEnclosingType
-        .getMethod(inheritedOperator.name);
+    var element = node.declaredElement;
+    if (element == null) return null;
+    var enclosingElement = element.enclosingElement3;
+    if (enclosingElement is! InterfaceElement) return null;
+    return enclosingElement.thisType.lookUpMethod2(
+      element.name,
+      element.library,
+      concrete: true,
+      inherited: true,
+    );
   }
 
   @override
@@ -313,15 +315,16 @@ class _UnnecessarySetterOverrideVisitor
 
   @override
   ExecutableElement? getInheritedElement(node) {
-    var inheritedSetter = node.lookUpInheritedConcreteSetter();
-    if (inheritedSetter == null) return null;
-    var enclosingTypeAsInstanceOfInheritedEnclosingType =
-        node.enclosingTypeAsInstanceOfInheritedEnclosingType(inheritedSetter);
-    if (enclosingTypeAsInstanceOfInheritedEnclosingType == null) {
-      return inheritedSetter;
-    }
-    return enclosingTypeAsInstanceOfInheritedEnclosingType
-        .getSetter(inheritedSetter.name);
+    var element = node.declaredElement;
+    if (element == null) return null;
+    var enclosingElement = element.enclosingElement3;
+    if (enclosingElement is! InterfaceElement) return null;
+    return enclosingElement.thisType.lookUpSetter2(
+      node.name.lexeme,
+      element.library,
+      concrete: true,
+      inherited: true,
+    );
   }
 
   @override
@@ -364,21 +367,5 @@ class _Visitor extends SimpleAstVisitor<void> {
       var visitor = _UnnecessaryMethodOverrideVisitor(rule);
       visitor.visitMethodDeclaration(node);
     }
-  }
-}
-
-extension on MethodDeclaration {
-  /// Returns the enclosing type of this method declaration, as an instance of
-  /// the enclosing type of [inheritedMethod].
-  ///
-  /// Returns null in cases where it cannot be determined.
-  InterfaceType? enclosingTypeAsInstanceOfInheritedEnclosingType(
-      ExecutableElement? inheritedMethod) {
-    var enclosingElement = declaredElement2?.enclosingElement3;
-    var inheritedEnclosingElement = inheritedMethod?.enclosingElement3;
-    if (enclosingElement is! InterfaceElement) return null;
-    if (inheritedEnclosingElement is! InterfaceElement) return null;
-
-    return enclosingElement.thisType.asInstanceOf(inheritedEnclosingElement);
   }
 }
