@@ -131,7 +131,7 @@ class _CascadableExpression {
   /// cascade operation.
   ///
   /// If this expression is a [PropertyAccess], [CascadeExpression], or
-  /// [MethodInvocation] in which the target is not a SimpleIdentifier, or an
+  /// [MethodInvocation] in which the target is not a [SimpleIdentifier], or an
   /// [AssignmentExpression] in which the left side is not a [SimpleIdentifier],
   /// it cannot join. See bugs https://github.com/dart-lang/linter/issues/1323
   /// and https://github.com/dart-lang/linter/issues/3240.
@@ -147,7 +147,7 @@ class _CascadableExpression {
   /// For example, `a.b = 1` can receive, but `a = 1` cannot receive.
   ///
   /// If this expression is a [PropertyAccess], [CascadeExpression], or
-  /// [MethodInvocation] in which the target is not a SimpleIdentifier, or an
+  /// [MethodInvocation] in which the target is not a [SimpleIdentifier], or an
   /// [AssignmentExpression] in which the left side is not a [SimpleIdentifier],
   /// it cannot receive. See bugs
   /// https://github.com/dart-lang/linter/issues/1323 and
