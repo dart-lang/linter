@@ -9,8 +9,16 @@ class C {
   void other() {}
 }
 
+class C2 {
+  void call<T>(T arg) {}
+}
+
 void callIt(void Function() f) {
   f();
+}
+
+void callIt2(void Function(int) f) {
+  f(0);
 }
 
 void Function() r1() => C(); // LINT
@@ -42,6 +50,9 @@ List<void Function()> r10(C c) {
   return [c.call]; // OK
 }
 
+void Function(int) r11(C2 c) => c; // LINT
+void Function(int) r12(C2 c) => c.call; // OK
+
 void main() {
   callIt(C()); // LINT
   callIt(C().call); // OK
@@ -64,4 +75,49 @@ void main() {
     c, // LINT
     c.call, // OK
   ];
+
+  callIt2(C2()); // LINT
+  callIt2(C2().call); // OK
+  callIt2(C2()<int>); // LINT
+  callIt2(C2().call<int>); // OK
+  Function f9 = C2(); // LINT
+  Function f10 = C2().call; // OK
+  Function f11 = C2()<int>; // LINT
+  Function f12 = C2().call<int>; // OK
+  void Function<T>(T) f13 = C2(); // LINT
+  void Function<T>(T) f14 = C2().call; // OK
+  void Function(int) f15 = C2(); // LINT
+  void Function(int) f16 = C2().call; // OK
+  void Function(int) f17 = C2()<int>; // LINT
+  void Function(int) f18 = C2().call<int>; // OK
+
+  final c2 = C2();
+  callIt2(c2); // LINT
+  callIt2(c2.call); // OK
+  callIt2(c2<int>); // LINT
+  callIt2(c2.call<int>); // OK
+  Function f19 = c2; // LINT
+  Function f20 = c2.call; // OK
+  Function f21 = c2<int>; // LINT
+  Function f22 = c2.call<int>; // OK
+  void Function<T>(T) f23 = c2; // LINT
+  void Function<T>(T) f24 = c2.call; // OK
+  void Function(int) f25 = c2; // LINT
+  void Function(int) f26 = c2.call; // OK
+  void Function(int) f27 = c2<int>; // LINT
+  void Function(int) f28 = c2.call<int>; // OK
+
+  <void Function(int)>[
+    C2(), // LINT
+    C2().call, //OK
+    C2()<int>, // LINT
+    C2().call<int>, //OK
+    c2, // LINT
+    c2.call, // OK
+    c2<int>, // LINT
+    c2.call<int>, // OK
+  ];
+
+  C2()<int>; // LINT
+  c2<int>; // LINT
 }
