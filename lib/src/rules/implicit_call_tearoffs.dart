@@ -41,10 +41,10 @@ callIt(Callable().call);
 
 ''';
 
-class ImplicitCallTearoff extends LintRule {
-  ImplicitCallTearoff()
+class ImplicitCallTearoffs extends LintRule {
+  ImplicitCallTearoffs()
       : super(
-          name: 'implicit_call_tearoff',
+          name: 'implicit_call_tearoffs',
           description: _desc,
           details: _details,
           group: Group.style,
