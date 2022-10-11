@@ -13,7 +13,8 @@ const _desc =
 const _details = r'''
 **DO** ...
 Explicitly tear off `.call` methods from objects when assigning to a Function
-type.
+type. There is less magic with an explicit tear off. Future language versions
+may remove the implicit call tear off.
 
 **BAD:**
 ```dart
