@@ -638,8 +638,8 @@ class RuleHtmlGenerator {
     var sdkVersion = info.sinceDartSdk != null
         ? '>= ${info.sinceDartSdk}'
         : '<strong>unreleased</strong>';
-    var linterVersion = info.sinceDartSdk != null
-        ? 'v${info.sinceDartSdk}'
+    var linterVersion = info.sinceLinter != null
+        ? 'v${info.sinceLinter}'
         : '<strong>unreleased</strong>';
     return 'Dart SDK: $sdkVersion • <small>(Linter $linterVersion)</small>';
   }
@@ -718,8 +718,8 @@ class RuleMarkdownGenerator {
     var sdkVersion = info.sinceDartSdk != null
         ? '>= ${info.sinceDartSdk}'
         : '<strong>unreleased</strong>';
-    var linterVersion = info.sinceDartSdk != null
-        ? 'v${info.sinceDartSdk}'
+    var linterVersion = info.sinceLinter != null
+        ? 'v${info.sinceLinter}'
         : '<strong>unreleased</strong>';
     return 'Dart SDK: $sdkVersion • _(Linter $linterVersion)_';
   }
