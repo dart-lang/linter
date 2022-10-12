@@ -634,14 +634,14 @@ class RuleHtmlGenerator {
   String get name => rule.name;
 
   String get since {
-    // See: https://github.com/dart-lang/linter/issues/2824
-    // var info = sinceInfo[name]!;
-    // var version = info.sinceDartSdk != null
-    //     ? '>= ${info.sinceDartSdk}'
-    //     : '<strong>unreleased</strong>';
-    //return 'Dart SDK: $version • <small>(Linter v${info.sinceLinter})</small>';
-    var sinceLinter = sinceInfo[name]!.sinceLinter;
-    return sinceLinter != null ? 'Linter v$sinceLinter' : 'Unreleased';
+    var info = sinceInfo[name]!;
+    var sdkVersion = info.sinceDartSdk != null
+        ? '>= ${info.sinceDartSdk}'
+        : '<strong>unreleased</strong>';
+    var linterVersion = info.sinceDartSdk != null
+        ? 'v${info.sinceDartSdk}'
+        : '<strong>unreleased</strong>';
+    return 'Dart SDK: $sdkVersion • <small>(Linter $linterVersion)</small>';
   }
 
   void generate([String? filePath]) {
@@ -714,14 +714,14 @@ class RuleMarkdownGenerator {
   String get name => rule.name;
 
   String get since {
-    // See: https://github.com/dart-lang/linter/issues/2824
-    // var info = sinceInfo[name]!;
-    // var version = info.sinceDartSdk != null
-    //     ? '>= ${info.sinceDartSdk}'
-    //     : '<strong>unreleased</strong>';
-    //return 'Dart SDK: $version • <small>(Linter v${info.sinceLinter})</small>';
-    var sinceLinter = sinceInfo[name]!.sinceLinter;
-    return sinceLinter != null ? 'Linter v$sinceLinter' : 'Unreleased';
+    var info = sinceInfo[name]!;
+    var sdkVersion = info.sinceDartSdk != null
+        ? '>= ${info.sinceDartSdk}'
+        : '<strong>unreleased</strong>';
+    var linterVersion = info.sinceDartSdk != null
+        ? 'v${info.sinceDartSdk}'
+        : '<strong>unreleased</strong>';
+    return 'Dart SDK: $sdkVersion • _(Linter $linterVersion)_';
   }
 
   void generate({String? filePath, String? fixStatus}) {
