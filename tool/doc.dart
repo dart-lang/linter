@@ -718,9 +718,8 @@ class RuleMarkdownGenerator {
     var sdkVersion = info.sinceDartSdk != null
         ? '>= ${info.sinceDartSdk}'
         : '**Unreleased**';
-    var linterVersion = info.sinceLinter != null
-        ? 'v${info.sinceLinter}'
-        : '**Unreleased**';
+    var linterVersion =
+        info.sinceLinter != null ? 'v${info.sinceLinter}' : '**Unreleased**';
     return 'Dart SDK: $sdkVersion • _(Linter $linterVersion)_';
   }
 
