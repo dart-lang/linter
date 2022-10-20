@@ -57,6 +57,21 @@ class B extends A {
 ''');
   }
 
+  test_method_ok_expressionStatement_commentsInBody() async {
+    await assertNoDiagnostics(r'''
+class A {
+  void a() { }
+}
+
+class B extends A {
+  @override
+  void a() =>
+    // There's something we want to document here.
+    super.a();
+}
+''');
+  }
+
   test_method_ok_returnExpression_commentsInBody() async {
     await assertNoDiagnostics(r'''
 class A {
