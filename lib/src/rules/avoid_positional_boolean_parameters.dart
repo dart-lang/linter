@@ -63,8 +63,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
   void checkParams(List<FormalParameter>? parameters) {
-    var parameterToLint =
-        parameters?.firstWhereOrNull(_isFormalParameterToLint);
+    var parameterToLint = parameters?.firstWhereOrNull(_isBoolean);
     if (parameterToLint != null) {
       rule.reportLint(parameterToLint);
     }
@@ -112,7 +111,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         null;
   }
 
-  static bool _isFormalParameterToLint(FormalParameter node) {
+  static bool _isBoolean(FormalParameter node) {
     var type = node.declaredElement?.type;
     return !node.isNamed && type is InterfaceType && type.isDartCoreBool;
   }
