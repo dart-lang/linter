@@ -48,16 +48,16 @@ void main() {
         test('`${rule.name}` bad example first', () {
           var details = rule.details;
           var lines = details.split('\n');
-          var good = false;
+          var hasGood  = false;
           for (var line in lines) {
             if (line.startsWith('**BAD:**')) {
-              if (good) {
+              if (hasGood ) {
                 fail(
-                    'Rule details for ${rule.name} should have BAD example before the GOOD one.');
+                    'Rule details for ${rule.name} should have the BAD example before the GOOD one.');
               }
               break;
             } else if (line.startsWith('**GOOD:**')) {
-              good = true;
+              hasGood  = true;
             }
           }
         });
