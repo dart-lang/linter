@@ -27,7 +27,7 @@ void main() {
       ], LinterOptions());
       expect(
           collectingOut.trim(), contains('3 files analyzed, 2 issues found'));
-      expect(collectingOut.trim(), contains('Do use sound null safety'));
+      expect(collectingOut.trim(), contains('5:1 [lint]'));
     });
   });
 }

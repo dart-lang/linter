@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Do use sound null safety.';
 
 const _details = r'''
-
 **DO** use sound null safety, by not specifying a dart version lower than `2.12`.
 
 **BAD:**
