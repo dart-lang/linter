@@ -12,7 +12,6 @@ const _desc =
     r'Avoid wrapping fields in getters and setters just to be "safe".';
 
 const _details = r'''
-
 From the [style guide](https://dart.dev/guides/language/effective-dart/style/):
 
 **AVOID** wrapping fields in getters and setters just to be "safe".
@@ -50,13 +49,21 @@ class Box {
 
 ''';
 
-class UnnecessaryGettersSetters extends LintRule implements NodeLintRule {
+class UnnecessaryGettersSetters extends LintRule {
+  static const LintCode code = LintCode('unnecessary_getters_setters',
+      'Unnecessary use of getter and setter to wrap a field.',
+      correctionMessage:
+          'Try removing the getter and setter and renaming the field.');
+
   UnnecessaryGettersSetters()
       : super(
             name: 'unnecessary_getters_setters',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -73,18 +80,20 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
+    _check(node.members);
+  }
+
+  void _check(NodeList<ClassMember> members) {
     var getters = <String, MethodDeclaration>{};
     var setters = <String, MethodDeclaration>{};
 
     // Build getter/setter maps
-    var members = node.members.where(isMethod);
-
-    for (var member in members) {
-      var method = member as MethodDeclaration;
+    for (var method in members.whereType<MethodDeclaration>()) {
+      var methodName = method.name.lexeme;
       if (method.isGetter) {
-        getters[method.name.toString()] = method;
+        getters[methodName] = method;
       } else if (method.isSetter) {
-        setters[method.name.toString()] = method;
+        setters[methodName] = method;
       }
     }
 
@@ -103,9 +112,8 @@ class _Visitor extends SimpleAstVisitor<void> {
         isSimpleGetter(getter) &&
         getterElement.metadata.isEmpty &&
         setterElement.metadata.isEmpty) {
-      rule
-        ..reportLint(getter.name)
-        ..reportLint(setter.name);
+      // Just flag the getter (https://github.com/dart-lang/linter/issues/2851)
+      rule.reportLintForToken(getter.name);
     }
   }
 }

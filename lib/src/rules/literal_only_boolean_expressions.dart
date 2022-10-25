@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Boolean expression composed only with literals.';
 
 const _details = r'''
-
 **DON'T** test for conditions composed only by literals, since the value can be
 inferred at compile time.
 
@@ -79,6 +78,17 @@ void bad() {
 }
 ```
 
+**NOTE:** that an exception is made for the common `while (true) { }` idiom,
+which is often reasonably prefered to the equivalent `for (;;)`.
+
+**GOOD:**
+```dart
+void good() {
+  while (true) {
+    // Do stuff.
+  }
+}
+```
 ''';
 
 bool _onlyLiterals(Expression? rawExpression) {
@@ -99,7 +109,7 @@ bool _onlyLiterals(Expression? rawExpression) {
   return false;
 }
 
-class LiteralOnlyBooleanExpressions extends LintRule implements NodeLintRule {
+class LiteralOnlyBooleanExpressions extends LintRule {
   LiteralOnlyBooleanExpressions()
       : super(
             name: 'literal_only_boolean_expressions',
@@ -149,7 +159,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitWhileStatement(WhileStatement node) {
-    if (_onlyLiterals(node.condition)) {
+    var condition = node.condition;
+    // Allow `while (true) { }`
+    // See: https://github.com/dart-lang/linter/issues/453
+    if (condition is BooleanLiteral && condition.value) {
+      return;
+    }
+
+    if (_onlyLiterals(condition)) {
       rule.reportLint(node);
     }
   }

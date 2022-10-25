@@ -8,14 +8,13 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc =
     r'Avoid returning null from members whose return type is bool, double, int,'
     r' or num.';
 
 const _details = r'''
-
 **AVOID** returning null from members whose return type is bool, double, int,
 or num.
 
@@ -41,18 +40,14 @@ double getDouble() => -1.0;
 
 ''';
 
-bool _isFunctionExpression(AstNode node) => node is FunctionExpression;
-
 bool _isPrimitiveType(DartType type) =>
-    DartTypeUtilities.isClass(type, 'bool', 'dart.core') ||
-    DartTypeUtilities.isClass(type, 'num', 'dart.core') ||
-    DartTypeUtilities.isClass(type, 'int', 'dart.core') ||
-    DartTypeUtilities.isClass(type, 'double', 'dart.core');
+    type is InterfaceType &&
+    (type.isDartCoreBool ||
+        type.isDartCoreDouble ||
+        type.isDartCoreInt ||
+        type.isDartCoreNum);
 
-bool _isReturnNull(AstNode node) =>
-    node is ReturnStatement && DartTypeUtilities.isNullLiteral(node.expression);
-
-class AvoidReturningNull extends LintRule implements NodeLintRule {
+class AvoidReturningNull extends LintRule {
   AvoidReturningNull()
       : super(
             name: 'avoid_returning_null',
@@ -71,6 +66,25 @@ class AvoidReturningNull extends LintRule implements NodeLintRule {
       registry.addFunctionExpression(this, visitor);
       registry.addMethodDeclaration(this, visitor);
     }
+  }
+}
+
+class _BodyVisitor extends RecursiveAstVisitor {
+  final LintRule rule;
+  _BodyVisitor(this.rule);
+
+  @override
+  visitFunctionExpression(FunctionExpression node) {
+    // Skip Function expressions.
+  }
+
+  @override
+  visitReturnStatement(ReturnStatement node) {
+    if (node.expression.isNullLiteral) {
+      rule.reportLint(node);
+    }
+
+    super.visitReturnStatement(node);
   }
 }
 
@@ -97,15 +111,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  void _visitFunctionBody(FunctionBody? node) {
-    if (node is ExpressionFunctionBody &&
-        DartTypeUtilities.isNullLiteral(node.expression)) {
+  void _visitFunctionBody(FunctionBody node) {
+    if (node is ExpressionFunctionBody && node.expression.isNullLiteral) {
       rule.reportLint(node);
       return;
     }
-    DartTypeUtilities.traverseNodesInDFS(node!,
-            excludeCriteria: _isFunctionExpression)
-        .where(_isReturnNull)
-        .forEach(rule.reportLint);
+
+    node.accept(_BodyVisitor(rule));
   }
 }

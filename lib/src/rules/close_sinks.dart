@@ -5,13 +5,12 @@
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 import '../util/leak_detector_visitor.dart';
 
 const _desc = r'Close instances of `dart.core.Sink`.';
 
 const _details = r'''
-
 **DO** invoke `close` on instances of `dart.core.Sink`.
 
 Closing instances of Sink prevents memory leaks and unexpected behavior.
@@ -57,13 +56,11 @@ void someFunctionOK() {
 
 ''';
 
-bool _isSink(DartType type) =>
-    DartTypeUtilities.implementsInterface(type, 'Sink', 'dart.core');
+bool _isSink(DartType type) => type.implementsInterface('Sink', 'dart.core');
 
-bool _isSocket(DartType type) =>
-    DartTypeUtilities.implementsInterface(type, 'Socket', 'dart.io');
+bool _isSocket(DartType type) => type.implementsInterface('Socket', 'dart.io');
 
-class CloseSinks extends LintRule implements NodeLintRule {
+class CloseSinks extends LintRule {
   CloseSinks()
       : super(
             name: 'close_sinks',
@@ -90,5 +87,5 @@ class _Visitor extends LeakDetectorProcessors {
     _isSocket: _destroyMethodName
   };
 
-  _Visitor(LintRule rule) : super(rule);
+  _Visitor(super.rule);
 }

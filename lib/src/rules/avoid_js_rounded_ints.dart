@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid JavaScript rounded ints.';
 
 const _details = r'''
-
 **AVOID** integer literals that cannot be represented exactly when compiled to
 JavaScript.
 
@@ -33,7 +32,7 @@ BigInt value = BigInt.parse('9007199254740995');
 
 ''';
 
-class AvoidJsRoundedInts extends LintRule implements NodeLintRule {
+class AvoidJsRoundedInts extends LintRule {
   AvoidJsRoundedInts()
       : super(
             name: 'avoid_js_rounded_ints',

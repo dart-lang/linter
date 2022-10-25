@@ -13,7 +13,6 @@ const desc =
     'Prefer const literals as parameters of constructors on @immutable classes.';
 
 const details = '''
-
 **PREFER** using `const` for instantiating list, map and set literals used as
 parameters in immutable class instantiations.
 
@@ -48,14 +47,22 @@ bool _isImmutable(Element? element) =>
     element.name == _immutableVarName &&
     element.library.name == _metaLibName;
 
-class PreferConstLiteralsToCreateImmutables extends LintRule
-    implements NodeLintRule {
+class PreferConstLiteralsToCreateImmutables extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_const_literals_to_create_immutables',
+      "Use 'const' literals as arguments to constructors of '@immutable' "
+          'classes.',
+      correctionMessage: "Try adding 'const' before the literal.");
+
   PreferConstLiteralsToCreateImmutables()
       : super(
             name: 'prefer_const_literals_to_create_immutables',
             description: desc,
             details: details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -85,7 +92,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     InterfaceType? current = type;
     // TODO(a14n) the is check looks unnecessary but prevents https://github.com/dart-lang/sdk/issues/33210
     // for now it's not clear how this can happen
-    while (current != null && current is InterfaceType) {
+    while (current != null) {
       yield current;
       current = current.superclass;
     }
@@ -99,7 +106,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
     var inheritedAndSelfTypes = _getSelfAndInheritedTypes(type);
     var inheritedAndSelfAnnotations = inheritedAndSelfTypes
-        .map((type) => type.element)
+        .map((type) => type.element2)
         .expand((c) => c.metadata)
         .map((m) => m.element);
     return inheritedAndSelfAnnotations.any(_isImmutable);
