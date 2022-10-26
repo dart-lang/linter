@@ -9,7 +9,7 @@ import '../analyzer.dart';
 
 const _desc =
     'Avoid library directives unless that have documentation comments or '
-    'annotations';
+    'annotations.';
 
 const _details = r'''
 **DO** use library directives if you want to document a library and/or annotate 
