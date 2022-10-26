@@ -7,6 +7,8 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
+const _name = 'avoid_library_directive';
+
 const _desc =
     'Avoid library directives unless that have documentation comments or '
     'annotations.';
@@ -33,23 +35,28 @@ library;
 ''';
 
 class AvoidLibraryDirective extends LintRule {
-  static const LintCode code = LintCode('avoid_library_directive',
-      'Library directives without comments or annotations should be avoided.',
-      correctionMessage: 'Try deleting the library directive.');
+  static const LintCode code = LintCode(
+    _name,
+    'Library directives without comments or annotations should be avoided.',
+    correctionMessage: 'Try deleting the library directive.',
+  );
 
   AvoidLibraryDirective()
       : super(
-            name: 'avoid_library_directive',
-            description: _desc,
-            details: _details,
-            group: Group.style);
+          name: _name,
+          description: _desc,
+          details: _details,
+          group: Group.style,
+        );
 
   @override
   LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
-      NodeLintRegistry registry, LinterContext context) {
+    NodeLintRegistry registry,
+    LinterContext context,
+  ) {
     var visitor = _Visitor(this);
     registry.addLibraryDirective(this, visitor);
   }
@@ -62,8 +69,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitLibraryDirective(LibraryDirective node) {
-    if (node.documentationComment == null &&
-        node.sortedCommentAndAnnotations.isEmpty) {
+    if (node.sortedCommentAndAnnotations.isEmpty) {
       rule.reportLint(node);
     }
   }
