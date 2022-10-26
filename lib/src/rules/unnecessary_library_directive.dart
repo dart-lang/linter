@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _name = 'avoid_library_directive';
+const _name = 'unnecessary_library_directive';
 
 const _desc =
     'Avoid library directives unless that have documentation comments or '
@@ -34,14 +34,14 @@ library;
 ```
 ''';
 
-class AvoidLibraryDirective extends LintRule {
+class UnnecessaryLibraryDirective extends LintRule {
   static const LintCode code = LintCode(
     _name,
     'Library directives without comments or annotations should be avoided.',
     correctionMessage: 'Try deleting the library directive.',
   );
 
-  AvoidLibraryDirective()
+  UnnecessaryLibraryDirective()
       : super(
           name: _name,
           description: _desc,

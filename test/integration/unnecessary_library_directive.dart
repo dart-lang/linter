@@ -12,7 +12,7 @@ import '../mocks.dart';
 import '../test_constants.dart';
 
 void main() {
-  group('avoid_library_directive', () {
+  group('unnecessary_library_directive', () {
     var currentOut = outSink;
     var collectingOut = CollectingSink();
     setUp(() => outSink = collectingOut);
@@ -20,10 +20,10 @@ void main() {
       collectingOut.buffer.clear();
       outSink = currentOut;
     });
-    test('avoid_library_directive', () async {
+    test('unnecessary_library_directive', () async {
       await cli.runLinter([
-        '$integrationTestDir/avoid_library_directive',
-        '--rules=avoid_library_directive',
+        '$integrationTestDir/unnecessary_library_directive',
+        '--rules=unnecessary_library_directive',
       ], LinterOptions());
       expect(
         collectingOut.trim(),

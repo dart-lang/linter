@@ -27,7 +27,6 @@ import 'rules/avoid_function_literals_in_foreach_calls.dart';
 import 'rules/avoid_implementing_value_types.dart';
 import 'rules/avoid_init_to_null.dart';
 import 'rules/avoid_js_rounded_ints.dart';
-import 'rules/avoid_library_directive.dart';
 import 'rules/avoid_multiple_declarations_per_line.dart';
 import 'rules/avoid_null_checks_in_equality_operators.dart';
 import 'rules/avoid_positional_boolean_parameters.dart';
@@ -179,6 +178,7 @@ import 'rules/unnecessary_final.dart';
 import 'rules/unnecessary_getters_setters.dart';
 import 'rules/unnecessary_lambdas.dart';
 import 'rules/unnecessary_late.dart';
+import 'rules/unnecessary_library_directive.dart';
 import 'rules/unnecessary_new.dart';
 import 'rules/unnecessary_null_aware_assignments.dart';
 import 'rules/unnecessary_null_aware_operator_on_extension_on_nullable.dart';
@@ -222,7 +222,7 @@ void registerLintRules({bool inTestMode = false}) {
   Analyzer.facade.cacheLinterVersion();
   Analyzer.facade
     ..register(AlwaysDeclareReturnTypes())
-    ..register(AvoidLibraryDirective())
+    ..register(UnnecessaryLibraryDirective())
     ..register(AlwaysPutControlBodyOnNewLine())
     ..register(AlwaysPutRequiredNamedParametersFirst())
     ..register(AlwaysRequireNonNullNamedParameters())
