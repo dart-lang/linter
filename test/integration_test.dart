@@ -14,6 +14,7 @@ import 'package:yaml/yaml.dart';
 import '../test_data/rules/experiments/experiments.dart';
 import 'integration/always_require_non_null_named_parameters.dart'
     as always_require_non_null_named_parameters;
+import 'integration/avoid_library_directive.dart' as avoid_library_directive;
 import 'integration/avoid_private_typedef_functions.dart'
     as avoid_private_typedef_functions;
 import 'integration/avoid_relative_lib_imports.dart'
@@ -201,6 +202,7 @@ void ruleTests() {
     prefer_mixin.main();
     use_build_context_synchronously.main();
     prefer_const_constructors.main();
+    avoid_library_directive.main();
   });
 }
 
