@@ -51,12 +51,20 @@ It's valid to override a member in the following cases:
 ''';
 
 class UnnecessaryOverrides extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_overrides', 'Unnecessary override.',
+      correctionMessage:
+          'Try adding behavior in the overriding member or removing the override.');
+
   UnnecessaryOverrides()
       : super(
             name: 'unnecessary_overrides',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -132,11 +140,13 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
 
   @override
   void visitReturnStatement(ReturnStatement node) {
+    if (node.beginToken.precedingComments != null) return;
     node.expression?.accept(this);
   }
 
   @override
   void visitSuperExpression(SuperExpression node) {
+    if (node.beginToken.precedingComments != null) return;
     rule.reportLintForToken(declaration.name);
   }
 
@@ -154,20 +164,6 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
       }
     }
     return false;
-  }
-
-  /// Returns true if [_inheritedMethod] is `@protected` and [declaration] is
-  /// not `@protected`, and false otherwise.
-  ///
-  /// This indicates that [_inheritedMethod] may have been overridden in order
-  /// to expand its visibility.
-  bool _makesPublicFromProtected() {
-    var declaredElement = declaration.declaredElement;
-    if (declaredElement == null) return false;
-    if (declaredElement.hasProtected) {
-      return false;
-    }
-    return _inheritedMethod.hasProtected;
   }
 
   bool _haveSameDeclaration() {
@@ -194,6 +190,20 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
     return true;
   }
 
+  /// Returns true if [_inheritedMethod] is `@protected` and [declaration] is
+  /// not `@protected`, and false otherwise.
+  ///
+  /// This indicates that [_inheritedMethod] may have been overridden in order
+  /// to expand its visibility.
+  bool _makesPublicFromProtected() {
+    var declaredElement = declaration.declaredElement;
+    if (declaredElement == null) return false;
+    if (declaredElement.hasProtected) {
+      return false;
+    }
+    return _inheritedMethod.hasProtected;
+  }
+
   bool _sameKind(ParameterElement first, ParameterElement second) {
     if (first.isRequired) {
       return second.isRequired;
@@ -214,7 +224,7 @@ class _UnnecessaryGetterOverrideVisitor
   ExecutableElement? getInheritedElement(MethodDeclaration node) {
     var element = node.declaredElement;
     if (element == null) return null;
-    var enclosingElement = element.enclosingElement3;
+    var enclosingElement = element.enclosingElement;
     if (enclosingElement is! InterfaceElement) return null;
     return enclosingElement.thisType.lookUpGetter2(
       element.name,
@@ -240,7 +250,7 @@ class _UnnecessaryMethodOverrideVisitor
   ExecutableElement? getInheritedElement(node) {
     var element = node.declaredElement;
     if (element == null) return null;
-    var enclosingElement = element.enclosingElement3;
+    var enclosingElement = element.enclosingElement;
     if (enclosingElement is! InterfaceElement) return null;
     return enclosingElement.thisType.lookUpMethod2(
       node.name.lexeme,
@@ -270,7 +280,7 @@ class _UnnecessaryOperatorOverrideVisitor
   ExecutableElement? getInheritedElement(node) {
     var element = node.declaredElement;
     if (element == null) return null;
-    var enclosingElement = element.enclosingElement3;
+    var enclosingElement = element.enclosingElement;
     if (enclosingElement is! InterfaceElement) return null;
     return enclosingElement.thisType.lookUpMethod2(
       element.name,
@@ -317,7 +327,7 @@ class _UnnecessarySetterOverrideVisitor
   ExecutableElement? getInheritedElement(node) {
     var element = node.declaredElement;
     if (element == null) return null;
-    var enclosingElement = element.enclosingElement3;
+    var enclosingElement = element.enclosingElement;
     if (enclosingElement is! InterfaceElement) return null;
     return enclosingElement.thisType.lookUpSetter2(
       node.name.lexeme,

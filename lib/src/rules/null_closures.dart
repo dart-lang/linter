@@ -205,12 +205,19 @@ class NonNullableFunction {
 }
 
 class NullClosures extends LintRule {
+  static const LintCode code = LintCode(
+      'null_closures', "Closure can't be 'null' because it might be invoked.",
+      correctionMessage: 'Try providing a non-null closure.');
+
   NullClosures()
       : super(
             name: 'null_closures',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -300,7 +307,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         possibleMethods
             .lookup(NonNullableFunction(library, className, methodName));
 
-    var element = type.element2;
+    var element = type.element;
     if (element.isSynthetic) {
       return null;
     }
@@ -311,7 +318,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     for (var supertype in element.allSupertypes) {
-      var superElement = supertype.element2;
+      var superElement = supertype.element;
       method = getMethod(superElement.library.name, superElement.name);
       if (method != null) {
         return method;

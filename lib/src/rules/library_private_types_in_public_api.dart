@@ -41,12 +41,21 @@ class _Private {}
 ''';
 
 class LibraryPrivateTypesInPublicAPI extends LintRule {
+  static const LintCode code = LintCode('library_private_types_in_public_api',
+      'Invalid use of a private type in a public API.',
+      correctionMessage:
+          'Try making the private type public, or making the API that uses the '
+          'private type also be private.');
+
   LibraryPrivateTypesInPublicAPI()
       : super(
             name: 'library_private_types_in_public_api',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -63,15 +72,6 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    if (Identifier.isPrivateName(node.name.lexeme)) {
-      return;
-    }
-    node.typeParameters?.accept(this);
-    node.members.accept(this);
-  }
-
-  @override
-  void visitEnumDeclaration(EnumDeclaration node) {
     if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
@@ -100,6 +100,15 @@ class Validator extends SimpleAstVisitor<void> {
   @override
   void visitDefaultFormalParameter(DefaultFormalParameter node) {
     node.parameter.accept(this);
+  }
+
+  @override
+  void visitEnumDeclaration(EnumDeclaration node) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
+      return;
+    }
+    node.typeParameters?.accept(this);
+    node.members.accept(this);
   }
 
   @override
@@ -137,7 +146,7 @@ class Validator extends SimpleAstVisitor<void> {
     var element = node.declaredElement;
     if (element is FieldFormalParameterElement) {
       var type = element.type;
-      if (type is InterfaceType && isPrivateName(type.element2.name)) {
+      if (type is InterfaceType && isPrivateName(type.element.name)) {
         rule.reportLintForToken(node.name);
       }
     }
@@ -249,7 +258,7 @@ class Validator extends SimpleAstVisitor<void> {
     var element = node.declaredElement;
     if (element is SuperFormalParameterElement) {
       var type = element.type;
-      if (type is InterfaceType && isPrivateName(type.element2.name)) {
+      if (type is InterfaceType && isPrivateName(type.element.name)) {
         rule.reportLintForToken(node.name);
       }
     }

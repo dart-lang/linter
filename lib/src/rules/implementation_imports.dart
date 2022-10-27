@@ -59,12 +59,21 @@ bool samePackage(Uri? uri1, Uri? uri2) {
 }
 
 class ImplementationImports extends LintRule {
+  static const LintCode code = LintCode('implementation_imports',
+      "Import of a library in the 'lib/src' directory of another package.",
+      correctionMessage:
+          'Try importing a public library that exports this library, or '
+          'removing the import.');
+
   ImplementationImports()
       : super(
             name: 'implementation_imports',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -81,8 +90,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitImportDirective(ImportDirective node) {
-    var importUri = node.element2?.importedLibrary?.source.uri;
-    var sourceUri = node.element2?.source.uri;
+    var importUri = node.element?.importedLibrary?.source.uri;
+    var sourceUri = node.element?.source.uri;
 
     // Test for 'package:*/src/'.
     if (!isImplementation(importUri)) {

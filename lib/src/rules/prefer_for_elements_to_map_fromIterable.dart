@@ -52,12 +52,21 @@ final pizzaRecipients = {
 ''';
 
 class PreferForElementsToMapFromIterable extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_for_elements_to_map_fromIterable',
+      "Use 'for' elements when building maps from iterables.",
+      correctionMessage:
+          "Try using a collection literal with a 'for' element.");
+
   PreferForElementsToMapFromIterable()
       : super(
             name: 'prefer_for_elements_to_map_fromIterable',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -78,7 +87,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var element = creation.constructorName.staticElement;
     if (element == null ||
         element.name != 'fromIterable' ||
-        element.enclosingElement3 != context.typeProvider.mapElement) {
+        element.enclosingElement != context.typeProvider.mapElement) {
       return;
     }
 
