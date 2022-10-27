@@ -86,8 +86,9 @@ class _Visitor extends SimpleAstVisitor<void> {
         return;
       }
 
-      if (firstDirective.documentationComment != null) {
-        rule.reportLint(firstDirective.documentationComment);
+      var docComment = firstDirective.documentationComment;
+      if (docComment != null) {
+        rule.reportLintForToken(docComment.beginToken);
         return;
       }
 
