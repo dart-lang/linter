@@ -62,8 +62,8 @@ linter:
     - conditional_uri_does_not_exist
     - constant_identifier_names
     - control_flow_in_finally
-    - dangling_library_doc_comments
     - curly_braces_in_flow_control_structures
+    - dangling_library_doc_comments
     - depend_on_referenced_packages
     - deprecated_consistency
     - diagnostic_describe_all_properties
