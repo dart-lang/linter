@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -36,14 +37,15 @@ class C {}
 ```
 
 **NOTE:** An unnamed library, like `library;` above, is only supported in Dart
-2.19 and later. Code which might run in earlier versions of Dart need to provide
-a name in the `library` directive.
+2.19 and later. Code which might run in earlier versions of Dart will need to
+provide a name in the `library` directive.
 ''';
 
 class DanglingLibraryDocComments extends LintRule {
   static const LintCode code = LintCode(
       'dangling_library_doc_comments', 'Dangling library doc comment.',
-      correctionMessage: 'Attach library doc comments to library directives.');
+      correctionMessage:
+          "Add a 'library' directive after the library comment.");
 
   DanglingLibraryDocComments()
       : super(
@@ -93,9 +95,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.declarations.isEmpty) {
       // Without any declarations, we only need to check for a doc comment as
       // the last thing in a file.
-      var endComment = node.endToken.precedingComments;
-      if (endComment is DocumentationCommentToken) {
-        rule.reportLintForToken(endComment);
+      Token? endComment = node.endToken.precedingComments;
+      while (endComment is CommentToken) {
+        if (endComment is DocumentationCommentToken) {
+          rule.reportLintForToken(endComment);
+        }
+        endComment = endComment.next;
       }
       return;
     }
@@ -107,18 +112,33 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
     var lineInfo = node.lineInfo;
 
+    if (docComment.tokens.length > 1) {
+      for (var i = 0; i < docComment.tokens.length - 1; i++) {
+        var commentToken = docComment.tokens[i];
+        var followingCommentToken = docComment.tokens[i + 1];
+        var commentEndLine = lineInfo.getLocation(commentToken.end).lineNumber;
+        var followingCommentLine =
+            lineInfo.getLocation(followingCommentToken.offset).lineNumber;
+        if (followingCommentLine > commentEndLine + 1) {
+          // There is a blank line within the declaration's doc comments.
+          rule.reportLintForToken(commentToken);
+          return;
+        }
+      }
+    }
+
     // We must walk through the comments following the doc comment, tracking
     // pairs of consecutive comments so as to check whether any two are
     // separated by a blank line.
     var commentToken = docComment.endToken;
-    var followingCommentToken = docComment.endToken.next;
+    var followingCommentToken = commentToken.next;
     while (followingCommentToken != null) {
       // Any blank line between the doc comment and following comments makes
       // the doc comment look dangling.
       var commentEndLine = lineInfo.getLocation(commentToken.end).lineNumber;
-      var followingCommentEndLine =
+      var followingCommentLine =
           lineInfo.getLocation(followingCommentToken.offset).lineNumber;
-      if (followingCommentEndLine > commentEndLine + 1) {
+      if (followingCommentLine > commentEndLine + 1) {
         // There is a blank line between the declaration's doc comment and the
         // declaration.
         rule.reportLint(docComment);

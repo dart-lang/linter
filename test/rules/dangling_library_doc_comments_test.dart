@@ -17,7 +17,7 @@ class DanglingLibraryDocCommentsTest extends LintRuleTest {
   @override
   String get lintRule => 'dangling_library_doc_comments';
 
-  test_doc_comment_above_declaration() async {
+  test_docComment_aboveDeclaration() async {
     await assertDiagnostics(
       r'''
 /// Doc comment.
@@ -28,14 +28,14 @@ class C {}
     );
   }
 
-  test_doc_comment_above_declaration_ending_in_reference() async {
+  test_docComment_aboveDeclaration_endingInReference() async {
     await assertNoDiagnostics(r'''
 /// Doc comment [C]
 class C {}
 ''');
   }
 
-  test_doc_comment_above_declaration_with_annotation() async {
+  test_docComment_aboveDeclarationWithAnnotation() async {
     await assertNoDiagnostics(r'''
 /// Doc comment.
 @deprecated
@@ -43,7 +43,19 @@ class C {}
 ''');
   }
 
-  test_doc_comment_above_declaration_with_other_comment1() async {
+  test_docComment_aboveDeclarationWithDocComment() async {
+    await assertDiagnostics(
+      r'''
+/// Library comment.
+
+/// Class comment.
+class C {}
+''',
+      [lint(0, 20)],
+    );
+  }
+
+  test_docComment_aboveDeclarationWithOtherComment1() async {
     await assertNoDiagnostics(r'''
 /// Doc comment.
 // Comment.
@@ -51,7 +63,7 @@ class C {}
 ''');
   }
 
-  test_doc_comment_above_declaration_with_other_comment2() async {
+  test_docComment_aboveDeclarationWithOtherComment2() async {
     await assertDiagnostics(
       r'''
 /// Doc comment.
@@ -63,7 +75,7 @@ class C {}
     );
   }
 
-  test_doc_comment_above_declaration_with_other_comment3() async {
+  test_docComment_aboveDeclarationWithOtherComment3() async {
     await assertDiagnostics(
       r'''
 /// Doc comment.
@@ -75,7 +87,7 @@ class C {}
     );
   }
 
-  test_doc_comment_above_declaration_with_other_comment4() async {
+  test_docComment_aboveDeclarationWithOtherComment4() async {
     await assertNoDiagnostics(r'''
 /// Doc comment.
 // Comment.
@@ -84,7 +96,7 @@ class C {}
 ''');
   }
 
-  test_doc_comment_at_end_of_file() async {
+  test_docComment_atEndOfFile() async {
     await assertDiagnostics(
       r'''
 /// Doc comment with [int].
@@ -93,14 +105,25 @@ class C {}
     );
   }
 
-  test_doc_comment_attached_to_declaration() async {
+  test_docComment_atEndOfFile_precededByComment() async {
+    await assertDiagnostics(
+      r'''
+// Copyright something.
+
+/// Doc comment with [int].
+''',
+      [lint(25, 27)],
+    );
+  }
+
+  test_docComment_attachedToDeclaration() async {
     await assertNoDiagnostics(r'''
 /// Doc comment.
 class C {}
 ''');
   }
 
-  test_doc_comment_on_first_directive() async {
+  test_docComment_onFirstDirective() async {
     await assertDiagnostics(
       r'''
 /// Doc comment.
@@ -110,7 +133,7 @@ export 'dart:math';
     );
   }
 
-  test_doc_comment_on_later_directive() async {
+  test_docComment_onLaterDirective() async {
     await assertNoDiagnostics(r'''
 export 'dart:math';
 /// Doc comment for some reason.
@@ -118,7 +141,7 @@ export 'dart:io';
 ''');
   }
 
-  test_doc_comment_on_library_directive() async {
+  test_docComment_onLibraryDirective() async {
     await assertNoDiagnostics(r'''
 /// Doc comment.
 library l;
