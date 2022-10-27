@@ -1302,6 +1302,18 @@
     "sinceLinter": "0.1.4"
   },
   {
+    "name": "implicit_call_tearoffs",
+    "description": "Explicitly tear-off `call` methods when using an object as a Function.",
+    "group": "style",
+    "maturity": "experimental",
+    "incompatible": [],
+    "sets": [],
+    "fixStatus": "unregistered",
+    "details": "**DO**\nExplicitly tear off `.call` methods from objects when assigning to a Function\ntype. There is less magic with an explicit tear off. Future language versions\nmay remove the implicit call tear off.\n\n**BAD:**\n```dart\nclass Callable {\n  void call() {}\n}\nvoid callIt(void Function() f) {\n  f();\n}\n\ncallIt(Callable());\n```\n\n**GOOD:**\n```dart\nclass Callable {\n  void call() {}\n}\nvoid callIt(void Function() f) {\n  f();\n}\n\ncallIt(Callable().call);\n```\n\n",
+    "sinceDartSdk": "Unreleased",
+    "sinceLinter": "Unreleased"
+  },
+  {
     "name": "join_return_with_assignment",
     "description": "Join return statement with assignment when possible.",
     "group": "style",
