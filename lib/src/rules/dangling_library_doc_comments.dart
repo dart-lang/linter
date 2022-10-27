@@ -90,6 +90,8 @@ class _Visitor extends SimpleAstVisitor<void> {
         rule.reportLint(firstDirective.documentationComment);
         return;
       }
+
+      return;
     }
 
     if (node.declarations.isEmpty) {
