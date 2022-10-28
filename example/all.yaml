@@ -159,6 +159,7 @@ linter:
     - sort_child_properties_last
     - sort_constructors_first
     - sort_pub_dependencies
+    - sort_public_methods_before_private_methods
     - sort_unnamed_constructors_first
     - test_types_in_equals
     - throw_in_finally

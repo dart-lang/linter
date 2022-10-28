@@ -163,6 +163,7 @@ import 'rules/sized_box_shrink_expand.dart';
 import 'rules/slash_for_doc_comments.dart';
 import 'rules/sort_child_properties_last.dart';
 import 'rules/sort_constructors_first.dart';
+import 'rules/sort_public_methods_before_private_methods.dart';
 import 'rules/sort_unnamed_constructors_first.dart';
 import 'rules/super_goes_last.dart';
 import 'rules/test_types_in_equals.dart';
@@ -381,6 +382,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(SortChildPropertiesLast())
     ..register(SortConstructorsFirst())
     ..register(SortPubDependencies())
+    ..register(SortPublicMethodsBeforePrivateMethods())
     ..register(SortUnnamedConstructorsFirst())
     ..register(SuperGoesLast())
     ..register(TestTypesInEquals())
@@ -397,8 +399,8 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(UnnecessaryNew())
     ..register(UnnecessaryNullAwareAssignments())
     ..register(UnnecessaryNullInIfNullOperators())
-    // Disabled pending fix: https://github.com/dart-lang/linter/issues/23
-    //..register(UnnecessaryGetters())
+  // Disabled pending fix: https://github.com/dart-lang/linter/issues/23
+  //..register(UnnecessaryGetters())
     ..register(UnnecessaryGettersSetters())
     ..register(UnnecessaryLambdas())
     ..register(UnnecessaryLate())
