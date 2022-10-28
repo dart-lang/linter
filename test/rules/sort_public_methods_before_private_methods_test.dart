@@ -140,7 +140,6 @@ mixin A {
     ]);
   }
 
-
   test_public_methods_before_private_methods_in_extension() async {
     await assertNoDiagnostics(r'''
 extension A on int {
@@ -174,5 +173,4 @@ extension A on int {
       lint(59, 3),
     ]);
   }
-
 }

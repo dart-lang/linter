@@ -64,8 +64,7 @@ class _Visitor extends SimpleAstVisitor {
     // Members are sorted by source position in the AST.
     for (var member in members) {
       if (member is MethodDeclaration) {
-        if (foundPrivateMethod &&
-            !_isPrivateName(member: member)) {
+        if (foundPrivateMethod && !_isPrivateName(member: member)) {
           rule.reportLint(member.returnType);
         }
         if (_isPrivateName(member: member)) {
