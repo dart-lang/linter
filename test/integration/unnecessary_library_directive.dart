@@ -27,7 +27,7 @@ void main() {
       ], LinterOptions());
       expect(
         collectingOut.trim(),
-        startsWith('3 files analyzed, 0 issues found'),
+        startsWith('5 files analyzed, 0 issues found'),
       );
     });
   });

@@ -32,6 +32,9 @@ library;
 ```dart
 library;
 ```
+
+NOTE: Due to limitations with this lint, libraries with parts will not be
+flagged for unnecessary library directives.
 ''';
 
 class UnnecessaryLibraryDirective extends LintRule {
@@ -69,6 +72,13 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitLibraryDirective(LibraryDirective node) {
+    var parent = node.parent! as CompilationUnit;
+    if (parent.directives.any((element) => element is PartDirective)) {
+      // Parts may still use library names. No be safe, we don't lint those
+      // libraries – even though using library names itself is discouraged.
+      return;
+    }
+
     if (node.sortedCommentAndAnnotations.isEmpty) {
       rule.reportLint(node);
     }
