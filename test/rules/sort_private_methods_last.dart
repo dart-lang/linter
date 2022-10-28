@@ -47,7 +47,7 @@ class A {
   int d() => 0;
 }
 ''', [
-      lint(66, 3),
+      lint(0, 81),
     ]);
   }
 
@@ -69,6 +69,30 @@ class A {
 ''');
   }
 
+  test_static_methods_are_ignored() async {
+    await assertNoDiagnostics(r'''
+class A {
+  int a() => _e();
+  int _b() => _c();
+  int _c() => _b();
+  static int d() => 0;
+  static int _e() => 0;
+}
+''');
+  }
+
+  test_static_methods_are_ignored_2() async {
+    await assertNoDiagnostics(r'''
+class A {
+  int a() => _e();
+  static int _e() => 0;
+  int _b() => _c();
+  int _c() => _b();
+  static int d() => 0;
+}
+''');
+  }
+
   test_multiple_cases_are_reported_simultaneously() async {
     await assertDiagnostics(r'''
 class A {
@@ -77,11 +101,10 @@ class A {
   int _d() => _e();
   int c() => _d();
   int _e() => _f();
-  int _f() => 0;
+  int _f() => c();
 }
 ''', [
-      lint(29, 3),
-      lint(68, 3),
+      lint(0, 125),
     ]);
   }
 
@@ -118,7 +141,7 @@ enum A {
   int _g() => 0;
 }
 ''', [
-      lint(56, 3),
+      lint(0, 91),
     ]);
   }
 
@@ -152,7 +175,7 @@ mixin A {
   int _d() => 0;
 }
 ''', [
-      lint(48, 3),
+      lint(0, 83),
     ]);
   }
 
@@ -186,7 +209,7 @@ extension A on int {
   int _d() => 0;
 }
 ''', [
-      lint(59, 3),
+      lint(0, 94),
     ]);
   }
 }

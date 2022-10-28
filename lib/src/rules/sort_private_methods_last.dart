@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -63,9 +64,11 @@ class _Visitor extends SimpleAstVisitor {
     bool foundPrivateMethod = false;
     // Members are sorted by source position in the AST.
     for (var member in members) {
-      if (member is MethodDeclaration) {
+      if (member is MethodDeclaration &&
+          member.modifierKeyword?.keyword != Keyword.STATIC) {
         if (foundPrivateMethod && !_isPrivateName(member: member)) {
-          rule.reportLint(member.returnType);
+          rule.reportLint(member.parent);
+          return;
         }
         if (_isPrivateName(member: member)) {
           foundPrivateMethod = true;
