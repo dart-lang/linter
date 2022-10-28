@@ -69,6 +69,22 @@ class A {
 ''');
   }
 
+  test_multiple_cases_are_reported_simultaneously() async {
+    await assertDiagnostics(r'''
+class A {
+  int _a() => 0;
+  int b() => _a();
+  int _d() => _e();
+  int c() => _d();
+  int _e() => _f();
+  int _f() => 0;
+}
+''', [
+      lint(29, 3),
+      lint(68, 3),
+    ]);
+  }
+
   test_public_methods_before_private_methods_in_enum() async {
     await assertNoDiagnostics(r'''
 enum A {
