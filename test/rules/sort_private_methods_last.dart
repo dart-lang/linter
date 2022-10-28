@@ -8,14 +8,14 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(SortConstructorsFirstTest);
+    defineReflectiveTests(SortPrivateMethodsLastTest);
   });
 }
 
 @reflectiveTest
-class SortConstructorsFirstTest extends LintRuleTest {
+class SortPrivateMethodsLastTest extends LintRuleTest {
   @override
-  String get lintRule => 'sort_public_methods_before_private_methods';
+  String get lintRule => 'sort_private_methods_last';
 
   test_public_methods_before_private_methods_in_class() async {
     await assertNoDiagnostics(r'''

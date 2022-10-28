@@ -7,10 +7,10 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Define public methods before private methods.';
+const _desc = r'Define private methods below public methods.';
 
 const _details = r'''
-**DO** define public methods before private methods.
+**DO** define private methods below public methods.
 
 This makes the code uniform across multiple classes
 and it makes it faster to find specific methods in a class. 
@@ -35,10 +35,10 @@ class A {
 
 ''';
 
-class SortPublicMethodsBeforePrivateMethods extends LintRule {
-  SortPublicMethodsBeforePrivateMethods()
+class SortPrivateMethodsLast extends LintRule {
+  SortPrivateMethodsLast()
       : super(
-            name: 'sort_public_methods_before_private_methods',
+            name: 'sort_private_methods_last',
             description: _desc,
             details: _details,
             group: Group.style);
