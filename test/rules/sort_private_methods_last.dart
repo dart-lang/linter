@@ -93,6 +93,20 @@ class A {
 ''');
   }
 
+  test_rule_does_not_apply_to_nested_methods() async {
+    await assertNoDiagnostics(r'''
+class A {
+  int a() {
+    int b() => 0;
+    int _c() => b();
+    int _d() => _c();
+    int e() => _d();
+    return e();
+  }
+}
+''');
+  }
+
   test_multiple_cases_are_reported_simultaneously() async {
     await assertDiagnostics(r'''
 class A {
