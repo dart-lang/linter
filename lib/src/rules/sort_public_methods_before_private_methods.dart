@@ -48,6 +48,9 @@ class SortPublicMethodsBeforePrivateMethods extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addClassDeclaration(this, visitor);
+    registry.addEnumDeclaration(this, visitor);
+    registry.addMixinDeclaration(this, visitor);
+    registry.addExtensionDeclaration(this, visitor);
   }
 }
 
@@ -57,16 +60,16 @@ class _Visitor extends SimpleAstVisitor {
   _Visitor(this.rule);
 
   void check(NodeList<ClassMember> members) {
-    bool privateMethodIsBeforePublicMethod = false;
+    bool foundPrivateMethod = false;
     // Members are sorted by source position in the AST.
     for (var member in members) {
       if (member is MethodDeclaration) {
-        if (privateMethodIsBeforePublicMethod &&
+        if (foundPrivateMethod &&
             !_isPrivateName(member: member)) {
           rule.reportLint(member.returnType);
         }
         if (_isPrivateName(member: member)) {
-          privateMethodIsBeforePublicMethod = true;
+          foundPrivateMethod = true;
         }
       }
     }
@@ -77,6 +80,21 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
+    check(node.members);
+  }
+
+  @override
+  void visitEnumDeclaration(EnumDeclaration node) {
+    check(node.members);
+  }
+
+  @override
+  void visitMixinDeclaration(MixinDeclaration node) {
+    check(node.members);
+  }
+
+  @override
+  void visitExtensionDeclaration(ExtensionDeclaration node) {
     check(node.members);
   }
 }
