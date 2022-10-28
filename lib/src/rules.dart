@@ -399,8 +399,8 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(UnnecessaryNew())
     ..register(UnnecessaryNullAwareAssignments())
     ..register(UnnecessaryNullInIfNullOperators())
-  // Disabled pending fix: https://github.com/dart-lang/linter/issues/23
-  //..register(UnnecessaryGetters())
+    // Disabled pending fix: https://github.com/dart-lang/linter/issues/23
+    //..register(UnnecessaryGetters())
     ..register(UnnecessaryGettersSetters())
     ..register(UnnecessaryLambdas())
     ..register(UnnecessaryLate())
