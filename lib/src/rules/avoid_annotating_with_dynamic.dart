@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid annotating with dynamic when not required.';
 
 const _details = r'''
-
 **AVOID** annotating with dynamic when not required.
 
 As `dynamic` is the assumed return value of a function or method, it is usually
@@ -36,7 +35,7 @@ lookUpOrDefault(String name, Map map, defaultValue) {
 
 ''';
 
-class AvoidAnnotatingWithDynamic extends LintRule implements NodeLintRule {
+class AvoidAnnotatingWithDynamic extends LintRule {
   AvoidAnnotatingWithDynamic()
       : super(
             name: 'avoid_annotating_with_dynamic',
@@ -48,7 +47,9 @@ class AvoidAnnotatingWithDynamic extends LintRule implements NodeLintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
+    registry.addFieldFormalParameter(this, visitor);
     registry.addSimpleFormalParameter(this, visitor);
+    registry.addSuperFormalParameter(this, visitor);
   }
 }
 
@@ -58,9 +59,22 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   @override
+  void visitFieldFormalParameter(FieldFormalParameter node) {
+    _checkNode(node, node.type);
+  }
+
+  @override
   void visitSimpleFormalParameter(SimpleFormalParameter node) {
-    var type = node.type;
-    if (type is TypeName && type.name.name == 'dynamic') {
+    _checkNode(node, node.type);
+  }
+
+  @override
+  void visitSuperFormalParameter(SuperFormalParameter node) {
+    _checkNode(node, node.type);
+  }
+
+  void _checkNode(NormalFormalParameter node, TypeAnnotation? type) {
+    if (type is NamedType && type.name.name == 'dynamic') {
       rule.reportLint(node);
     }
   }

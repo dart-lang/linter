@@ -5,12 +5,14 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
 const _desc = r"Don't implement classes that override `==`.";
 
-const _details = r'''**DON'T** implement classes that override `==`.
+const _details = r'''
+**DON'T** implement classes that override `==`.
 
 The `==` operator is contractually required to be an equivalence relation;
 that is, symmetrically for all objects `o1` and `o2`, `o1 == o2` and `o2 == o1`
@@ -86,7 +88,7 @@ void main() {
 
 ''';
 
-class AvoidImplementingValueTypes extends LintRule implements NodeLintRule {
+class AvoidImplementingValueTypes extends LintRule {
   AvoidImplementingValueTypes()
       : super(
             name: 'avoid_implementing_value_types',
@@ -114,14 +116,15 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
     for (var interface in implementsClause.interfaces) {
-      var element = interface.type?.element;
-      if (element is ClassElement && _overridesEquals(element)) {
+      var interfaceType = interface.type;
+      if (interfaceType is InterfaceType &&
+          _overridesEquals(interfaceType.element)) {
         rule.reportLint(interface);
       }
     }
   }
 
-  static bool _overridesEquals(ClassElement element) {
+  static bool _overridesEquals(InterfaceElement element) {
     var method = element.lookUpConcreteMethod('==', element.library);
     var enclosing = method?.enclosingElement;
     return enclosing is ClassElement && !enclosing.isDartCoreObject;

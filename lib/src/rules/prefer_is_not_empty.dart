@@ -13,7 +13,6 @@ import '../ast.dart';
 const _desc = r'Use `isNotEmpty` for Iterables and Maps.';
 
 const _details = r'''
-
 **PREFER** `x.isNotEmpty` to `!x.isEmpty` for `Iterable` and `Map` instances.
 
 When testing whether an iterable or map is empty, prefer `isNotEmpty` over
@@ -35,13 +34,20 @@ if (!sources.isEmpty) {
 
 ''';
 
-class PreferIsNotEmpty extends LintRule implements NodeLintRule {
+class PreferIsNotEmpty extends LintRule {
+  static const LintCode code = LintCode('prefer_is_not_empty',
+      "Use 'isNotEmpty' rather than negating the result of 'isEmpty'.",
+      correctionMessage: "Try rewriting the expression to use 'isNotEmpty'.");
+
   PreferIsNotEmpty()
       : super(
             name: 'prefer_is_not_empty',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
