@@ -73,7 +73,6 @@ class _Visitor extends SimpleAstVisitor<void> {
       var name = parameter.name;
       if (declaredElement != null &&
           declaredElement is! FieldFormalParameterElement &&
-          declaredElement.hasImplicitType &&
           name != null &&
           _isTypeName(node, name)) {
         rule.reportLintForToken(name, arguments: [name.lexeme]);
@@ -85,14 +84,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     var result = context.resolveNameInScope(name.lexeme, false, scope);
     if (result.isRequestedName) {
       var element = result.element;
-      return element is ClassElement || element is TypeAliasElement;
+      return element is ClassElement ||
+          element is TypeAliasElement ||
+          element is TypeParameterElement;
     }
     return false;
   }
-
-  bool _isTypeParameter(
-          TypeParameterList? typeParameters, SimpleIdentifier node) =>
-      typeParameters?.typeParameters
-          .any((element) => element.name.name == node.name) ??
-      false;
 }
