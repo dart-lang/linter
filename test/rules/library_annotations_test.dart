@@ -30,6 +30,26 @@ class C {}
     );
   }
 
+  test_classTypeAliasDeclaration() async {
+    await assertDiagnostics(
+      r'''
+@pragma('dart2js:late:trust')
+abstract class C = Object with Future;
+''',
+      [lint(0, 29)],
+    );
+  }
+
+  test_enumDeclaration() async {
+    await assertDiagnostics(
+      r'''
+@pragma('dart2js:late:trust')
+enum E { one, two }
+''',
+      [lint(0, 29)],
+    );
+  }
+
   test_exportDeclaration() async {
     await assertDiagnostics(
       r'''
@@ -55,6 +75,16 @@ extension E on int {}
       r'''
 @pragma('dart2js:late:trust')
 void f() {}
+''',
+      [lint(0, 29)],
+    );
+  }
+
+  test_genericTypedefDeclaration() async {
+    await assertDiagnostics(
+      r'''
+@pragma('dart2js:late:trust')
+typedef Fn = void Function();
 ''',
       [lint(0, 29)],
     );
@@ -97,41 +127,11 @@ var i = 1;
     );
   }
 
-  test_classTypeAliasDeclaration() async {
-    await assertDiagnostics(
-      r'''
-@pragma('dart2js:late:trust')
-abstract class C = Object with Future;
-''',
-      [lint(0, 29)],
-    );
-  }
-
   test_typedefDeclaration() async {
     await assertDiagnostics(
       r'''
 @pragma('dart2js:late:trust')
 typedef void Fn();
-''',
-      [lint(0, 29)],
-    );
-  }
-
-  test_genericTypedefDeclaration() async {
-    await assertDiagnostics(
-      r'''
-@pragma('dart2js:late:trust')
-typedef Fn = void Function();
-''',
-      [lint(0, 29)],
-    );
-  }
-
-  test_enumDeclaration() async {
-    await assertDiagnostics(
-      r'''
-@pragma('dart2js:late:trust')
-enum E { one, two }
 ''',
       [lint(0, 29)],
     );
