@@ -42,7 +42,8 @@ provide a name in the `library` directive.
 class LibraryAnnotations extends LintRule {
   static const LintCode code = LintCode('library_annotations',
       'This annotation must be attached to a library directive.',
-      correctionMessage: 'Attach library annotations to library directives.');
+      correctionMessage:
+          'Try attaching library annotations to library directives.');
 
   LibraryAnnotations()
       : super(
@@ -58,17 +59,7 @@ class LibraryAnnotations extends LintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
-    registry.addClassDeclaration(this, visitor);
-    registry.addClassTypeAlias(this, visitor);
-    registry.addEnumDeclaration(this, visitor);
-    registry.addExportDirective(this, visitor);
-    registry.addExtensionDeclaration(this, visitor);
-    registry.addFunctionTypeAlias(this, visitor);
-    registry.addFunctionDeclaration(this, visitor);
-    registry.addGenericTypeAlias(this, visitor);
-    registry.addImportDirective(this, visitor);
-    registry.addMixinDeclaration(this, visitor);
-    registry.addTopLevelVariableDeclaration(this, visitor);
+    registry.addCompilationUnit(this, visitor);
   }
 }
 
@@ -78,38 +69,18 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   @override
-  void visitClassDeclaration(ClassDeclaration node) => _check(node);
+  void visitCompilationUnit(CompilationUnit node) {
+    for (var directive in node.directives) {
+      if (directive is PartDirective) {
+        return;
+      }
+      if (directive is! LibraryDirective) {
+        _check(directive);
+      }
+    }
 
-  @override
-  void visitClassTypeAlias(ClassTypeAlias node) => _check(node);
-
-  @override
-  void visitEnumDeclaration(EnumDeclaration node) => _check(node);
-
-  @override
-  void visitExportDirective(ExportDirective node) => _check(node);
-
-  @override
-  void visitExtensionDeclaration(ExtensionDeclaration node) => _check(node);
-
-  @override
-  void visitFunctionDeclaration(FunctionDeclaration node) => _check(node);
-
-  @override
-  void visitFunctionTypeAlias(FunctionTypeAlias node) => _check(node);
-
-  @override
-  void visitGenericTypeAlias(GenericTypeAlias node) => _check(node);
-
-  @override
-  void visitImportDirective(ImportDirective node) => _check(node);
-
-  @override
-  void visitMixinDeclaration(MixinDeclaration node) => _check(node);
-
-  @override
-  void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) =>
-      _check(node);
+    node.declarations.forEach(_check);
+  }
 
   void _check(AnnotatedNode node) {
     for (var annotation in node.metadata) {
@@ -118,15 +89,13 @@ class _Visitor extends SimpleAstVisitor<void> {
         return;
       }
 
-      if (elementAnnotation.targetKinds.contains(TargetKind.library) &&
+      if (elementAnnotation.targetKinds.length == 1 &&
+          elementAnnotation.targetKinds.contains(TargetKind.library) &&
           (node.parent as CompilationUnit?)?.directives.first == node) {
         rule.reportLint(annotation);
-        return;
-      }
-
-      if (elementAnnotation.isPragmaLateTrust) {
+        continue;
+      } else if (elementAnnotation.isPragmaLateTrust) {
         rule.reportLint(annotation);
-        return;
       }
     }
   }
