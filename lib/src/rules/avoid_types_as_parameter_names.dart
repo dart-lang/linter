@@ -73,6 +73,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       var name = parameter.name;
       if (declaredElement != null &&
           declaredElement is! FieldFormalParameterElement &&
+          declaredElement.hasImplicitType &&
           name != null &&
           _isTypeName(node, name)) {
         rule.reportLintForToken(name, arguments: [name.lexeme]);

@@ -47,12 +47,12 @@ class FieldFormalParameter {
   FieldFormalParameter(this.num); // OK
 }
 
-void m11<X>(int X) {} // LINT
+void m11<X>(int X) {} // OK
 
-void m12(int Function<T>(String T) g) {} // LINT
+void m12(int Function<T>(String T) g) {} // OK
 
 class C<X> {
   C.name();
   factory C(X) => C.name(); // LINT
-  void m(void Function(C X) h) {} // LINT
+  void m(void Function(C X) h) {} // OK
 }
