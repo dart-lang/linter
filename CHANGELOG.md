@@ -1,6 +1,8 @@
 # 1.29.0-dev
 
-- New lint: `enable_null_safety`
+- new lint: `implicit_call_tearoffs`
+- new lint: `unnecessary_library_directive`
+- new lint: `enable_null_safety`
 
 # 1.28.0
 
