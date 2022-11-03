@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -42,16 +43,20 @@ class EnableNullSafety extends LintRule implements NodeLintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
+  // to be kept in sync with LanguageVersionOverrideVerifier (added groups for the version)
+  static final regExp = RegExp(r'^\s*//\s*@dart\s*=\s*(\d+)\.(\d+)');
   final LintRule rule;
   final LinterContext context;
-  // to be kept in sync with LanguageVersionOverrideVerifier (added groups for the version)
-  final regExp = RegExp(r'^\s*//\s*@dart\s*=\s*(\d+)\.(\d+)');
 
   _Visitor(this.rule, this.context);
 
   @override
   void visitCompilationUnit(CompilationUnit node) {
-    CommentToken? comment = node.beginToken.precedingComments;
+    var beginToken = node.beginToken;
+    if (beginToken.type == TokenType.SCRIPT_TAG) {
+      beginToken = beginToken.next!;
+    }
+    CommentToken? comment = beginToken.precedingComments;
     while (comment != null) {
       var match = regExp.firstMatch(comment.lexeme);
       if (match != null && match.groupCount == 2) {
