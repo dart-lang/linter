@@ -66,6 +66,7 @@ import 'rules/constant_identifier_names.dart';
 import 'rules/control_flow_in_finally.dart';
 import 'rules/curly_braces_in_flow_control_structures.dart';
 import 'rules/dangling_library_doc_comments.dart';
+import 'rules/dartdoc_summary_line.dart';
 import 'rules/depend_on_referenced_packages.dart';
 import 'rules/deprecated_consistency.dart';
 import 'rules/diagnostic_describe_all_properties.dart';
@@ -227,6 +228,7 @@ import 'rules/void_checks.dart';
 void registerLintRules({bool inTestMode = false}) {
   Analyzer.facade.cacheLinterVersion();
   Analyzer.facade
+    ..register(DartdocSummaryLine())
     ..register(AlwaysDeclareReturnTypes())
     ..register(UnnecessaryLibraryDirective())
     ..register(AlwaysPutControlBodyOnNewLine())
