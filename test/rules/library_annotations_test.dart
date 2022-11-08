@@ -80,6 +80,25 @@ void f() {}
     );
   }
 
+  test_functionDeclaration_annotationWithTargetKindLibrary() async {
+    // In this library, `invalid_annotation_target` is reported (and
+    // suppressed), so we do not also report `library_annotations`.
+    await assertNoDiagnostics(
+      r'''
+import 'package:meta/meta_meta.dart';
+
+@Target({TargetKind.library})
+class TestOn {
+  const TestOn(String name);
+}
+
+// ignore: invalid_annotation_target
+@TestOn('browser')
+class C {}
+''',
+    );
+  }
+
   test_genericTypedefDeclaration() async {
     await assertDiagnostics(
       r'''
@@ -90,7 +109,7 @@ typedef Fn = void Function();
     );
   }
 
-  test_importDirective() async {
+  test_importDirective_annotationWithTargetKindLibrary() async {
     await assertDiagnostics(
       r'''
 @TestOn('browser')
