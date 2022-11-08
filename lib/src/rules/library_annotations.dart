@@ -68,8 +68,13 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
+  Directive? firstDirective;
+
   @override
   void visitCompilationUnit(CompilationUnit node) {
+    if (node.directives.isNotEmpty) {
+      firstDirective = node.directives.first;
+    }
     for (var directive in node.directives) {
       if (directive is PartDirective) {
         return;
@@ -91,9 +96,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
       if (elementAnnotation.targetKinds.length == 1 &&
           elementAnnotation.targetKinds.contains(TargetKind.library) &&
-          (node.parent as CompilationUnit?)?.directives.first == node) {
+          firstDirective == node) {
         rule.reportLint(annotation);
-        continue;
       } else if (elementAnnotation.isPragmaLateTrust) {
         rule.reportLint(annotation);
       }
