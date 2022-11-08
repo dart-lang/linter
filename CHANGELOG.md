@@ -1,6 +1,6 @@
 # 1.34.0
 
-- new lint: `dartdoc_summary_line_format`
+- new lint: `dartdoc_summary_line`
 
 # 1.33.0
 

@@ -1,18 +1,16 @@
-// Copyright (c) 2016, the Dart project authors. Please see the AUTHORS file
+// Copyright (c) 2022, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// ignore_for_file: slash_for_doc_comments
-
-import 'dart:convert';
-
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-/// The maximum allowed length for a summary line.
-const maxSummaryLength = 140;
+/// The maximum amount of lines that can be considered part of a single
+/// summary line (like this one!).
+const maxSummaryLines = 2;
 
 const _desc =
     r'Start your DartDoc comment with a single, brief sentence that ends with a period.';
@@ -84,7 +82,8 @@ void delete(String path) {
 ```
 ''';
 
-/// Enforces that DartDoc blocks start with a single, brief line that ends in a period.
+/// Enforces that DartDoc blocks start with a single, brief line that ends in
+/// a period.
 ///
 /// (Like the one above!)
 class DartdocSummaryLine extends LintRule {
@@ -108,74 +107,71 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  /**
-   * Visits a [Comment] node, and finds and validates its summary line.
-   */
+  /// The summary line should be 'brief' according to the Dart recommendations,
+  /// however 'brief' is not defined perfectly. Instead of enforcing a fixed
+  /// number of characters, we just look at how many lines are part of the
+  /// summary, and if we deem them to be too many (2 should be plenty), we fail
+  /// the lint
+  ///
+  /// The above summary fails with all the checks that this lint adds, it has
+  /// more than one sentence, is too long, and doesn't add a period at the end.
+  ///
+  /// It has it all!
   @override
   void visitComment(Comment node) {
-    if (!node.isDocumentation) {
-      // Skip things that may not be proper dartdoc (like a /** */ comment)
+    if (!node.isDocumentation || !node.tokens.first.lexeme.startsWith('///')) {
+      // Ignore /** comments.
       return;
     }
 
-    List<String> summary = _getSummary(node).toList();
+    Iterable<Token> summary = _getSummary(node);
 
-    // Should we enforce that summary.length == 1?
-    if (!_endsWithPeriod(summary) ||
-        summary.join(' ').length > maxSummaryLength) {
-      // Highlight the offending comment
-      rule.reportLintForOffset(node.offset, 3);
+    if (summary.length > maxSummaryLines) {
+      // Highlight the extra lines.
+      summary.skip(maxSummaryLines).forEach(rule.reportLintForToken);
+    }
+    if (!_endsWithPeriod(summary)) {
+      Token last = summary.last;
+      // Highlight the last character of the sentence...
+      rule.reportLintForOffset(last.offset + last.lexeme.length, 1);
+    }
+    int? sentenceBreakOffset = _findSentenceBreak(summary);
+    if (sentenceBreakOffset != null) {
+      // Highlight the position of the period that is breaking the summary.
+      rule.reportLintForOffset(sentenceBreakOffset, 1);
     }
   }
 }
 
 // Some utility functions
 
-/**
- * Detects if a Comment starts with slash-star-star.
- *
- * This is a less common style for Dart Docs, but still [valid](https://dart.dev/guides/language/language-tour#documentation-comments).
- */
-bool _isSlashStarStar(Comment node) =>
-    node.tokens.first.lexeme.startsWith('/**');
-
-/// Removes the first appearance of `prefix` from `line`, and trims the output.
-String _trimPrefix(String line, String prefix) =>
-    line.replaceFirst(prefix, '').trim();
-
 /// Removes the first triple slash of a `line` and returns its trimmed value.
-String _trimSlashes(String line) => _trimPrefix(line, '///');
+String _trimSlashes(String line) => line.replaceFirst('///', '');
 
-/**
- * Removes the first asterisk of a `line` and and returns its trimmed value.
- *
- * (Like the ones that make this comment!)
- */
-String _trimStars(String line) => _trimPrefix(line, ' *');
-
-/// [String.isNotEmpty] so it can be torn off.
-bool _isNotEmpty(String line) => line.isNotEmpty;
+/// Determines if a token `tk` represents an empty comment line.
+bool _isNotBlankLine(Token tk) => _trimSlashes(tk.lexeme).trim().isNotEmpty;
 
 /// Retrieves the summary line of a [Comment] node.
 ///
 /// This will take "lines" (tokens or actual strings) from the beginning of the
 /// node until an empty line is found.
-Iterable<String> _getSummary(Comment node) {
-  if (_isSlashStarStar(node)) {
-    // The first token contains the whole block comment... Split in lines, then
-    // take as many as needed...
-    LineSplitter splitter = LineSplitter();
-    List<String> lines = splitter.convert(node.tokens.first.lexeme);
-    return lines
-        .sublist(1, lines.length - 1)
-        .map(_trimStars)
-        .takeWhile(_isNotEmpty);
-  } else {
-    return node.tokens
-        .map((tk) => _trimSlashes(tk.lexeme))
-        .takeWhile(_isNotEmpty);
-  }
-}
+Iterable<Token> _getSummary(Comment node) =>
+    node.tokens.takeWhile(_isNotBlankLine);
 
 /// Checks that the last of the `lines` ends in a period.
-bool _endsWithPeriod(Iterable<String> lines) => lines.last.endsWith('.');
+bool _endsWithPeriod(Iterable<Token> tokens) =>
+    tokens.last.lexeme.endsWith('.');
+
+/// See: https://regexr.com/71rtq for docs and tests.
+RegExp _sentenceBreak = RegExp(r'[^\.]+\.\s+[^\.]+');
+
+/// Returns the offset of the token that contains a sentence break.
+int? _findSentenceBreak(Iterable<Token> tokens) {
+  for (Token tk in tokens) {
+    RegExpMatch? match = _sentenceBreak.firstMatch(tk.lexeme);
+    if (match != null) {
+      return tk.offset + tk.lexeme.indexOf('.', match.start);
+    }
+  }
+  return null;
+}
