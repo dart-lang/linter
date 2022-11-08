@@ -170,6 +170,12 @@ RegExp _sentenceBreak = RegExp(r'[^\.]+\.\s+[^\.]+');
 /// Returns the offset of the token that contains a sentence break.
 int? _findSentenceBreak(Iterable<Token> tokens) {
   for (Token tk in tokens) {
+    // "Corner case": If token is not last, and ends with a period.
+    // This used to be accepted, but shouldn't.
+    if (tk != tokens.last && tk.lexeme.endsWith('.')) {
+      return tk.end - 1;
+    }
+    // Attempt to locate the period in the middle of the lexeme.
     RegExpMatch? match = _sentenceBreak.firstMatch(tk.lexeme);
     if (match != null) {
       return tk.offset + tk.lexeme.indexOf('.', match.start);
