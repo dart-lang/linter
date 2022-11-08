@@ -126,10 +126,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     Iterable<Token> summary = _getSummary(node);
 
-    if (summary.length > maxSummaryLines) {
-      // Highlight the extra lines.
-      summary.skip(maxSummaryLines).forEach(rule.reportLintForToken);
-    }
     if (!_endsWithPeriod(summary)) {
       Token last = summary.last;
       // Highlight the last character of the sentence...
@@ -139,6 +135,12 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (sentenceBreakOffset != null) {
       // Highlight the position of the period that is breaking the summary.
       rule.reportLintForOffset(sentenceBreakOffset, 1);
+    }
+    if (summary.length > maxSummaryLines) {
+      // Highlight the extra lines.
+      summary.skip(maxSummaryLines).forEach((token) {
+        rule.reportLintForOffset(token.offset, 3);
+      });
     }
   }
 }
