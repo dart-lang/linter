@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <link rel="shortcut icon" href="../dart-192.png">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <title>library_annotations</title>
+      <link rel="stylesheet" href="../styles.css">
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>library_annotations</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <div class="tooltip">
+               <p>Dart SDK: <strong>Unreleased</strong> • <small>(Linter <strong>Unreleased</strong>)</small></p>
+               <span class="tooltip-content">Since info is static, may be stale</span>
+            </div>
+            
+            <ul>
+               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
+               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
+            </ul>
+            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+         </header>
+         <section>
+
+            <p>Attach library annotations to library directives, rather than
+some other library-level element.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">import 'package:test/test.dart';
+
+@TestOn('browser')
+void main() {}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">@TestOn('browser')
+library;
+import 'package:test/test.dart';
+
+void main() {}
+</code></pre>
+<p><strong>NOTE:</strong> An unnamed library, like <code>library;</code> above, is only supported in Dart
+2.19 and later. Code which might run in earlier versions of Dart will need to
+provide a name in the <code>library</code> directive.</p>
+
+            
+         </section>
+      </div>
+      <footer>
+         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
+      </footer>
+   </body>
+</html>
