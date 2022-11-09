@@ -1244,6 +1244,18 @@
     "sinceLinter": "0.1.1"
   },
   {
+    "name": "enable_null_safety",
+    "description": "Do use sound null safety.",
+    "group": "style",
+    "maturity": "stable",
+    "incompatible": [],
+    "sets": [],
+    "fixStatus": "unregistered",
+    "details": "**DO** use sound null safety, by not specifying a dart version lower than `2.12`.\n\n**BAD:**\n```dart\n// @dart=2.8\na() {\n}\n```\n\n**GOOD:**\n```dart\nb() {\n}\n",
+    "sinceDartSdk": "Unreleased",
+    "sinceLinter": "Unreleased"
+  },
+  {
     "name": "eol_at_end_of_file",
     "description": "Put a single newline at end of file.",
     "group": "style",
