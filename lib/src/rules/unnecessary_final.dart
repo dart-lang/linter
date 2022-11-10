@@ -16,7 +16,7 @@ Per Effective Dart, there are two styles in wide use. This rule
 enforces the `var` style. For the alternative style that prefers `final`,
 enable `prefer_final_locals` and `prefer_final_in_for_each` instead.
 
-For fields, final is always recommended; see the rule `prefer_final_fields`.
+For fields, `final` is always recommended; see the rule `prefer_final_fields`.
 
 **BAD:**
 ```dart
