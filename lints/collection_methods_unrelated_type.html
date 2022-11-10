@@ -43,13 +43,8 @@ as follows:</p>
 <li>an argument to <code>Map&lt;K, V&gt;.remove</code> should be related to <code>K</code></li>
 <li>an argument to <code>Map&lt;K, V&gt;.[]</code> should be related to <code>K</code></li>
 <li>an argument to <code>Queue&lt;E&gt;.remove</code> should be related to <code>E</code></li>
-<li>an argument to <code>Set&lt;E&gt;.containsAll</code> should be related to <code>Iterable&lt;E&gt;</code></li>
-<li>an argument to <code>Set&lt;E&gt;.difference</code> should be related to <code>Set&lt;E&gt;</code></li>
-<li>an argument to <code>Set&lt;E&gt;.intersection</code> should be related to <code>Set&lt;E&gt;</code></li>
 <li>an argument to <code>Set&lt;E&gt;.lookup</code> should be related to <code>E</code></li>
 <li>an argument to <code>Set&lt;E&gt;.remove</code> should be related to <code>E</code></li>
-<li>an argument to <code>Set&lt;E&gt;.removeAll</code> should be related to <code>Iterable&lt;E&gt;</code></li>
-<li>an argument to <code>Set&lt;E&gt;.retainAll</code> should be related to <code>Iterable&lt;E&gt;</code></li>
 </ul>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">void someFunction() {
@@ -60,7 +55,7 @@ as follows:</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">void someFunction() {
   var set = &lt;int&gt;{};
-  set.removeAll({'1'}); // LINT
+  set.remove('1'); // LINT
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
@@ -72,7 +67,7 @@ as follows:</p>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">void someFunction() {
   var set = &lt;int&gt;{};
-  set.removeAll({1}); // OK
+  set.remove(1); // OK
 }
 </code></pre>
 
