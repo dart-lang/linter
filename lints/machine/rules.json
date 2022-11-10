@@ -690,7 +690,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "needsEvaluation",
-    "details": "**AVOID** defining a class that contains only static members.\n\nCreating classes with the sole purpose of providing utility or otherwise static\nmethods is discouraged.  Dart allows functions to exist outside of classes for\nthis very reason.\n\n**BAD:**\n```dart\nclass DateUtils {\n  static DateTime mostRecent(List<DateTime> dates) {\n    return dates.reduce((a, b) => a.isAfter(b) ? a : b);\n  }\n}\n\nclass _Favorites {\n  static const mammal = 'weasel';\n}\n```\n\n**GOOD:**\n```dart\nDateTime mostRecent(List<DateTime> dates) {\n  return dates.reduce((a, b) => a.isAfter(b) ? a : b);\n}\n\nconst _favoriteMammal = 'weasel';\n```\n\n",
+    "details": "From [Effective Dart](https://dart.dev/guides/language/effective-dart/design#avoid-defining-a-class-that-contains-only-static-members):\n\n**AVOID** defining a class that contains only static members.\n\nCreating classes with the sole purpose of providing utility or otherwise static\nmethods is discouraged.  Dart allows functions to exist outside of classes for\nthis very reason.\n\n**BAD:**\n```dart\nclass DateUtils {\n  static DateTime mostRecent(List<DateTime> dates) {\n    return dates.reduce((a, b) => a.isAfter(b) ? a : b);\n  }\n}\n\nclass _Favorites {\n  static const mammal = 'weasel';\n}\n```\n\n**GOOD:**\n```dart\nDateTime mostRecent(List<DateTime> dates) {\n  return dates.reduce((a, b) => a.isAfter(b) ? a : b);\n}\n\nconst _favoriteMammal = 'weasel';\n```\n\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.31"
   },
@@ -1250,10 +1250,10 @@
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "unregistered",
+    "fixStatus": "needsEvaluation",
     "details": "**DO** use sound null safety, by not specifying a dart version lower than `2.12`.\n\n**BAD:**\n```dart\n// @dart=2.8\na() {\n}\n```\n\n**GOOD:**\n```dart\nb() {\n}\n",
     "sinceDartSdk": "Unreleased",
-    "sinceLinter": "Unreleased"
+    "sinceLinter": "1.30.0"
   },
   {
     "name": "eol_at_end_of_file",
@@ -1368,10 +1368,10 @@
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "unregistered",
+    "fixStatus": "needsEvaluation",
     "details": "Attach library annotations to library directives, rather than\nsome other library-level element.\n\n**BAD:**\n```dart\nimport 'package:test/test.dart';\n\n@TestOn('browser')\nvoid main() {}\n```\n\n**GOOD:**\n```dart\n@TestOn('browser')\nlibrary;\nimport 'package:test/test.dart';\n\nvoid main() {}\n```\n\n**NOTE:** An unnamed library, like `library;` above, is only supported in Dart\n2.19 and later. Code which might run in earlier versions of Dart will need to\nprovide a name in the `library` directive.\n",
     "sinceDartSdk": "Unreleased",
-    "sinceLinter": "Unreleased"
+    "sinceLinter": "1.30.0"
   },
   {
     "name": "library_names",
