@@ -29,7 +29,7 @@
          </header>
          <section>
 
-            <p>From the <a href="https://flutter.dev/style-guide/">flutter style guide</a>:</p>
+            <p>From the <a href="https://flutter.dev/style-guide/">style guide for the flutter repo</a>:</p>
 <p><strong>DO</strong> separate the control structure expression from its statement.</p>
 <p>Don't put the statement part of an <code>if</code>, <code>for</code>, <code>while</code>, <code>do</code> on the same line
 as the expression, even if it is short.  Doing so makes it unclear that there
@@ -55,6 +55,9 @@ else print('ok')
 
 while (condition) i += 1;
 </code></pre>
+<p>Note that this rule can conflict with the
+<a href="https://dart.dev/tools/dart-format">Dart formatter</a>, and should not be enabled
+when the Dart formatter is used.</p>
 
             
          </section>
