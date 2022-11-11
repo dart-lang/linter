@@ -2922,7 +2922,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "needsEvaluation",
-    "details": "From the [design guide](https://dart.dev/guides/language/effective-dart/design):\n\n**PREFER** naming a method to___() if it copies the object's state to a new object.\n\n**PREFER** naming a method as___() if it returns a different representation backed by the original object.\n\n**BAD:**\n```dart\nclass Bar {\n  Foo myMethod() {\n    return Foo.from(this);\n  }\n}\n```\n\n**GOOD:**\n```dart\nclass Bar {\n  Foo toFoo() {\n    return Foo.from(this);\n  }\n}\n```\n\n**GOOD:**\n```dart\nclass Bar {\n  Foo asFoo() {\n    return Foo.from(this);\n  }\n}\n```\n\n",
+    "details": "From the [Effective Dart](https://dart.dev/guides/language/effective-dart/design):\n\n**PREFER** naming a method `to___()` if it copies the object's state to a new\nobject.\n\n**PREFER** naming a method `as___()` if it returns a different representation\nbacked by the original object.\n\n**BAD:**\n```dart\nclass Bar {\n  Foo myMethod() {\n    return Foo.from(this);\n  }\n}\n```\n\n**GOOD:**\n```dart\nclass Bar {\n  Foo toFoo() {\n    return Foo.from(this);\n  }\n}\n```\n\n**GOOD:**\n```dart\nclass Bar {\n  Foo asFoo() {\n    return Foo.from(this);\n  }\n}\n```\n\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.31"
   },

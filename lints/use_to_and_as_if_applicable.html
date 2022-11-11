@@ -29,9 +29,11 @@
          </header>
          <section>
 
-            <p>From the <a href="https://dart.dev/guides/language/effective-dart/design">design guide</a>:</p>
-<p><strong>PREFER</strong> naming a method to___() if it copies the object's state to a new object.</p>
-<p><strong>PREFER</strong> naming a method as___() if it returns a different representation backed by the original object.</p>
+            <p>From the <a href="https://dart.dev/guides/language/effective-dart/design">Effective Dart</a>:</p>
+<p><strong>PREFER</strong> naming a method <code>to___()</code> if it copies the object's state to a new
+object.</p>
+<p><strong>PREFER</strong> naming a method <code>as___()</code> if it returns a different representation
+backed by the original object.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">class Bar {
   Foo myMethod() {
