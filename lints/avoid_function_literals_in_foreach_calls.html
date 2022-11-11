@@ -31,9 +31,9 @@
 
             <p><strong>AVOID</strong> using <code>forEach</code> with a function literal.</p>
 <p>The <code>for</code> loop enables a developer to be clear and explicit as to their intent.
-A return in the body of the <code>for</code> loop returns from the body of the function, 
-where as a return in the body of the <code>forEach</code> closure only returns a value 
-for that iteration of the <code>forEach</code>. The body of a <code>for</code> loop can contain 
+A return in the body of the <code>for</code> loop returns from the body of the function,
+where as a return in the body of the <code>forEach</code> closure only returns a value
+for that iteration of the <code>forEach</code>. The body of a <code>for</code> loop can contain
 <code>await</code>s, while the closure body of a <code>forEach</code> cannot.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">people.forEach((person) {
