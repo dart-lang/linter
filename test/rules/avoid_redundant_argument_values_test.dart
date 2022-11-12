@@ -208,7 +208,6 @@ class C extends B {
 
   @override
   String toString() => '$value';
-  
 }
 void f() {
   A();
