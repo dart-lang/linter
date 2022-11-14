@@ -70,12 +70,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    if (node.typeParameters != null) {
-      return;
-    }
-    if (node.type is TypeName) {
-      return;
-    }
+    if (node.typeParameters != null) return;
+    if (node.type is NamedType) return;
 
     _countAndReport(node.name);
   }
