@@ -114,8 +114,6 @@ void _writeTimings(IOSink out, List<_Stat> timings, int summaryLength) {
   timings.sort();
   for (var stat in timings) {
     totalTime += stat.elapsed;
-    // TODO: Shame timings slower than 100ms?
-    // TODO: Present both total times and time per count?
     out.writeln(
         '${stat.name.padRight(longestName)}${stat.elapsed.toString().padLeft(pad)}');
   }
@@ -127,21 +125,13 @@ void _writeTimings(IOSink out, List<_Stat> timings, int summaryLength) {
 }
 
 class DetailedReporter extends SimpleFormatter {
-  DetailedReporter(
-      Iterable<AnalysisErrorInfo> errors, LintFilter? filter, IOSink out,
-      {int? fileCount,
-      int? elapsedMs,
-      String? fileRoot,
-      bool showStatistics = false,
-      bool machineOutput = false,
-      bool quiet = false})
-      : super(errors, filter, out,
-            fileCount: fileCount,
-            fileRoot: fileRoot,
-            elapsedMs: elapsedMs,
-            showStatistics: showStatistics,
-            machineOutput: machineOutput,
-            quiet: quiet);
+  DetailedReporter(super.errors, super.filter, super.out,
+      {super.fileCount,
+      super.elapsedMs,
+      super.fileRoot,
+      super.showStatistics,
+      super.machineOutput,
+      super.quiet});
 
   @override
   void writeLint(AnalysisError error, {int? offset, int? line, int? column}) {
@@ -246,7 +236,10 @@ class SimpleFormatter implements ReportFormatter {
     var tableWidth = max(_summaryLength, longest + largestCountGuess);
     var pad = tableWidth - longest;
     var line = ''.padLeft(tableWidth, '-');
-    out..writeln(line)..writeln('Counts')..writeln(line);
+    out
+      ..writeln(line)
+      ..writeln('Counts')
+      ..writeln(line);
     for (var code in codes) {
       out
         ..write(code.padRight(longest))

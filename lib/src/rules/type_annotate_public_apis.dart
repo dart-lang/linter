@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 import '../ast.dart';
-import '../utils.dart';
+import '../util/ascii_utils.dart';
 
 const _desc = r'Type annotate public APIs.';
 
@@ -49,7 +49,7 @@ With types, all of this is clarified.
 
 ''';
 
-class TypeAnnotatePublicApis extends LintRule implements NodeLintRule {
+class TypeAnnotatePublicApis extends LintRule {
   TypeAnnotatePublicApis()
       : super(
             name: 'type_annotate_public_apis',
@@ -141,7 +141,7 @@ class _VisitorHelper extends RecursiveAstVisitor {
   void visitSimpleFormalParameter(SimpleFormalParameter param) {
     if (param.type == null) {
       var paramName = param.identifier?.name;
-      if (paramName != null && !isJustUnderscores(paramName)) {
+      if (paramName != null && !paramName.isJustUnderscores) {
         rule.reportLint(param);
       }
     }

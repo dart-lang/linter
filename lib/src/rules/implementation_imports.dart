@@ -56,10 +56,10 @@ bool samePackage(Uri? uri1, Uri? uri2) {
   if (segments1.isEmpty || segments2.isEmpty) {
     return false;
   }
-  return segments1[0] == segments2[0];
+  return segments1.first == segments2.first;
 }
 
-class ImplementationImports extends LintRule implements NodeLintRule {
+class ImplementationImports extends LintRule {
   ImplementationImports()
       : super(
             name: 'implementation_imports',

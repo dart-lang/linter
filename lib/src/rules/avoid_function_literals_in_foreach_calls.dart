@@ -4,6 +4,8 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
@@ -31,8 +33,28 @@ people.forEach(print);
 ```
 ''';
 
-class AvoidFunctionLiteralInForeachMethod extends LintRule
-    implements NodeLintRule {
+bool _hasMethodChaining(MethodInvocation node) {
+  var exp = node.target;
+  while (exp is PrefixedIdentifier ||
+      exp is MethodInvocation ||
+      exp is PropertyAccess) {
+    if (exp is PrefixedIdentifier) {
+      exp = exp.prefix;
+    } else if (exp is MethodInvocation) {
+      return true;
+    } else if (exp is PropertyAccess) {
+      exp = exp.target;
+    }
+  }
+  return false;
+}
+
+bool _isNonNullableIterable(DartType? type) =>
+    type != null &&
+    type.nullabilitySuffix != NullabilitySuffix.question &&
+    DartTypeUtilities.implementsInterface(type, 'Iterable', 'dart.core');
+
+class AvoidFunctionLiteralInForeachMethod extends LintRule {
   AvoidFunctionLiteralInForeachMethod()
       : super(
             name: 'avoid_function_literals_in_foreach_calls',
@@ -59,27 +81,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (target != null &&
         node.methodName.token.value() == 'forEach' &&
         node.argumentList.arguments.isNotEmpty &&
-        node.argumentList.arguments[0] is FunctionExpression &&
-        DartTypeUtilities.implementsInterface(
-            target.staticType, 'Iterable', 'dart.core') &&
+        node.argumentList.arguments.first is FunctionExpression &&
+        _isNonNullableIterable(target.staticType) &&
         !_hasMethodChaining(node)) {
       rule.reportLint(node.function);
     }
   }
-}
-
-bool _hasMethodChaining(MethodInvocation node) {
-  var exp = node.target;
-  while (exp is PrefixedIdentifier ||
-      exp is MethodInvocation ||
-      exp is PropertyAccess) {
-    if (exp is PrefixedIdentifier) {
-      exp = exp.prefix;
-    } else if (exp is MethodInvocation) {
-      return true;
-    } else if (exp is PropertyAccess) {
-      exp = exp.target;
-    }
-  }
-  return false;
 }

@@ -72,7 +72,7 @@ generates lint and test stubs in `lib/src/rules` and `test_data/rules`.
 
 The linter has a close relationship with the `analyzer` package and at times reaches into non-public APIs.  For the most part, we have isolated these references in an [analyzer.dart utility library](https://github.com/dart-lang/linter/blob/master/lib/src/analyzer.dart).  *Whereever possible please use this library to access analyzer internals.*  
 
-  * If `analyzer.dart` is missing something please consider either opening an issue where we can discuss how best to add it. 
+  * If `analyzer.dart` is missing something please consider opening an issue where we can discuss how best to add it. 
   * If you find yourself tempted to make references to analyzer [implementation classes](https://dart-lang.github.io/linter/lints/implementation_imports.html) also consider opening an issue so that we can see how best to manage the new dependency.
   
 Thanks!
@@ -83,7 +83,7 @@ When writing lints, it can be useful to have the [Dart Language Specification](h
 
 ### Writing Tests that Depend on Dart SDK Details
 
-**Important:** when writing tests that use standard `dart:` libraries, it's important to keep in mind that linter tests use a mocked SDK that has only a small subset of the real one.  We do this for performance reasons as it's FAR faster to load a mock SDK into memory than read the real one from disk.  If you are writing tests that depend on something in the Dart SDK (for example, an interface such as `Iterable`), you may need to update SDK mock content located in the `package:analyzer` [test utilities `mock_sdk.dart`](https://github.com/dart-lang/sdk/blob/master/pkg/analyzer/lib/src/test_utilities/mock_sdk.dart).
+**Important:** when writing tests that use standard `dart:` libraries, it's important to keep in mind that linter tests use a mocked SDK that has only a small subset of the real one.  We do this for performance reasons as it's FAR faster to load a mock SDK into memory than read the real one from disk.  If you are writing tests that depend on something in the Dart SDK (for example, an interface such as `Iterable`), you may need to update SDK mock content located in the `package:analyzer` [test utilities `mock_sdk.dart`](https://github.com/dart-lang/sdk/blob/main/pkg/analyzer/lib/src/test_utilities/mock_sdk.dart).
 
 ### Running Tests
 

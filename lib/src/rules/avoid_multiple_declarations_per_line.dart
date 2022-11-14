@@ -27,8 +27,7 @@ String? baz;
 
 ''';
 
-class AvoidMultipleDeclarationsPerLine extends LintRule
-    implements NodeLintRule {
+class AvoidMultipleDeclarationsPerLine extends LintRule {
   AvoidMultipleDeclarationsPerLine()
       : super(
             name: 'avoid_multiple_declarations_per_line',
@@ -51,8 +50,10 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitVariableDeclarationList(VariableDeclarationList node) {
-    var variables = node.variables;
+    var parent = node.parent;
+    if (parent is ForPartsWithDeclarations && parent.variables == node) return;
 
+    var variables = node.variables;
     if (variables.length > 1) {
       var secondVariable = variables[1];
       rule.reportLint(secondVariable.name);

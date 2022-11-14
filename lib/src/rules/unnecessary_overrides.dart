@@ -40,16 +40,17 @@ class A extends B {
 It's valid to override a member in the following cases:
 
 * if a type (return type or a parameter type) is not the exactly the same as the
-super method,
+  super member,
 * if the `covariant` keyword is added to one of the parameters,
 * if documentation comments are present on the member,
-* if the member has annotations other than `@override`.
+* if the member has annotations other than `@override`,
+* if the member is not annotated with `@protected`, and the super member is.
 
 `noSuchMethod` is a special method and is not checked by this rule.
 
 ''';
 
-class UnnecessaryOverrides extends LintRule implements NodeLintRule {
+class UnnecessaryOverrides extends LintRule {
   UnnecessaryOverrides()
       : super(
             name: 'unnecessary_overrides',
@@ -68,7 +69,9 @@ class UnnecessaryOverrides extends LintRule implements NodeLintRule {
 abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
   final LintRule rule;
 
-  ExecutableElement? inheritedMethod;
+  /// If [declaration] is an inherited member of interest, then this is set in
+  /// [visitMethodDeclaration].
+  late ExecutableElement _inheritedMethod;
   late MethodDeclaration declaration;
 
   _AbstractUnnecessaryOverrideVisitor(this.rule);
@@ -99,17 +102,27 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    // noSuchMethod is mandatory to proxify
+    // 'noSuchMethod' is mandatory to proxify.
     if (node.name.name == 'noSuchMethod') return;
 
-    // it's ok to override to have better documentation
+    // It's ok to override to have better documentation.
     if (node.documentationComment != null) return;
 
-    inheritedMethod = getInheritedElement(node);
+    var inheritedMethod = getInheritedElement(node);
+    if (inheritedMethod == null) return;
+    _inheritedMethod = inheritedMethod;
     declaration = node;
-    if (inheritedMethod != null && !_addsMetadata() && _haveSameDeclaration()) {
-      node.body.accept(this);
-    }
+
+    // It's ok to override to add annotations.
+    if (_addsMetadata()) return;
+
+    // It's ok to override to change the signature.
+    if (!_haveSameDeclaration()) return;
+
+    // It's ok to override to make a `@protected` method public.
+    if (_makesPublicFromProtected()) return;
+
+    node.body.accept(this);
   }
 
   @override
@@ -127,16 +140,34 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
     rule.reportLint(declaration.name);
   }
 
+  /// Returns whether [declaration] is annotated with any metadata (other than
+  /// `@override` or `@Override`).
   bool _addsMetadata() {
     var metadata = declaration.declaredElement?.metadata;
     if (metadata != null) {
       for (var annotation in metadata) {
-        if (!annotation.isOverride) {
-          return true;
-        }
+        if (annotation.isOverride) continue;
+        if (annotation.isProtected && _inheritedMethod.hasProtected) continue;
+
+        // Any other annotation implies a meaningful override.
+        return true;
       }
     }
     return false;
+  }
+
+  /// Returns true if [_inheritedMethod] is `@protected` and [declaration] is
+  /// not `@protected`, and false otherwise.
+  ///
+  /// This indicates that [_inheritedMethod] may have been overridden in order
+  /// to expand its visibility.
+  bool _makesPublicFromProtected() {
+    var declaredElement = declaration.declaredElement;
+    if (declaredElement == null) return false;
+    if (declaredElement.hasProtected) {
+      return false;
+    }
+    return _inheritedMethod.hasProtected;
   }
 
   bool _haveSameDeclaration() {
@@ -144,19 +175,15 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
     if (declaredElement == null) {
       return false;
     }
-    var inheritedMethod = this.inheritedMethod;
-    if (inheritedMethod == null) {
-      return false;
-    }
-    if (declaredElement.returnType != inheritedMethod.returnType) {
+    if (declaredElement.returnType != _inheritedMethod.returnType) {
       return false;
     }
     if (declaredElement.parameters.length !=
-        inheritedMethod.parameters.length) {
+        _inheritedMethod.parameters.length) {
       return false;
     }
-    for (var i = 0; i < inheritedMethod.parameters.length; i++) {
-      var superParam = inheritedMethod.parameters[i];
+    for (var i = 0; i < _inheritedMethod.parameters.length; i++) {
+      var superParam = _inheritedMethod.parameters[i];
       var param = declaredElement.parameters[i];
       if (param.type != superParam.type) return false;
       if (param.name != superParam.name) return false;
@@ -168,8 +195,8 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
   }
 
   bool _sameKind(ParameterElement first, ParameterElement second) {
-    if (first.isNotOptional) {
-      return second.isNotOptional;
+    if (first.isRequired) {
+      return second.isRequired;
     } else if (first.isOptionalPositional) {
       return second.isOptionalPositional;
     } else if (first.isNamed) {
@@ -181,7 +208,7 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
 
 class _UnnecessaryGetterOverrideVisitor
     extends _AbstractUnnecessaryOverrideVisitor {
-  _UnnecessaryGetterOverrideVisitor(LintRule rule) : super(rule);
+  _UnnecessaryGetterOverrideVisitor(super.rule);
 
   @override
   ExecutableElement? getInheritedElement(MethodDeclaration node) =>
@@ -189,7 +216,7 @@ class _UnnecessaryGetterOverrideVisitor
 
   @override
   void visitPropertyAccess(PropertyAccess node) {
-    if (node.propertyName.staticElement == inheritedMethod) {
+    if (node.propertyName.staticElement == _inheritedMethod) {
       node.target?.accept(this);
     }
   }
@@ -197,7 +224,7 @@ class _UnnecessaryGetterOverrideVisitor
 
 class _UnnecessaryMethodOverrideVisitor
     extends _AbstractUnnecessaryOverrideVisitor {
-  _UnnecessaryMethodOverrideVisitor(LintRule rule) : super(rule);
+  _UnnecessaryMethodOverrideVisitor(super.rule);
 
   @override
   ExecutableElement? getInheritedElement(node) =>
@@ -207,7 +234,7 @@ class _UnnecessaryMethodOverrideVisitor
   void visitMethodInvocation(MethodInvocation node) {
     var declarationParameters = declaration.parameters;
     if (declarationParameters != null &&
-        node.methodName.staticElement == inheritedMethod &&
+        node.methodName.staticElement == _inheritedMethod &&
         DartTypeUtilities.matchesArgumentsWithParameters(
             node.argumentList.arguments, declarationParameters.parameters)) {
       node.target?.accept(this);
@@ -217,7 +244,7 @@ class _UnnecessaryMethodOverrideVisitor
 
 class _UnnecessaryOperatorOverrideVisitor
     extends _AbstractUnnecessaryOverrideVisitor {
-  _UnnecessaryOperatorOverrideVisitor(LintRule rule) : super(rule);
+  _UnnecessaryOperatorOverrideVisitor(super.rule);
 
   @override
   ExecutableElement? getInheritedElement(node) =>
@@ -255,7 +282,7 @@ class _UnnecessaryOperatorOverrideVisitor
 
 class _UnnecessarySetterOverrideVisitor
     extends _AbstractUnnecessaryOverrideVisitor {
-  _UnnecessarySetterOverrideVisitor(LintRule rule) : super(rule);
+  _UnnecessarySetterOverrideVisitor(super.rule);
 
   @override
   ExecutableElement? getInheritedElement(node) =>
@@ -271,7 +298,7 @@ class _UnnecessarySetterOverrideVisitor
                 node.rightHandSide)) {
       var leftPart = node.leftHandSide.unParenthesized;
       if (leftPart is PropertyAccess) {
-        if (node.writeElement == inheritedMethod) {
+        if (node.writeElement == _inheritedMethod) {
           leftPart.target?.accept(this);
         }
       }

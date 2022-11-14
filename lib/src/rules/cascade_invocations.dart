@@ -14,7 +14,7 @@ const _desc = r'Cascade consecutive method invocations on the same reference.';
 
 const _details = r'''
 
-**DO** Use the cascading style when succesively invoking methods on the same
+**DO** Use the cascading style when successively invoking methods on the same
 reference.
 
 **BAD:**
@@ -108,7 +108,7 @@ bool _isInvokedWithoutNullAwareOperator(Token? token) =>
 
 /// Rule to lint consecutive invocations of methods or getters on the same
 /// reference that could be done with the cascade operator.
-class CascadeInvocations extends LintRule implements NodeLintRule {
+class CascadeInvocations extends LintRule {
   /// Default constructor.
   CascadeInvocations()
       : super(
@@ -273,13 +273,13 @@ class _CascadableExpression {
       !_hasCriticalDependencies(expressionBox);
 
   bool _hasCriticalDependencies(_CascadableExpression expressionBox) {
-    bool _isCriticalNode(AstNode node) =>
+    bool isCriticalNode(AstNode node) =>
         DartTypeUtilities.getCanonicalElementFromIdentifier(node) ==
         expressionBox.element;
     return expressionBox.isCritical &&
         criticalNodes.any((node) =>
-            _isCriticalNode(node) ||
-            DartTypeUtilities.traverseNodesInDFS(node).any(_isCriticalNode));
+            isCriticalNode(node) ||
+            DartTypeUtilities.traverseNodesInDFS(node).any(isCriticalNode));
   }
 }
 

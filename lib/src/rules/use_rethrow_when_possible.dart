@@ -39,7 +39,7 @@ try {
 
 ''';
 
-class UseRethrowWhenPossible extends LintRule implements NodeLintRule {
+class UseRethrowWhenPossible extends LintRule {
   UseRethrowWhenPossible()
       : super(
             name: 'use_rethrow_when_possible',
@@ -62,6 +62,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitThrowExpression(ThrowExpression node) {
+    if (node.parent is Expression || node.parent is ArgumentList) return;
+
     var element =
         DartTypeUtilities.getCanonicalElementFromIdentifier(node.expression);
     if (element != null) {

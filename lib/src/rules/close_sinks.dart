@@ -63,7 +63,7 @@ bool _isSink(DartType type) =>
 bool _isSocket(DartType type) =>
     DartTypeUtilities.implementsInterface(type, 'Socket', 'dart.io');
 
-class CloseSinks extends LintRule implements NodeLintRule {
+class CloseSinks extends LintRule {
   CloseSinks()
       : super(
             name: 'close_sinks',
@@ -90,5 +90,5 @@ class _Visitor extends LeakDetectorProcessors {
     _isSocket: _destroyMethodName
   };
 
-  _Visitor(LintRule rule) : super(rule);
+  _Visitor(super.rule);
 }

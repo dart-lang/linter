@@ -50,7 +50,7 @@ class Box {
 
 ''';
 
-class UnnecessaryGettersSetters extends LintRule implements NodeLintRule {
+class UnnecessaryGettersSetters extends LintRule {
   UnnecessaryGettersSetters()
       : super(
             name: 'unnecessary_getters_setters',
@@ -73,18 +73,20 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
+    _check(node.members);
+  }
+
+  void _check(NodeList<ClassMember> members) {
     var getters = <String, MethodDeclaration>{};
     var setters = <String, MethodDeclaration>{};
 
     // Build getter/setter maps
-    var members = node.members.where(isMethod);
-
-    for (var member in members) {
-      var method = member as MethodDeclaration;
+    for (var method in members.whereType<MethodDeclaration>()) {
+      var methodName = method.name.toString();
       if (method.isGetter) {
-        getters[method.name.toString()] = method;
+        getters[methodName] = method;
       } else if (method.isSetter) {
-        setters[method.name.toString()] = method;
+        setters[methodName] = method;
       }
     }
 
@@ -103,7 +105,8 @@ class _Visitor extends SimpleAstVisitor<void> {
         isSimpleGetter(getter) &&
         getterElement.metadata.isEmpty &&
         setterElement.metadata.isEmpty) {
-      rule..reportLint(getter.name)..reportLint(setter.name);
+      // Just flag the getter (https://github.com/dart-lang/linter/issues/2851)
+      rule.reportLint(getter.name);
     }
   }
 }

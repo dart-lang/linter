@@ -44,15 +44,14 @@ class Point {
 ''';
 
 bool _hasNewInvocation(DartType returnType, FunctionBody body) {
-  bool _isInstanceCreationExpression(AstNode node) =>
+  bool isInstanceCreationExpression(AstNode node) =>
       node is InstanceCreationExpression && node.staticType == returnType;
 
   return DartTypeUtilities.traverseNodesInDFS(body)
-      .any(_isInstanceCreationExpression);
+      .any(isInstanceCreationExpression);
 }
 
-class PreferConstructorsInsteadOfStaticMethods extends LintRule
-    implements NodeLintRule {
+class PreferConstructorsInsteadOfStaticMethods extends LintRule {
   PreferConstructorsInsteadOfStaticMethods()
       : super(
             name: 'prefer_constructors_over_static_methods',

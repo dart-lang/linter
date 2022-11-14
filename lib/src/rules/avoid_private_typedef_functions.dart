@@ -27,7 +27,7 @@ m(void Function() f);
 
 ''';
 
-class AvoidPrivateTypedefFunctions extends LintRule implements NodeLintRule {
+class AvoidPrivateTypedefFunctions extends LintRule {
   AvoidPrivateTypedefFunctions()
       : super(
             name: 'avoid_private_typedef_functions',
@@ -50,9 +50,9 @@ class _CountVisitor extends RecursiveAstVisitor {
   _CountVisitor(this.type);
 
   @override
-  void visitTypeName(TypeName node) {
+  void visitNamedType(NamedType node) {
     if (node.name.name == type) count++;
-    super.visitTypeName(node);
+    super.visitNamedType(node);
   }
 }
 

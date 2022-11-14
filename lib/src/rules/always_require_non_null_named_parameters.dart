@@ -39,8 +39,7 @@ NOTE: Only asserts at the start of the bodies will be taken into account.
 
 ''';
 
-class AlwaysRequireNonNullNamedParameters extends LintRule
-    implements NodeLintRule {
+class AlwaysRequireNonNullNamedParameters extends LintRule {
   AlwaysRequireNonNullNamedParameters()
       : super(
             name: 'always_require_non_null_named_parameters',
@@ -132,7 +131,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   bool _hasAssertNotNull(Expression node, String name) {
-    bool _hasSameName(Expression rawExpression) {
+    bool hasSameName(Expression rawExpression) {
       var expression = rawExpression.unParenthesized;
       return expression is SimpleIdentifier && expression.name == name;
     }
@@ -146,7 +145,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (expression.operator.type == TokenType.BANG_EQ) {
         var operands = [expression.leftOperand, expression.rightOperand];
         return operands.any(DartTypeUtilities.isNullLiteral) &&
-            operands.any(_hasSameName);
+            operands.any(hasSameName);
       }
     }
     return false;

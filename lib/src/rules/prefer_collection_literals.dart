@@ -57,7 +57,7 @@ void printHashMap(LinkedHashMap map) => printMap(map);
 ```
 ''';
 
-class PreferCollectionLiterals extends LintRule implements NodeLintRule {
+class PreferCollectionLiterals extends LintRule {
   PreferCollectionLiterals()
       : super(
             name: 'prefer_collection_literals',
@@ -166,6 +166,15 @@ class _Visitor extends SimpleAstVisitor<void> {
           return true;
         }
       }
+
+      // Skip: void f({required LinkedHashSet<Foo> s})
+      if (parent is NamedExpression) {
+        var paramType = parent.staticParameterElement?.type;
+        if (paramType != null && typeCheck(paramType)) {
+          return true;
+        }
+      }
+
       // Skip: <int, LinkedHashSet>{}.putIfAbsent(3, () => LinkedHashSet());
       // or <int, LinkedHashMap>{}.putIfAbsent(3, () => LinkedHashMap());
       if (parent is ExpressionFunctionBody) {

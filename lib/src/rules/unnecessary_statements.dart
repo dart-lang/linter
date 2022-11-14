@@ -46,7 +46,7 @@ return myvar;
 
 ''';
 
-class UnnecessaryStatements extends LintRule implements NodeLintRule {
+class UnnecessaryStatements extends LintRule {
   UnnecessaryStatements()
       : super(
             name: 'unnecessary_statements',
@@ -58,7 +58,6 @@ class UnnecessaryStatements extends LintRule implements NodeLintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(_ReportNoClearEffectVisitor(this));
-    registry.addAsExpression(this, visitor);
     registry.addExpressionStatement(this, visitor);
     registry.addForStatement(this, visitor);
     registry.addCascadeExpression(this, visitor);

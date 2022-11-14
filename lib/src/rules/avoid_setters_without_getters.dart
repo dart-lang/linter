@@ -50,7 +50,7 @@ bool _hasGetter(MethodDeclaration node) =>
 bool _hasInheritedSetter(MethodDeclaration node) =>
     DartTypeUtilities.lookUpInheritedConcreteSetter(node) != null;
 
-class AvoidSettersWithoutGetters extends LintRule implements NodeLintRule {
+class AvoidSettersWithoutGetters extends LintRule {
   AvoidSettersWithoutGetters()
       : super(
             name: 'avoid_setters_without_getters',
@@ -63,6 +63,8 @@ class AvoidSettersWithoutGetters extends LintRule implements NodeLintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addClassDeclaration(this, visitor);
+    registry.addEnumDeclaration(this, visitor);
+    // todo(pq): consider visiting mixin declarations
   }
 }
 
@@ -73,7 +75,16 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    for (var member in node.members.whereType<MethodDeclaration>()) {
+    visitMembers(node.members);
+  }
+
+  @override
+  void visitEnumDeclaration(EnumDeclaration node) {
+    visitMembers(node.members);
+  }
+
+  void visitMembers(NodeList<ClassMember> members) {
+    for (var member in members.whereType<MethodDeclaration>()) {
       if (member.isSetter &&
           !_hasInheritedSetter(member) &&
           !_hasGetter(member)) {

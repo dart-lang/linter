@@ -4,36 +4,54 @@
 
 // test w/ `dart test -N avoid_classes_with_only_static_members`
 
-class Bad { // LINT
-  static int a;
+class Bad // LINT
+{
+  static int a = 0;
 
   static foo() {}
 }
 
-class Bad2 extends Good1 { // LINT
-  static int staticInt;
+class Ok extends Good1 // OK
+{
+  static int staticInt = 0;
 
   static foo() {}
 }
 
-class Bad3 {} // OK
+class Bad3 // OK
+{}
 
-class Good1 { // OK
+class Good1 // OK
+{
   int a = 0;
 }
 
-class Good2 { // OK
+class Good2 // OK
+{
   void foo() {}
 }
 
-class Good3 { // OK
+class Good3 // OK
+{
   Good3();
 }
 
-class Color { // OK
+class Color // OK
+{
   static const red = '#f00';
   static const green = '#0f0';
   static const blue = '#00f';
   static const black = '#000';
   static const white = '#fff';
+}
+
+class DateUtils // LINT
+{
+  static DateTime mostRecent(List<DateTime> dates) => dates.first;
+}
+
+class F // OK
+{
+  F._();
+  static int f = 0;
 }

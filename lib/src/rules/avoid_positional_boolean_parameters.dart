@@ -37,8 +37,7 @@ Button(ButtonState.enabled);
 
 ''';
 
-class AvoidPositionalBooleanParameters extends LintRule
-    implements NodeLintRule {
+class AvoidPositionalBooleanParameters extends LintRule {
   AvoidPositionalBooleanParameters()
       : super(
             name: 'avoid_positional_boolean_parameters',
@@ -50,7 +49,6 @@ class AvoidPositionalBooleanParameters extends LintRule
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this, context);
-    registry.addCompilationUnit(this, visitor);
     registry.addConstructorDeclaration(this, visitor);
     registry.addFunctionDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
@@ -69,7 +67,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (declaredElement != null && !declaredElement.isPrivate) {
       var parametersToLint =
           node.parameters.parameters.where(_isFormalParameterToLint);
-      if (parametersToLint.isNotEmpty == true) {
+      if (parametersToLint.isNotEmpty) {
         rule.reportLint(parametersToLint.first);
       }
     }

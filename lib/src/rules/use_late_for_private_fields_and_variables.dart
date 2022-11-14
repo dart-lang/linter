@@ -12,13 +12,13 @@ import 'package:analyzer/error/error.dart';
 import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
 
-const _desc = r'Use late for private members with non-nullable type.';
+const _desc = r'Use late for private members with a non-nullable type.';
 
 const _details = r'''
 
-Use late for private members with non-nullable types that are always expected to
-be non-null. Thus it's clear that the field is not expected to be `null` and it
-avoids null checks.
+Use `late` for private members with non-nullable types that are always expected
+to be non-null. Thus it's clear that the field is not expected to be `null`
+and it avoids null checks.
 
 **BAD:**
 ```dart
@@ -36,6 +36,15 @@ m() {
 }
 ```
 
+**OK:**
+```dart
+int? _i;
+m() {
+  _i?.abs();
+  _i = null;
+}
+```
+
 ''';
 
 bool _isPrivateExtension(AstNode parent) {
@@ -46,8 +55,7 @@ bool _isPrivateExtension(AstNode parent) {
   return parentName == null || Identifier.isPrivateName(parentName);
 }
 
-class UseLateForPrivateFieldsAndVariables extends LintRule
-    implements NodeLintRule {
+class UseLateForPrivateFieldsAndVariables extends LintRule {
   UseLateForPrivateFieldsAndVariables()
       : super(
           name: 'use_late_for_private_fields_and_variables',

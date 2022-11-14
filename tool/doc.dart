@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:analyzer/src/lint/config.dart';
 import 'package:analyzer/src/lint/registry.dart';
 import 'package:args/args.dart';
+import 'package:github/github.dart';
 import 'package:http/http.dart' as http;
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';
@@ -19,7 +20,14 @@ import 'since.dart';
 /// Generates lint rule docs for publishing to https://dart-lang.github.io/
 void main(List<String> args) async {
   var parser = ArgParser()
-    ..addOption('out', abbr: 'o', help: 'Specifies output directory.');
+    ..addOption('out', abbr: 'o', help: 'Specifies output directory.')
+    ..addOption('token', abbr: 't', help: 'Specifies a github auth token.')
+    ..addFlag('create-dirs',
+        abbr: 'd', help: 'Enables creation of necessary directories.')
+    ..addFlag('markdown',
+        abbr: 'm',
+        help: 'Enables generation of the markdown docs.',
+        defaultsTo: true);
 
   ArgResults options;
   try {
@@ -30,7 +38,18 @@ void main(List<String> args) async {
   }
 
   var outDir = options['out'] as String?;
-  await generateDocs(outDir);
+
+  var token = options['token'];
+  var auth = token is String ? Authentication.withToken(token) : null;
+
+  var createDirectories = options['create-dirs'] == true;
+
+  var enableMarkdown = options['markdown'] == true;
+
+  await generateDocs(outDir,
+      auth: auth,
+      createDirectories: createDirectories,
+      enableMarkdown: enableMarkdown);
 }
 
 const ruleFootMatter = '''
@@ -51,9 +70,9 @@ enabled in practice, but this list should provide a convenient jumping-off point
 
 Many lints are included in various predefined rulesets:
 
-* [pedantic](https://github.com/dart-lang/pedantic) for rules enforced internally at Google
-* [effective_dart](https://github.com/tenhobi/effective_dart) for rules corresponding to the [Effective Dart](https://dart.dev/guides/language/effective-dart) style guide
-* [flutter](https://github.com/flutter/packages/blob/master/packages/flutter_lints/lib/flutter.yaml) for rules recommended for Flutter projects (`flutter create` enables these by default)
+* [core](https://github.com/dart-lang/lints) for official "core" Dart team lint rules.
+* [recommended](https://github.com/dart-lang/lints) for additional lint rules "recommended" by the Dart team.
+* [flutter](https://github.com/flutter/packages/blob/master/packages/flutter_lints/lib/flutter.yaml) for rules recommended for Flutter projects (`flutter create` enables these by default).
 
 Rules included in these rulesets are badged in the documentation below.
 
@@ -64,26 +83,15 @@ These rules are under active development.  Feedback is
 const ruleLeadMatter = 'Rules are organized into familiar rule groups.';
 
 final coreRules = <String?>[];
-final recommendedRules = <String?>[];
-final effectiveDartRules = <String?>[];
 final flutterRules = <String?>[];
 final pedanticRules = <String?>[];
+final recommendedRules = <String?>[];
 
 /// Sorted list of contributed lint rules.
 final List<LintRule> rules =
     List<LintRule>.of(Registry.ruleRegistry, growable: false)..sort();
 
 late Map<String, SinceInfo> sinceInfo;
-
-Future<String> get effectiveDartLatestVersion async {
-  var url =
-      'https://raw.githubusercontent.com/tenhobi/effective_dart/master/lib/analysis_options.yaml';
-  var client = http.Client();
-  print('loading $url...');
-  var req = await client.get(Uri.parse(url));
-  var parts = req.body.split('package:effective_dart/analysis_options.');
-  return parts[1].split('.yaml')[0];
-}
 
 String get enumerateErrorRules =>
     rules.where((r) => r.group == Group.errors).map(toDescription).join('\n\n');
@@ -139,15 +147,6 @@ Future<void> fetchBadgeInfo() async {
     }
   }
 
-  var latestEffectiveDart = await effectiveDartLatestVersion;
-  var effectiveDart = await fetchConfig(
-      'https://raw.githubusercontent.com/tenhobi/effective_dart/master/lib/analysis_options.$latestEffectiveDart.yaml');
-  if (effectiveDart != null) {
-    for (var ruleConfig in effectiveDart.ruleConfigs) {
-      effectiveDartRules.add(ruleConfig.name);
-    }
-  }
-
   var flutter = await fetchConfig(
       'https://raw.githubusercontent.com/flutter/packages/master/packages/flutter_lints/lib/flutter.yaml');
   if (flutter != null) {
@@ -165,23 +164,36 @@ Future<LintConfig?> fetchConfig(String url) async {
   return processAnalysisOptionsFile(req.body);
 }
 
-Future<void> fetchSinceInfo() async {
-  sinceInfo = await sinceMap;
+Future<void> fetchSinceInfo(Authentication? auth) async {
+  sinceInfo = await getSinceMap(auth);
 }
 
-Future<void> generateDocs(String? dir) async {
+Future<void> generateDocs(String? dir,
+    {Authentication? auth,
+    bool createDirectories = false,
+    bool enableMarkdown = true}) async {
   var outDir = dir;
   if (outDir != null) {
     var d = Directory(outDir);
+    if (createDirectories) {
+      d.createSync();
+    }
+
     if (!d.existsSync()) {
       print("Directory '${d.path}' does not exist");
       return;
     }
+
     if (!File('$outDir/options').existsSync()) {
       var lintsChildDir = Directory('$outDir/lints');
       if (lintsChildDir.existsSync()) {
         outDir = lintsChildDir.path;
       }
+    }
+
+    if (createDirectories) {
+      Directory('$outDir/options').createSync();
+      Directory('$outDir/machine').createSync();
     }
   }
 
@@ -194,17 +206,22 @@ Future<void> generateDocs(String? dir) async {
   await fetchBadgeInfo();
 
   // Fetch since info.
-  await fetchSinceInfo();
+  await fetchSinceInfo(auth);
 
   // Generate rule files.
   for (var l in rules) {
     RuleHtmlGenerator(l).generate(outDir);
-    RuleMarkdownGenerator(l).generate(filePath: outDir);
+    if (enableMarkdown) {
+      RuleMarkdownGenerator(l).generate(filePath: outDir);
+    }
   }
 
   // Generate index.
   HtmlIndexer(Registry.ruleRegistry).generate(outDir);
-  MarkdownIndexer(Registry.ruleRegistry).generate(filePath: outDir);
+
+  if (enableMarkdown) {
+    MarkdownIndexer(Registry.ruleRegistry).generate(filePath: outDir);
+  }
 
   // Generate options samples.
   OptionsSample(rules).generate(outDir);
@@ -234,11 +251,6 @@ String getBadges(String rule) {
     sb.write(
         '<a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints">'
         '<!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a>');
-  }
-  if (effectiveDartRules.contains(rule)) {
-    sb.write(
-        '<a class="style-type" href="https://github.com/tenhobi/effective_dart">'
-        '<!--suppress HtmlUnknownTarget --><img alt="effective dart" src="style-effective_dart.svg"></a>');
   }
   return sb.toString();
 }
@@ -344,7 +356,7 @@ class HtmlIndexer {
       </div>
       <footer>
          <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">Github</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
       </footer>
    </body>
 </html>
@@ -418,10 +430,6 @@ class MarkdownIndexer {
         buffer.writeln('[![pedantic](style-pedantic.svg)]'
             '(https://github.com/dart-lang/pedantic/#enabled-lints)');
       }
-      if (effectiveDartRules.contains(rule.name)) {
-        buffer.writeln('[![effective dart](style-effective_dart.svg)]'
-            '(https://github.com/tenhobi/effective_dart)');
-      }
       buffer.writeln();
     }
 
@@ -481,7 +489,7 @@ linter:
         .where((r) => r.maturity != Maturity.deprecated)
         .map((r) => r.name)
         .toList()
-          ..sort();
+      ..sort();
     for (var rule in sortedRules) {
       sb.write('    - $rule\n');
     }
@@ -532,7 +540,7 @@ linter:
       </div>
       <footer>
          <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">Github</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
       </footer>
    </body>
 </html>
@@ -585,11 +593,14 @@ class RuleHtmlGenerator {
   String get name => rule.name;
 
   String get since {
-    var info = sinceInfo[name]!;
-    var version = info.sinceDartSdk != null
-        ? '>= ${info.sinceDartSdk}'
-        : '<strong>unreleased</strong>';
-    return 'Dart SDK: $version • <small>(Linter v${info.sinceLinter})</small>';
+    // See: https://github.com/dart-lang/linter/issues/2824
+    // var info = sinceInfo[name]!;
+    // var version = info.sinceDartSdk != null
+    //     ? '>= ${info.sinceDartSdk}'
+    //     : '<strong>unreleased</strong>';
+    //return 'Dart SDK: $version • <small>(Linter v${info.sinceLinter})</small>';
+    var sinceLinter = sinceInfo[name]!.sinceLinter;
+    return sinceLinter != null ? 'Linter v$sinceLinter' : 'Unreleased';
   }
 
   void generate([String? filePath]) {
@@ -641,7 +652,7 @@ class RuleHtmlGenerator {
       </div>
       <footer>
          <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">Github</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
       </footer>
    </body>
 </html>
@@ -662,11 +673,14 @@ class RuleMarkdownGenerator {
   String get name => rule.name;
 
   String get since {
-    var info = sinceInfo[name]!;
-    var version = info.sinceDartSdk != null
-        ? '>= ${info.sinceDartSdk}'
-        : '**unreleased**';
-    return 'Dart SDK: $version • (Linter v${info.sinceLinter})';
+    // See: https://github.com/dart-lang/linter/issues/2824
+    // var info = sinceInfo[name]!;
+    // var version = info.sinceDartSdk != null
+    //     ? '>= ${info.sinceDartSdk}'
+    //     : '<strong>unreleased</strong>';
+    //return 'Dart SDK: $version • <small>(Linter v${info.sinceLinter})</small>';
+    var sinceLinter = sinceInfo[name]!.sinceLinter;
+    return sinceLinter != null ? 'Linter v$sinceLinter' : 'Unreleased';
   }
 
   void generate({String? filePath}) {
@@ -696,10 +710,6 @@ class RuleMarkdownGenerator {
     if (pedanticRules.contains(name)) {
       buffer.writeln('[![pedantic](style-pedantic.svg)]'
           '(https://github.com/dart-lang/pedantic/#enabled-lints)');
-    }
-    if (effectiveDartRules.contains(name)) {
-      buffer.writeln('[![effective dart](style-effective_dart.svg)]'
-          '(https://github.com/tenhobi/effective_dart)');
     }
 
     buffer.writeln();

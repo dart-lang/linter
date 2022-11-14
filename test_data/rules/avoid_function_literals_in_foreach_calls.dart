@@ -5,16 +5,18 @@
 // test w/ `dart test -N avoid_function_literals_in_foreach_calls`
 
 class Person {
-  Iterable<Person> children;
+  Iterable<Person> children = [];
 }
 
 void main() {
-  Iterable<String> people;
+  Iterable<String?> people = [];
 
-  for (var person in people) { // OK
+  for (var person in people) {
+    // OK
     print('$person!');
   }
-  people.forEach((person) { // LINT
+  people.forEach((person) // LINT
+      {
     print('$person!');
   });
 
@@ -24,17 +26,17 @@ void main() {
 
   people
       .where((person) => person != null)
-      .map((person) => person.toUpperCase())
+      .map((person) => person!.toUpperCase())
       .forEach((person) => print('$person!')); // OK
 
   people
       .where((person) => person != null)
-      .map((person) => person.toUpperCase())
+      .map((person) => person!.toUpperCase())
       .forEach(print); // OK
 
   Person()
       .children
-      .firstWhere((person) => person != null)
+      .firstWhere((person) => person.children.isNotEmpty)
       .children
       .forEach((person) => print('$person!')); // OK
 
@@ -45,4 +47,7 @@ void main() {
       .first
       .children
       .forEach((person) => print('$person!')); // LINT
+
+  Iterable<String>? nullables;
+  nullables?.forEach((n) => print(n)); // OK
 }

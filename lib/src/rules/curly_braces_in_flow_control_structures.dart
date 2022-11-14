@@ -50,14 +50,21 @@ if (overflowChars != other.overflowChars)
 ```
 ''';
 
-class CurlyBracesInFlowControlStructures extends LintRule
-    implements NodeLintRule {
+class CurlyBracesInFlowControlStructures extends LintRule {
+  static const LintCode code = LintCode(
+      'curly_braces_in_flow_control_structures',
+      'Statements in {0} should be enclosed in a block.',
+      correctionMessage: 'Try wrapping the statement in a block.');
+
   CurlyBracesInFlowControlStructures()
       : super(
             name: 'curly_braces_in_flow_control_structures',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -77,41 +84,45 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitDoStatement(DoStatement node) {
-    _check(node.body);
+    _check('a do', node.body);
   }
 
   @override
   void visitForStatement(ForStatement node) {
-    _check(node.body);
+    _check('a for', node.body);
   }
 
   @override
   void visitIfStatement(IfStatement node) {
     var elseStatement = node.elseStatement;
     if (elseStatement == null) {
+      var parent = node.parent;
+      if (parent is IfStatement && node == parent.elseStatement) {
+        _check('an if', node.thenStatement);
+        return;
+      }
       if (node.thenStatement is Block) return;
 
       var unit = node.root as CompilationUnit;
       var lineInfo = unit.lineInfo;
-      if (lineInfo != null &&
-          lineInfo.getLocation(node.rightParenthesis.end).lineNumber !=
-              lineInfo.getLocation(node.thenStatement.end).lineNumber) {
-        rule.reportLint(node.thenStatement);
+      if (lineInfo.getLocation(node.rightParenthesis.end).lineNumber !=
+          lineInfo.getLocation(node.thenStatement.end).lineNumber) {
+        rule.reportLint(node.thenStatement, arguments: ['an if']);
       }
     } else {
-      _check(node.thenStatement);
+      _check('an if', node.thenStatement);
       if (elseStatement is! IfStatement) {
-        _check(elseStatement);
+        _check('an if', elseStatement);
       }
     }
   }
 
   @override
   void visitWhileStatement(WhileStatement node) {
-    _check(node.body);
+    _check('a while', node.body);
   }
 
-  void _check(Statement node) {
-    if (node is! Block) rule.reportLint(node);
+  void _check(String where, Statement node) {
+    if (node is! Block) rule.reportLint(node, arguments: [where]);
   }
 }

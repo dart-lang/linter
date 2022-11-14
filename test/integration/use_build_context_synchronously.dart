@@ -24,14 +24,12 @@ void main() {
     test('mixed_mode', () async {
       await cli.runLinter([
         '$integrationTestDir/use_build_context_synchronously/lib/unmigrated.dart',
-        '--packages',
-        '$ruleTestDir/.mock_packages',
         '--rules=use_build_context_synchronously',
       ], LinterOptions());
       var out = collectingOut.trim();
       expect(out, contains('1 file analyzed, 1 issue found'));
       expect(out,
-          contains('21:3 [lint] Do not use BuildContexts across async gaps.'));
+          contains('22:3 [lint] Do not use BuildContexts across async gaps.'));
     });
   });
 }

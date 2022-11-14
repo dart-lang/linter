@@ -20,18 +20,17 @@ and read than concatenation.
 
 **BAD:**
 ```dart
-'Hello, ' + name + '! You are ' + (year - birth) + ' years old.';
+'Hello, ' + person.name + ' from ' + person.city + '.';
 ```
 
 **GOOD:**
 ```dart
-'Hello, $name! You are ${year - birth} years old.';
+'Hello, ${person.name} from ${person.city}.'
 ```
 
 ''';
 
-class PreferInterpolationToComposeStrings extends LintRule
-    implements NodeLintRule {
+class PreferInterpolationToComposeStrings extends LintRule {
   PreferInterpolationToComposeStrings()
       : super(
             name: 'prefer_interpolation_to_compose_strings',

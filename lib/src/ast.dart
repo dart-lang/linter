@@ -14,6 +14,8 @@ import 'package:path/path.dart' as path;
 import 'analyzer.dart';
 import 'utils.dart';
 
+final List<String> reservedWords = _collectReservedWords();
+
 /// Returns direct children of [parent].
 List<Element> getChildren(Element parent, [String? name]) {
   var children = <Element>[];
@@ -41,6 +43,19 @@ SimpleIdentifier? getFieldIdentifier(FieldDeclaration decl, String name) {
   return null;
 }
 
+/// Returns the value of an [IntegerLiteral] or [PrefixExpression] with a
+/// minus and then an [IntegerLiteral]. If a [context] is provided,
+/// [SimpleIdentifier]s are evaluated as constants. For anything else,
+/// returns `null`.
+int? getIntValue(Expression expression, LinterContext? context) {
+  if (expression is PrefixExpression) {
+    var operand = expression.operand;
+    if (expression.operator.type != TokenType.MINUS) return null;
+    return _getIntValue(operand, context, negated: true);
+  }
+  return _getIntValue(expression, context);
+}
+
 /// Returns the most specific AST node appropriate for associating errors.
 AstNode getNodeToAnnotate(Declaration node) {
   var mostSpecific = _getNodeToAnnotate(node);
@@ -64,26 +79,12 @@ bool hasConstantError(LinterContext context, Expression node) {
 }
 
 /// Returns `true` if this [element] has a `@literal` annotation.
-bool hasLiteralAnnotation(Element element) {
-  var metadata = element.metadata;
-  for (var i = 0; i < metadata.length; i++) {
-    if (metadata[i].isLiteral) {
-      return true;
-    }
-  }
-  return false;
-}
+@Deprecated('prefer: element.hasLiteral')
+bool hasLiteralAnnotation(Element element) => element.hasLiteral;
 
 /// Returns `true` if this [element] has an `@override` annotation.
-bool hasOverrideAnnotation(Element element) {
-  var metadata = element.metadata;
-  for (var i = 0; i < metadata.length; i++) {
-    if (metadata[i].isOverride) {
-      return true;
-    }
-  }
-  return false;
-}
+@Deprecated('prefer: element.hasOverride')
+bool hasOverrideAnnotation(Element element) => element.hasOverride;
 
 /// Returns `true` if this [node] is the child of a private compilation unit
 /// member.
@@ -108,10 +109,10 @@ bool isFinalOrConst(Token token) =>
     isKeyword(token, Keyword.FINAL) || isKeyword(token, Keyword.CONST);
 
 /// Returns `true` if this element is a `hashCode` method or field declaration.
-bool isHashCode(ClassMember element) =>
-    (element is MethodDeclaration && element.name.name == 'hashCode') ||
-    (element is FieldDeclaration &&
-        getFieldIdentifier(element, 'hashCode') != null);
+bool isHashCode(ClassMember element) => _hasFieldOrMethod(element, 'hashCode');
+
+/// Returns `true` if this element is an `index` method or field declaration.
+bool isIndex(ClassMember element) => _hasFieldOrMethod(element, 'index');
 
 /// Return true if this compilation unit [node] is declared within the given
 /// [package]'s `lib/` directory tree.
@@ -143,7 +144,7 @@ bool isKeyword(Token token, Keyword keyword) =>
     token is KeywordToken && token.keyword == keyword;
 
 /// Returns `true` if the given [id] is a Dart keyword.
-bool isKeyWord(String id) => Keyword.keywords.keys.contains(id);
+bool isKeyWord(String id) => Keyword.keywords.containsKey(id);
 
 /// Returns `true` if the given [ClassMember] is a method.
 bool isMethod(ClassMember m) => m is MethodDeclaration;
@@ -157,6 +158,9 @@ bool isPublicMethod(ClassMember m) {
   var declaredElement = m.declaredElement;
   return declaredElement != null && isMethod(m) && declaredElement.isPublic;
 }
+
+/// Check if the given word is a Dart reserved word.
+bool isReservedWord(String word) => reservedWords.contains(word);
 
 /// Returns `true` if the given method [declaration] is a "simple getter".
 ///
@@ -183,7 +187,7 @@ bool isSimpleGetter(MethodDeclaration declaration) {
   } else if (body is BlockFunctionBody) {
     var block = body.block;
     if (block.statements.length == 1) {
-      var statement = block.statements[0];
+      var statement = block.statements.first;
       if (statement is ReturnStatement) {
         return _checkForSimpleGetter(declaration, statement.expression);
       }
@@ -217,7 +221,7 @@ bool isSimpleSetter(MethodDeclaration setter) {
   } else if (body is BlockFunctionBody) {
     var block = body.block;
     if (block.statements.length == 1) {
-      var statement = block.statements[0];
+      var statement = block.statements.first;
       if (statement is ExpressionStatement) {
         return _checkForSimpleSetter(setter, statement.expression);
       }
@@ -229,6 +233,9 @@ bool isSimpleSetter(MethodDeclaration setter) {
 
 /// Returns `true` if the given [id] is a valid Dart identifier.
 bool isValidDartIdentifier(String id) => !isKeyWord(id) && isIdentifier(id);
+
+/// Returns `true` if this element is a `values` method or field declaration.
+bool isValues(ClassMember element) => _hasFieldOrMethod(element, 'values');
 
 /// Returns `true` if the keyword associated with this token is `var`.
 bool isVar(Token token) => isKeyword(token, Keyword.VAR);
@@ -249,7 +256,7 @@ File? locatePubspecFile(CompilationUnit compilationUnit) {
   var file = resourceProvider.getFile(fullName);
 
   // Look for a pubspec.yaml file.
-  for (var folder in file.parent2.withAncestors) {
+  for (var folder in file.parent.withAncestors) {
     var pubspecFile = folder.getChildAssumingFile('pubspec.yaml');
     if (pubspecFile.exists) {
       return pubspecFile;
@@ -308,11 +315,34 @@ bool _checkForSimpleSetter(MethodDeclaration setter, Expression expression) {
 
     var parameters = setter.parameters?.parameters;
     if (parameters != null && parameters.length == 1) {
-      return rightElement == parameters[0].declaredElement;
+      return rightElement == parameters.first.declaredElement;
     }
   }
 
   return false;
+}
+
+List<String> _collectReservedWords() {
+  var reserved = <String>[];
+  for (var entry in Keyword.keywords.entries) {
+    if (entry.value.isReservedWord) {
+      reserved.add(entry.key);
+    }
+  }
+  return reserved;
+}
+
+int? _getIntValue(Expression expression, LinterContext? context,
+    {bool negated = false}) {
+  int? value;
+  if (expression is IntegerLiteral) {
+    value = expression.value;
+  } else if (expression is SimpleIdentifier && context != null) {
+    value = context.evaluateConstant(expression).value?.toIntValue();
+  }
+  if (value is! int) return null;
+
+  return negated ? -value : value;
 }
 
 AstNode? _getNodeToAnnotate(Declaration node) {
@@ -382,6 +412,10 @@ Element? _getWriteElement(AstNode node) {
   return null;
 }
 
+bool _hasFieldOrMethod(ClassMember element, String name) =>
+    (element is MethodDeclaration && element.name.name == name) ||
+    (element is FieldDeclaration && getFieldIdentifier(element, name) != null);
+
 /// An [Element] processor function type.
 /// If `true` is returned, children of [element] will be visited.
 typedef ElementProcessor = bool Function(Element element);
@@ -395,8 +429,17 @@ class _ElementVisitorAdapter extends GeneralizingElementVisitor {
   @override
   void visitElement(Element element) {
     var visitChildren = processor(element);
-    if (visitChildren == true) {
+    if (visitChildren) {
       element.visitChildren(this);
     }
+  }
+}
+
+extension ElementExtension on Element? {
+  bool get isDartCorePrint {
+    var self = this;
+    return self is FunctionElement &&
+        self.name == 'print' &&
+        self.library.isDartCore;
   }
 }

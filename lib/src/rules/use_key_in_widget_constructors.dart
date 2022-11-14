@@ -33,7 +33,7 @@ class MyPublicWidget extends StatelessWidget {
 ```
 ''';
 
-class UseKeyInWidgetConstructors extends LintRule implements NodeLintRule {
+class UseKeyInWidgetConstructors extends LintRule {
   UseKeyInWidgetConstructors()
       : super(
             name: 'use_key_in_widget_constructors',
@@ -79,6 +79,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         classElement.isPublic &&
         hasWidgetAsAscendant(classElement) &&
         !isExactWidget(classElement) &&
+        !_hasKeySuperParameterInitializerArg(node) &&
         !node.initializers.any((initializer) {
           if (initializer is SuperConstructorInvocation) {
             var staticElement = initializer.staticElement;
@@ -93,17 +94,28 @@ class _Visitor extends SimpleAstVisitor<void> {
           }
           return false;
         })) {
-      rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);
+      rule.reportLint(node.name ?? node.returnType);
     }
     super.visitConstructorDeclaration(node);
   }
 
-  bool _defineKeyParameter(ConstructorElement element) =>
-      element.parameters.any((e) => e.name == 'key' && _isKeyType(e.type));
-
   bool _defineKeyArgument(ArgumentList argumentList) => argumentList.arguments
       .any((a) => a.staticParameterElement?.name == 'key');
 
+  bool _defineKeyParameter(ConstructorElement element) =>
+      element.parameters.any((e) => e.name == 'key' && _isKeyType(e.type));
+
   bool _isKeyType(DartType type) =>
       DartTypeUtilities.implementsInterface(type, 'Key', '');
+
+  bool _hasKeySuperParameterInitializerArg(ConstructorDeclaration node) {
+    for (var parameter in node.parameters.parameters) {
+      var element = parameter.declaredElement;
+      if (element is SuperFormalParameterElement && element.name == 'key') {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

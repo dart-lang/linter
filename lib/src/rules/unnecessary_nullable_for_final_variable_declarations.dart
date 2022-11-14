@@ -28,8 +28,7 @@ final int i = 1;
 
 ''';
 
-class UnnecessaryNullableForFinalVariableDeclarations extends LintRule
-    implements NodeLintRule {
+class UnnecessaryNullableForFinalVariableDeclarations extends LintRule {
   UnnecessaryNullableForFinalVariableDeclarations()
       : super(
             name: 'unnecessary_nullable_for_final_variable_declarations',
@@ -46,7 +45,6 @@ class UnnecessaryNullableForFinalVariableDeclarations extends LintRule
     }
 
     var visitor = _Visitor(this, context);
-    registry.addCompilationUnit(this, visitor);
     registry.addFieldDeclaration(this, visitor);
     registry.addTopLevelVariableDeclaration(this, visitor);
     registry.addVariableDeclarationStatement(this, visitor);

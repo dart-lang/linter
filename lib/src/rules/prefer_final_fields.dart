@@ -97,7 +97,7 @@ bool _containedInInitializer(
             initializer.fieldName) ==
         element;
 
-class PreferFinalFields extends LintRule implements NodeLintRule {
+class PreferFinalFields extends LintRule {
   PreferFinalFields()
       : super(
             name: 'prefer_final_fields',
@@ -164,6 +164,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
+    if (node.parent is EnumDeclaration) return;
+
     var fields = node.fields;
     if (fields.isFinal || fields.isConst) {
       return;

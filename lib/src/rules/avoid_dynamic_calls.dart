@@ -91,14 +91,14 @@ void functionTypeWithParameters(Function() function) {
 
 ''';
 
-class AvoidDynamicCalls extends LintRule implements NodeLintRule {
+class AvoidDynamicCalls extends LintRule {
   AvoidDynamicCalls()
       : super(
           name: 'avoid_dynamic_calls',
           description: _desc,
           details: _details,
           group: Group.errors,
-          maturity: Maturity.experimental,
+          maturity: Maturity.stable,
         );
 
   @override
@@ -231,9 +231,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
     if (root is CompoundAssignmentExpression) {
-      // Not promoted by "is" since the type would lose capabilities.
-      var rootAsAssignment = root as CompoundAssignmentExpression;
-      if (rootAsAssignment.readType?.isDynamic ?? false) {
+      if (root.readType?.isDynamic ?? false) {
         // An assignment expression can only be a dynamic call if it is a
         // "compound assignment" (i.e. such as `x += 1`); so if `readType` is
         // dynamic we should lint.

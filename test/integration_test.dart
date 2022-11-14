@@ -28,20 +28,21 @@ import 'integration/depend_on_referenced_packages.dart'
     as depend_on_referenced_packages;
 import 'integration/directives_ordering.dart' as directives_ordering;
 import 'integration/exhaustive_cases.dart' as exhaustive_cases;
-import 'integration/file_names.dart' as file_names;
 import 'integration/flutter_style_todos.dart' as flutter_style_todos;
 import 'integration/lines_longer_than_80_chars.dart'
     as lines_longer_than_80_chars;
 import 'integration/only_throw_errors.dart' as only_throw_errors;
 import 'integration/overridden_fields.dart' as overridden_fields;
-import 'integration/packages_file_test.dart' as packages_file_test;
 import 'integration/prefer_asserts_in_initializer_lists.dart'
     as prefer_asserts_in_initializer_lists;
+import 'integration/prefer_const_constructors.dart'
+    as prefer_const_constructors;
 import 'integration/prefer_const_constructors_in_immutables.dart'
     as prefer_const_constructors_in_immutables;
 import 'integration/prefer_mixin.dart' as prefer_mixin;
 import 'integration/prefer_relative_imports.dart' as prefer_relative_imports;
 import 'integration/public_member_api_docs.dart' as public_member_api_docs;
+import 'integration/secure_pubspec_urls.dart' as secure_pubspec_urls;
 import 'integration/sort_pub_dependencies.dart' as sort_pub_dependencies;
 import 'integration/unnecessary_lambdas.dart' as unnecessary_lambdas;
 import 'integration/unnecessary_string_escapes.dart'
@@ -129,11 +130,7 @@ void coreTests() {
         outSink = currentOut;
       });
       test('no warnings due to bad canonicalization', () async {
-        var packagesFilePath =
-            File('$integrationTestDir/p4/_packages').absolute.path;
-        await cli.runLinter(
-            ['--packages', packagesFilePath, '$integrationTestDir/p4'],
-            LinterOptions([]));
+        await cli.runLinter(['$integrationTestDir/p4'], LinterOptions([]));
         expect(collectingOut.trim(),
             startsWith('3 files analyzed, 0 issues found, in'));
       });
@@ -182,13 +179,11 @@ void ruleTests() {
     unnecessary_lambdas.main();
     exhaustive_cases.main();
     avoid_web_libraries_in_flutter.main();
-    packages_file_test.main();
     overridden_fields.main();
     close_sinks.main();
     cancel_subscriptions.main();
     depend_on_referenced_packages.main();
     directives_ordering.main();
-    file_names.main();
     flutter_style_todos.main();
     lines_longer_than_80_chars.main();
     only_throw_errors.main();
@@ -198,12 +193,14 @@ void ruleTests() {
     avoid_relative_lib_imports.main();
     prefer_relative_imports.main();
     public_member_api_docs.main();
+    secure_pubspec_urls.main();
     avoid_renaming_method_parameters.main();
     avoid_private_typedef_functions.main();
     sort_pub_dependencies.main();
     unnecessary_string_escapes.main();
     prefer_mixin.main();
     use_build_context_synchronously.main();
+    prefer_const_constructors.main();
   });
 }
 
@@ -224,22 +221,16 @@ Map<String, YamlNode> _getOptionsFromString(String? optionsSource) {
     throw Exception(
         'Bad options file format (expected map, got ${doc.runtimeType})');
   }
-  if (doc is YamlMap) {
-    doc.nodes.forEach((k, YamlNode v) {
-      Object? key;
-      if (k is YamlScalar) {
-        key = k.value;
-      }
-      if (key is! String) {
-        throw Exception('Bad options file format (expected String scope key, '
-            'got ${k.runtimeType})');
-      }
-      if (v is! YamlNode) {
-        throw Exception('Bad options file format (expected Node value, '
-            'got ${v.runtimeType}: `${v.toString()}`)');
-      }
-      options[key] = v;
-    });
-  }
+  doc.nodes.forEach((k, YamlNode v) {
+    Object? key;
+    if (k is YamlScalar) {
+      key = k.value;
+    }
+    if (key is! String) {
+      throw Exception('Bad options file format (expected String scope key, '
+          'got ${k.runtimeType})');
+    }
+    options[key] = v;
+  });
   return options;
 }

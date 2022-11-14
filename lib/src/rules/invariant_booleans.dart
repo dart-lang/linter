@@ -16,6 +16,8 @@ const _desc =
     r'Conditions should not unconditionally evaluate to `true` or to `false`.';
 
 const _details = r'''
+**DEPRECATED:** This rule is unmaintained and will be removed in a future Linter
+release.
 
 **DON'T** test for conditions that can be inferred at compile time or test the
 same condition twice.
@@ -103,15 +105,13 @@ Iterable<Element?> _getElementsInExpression(Expression node) =>
         .map(DartTypeUtilities.getCanonicalElementFromIdentifier)
         .where((e) => e != null);
 
-class InvariantBooleans extends LintRule implements NodeLintRule {
+class InvariantBooleans extends LintRule {
   InvariantBooleans()
       : super(
             name: 'invariant_booleans',
             description: _desc,
             details: _details,
-            // This rule is experimental until there are fewer "false positive"
-            // bugs, and performance has been improved.
-            maturity: Maturity.experimental,
+            maturity: Maturity.deprecated,
             group: Group.errors);
 
   @override

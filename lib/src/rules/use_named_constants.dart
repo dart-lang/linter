@@ -27,7 +27,7 @@ Duration.zero;
 ''';
 const lintName = 'use_named_constants';
 
-class UseNamedConstants extends LintRule implements NodeLintRule {
+class UseNamedConstants extends LintRule {
   UseNamedConstants()
       : super(
           name: lintName,
@@ -67,16 +67,18 @@ class _Visitor extends SimpleAstVisitor<void> {
         if (nodeField?.enclosingElement == element) return;
 
         var library = (node.root as CompilationUnit).declaredElement?.library;
+        if (library == null) return;
         var value = context.evaluateConstant(node).value;
         for (var field
             in element.fields.where((e) => e.isStatic && e.isConst)) {
-          if (field.isAccessibleIn(library) &&
+          if (field.isAccessibleIn2(library) &&
               field.computeConstantValue() == value) {
             rule.reportLint(node,
                 arguments: ['${element.name}.${field.name}'],
                 errorCode: const LintCode(lintName,
                     "The constant '{0}' should be referenced instead of duplicating its value.",
-                    correction: "Try using the predefined constant '{0}'."));
+                    correctionMessage:
+                        "Try using the predefined constant '{0}'."));
             return;
           }
         }

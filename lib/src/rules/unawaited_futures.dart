@@ -10,7 +10,7 @@ import '../analyzer.dart';
 import '../util/dart_type_utilities.dart';
 
 const _desc = r'`Future` results in `async` function bodies must be '
-    '`await`ed or marked `unawaited` using `package:pedantic`.';
+    '`await`ed or marked `unawaited` using `dart:async`.';
 
 const _details = r'''
 
@@ -20,7 +20,7 @@ It's easy to forget await in async methods as naming conventions usually don't
 tell us if a method is sync or async (except for some in `dart:io`).
 
 When you really _do_ want to start a fire-and-forget `Future`, the recommended
-way is to use `unawaited` from `package:pedantic`. The `// ignore` and
+way is to use `unawaited` from `dart:async`. The `// ignore` and
 `// ignore_for_file` comments also work.
 
 **GOOD:**
@@ -43,7 +43,7 @@ void main() async {
 
 ''';
 
-class UnawaitedFutures extends LintRule implements NodeLintRule {
+class UnawaitedFutures extends LintRule {
   UnawaitedFutures()
       : super(
             name: 'unawaited_futures',
@@ -57,6 +57,7 @@ class UnawaitedFutures extends LintRule implements NodeLintRule {
     var visitor = _Visitor(this);
     registry.addExpressionStatement(this, visitor);
     registry.addCascadeExpression(this, visitor);
+    registry.addInterpolationExpression(this, visitor);
   }
 }
 
@@ -67,12 +68,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitCascadeExpression(CascadeExpression node) {
-    for (var expr in node.cascadeSections) {
-      if ((expr.staticType?.isDartAsyncFuture ?? false) &&
-          _isEnclosedInAsyncFunctionBody(expr) &&
-          expr is! AssignmentExpression) {
-        rule.reportLint(expr);
-      }
+    var sections = node.cascadeSections;
+    for (var i = 0; i < sections.length; i++) {
+      _visit(sections[i]);
     }
   }
 
@@ -100,6 +98,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
+  @override
+  void visitInterpolationExpression(InterpolationExpression node) {
+    _visit(node.expression);
+  }
+
   bool _isEnclosedInAsyncFunctionBody(AstNode node) {
     var enclosingFunctionBody = node.thisOrAncestorOfType<FunctionBody>();
     return enclosingFunctionBody?.isAsynchronous ?? false;
@@ -121,4 +124,12 @@ class _Visitor extends SimpleAstVisitor<void> {
       expr is MethodInvocation &&
       expr.methodName.name == 'putIfAbsent' &&
       _isMapClass(expr.methodName.staticElement?.enclosingElement);
+
+  void _visit(Expression expr) {
+    if ((expr.staticType?.isDartAsyncFuture ?? false) &&
+        _isEnclosedInAsyncFunctionBody(expr) &&
+        expr is! AssignmentExpression) {
+      rule.reportLint(expr);
+    }
+  }
 }

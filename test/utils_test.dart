@@ -22,8 +22,10 @@ void main() {
       'foo',
       '_foo',
       '__foo',
+      'async',
     ], isValidPackageName, isTrue);
     testEach([
+      'break', // reserved word
       'fOO',
       'foo_',
       'foo_Bar',

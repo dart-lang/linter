@@ -9,16 +9,15 @@ import 'package:analyzer/dart/element/element.dart';
 import '../analyzer.dart';
 import '../ast.dart';
 
-const _desc = r'Prefer putting asserts in initializer list.';
+const _desc = r'Prefer putting asserts in initializer lists.';
 
 const _details = r'''
-**DO** put asserts in initializer list for constructors with only asserts in
-their body.
+**DO** put asserts in initializer lists.
 
 **GOOD:**
 ```dart
 class A {
-  A(int a) : assert(a != null);
+  A(int a) : assert(a != 0);
 }
 ```
 
@@ -26,14 +25,13 @@ class A {
 ```dart
 class A {
   A(int a) {
-    assert(a != null);
+    assert(a != 0);
   }
 }
 ```
-
 ''';
 
-class PreferAssertsInInitializerLists extends LintRule implements NodeLintRule {
+class PreferAssertsInInitializerLists extends LintRule {
   PreferAssertsInInitializerLists()
       : super(
             name: 'prefer_asserts_in_initializer_lists',
@@ -71,9 +69,7 @@ class _AssertVisitor extends RecursiveAstVisitor {
         element is PropertyAccessorElement &&
             !element.isStatic &&
             _hasAccessor(element) &&
-            !constructorElement.parameters
-                .whereType<FieldFormalParameterElement>()
-                .any((p) => p.field?.getter == element);
+            !_paramMatchesField(element, constructorElement.parameters);
   }
 
   @override
@@ -89,6 +85,23 @@ class _AssertVisitor extends RecursiveAstVisitor {
   bool _hasMethod(MethodElement element) {
     var classes = classAndSuperClasses?.classes;
     return classes != null && classes.contains(element.enclosingElement);
+  }
+
+  bool _paramMatchesField(
+      PropertyAccessorElement element, List<ParameterElement> parameters) {
+    for (var p in parameters) {
+      ParameterElement? parameterElement = p;
+      if (parameterElement is SuperFormalParameterElement) {
+        parameterElement = parameterElement.superConstructorParameter;
+      }
+
+      if (parameterElement is FieldFormalParameterElement) {
+        if (parameterElement.field?.getter == element) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
 
