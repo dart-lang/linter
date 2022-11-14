@@ -1,4 +1,17 @@
 name: Check links
-uses: filiph/linkcheck@2.0.23
-  with:
-    arguments: -e -d https://dart-lang.github.io/linter/lints/index.html
+
+on:
+  # Only the default branch is supported.
+  branch_protection_rule:
+  push:
+    branches: [ main ]
+
+jobs:
+  check-links:
+    name: Check links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check links with linkcheck
+        uses: filiph/linkcheck@2.0.23
+        with:
+          arguments: -e -d https://dart-lang.github.io/linter/lints/index.html
