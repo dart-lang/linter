@@ -122,7 +122,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     InterfaceType? current = type;
     while (current != null) {
-      for (var annotation in current.element2.metadata) {
+      for (var annotation in current.element.metadata) {
         if (_isImmutable(annotation.element)) return true;
       }
       current = current.superclass;
