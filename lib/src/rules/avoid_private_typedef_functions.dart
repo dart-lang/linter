@@ -78,9 +78,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void _countAndReport(Token identifier) {
     var name = identifier.lexeme;
-    if (!Identifier.isPrivateName(name)) {
-      return;
-    }
+    if (!Identifier.isPrivateName(name)) return;
+
     var visitor = _CountVisitor(name);
     for (var unit in context.allUnits) {
       unit.unit.accept(visitor);
