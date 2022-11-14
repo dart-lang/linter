@@ -1,4 +1,4 @@
-- name: Check links with linkcheck
-  uses: filiph/linkcheck@2.0.23
+name: Check links
+uses: filiph/linkcheck@2.0.23
   with:
     arguments: -e -d https://dart-lang.github.io/linter/lints/index.html
