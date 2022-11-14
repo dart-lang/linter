@@ -65,6 +65,7 @@ import 'rules/conditional_uri_does_not_exist.dart';
 import 'rules/constant_identifier_names.dart';
 import 'rules/control_flow_in_finally.dart';
 import 'rules/curly_braces_in_flow_control_structures.dart';
+import 'rules/dangling_library_doc_comments.dart';
 import 'rules/depend_on_referenced_packages.dart';
 import 'rules/deprecated_consistency.dart';
 import 'rules/diagnostic_describe_all_properties.dart';
@@ -74,16 +75,19 @@ import 'rules/do_not_use_environment.dart';
 import 'rules/empty_catches.dart';
 import 'rules/empty_constructor_bodies.dart';
 import 'rules/empty_statements.dart';
+import 'rules/enable_null_safety.dart';
 import 'rules/eol_at_end_of_file.dart';
 import 'rules/exhaustive_cases.dart';
 import 'rules/file_names.dart';
 import 'rules/flutter_style_todos.dart';
 import 'rules/hash_and_equals.dart';
 import 'rules/implementation_imports.dart';
+import 'rules/implicit_call_tearoffs.dart';
 import 'rules/invariant_booleans.dart';
 import 'rules/iterable_contains_unrelated_type.dart';
 import 'rules/join_return_with_assignment.dart';
 import 'rules/leading_newlines_in_multiline_strings.dart';
+import 'rules/library_annotations.dart';
 import 'rules/library_names.dart';
 import 'rules/library_prefixes.dart';
 import 'rules/library_private_types_in_public_api.dart';
@@ -178,6 +182,7 @@ import 'rules/unnecessary_final.dart';
 import 'rules/unnecessary_getters_setters.dart';
 import 'rules/unnecessary_lambdas.dart';
 import 'rules/unnecessary_late.dart';
+import 'rules/unnecessary_library_directive.dart';
 import 'rules/unnecessary_new.dart';
 import 'rules/unnecessary_null_aware_assignments.dart';
 import 'rules/unnecessary_null_aware_operator_on_extension_on_nullable.dart';
@@ -221,6 +226,7 @@ void registerLintRules({bool inTestMode = false}) {
   Analyzer.facade.cacheLinterVersion();
   Analyzer.facade
     ..register(AlwaysDeclareReturnTypes())
+    ..register(UnnecessaryLibraryDirective())
     ..register(AlwaysPutControlBodyOnNewLine())
     ..register(AlwaysPutRequiredNamedParametersFirst())
     ..register(AlwaysRequireNonNullNamedParameters())
@@ -282,6 +288,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(ConstantIdentifierNames())
     ..register(ControlFlowInFinally())
     ..register(CurlyBracesInFlowControlStructures())
+    ..register(DanglingLibraryDocComments())
     ..register(DependOnReferencedPackages())
     ..register(DeprecatedConsistency())
     ..register(DiagnosticsDescribeAllProperties())
@@ -291,16 +298,19 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(EmptyCatches())
     ..register(EmptyConstructorBodies())
     ..register(EmptyStatements())
+    ..register(EnableNullSafety())
     ..register(EolAtEndOfFile())
     ..register(ExhaustiveCases())
     ..register(FileNames())
     ..register(FlutterStyleTodos())
     ..register(HashAndEquals())
     ..register(ImplementationImports())
+    ..register(ImplicitCallTearoffs())
     ..register(InvariantBooleans())
     ..register(IterableContainsUnrelatedType())
     ..register(JoinReturnWithAssignment())
     ..register(LeadingNewlinesInMultilineStrings())
+    ..register(LibraryAnnotations())
     ..register(LibraryNames())
     ..register(LibraryPrefixes())
     ..register(LibraryPrivateTypesInPublicAPI())

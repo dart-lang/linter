@@ -18,7 +18,7 @@ const _details = r'''
 
 When mixing relative and absolute imports it's possible to create confusion
 where the same member gets imported in two different ways. One way to avoid
-that is to ensure you consistently use relative imports for files withing the
+that is to ensure you consistently use relative imports for files within the
 `lib/` directory.
 
 **GOOD:**
@@ -36,12 +36,19 @@ import 'package:my_package/bar.dart';
 ''';
 
 class PreferRelativeImports extends LintRule {
+  static const LintCode code = LintCode('prefer_relative_imports',
+      "Use relative imports for files in the 'lib' directory.",
+      correctionMessage: 'Try converting the URI to a relative URI.');
+
   PreferRelativeImports()
       : super(
             name: 'prefer_relative_imports',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -62,7 +69,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule, this.context);
 
   bool isPackageSelfReference(ImportDirective node) {
-    var uri = node.element2?.uri;
+    var uri = node.element?.uri;
     if (uri is! DirectiveUriWithSource) {
       return false;
     }
@@ -71,7 +78,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var importUri = uri.relativeUri;
     if (!importUri.isScheme('package')) return false;
 
-    var sourceUri = node.element2?.source.uri;
+    var sourceUri = node.element?.source.uri;
     if (!samePackage(importUri, sourceUri)) return false;
 
     // todo (pq): context.package.contains(source) should work (but does not)

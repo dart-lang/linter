@@ -10,7 +10,7 @@ import '../analyzer.dart';
 const _desc = r'Separate the control structure expression from its statement.';
 
 const _details = r'''
-From the [flutter style guide](https://flutter.dev/style-guide/):
+From the [style guide for the flutter repo](https://flutter.dev/style-guide/):
 
 **DO** separate the control structure expression from its statement.
 
@@ -43,15 +43,26 @@ else print('ok')
 while (condition) i += 1;
 ```
 
+Note that this rule can conflict with the
+[Dart formatter](https://dart.dev/tools/dart-format), and should not be enabled
+when the Dart formatter is used.
+
 ''';
 
 class AlwaysPutControlBodyOnNewLine extends LintRule {
+  static const LintCode code = LintCode('always_put_control_body_on_new_line',
+      'Statement should be on a separate line.',
+      correctionMessage: 'Try moving the statement to a new line.');
+
   AlwaysPutControlBodyOnNewLine()
       : super(
             name: 'always_put_control_body_on_new_line',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

@@ -28,12 +28,19 @@ m(void Function() f);
 ''';
 
 class AvoidPrivateTypedefFunctions extends LintRule {
+  static const LintCode code = LintCode('avoid_private_typedef_functions',
+      'The typedef is unnecessary because it is only used in one place.',
+      correctionMessage: 'Try inlining the type or using it in other places.');
+
   AvoidPrivateTypedefFunctions()
       : super(
             name: 'avoid_private_typedef_functions',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -70,17 +77,16 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    if (node.typeParameters != null) {
-      return;
-    }
+    if (node.typeParameters != null) return;
+    if (node.type is NamedType) return;
+
     _countAndReport(node.name);
   }
 
   void _countAndReport(Token identifier) {
     var name = identifier.lexeme;
-    if (!Identifier.isPrivateName(name)) {
-      return;
-    }
+    if (!Identifier.isPrivateName(name)) return;
+
     var visitor = _CountVisitor(name);
     for (var unit in context.allUnits) {
       unit.unit.accept(visitor);

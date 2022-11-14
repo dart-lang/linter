@@ -79,7 +79,7 @@ void bad() {
 ```
 
 **NOTE:** that an exception is made for the common `while (true) { }` idiom,
-which is often reasonably prefered to the equivalent `for (;;)`.
+which is often reasonably preferred to the equivalent `for (;;)`.
 
 **GOOD:**
 ```dart
@@ -110,12 +110,19 @@ bool _onlyLiterals(Expression? rawExpression) {
 }
 
 class LiteralOnlyBooleanExpressions extends LintRule {
+  static const LintCode code = LintCode('literal_only_boolean_expressions',
+      'The Boolean expression has a constant value.',
+      correctionMessage: 'Try changing the expression.');
+
   LiteralOnlyBooleanExpressions()
       : super(
             name: 'literal_only_boolean_expressions',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

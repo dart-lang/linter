@@ -29,7 +29,7 @@ might change in ways that could break your code.
 **BAD:**
 ```dart
 // In 'road_runner'
-import 'package:acme/lib/src/internals.dart;
+import 'package:acme/src/internals.dart';
 ```
 
 ''';
@@ -90,8 +90,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitImportDirective(ImportDirective node) {
-    var importUri = node.element2?.importedLibrary?.source.uri;
-    var sourceUri = node.element2?.source.uri;
+    var importUri = node.element?.importedLibrary?.source.uri;
+    var sourceUri = node.element?.source.uri;
 
     // Test for 'package:*/src/'.
     if (!isImplementation(importUri)) {
