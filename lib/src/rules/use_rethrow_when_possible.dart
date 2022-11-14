@@ -39,12 +39,19 @@ try {
 ''';
 
 class UseRethrowWhenPossible extends LintRule {
+  static const LintCode code = LintCode('use_rethrow_when_possible',
+      "Use 'rethrow' to rethrow a caught exception.",
+      correctionMessage: "Try replacing the 'throw' with a 'rethrow'.");
+
   UseRethrowWhenPossible()
       : super(
             name: 'use_rethrow_when_possible',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -67,7 +74,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (element != null) {
       var catchClause = node.thisOrAncestorOfType<CatchClause>();
       var exceptionParameter =
-          catchClause?.exceptionParameter2?.declaredElement?.canonicalElement;
+          catchClause?.exceptionParameter?.declaredElement?.canonicalElement;
       if (element == exceptionParameter) {
         rule.reportLint(node);
       }

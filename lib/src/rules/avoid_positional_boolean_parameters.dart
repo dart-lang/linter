@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:collection/collection.dart';
 
 import '../analyzer.dart';
 import '../extensions.dart';
@@ -38,12 +39,19 @@ Button(ButtonState.enabled);
 ''';
 
 class AvoidPositionalBooleanParameters extends LintRule {
+  static const LintCode code = LintCode('avoid_positional_boolean_parameters',
+      "'bool' parameters should be named parameters.",
+      correctionMessage: 'Try converting the parameter to a named parameter.');
+
   AvoidPositionalBooleanParameters()
       : super(
             name: 'avoid_positional_boolean_parameters',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -61,15 +69,18 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule, this.context);
 
+  void checkParams(List<FormalParameter>? parameters) {
+    var parameterToLint = parameters?.firstWhereOrNull(_isBoolean);
+    if (parameterToLint != null) {
+      rule.reportLint(parameterToLint);
+    }
+  }
+
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
     var declaredElement = node.declaredElement;
     if (declaredElement != null && !declaredElement.isPrivate) {
-      var parametersToLint =
-          node.parameters.parameters.where(_isFormalParameterToLint);
-      if (parametersToLint.isNotEmpty) {
-        rule.reportLint(parametersToLint.first);
-      }
+      checkParams(node.parameters.parameters);
     }
   }
 
@@ -77,11 +88,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitFunctionDeclaration(FunctionDeclaration node) {
     var declaredElement = node.declaredElement;
     if (declaredElement != null && !declaredElement.isPrivate) {
-      var parametersToLint = node.functionExpression.parameters?.parameters
-          .where(_isFormalParameterToLint);
-      if (parametersToLint != null && parametersToLint.isNotEmpty) {
-        rule.reportLint(parametersToLint.first);
-      }
+      checkParams(node.functionExpression.parameters?.parameters);
     }
   }
 
@@ -94,31 +101,25 @@ class _Visitor extends SimpleAstVisitor<void> {
         !node.isOperator &&
         !node.hasInheritedMethod &&
         !_isOverridingMember(declaredElement)) {
-      var parametersToLint =
-          node.parameters?.parameters.where(_isFormalParameterToLint);
-      if (parametersToLint != null && parametersToLint.isNotEmpty) {
-        rule.reportLint(parametersToLint.first);
-      }
+      checkParams(node.parameters?.parameters);
     }
-  }
-
-  bool _isFormalParameterToLint(FormalParameter node) {
-    var type = node.declaredElement?.type;
-    return !node.isNamed && type is InterfaceType && type.isDartCoreBool;
   }
 
   bool _isOverridingMember(Element member) {
     var classElement = member.thisOrAncestorOfType<ClassElement>();
-    if (classElement == null) {
-      return false;
-    }
+    if (classElement == null) return false;
+
     var name = member.name;
-    if (name == null) {
-      return false;
-    }
+    if (name == null) return false;
+
     var libraryUri = classElement.library.source.uri;
     return context.inheritanceManager
             .getInherited(classElement.thisType, Name(libraryUri, name)) !=
         null;
+  }
+
+  static bool _isBoolean(FormalParameter node) {
+    var type = node.declaredElement?.type;
+    return !node.isNamed && type is InterfaceType && type.isDartCoreBool;
   }
 }

@@ -86,7 +86,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   static bool _isRegExpInstanceCreation(AstNode? node) {
     if (node is InstanceCreationExpression) {
       var constructorElement = node.constructorName.staticElement;
-      return constructorElement?.enclosingElement3.name == 'RegExp';
+      return constructorElement?.enclosingElement.name == 'RegExp';
     }
     return false;
   }
@@ -126,11 +126,11 @@ extension on StringLiteral {
   /// Returns whether this contains whitespace, where any
   /// [InterpolationExpression] does not count as whitespace.
   bool get hasWhitespace {
-    if (this is SimpleStringLiteral) {
-      return (this as SimpleStringLiteral).value.hasWhitespace;
-    } else if (this is StringInterpolation) {
-      return (this as StringInterpolation)
-          .elements
+    var self = this;
+    if (self is SimpleStringLiteral) {
+      return self.value.hasWhitespace;
+    } else if (self is StringInterpolation) {
+      return self.elements
           .any((e) => e is InterpolationString && e.value.hasWhitespace);
     }
     return false;
