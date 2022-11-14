@@ -1,10 +1,9 @@
 name: Check links
 
 on:
-  # Only the default branch is supported.
-  branch_protection_rule:
-  push:
-    branches: [ main ]
+  - pull_request_target
+
+permissions: read-all
 
 jobs:
   check-links:
