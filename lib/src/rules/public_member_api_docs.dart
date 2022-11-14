@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
@@ -12,7 +13,6 @@ import '../ast.dart';
 const _desc = r'Document all public members.';
 
 const _details = r'''
-
 **DO** document all public members.
 
 All non-overriding public members should be documented with `///` doc-style
@@ -106,13 +106,14 @@ class _Visitor extends SimpleAstVisitor {
 
   bool check(Declaration node) {
     if (node.documentationComment == null && !isOverridingMember(node)) {
-      rule.reportLint(getNodeToAnnotate(node));
+      var errorNode = getNodeToAnnotate(node);
+      rule.reportLintForOffset(errorNode.offset, errorNode.length);
       return true;
     }
     return false;
   }
 
-  void checkMethods(NodeList<ClassMember> members) {
+  void checkMethods(List<ClassMember> members) {
     // Check methods
 
     var getters = <String, MethodDeclaration>{};
@@ -125,7 +126,7 @@ class _Visitor extends SimpleAstVisitor {
     for (var member in members) {
       if (member is MethodDeclaration && !isPrivate(member.name)) {
         if (member.isGetter) {
-          getters[member.name.name] = member;
+          getters[member.name.lexeme] = member;
         } else if (member.isSetter) {
           setters.add(member);
         } else {
@@ -144,7 +145,7 @@ class _Visitor extends SimpleAstVisitor {
 
     // But only setters whose getter is missing a doc.
     for (var setter in setters) {
-      var getter = getters[setter.name.name];
+      var getter = getters[setter.name.lexeme];
       if (getter != null && missingDocs.contains(getter)) {
         check(setter);
       }
@@ -159,8 +160,8 @@ class _Visitor extends SimpleAstVisitor {
       return null;
     }
 
-    var classElement = member.thisOrAncestorOfType<ClassElement>();
-    if (classElement == null) {
+    var interfaceElement = member.thisOrAncestorOfType<InterfaceElement>();
+    if (interfaceElement == null) {
       return null;
     }
     var name = member.name;
@@ -168,9 +169,9 @@ class _Visitor extends SimpleAstVisitor {
       return null;
     }
 
-    var libraryUri = classElement.library.source.uri;
+    var libraryUri = interfaceElement.library.source.uri;
     return context.inheritanceManager.getInherited(
-      classElement.thisType,
+      interfaceElement.thisType,
       Name(libraryUri, name),
     );
   }
@@ -180,7 +181,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    _visitClassOrMixin(node);
+    _visitMembers(node, node.name, node.members);
   }
 
   @override
@@ -204,9 +205,9 @@ class _Visitor extends SimpleAstVisitor {
     for (var member in node.declarations) {
       if (member is FunctionDeclaration) {
         var name = member.name;
-        if (!isPrivate(name) && name.name != 'main') {
+        if (!isPrivate(name) && name.lexeme != 'main') {
           if (member.isGetter) {
-            getters[member.name.name] = member;
+            getters[member.name.lexeme] = member;
           } else if (member.isSetter) {
             setters.add(member);
           } else {
@@ -226,7 +227,7 @@ class _Visitor extends SimpleAstVisitor {
 
     // But only setters whose getter is missing a doc.
     for (var setter in setters) {
-      var getter = getters[setter.name.name];
+      var getter = getters[setter.name.lexeme];
       if (getter != null && missingDocs.contains(getter)) {
         check(setter);
       }
@@ -297,7 +298,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitMixinDeclaration(MixinDeclaration node) {
-    _visitClassOrMixin(node);
+    _visitMembers(node, node.name, node.members);
   }
 
   @override
@@ -309,10 +310,10 @@ class _Visitor extends SimpleAstVisitor {
     }
   }
 
-  void _visitClassOrMixin(ClassOrMixinDeclaration node) {
-    if (isPrivate(node.name)) return;
+  void _visitMembers(Declaration node, Token name, List<ClassMember> members) {
+    if (isPrivate(name)) return;
 
     check(node);
-    checkMethods(node.members);
+    checkMethods(members);
   }
 }

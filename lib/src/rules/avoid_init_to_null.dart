@@ -9,13 +9,12 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r"Don't explicitly initialize variables to null.";
 
 const _details = r'''
-
-From [effective dart](https://dart.dev/guides/language/effective-dart/usage#dont-explicitly-initialize-variables-to-null):
+From [Effective Dart](https://dart.dev/guides/language/effective-dart/usage#dont-explicitly-initialize-variables-to-null):
 
 **DON'T** explicitly initialize variables to null.
 
@@ -59,12 +58,19 @@ class LazyId {
 ''';
 
 class AvoidInitToNull extends LintRule {
+  static const LintCode code = LintCode(
+      'avoid_init_to_null', "Redundant initialization to 'null'.",
+      correctionMessage: 'Try removing the initializer.');
+
   AvoidInitToNull()
       : super(
             name: 'avoid_init_to_null',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -98,8 +104,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (defaultValue != 'null') return;
     }
 
-    if (DartTypeUtilities.isNullLiteral(node.defaultValue) &&
-        isNullable(declaredElement.type)) {
+    if (node.defaultValue.isNullLiteral && isNullable(declaredElement.type)) {
       rule.reportLint(node);
     }
   }
@@ -110,7 +115,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (declaredElement != null &&
         !node.isConst &&
         !node.isFinal &&
-        DartTypeUtilities.isNullLiteral(node.initializer) &&
+        node.initializer.isNullLiteral &&
         isNullable(declaredElement.type)) {
       rule.reportLint(node);
     }

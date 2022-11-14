@@ -7,9 +7,9 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
+import '../extensions.dart';
 import '../util/boolean_expression_utilities.dart';
 import '../util/condition_scope_visitor.dart';
-import '../util/dart_type_utilities.dart';
 import '../util/tested_expressions.dart';
 
 const _desc =
@@ -100,10 +100,12 @@ void nestedOk5() {
 
 ''';
 
-Iterable<Element?> _getElementsInExpression(Expression node) =>
-    DartTypeUtilities.traverseNodesInDFS(node)
-        .map(DartTypeUtilities.getCanonicalElementFromIdentifier)
-        .where((e) => e != null);
+Iterable<Element?> _getElementsInExpression(Expression node) => node
+    // todo(pq): migrate away from `traverseNodesInDFS` (https://github.com/dart-lang/linter/issues/3745)
+    // ignore: deprecated_member_use_from_same_package
+    .traverseNodesInDFS()
+    .map((e) => e.canonicalElement)
+    .where((e) => e != null);
 
 class InvariantBooleans extends LintRule {
   InvariantBooleans()

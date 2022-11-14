@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -11,7 +12,6 @@ import '../utils.dart';
 const _desc = r'Name types using UpperCamelCase.';
 
 const _details = r'''
-
 From the [style guide](https://dart.dev/guides/language/effective-dart/style/):
 
 **DO** name types using UpperCamelCase.
@@ -67,9 +67,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  void check(SimpleIdentifier name) {
-    if (!isCamelCase(name.toString())) {
-      rule.reportLint(name, arguments: [name.name]);
+  void check(Token name) {
+    var lexeme = name.lexeme;
+    if (!isCamelCase(lexeme)) {
+      rule.reportLintForToken(name, arguments: [lexeme]);
     }
   }
 

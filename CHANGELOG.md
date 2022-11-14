@@ -1,3 +1,74 @@
+# 1.30.0
+
+- new lint: `enable_null_safety`
+- new lint: `library_annotations`
+- miscellaneous documentation improvements
+
+# 1.29.0
+
+- new lint: `dangling_library_doc_comments`
+- fix `no_leading_underscores_for_local_identifiers` to not report super formals as local variables
+- fix `unnecessary_overrides` false negatives
+- fix `cancel_subscriptions` for nullable fields 
+- new lint: `collection_methods_unrelated_type`
+- update `library_names` to support unnamed libraries
+- fix `unnecessary_parenthesis` support for as-expressions
+- fix `use_build_context_synchronously` to check for context property accesses
+- fix false positive in `comment_references`
+- improved unrelated type checks to handle enums and cascades
+- fix `unnecessary_brace_in_string_interps` for `this` expressions 
+- update `use_build_context_synchronously` for `BuildContext.mounted`
+- improve `flutter_style_todos` to handle more cases
+- fix `use_build_context_synchronously` to check for `BuildContext`s in named expressions
+- fix `exhaustive_cases` to check parenthesized expressions
+- performance improvements for:
+  - `avoid_null_checks_in_equality_operators`
+  - `join_return_with_statement`
+  - `recursive_getters`
+  - `unnecessary_lambdas`
+  - `diagnostic_describe_all_properties`
+  - `prefer_foreach`
+  - `avoid_escaping_inner_quotes`
+  - `cascade_invocations`
+  - `tighten_type_of_initializing_formals`
+  - `prefer_interpolation_to_compose_strings`
+  - `prefer_constructors_over_static_methods`
+  - `avoid_returning_null`
+  - `parameter_assignments`
+  - `prefer_constructors_over_static_methods`
+  - `prefer_interpolation_to_compose_strings`
+  - `avoid_returning_null`
+  - `avoid_returning_this`
+  - `flutter_style_todos`
+  - `avoid_positional_boolean_parameters`
+  - `prefer_const_constructors`
+- new lint: `implicit_call_tearoffs`
+- new lint: `unnecessary_library_directive`
+
+# 1.28.0
+
+- update `avoid_redundant_argument_values` to work with enum declarations
+- performance improvements for `prefer_contains`
+- new lint: `unreachable_from_main`
+- (internal): analyzer API updates and `DartTypeUtilities` refactoring
+
+# 1.27.0
+
+- fix `avoid_redundant_argument_values` when referencing required 
+  parameters in legacy libraries
+- performance improvements for `use_late_for_private_fields_and_variables`
+- new lint: `use_string_in_part_of_directives`
+- fixed `use_super_parameters` false positive with repeated super
+  parameter references
+- updated `use_late_for_private_fields_and_variables` to handle enums
+- fixed `prefer_contains` false positive when start index is non-zero
+- improved `noop_primitive_operations` to catch `.toString()`
+  in string interpolations
+- updated `public_member_api_docs` to report diagnostics on extension
+  names (instead of bodies)
+- miscellaneous documentation improvements
+- (internal): `DartTypeUtilities` refactoring
+
 # 1.26.0
 
 - new lint: `combinators_ordering`

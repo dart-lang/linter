@@ -6,6 +6,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 
+import '../extensions.dart';
 import '../util/dart_type_utilities.dart';
 
 var _collectionInterfaces = <InterfaceTypeDefinition>[
@@ -44,7 +45,7 @@ bool isWidgetProperty(DartType? type) {
     return true;
   }
   if (type is InterfaceType &&
-      DartTypeUtilities.implementsAnyInterface(type, _collectionInterfaces)) {
+      type.implementsAnyInterface(_collectionInterfaces)) {
     return type.element.typeParameters.length == 1 &&
         isWidgetProperty(type.typeArguments.first);
   }
@@ -76,8 +77,8 @@ class _Flutter {
         _uriFramework = Uri.parse('$uriPrefix/src/widgets/framework.dart'),
         _uriFoundation = Uri.parse('$uriPrefix/src/foundation/constants.dart');
 
-  bool hasWidgetAsAscendant(ClassElement? element,
-      [Set<ClassElement>? alreadySeen]) {
+  bool hasWidgetAsAscendant(InterfaceElement? element,
+      [Set<InterfaceElement>? alreadySeen]) {
     alreadySeen ??= {};
     if (element == null || !alreadySeen.add(element)) {
       return false;
@@ -129,7 +130,7 @@ class _Flutter {
     return false;
   }
 
-  bool isWidget(ClassElement element) {
+  bool isWidget(InterfaceElement element) {
     if (_isExactWidget(element, _nameWidget, _uriFramework)) {
       return true;
     }
@@ -144,6 +145,6 @@ class _Flutter {
   bool isWidgetType(DartType? type) =>
       type is InterfaceType && isWidget(type.element);
 
-  bool _isExactWidget(ClassElement element, String type, Uri uri) =>
+  bool _isExactWidget(InterfaceElement element, String type, Uri uri) =>
       element.name == type && element.source.uri == uri;
 }

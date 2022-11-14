@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid annotating with dynamic when not required.';
 
 const _details = r'''
-
 **AVOID** annotating with dynamic when not required.
 
 As `dynamic` is the assumed return value of a function or method, it is usually
@@ -37,12 +36,19 @@ lookUpOrDefault(String name, Map map, defaultValue) {
 ''';
 
 class AvoidAnnotatingWithDynamic extends LintRule {
+  static const LintCode code = LintCode(
+      'avoid_annotating_with_dynamic', "Unnecessary 'dynamic' type annotation.",
+      correctionMessage: "Try removing the type 'dynamic'.");
+
   AvoidAnnotatingWithDynamic()
       : super(
             name: 'avoid_annotating_with_dynamic',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

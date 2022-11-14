@@ -11,8 +11,7 @@ import '../ast.dart';
 const _desc = r'Depend on referenced packages.';
 
 const _details = r'''
-
-**DO** Depend on referenced packages.
+**DO** depend on referenced packages.
 
 When importing a package, add a dependency on it to your pubspec.
 
@@ -112,7 +111,7 @@ class _Visitor extends SimpleAstVisitor {
 
   void _checkDirective(UriBasedDirective node) {
     // Is it a package: uri?
-    var uriContent = node.uriContent;
+    var uriContent = node.uri.stringValue;
     if (uriContent == null) return;
     if (!uriContent.startsWith('package:')) return;
 

@@ -8,10 +8,10 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 Element? _getLeftElement(AssignmentExpression assignment) =>
-    DartTypeUtilities.getCanonicalElement(assignment.writeElement);
+    assignment.writeElement?.canonicalElement;
 
 List<Expression?> _splitConjunctions(Expression? rawExpression) {
   var expression = rawExpression?.unParenthesized;
@@ -45,10 +45,8 @@ class ConditionScope {
 
   ConditionScope(this.outer);
 
-  void add(ExpressionBox? e) {
-    if (e != null) {
-      environment.add(e);
-    }
+  void add(ExpressionBox e) {
+    environment.add(e);
   }
 
   void addAll(Iterable<ExpressionBox> expressions) {
@@ -325,8 +323,7 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
 
   bool _isLastStatementAnExitStatement(Statement? statement) {
     if (statement is Block) {
-      return _isLastStatementAnExitStatement(
-          DartTypeUtilities.getLastStatementInBlock(statement));
+      return _isLastStatementAnExitStatement(statement.lastStatement);
     } else {
       if (statement is BreakStatement) {
         return statement.label == null;
@@ -353,7 +350,9 @@ abstract class ConditionScopeVisitor extends RecursiveAstVisitor {
         return false;
       }
 
-      for (var ref in DartTypeUtilities.traverseNodesInDFS(condition)) {
+      // todo(pq): migrate away from `traverseNodesInDFS` (https://github.com/dart-lang/linter/issues/3745)
+      // ignore: deprecated_member_use_from_same_package
+      for (var ref in condition.traverseNodesInDFS()) {
         if (ref is SimpleIdentifier) {
           var element = ref.staticElement;
           if (element == null) {
@@ -437,7 +436,7 @@ class _UndefinedExpression extends ExpressionBox {
   String toString() => '$element got undefined';
 
   static _UndefinedExpression? forElement(Element? element) {
-    var canonicalElement = DartTypeUtilities.getCanonicalElement(element);
+    var canonicalElement = element?.canonicalElement;
     if (canonicalElement == null) return null;
     return _UndefinedExpression._internal(canonicalElement);
   }

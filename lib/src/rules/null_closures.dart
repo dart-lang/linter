@@ -8,13 +8,12 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Do not pass `null` as an argument where a closure is expected.';
 
 const _details = r'''
-
-**DO NOT** pass null as an argument where a closure is expected.
+**DON'T** pass `null` as an argument where a closure is expected.
 
 Often a closure that is passed to a method will only be called conditionally,
 so that tests and "happy path" production calls do not reveal that `null` will
@@ -184,7 +183,7 @@ List<NonNullableFunction> _staticFunctionsWithNonNullableArguments =
 
 /// Function with closure parameters that cannot accept null arguments.
 class NonNullableFunction {
-  final String? library;
+  final String library;
   final String? type;
   final String? name;
   final List<int> positional;
@@ -206,12 +205,19 @@ class NonNullableFunction {
 }
 
 class NullClosures extends LintRule {
+  static const LintCode code = LintCode(
+      'null_closures', "Closure can't be 'null' because it might be invoked.",
+      correctionMessage: 'Try providing a non-null closure.');
+
   NullClosures()
       : super(
             name: 'null_closures',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -233,8 +239,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var type = node.staticType;
     for (var constructor in _constructorsWithNonNullableArguments) {
       if (constructorName.name?.name == constructor.name) {
-        if (DartTypeUtilities.extendsClass(
-            type, constructor.type, constructor.library)) {
+        if (type.extendsClass(constructor.type, constructor.library)) {
           _checkNullArgForClosure(
               node.argumentList, constructor.positional, constructor.named);
         }
@@ -298,22 +303,23 @@ class _Visitor extends SimpleAstVisitor<void> {
       return null;
     }
 
-    NonNullableFunction? getMethod(String? library, String? className) =>
+    NonNullableFunction? getMethod(String library, String className) =>
         possibleMethods
             .lookup(NonNullableFunction(library, className, methodName));
-
-    var method = getMethod(type.element.library.name, type.element.name);
-    if (method != null) {
-      return method;
-    }
 
     var element = type.element;
     if (element.isSynthetic) {
       return null;
     }
+
+    var method = getMethod(element.library.name, element.name);
+    if (method != null) {
+      return method;
+    }
+
     for (var supertype in element.allSupertypes) {
-      method =
-          getMethod(supertype.element.library.name, supertype.element.name);
+      var superElement = supertype.element;
+      method = getMethod(superElement.library.name, superElement.name);
       if (method != null) {
         return method;
       }

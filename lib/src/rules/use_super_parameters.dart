@@ -119,7 +119,7 @@ class _Visitor extends SimpleAstVisitor {
           !referencedParameters.contains(parameterElement)) {
         if (_checkNamedParameter(
             parameter, parameterElement, constructorElement, superInvocation)) {
-          var identifier = parameter.identifier?.name;
+          var identifier = parameter.name?.lexeme;
           if (identifier != null) {
             identifiers.add(identifier);
           }
@@ -164,6 +164,8 @@ class _Visitor extends SimpleAstVisitor {
     var convertibleConstructorParams = <String>[];
     var matchedConstructorParamIndex = 0;
 
+    var seenSuperParams = <Element>{};
+
     // For each super arg, ensure there is a constructor param (in the right
     // order).
     for (var i = 0; i < positionalSuperArgs.length; ++i) {
@@ -171,6 +173,10 @@ class _Visitor extends SimpleAstVisitor {
       var superParam = superArg.staticElement;
       if (superParam is! ParameterElement) return null;
       if (superParam.isNamed) return null;
+
+      // Check for the case where a super param is used more than once.
+      if (!seenSuperParams.add(superParam)) return null;
+
       bool match = false;
       for (var i = 0; i < constructorParams.length && !match; ++i) {
         var constructorParam = constructorParams[i];
@@ -188,7 +194,7 @@ class _Visitor extends SimpleAstVisitor {
           }
 
           match = true;
-          var identifier = constructorParam.identifier?.name;
+          var identifier = constructorParam.name?.lexeme;
           if (identifier != null) {
             convertibleConstructorParams.add(identifier);
           }
@@ -259,10 +265,10 @@ class _Visitor extends SimpleAstVisitor {
     var target = node.name ?? node.returnType;
     if (identifiers.length > 1) {
       var msg = identifiers.quotedAndCommaSeparatedWithAnd;
-      rule.reportLint(target,
+      rule.reportLintForOffset(target.offset, target.length,
           errorCode: UseSuperParameters.multipleParams, arguments: [msg]);
     } else {
-      rule.reportLint(target,
+      rule.reportLintForOffset(target.offset, target.length,
           errorCode: UseSuperParameters.singleParam,
           arguments: [identifiers.first]);
     }

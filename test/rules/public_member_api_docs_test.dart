@@ -15,11 +15,6 @@ main() {
 @reflectiveTest
 class PublicMemberApiDocsTest extends LintRuleTest {
   @override
-  List<String> get experiments => [
-        EnableString.enhanced_enums,
-      ];
-
-  @override
   String get lintRule => 'public_member_api_docs';
 
   test_enum() async {
@@ -30,12 +25,43 @@ enum A {
   int get y => 1;
 }
 ''', [
-      lint('public_member_api_docs', 5, 1),
-      lint('public_member_api_docs', 11, 1),
-      lint('public_member_api_docs', 13, 1),
-      lint('public_member_api_docs', 15, 1),
-      lint('public_member_api_docs', 24, 1),
-      lint('public_member_api_docs', 44, 1),
+      lint(5, 1),
+      lint(11, 1),
+      lint(13, 1),
+      lint(15, 1),
+      lint(24, 1),
+      lint(44, 1),
     ]);
+  }
+
+  /// https://github.com/dart-lang/linter/issues/3525
+  test_extension() async {
+    await assertDiagnostics(r'''
+extension E on Object {
+  void f() { }
+}
+''', [
+      lint(10, 1),
+      lint(31, 1),
+    ]);
+  }
+
+  test_mixin_method() async {
+    await assertDiagnostics(r'''
+/// A mixin M.
+mixin M {
+  String m() => '';
+}''', [
+      lint(34, 1),
+    ]);
+  }
+
+  test_mixin_overridingMethod_OK() async {
+    await assertNoDiagnostics(r'''
+/// A mixin M.
+mixin M {
+  @override
+  String toString() => '';
+}''');
   }
 }

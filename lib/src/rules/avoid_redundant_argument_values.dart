@@ -9,8 +9,7 @@ import '../analyzer.dart';
 
 const _desc = r'Avoid redundant argument values.';
 
-const _details = r'''Avoid redundant argument values.
-
+const _details = r'''
 **DON'T** declare arguments with values that match the defaults for the
 corresponding parameter.
 
@@ -50,6 +49,7 @@ class AvoidRedundantArgumentValues extends LintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this, context);
+    registry.addEnumConstantArguments(this, visitor);
     registry.addInstanceCreationExpression(this, visitor);
     registry.addFunctionExpressionInvocation(this, visitor);
     registry.addMethodInvocation(this, visitor);
@@ -71,7 +71,10 @@ class _Visitor extends SimpleAstVisitor {
     for (var i = arguments.length - 1; i >= 0; --i) {
       var arg = arguments[i];
       var param = arg.staticParameterElement;
-      if (param == null || param.hasRequired || !param.isOptional) {
+      if (param == null ||
+          param.declaration.isRequired ||
+          param.hasRequired ||
+          !param.isOptional) {
         continue;
       }
       var value = param.computeConstantValue();
@@ -89,6 +92,11 @@ class _Visitor extends SimpleAstVisitor {
         break;
       }
     }
+  }
+
+  @override
+  void visitEnumConstantArguments(EnumConstantArguments node) {
+    check(node.argumentList);
   }
 
   @override

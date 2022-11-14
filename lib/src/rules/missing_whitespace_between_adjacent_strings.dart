@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Missing whitespace between adjacent strings.';
 
 const _details = r'''
-
 Add a trailing whitespace to prevent missing whitespace between adjacent
 strings.
 
@@ -127,11 +126,11 @@ extension on StringLiteral {
   /// Returns whether this contains whitespace, where any
   /// [InterpolationExpression] does not count as whitespace.
   bool get hasWhitespace {
-    if (this is SimpleStringLiteral) {
-      return (this as SimpleStringLiteral).value.hasWhitespace;
-    } else if (this is StringInterpolation) {
-      return (this as StringInterpolation)
-          .elements
+    var self = this;
+    if (self is SimpleStringLiteral) {
+      return self.value.hasWhitespace;
+    } else if (self is StringInterpolation) {
+      return self.elements
           .any((e) => e is InterpolationString && e.value.hasWhitespace);
     }
     return false;

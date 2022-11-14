@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Prefer using /// for doc comments.';
 
 const _details = r'''
-
 From the [style guide](https://dart.dev/guides/language/effective-dart/style):
 
 **PREFER** using `///` for doc comments.
@@ -44,12 +43,19 @@ bool isJavaStyle(Comment comment) {
 }
 
 class SlashForDocComments extends LintRule {
+  static const LintCode code = LintCode('slash_for_doc_comments',
+      "Use the end-of-line form ('///') for doc comments.",
+      correctionMessage: "Try rewriting the comment to use '///'.");
+
   SlashForDocComments()
       : super(
             name: 'slash_for_doc_comments',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

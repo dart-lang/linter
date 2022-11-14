@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Use a function declaration to bind a function to a name.';
 
 const _details = r'''
-
 **DO** use a function declaration to bind a function to a name.
 
 As Dart allows local function declarations, it is a good practice to use them in
@@ -37,12 +36,22 @@ void main() {
 ''';
 
 class PreferFunctionDeclarationsOverVariables extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_function_declarations_over_variables',
+      'Use a function declaration rather than a variable assignment to bind a '
+          'function to a name.',
+      correctionMessage:
+          'Try rewriting the closure assignment as a function declaration.');
+
   PreferFunctionDeclarationsOverVariables()
       : super(
             name: 'prefer_function_declarations_over_variables',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

@@ -4,13 +4,13 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 
 const _desc = r'Prefer const with constant constructors.';
 
 const _details = r'''
-
 **PREFER** using `const` for instantiating constant constructors.
 
 If a constructor can be invoked as const to produce a canonicalized instance,
@@ -52,12 +52,20 @@ void accessA() {
 ''';
 
 class PreferConstConstructors extends LintRule {
+  static const LintCode code = LintCode('prefer_const_constructors',
+      "Use 'const' with the constructor to improve performance.",
+      correctionMessage:
+          "Try adding the 'const' keyword to the constructor invocation.");
+
   PreferConstConstructors()
       : super(
             name: 'prefer_const_constructors',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -76,18 +84,18 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    if (node.constructorName.type.isDeferred) {
-      return;
-    }
+    if (node.constructorName.type.isDeferred) return;
 
     var element = node.constructorName.staticElement;
-    if (!node.isConst && element != null && element.isConst) {
-      // Handled by analyzer hint.
-      if (element.hasLiteral) {
-        return;
-      }
+    if (element == null) return;
 
-      if (element.enclosingElement.isDartCoreObject) {
+    if (element.isConst && !node.isConst) {
+      // Handled by analyzer hint.
+      if (element.hasLiteral) return;
+
+      var enclosingElement = element.enclosingElement;
+      if (enclosingElement is ClassElement &&
+          enclosingElement.isDartCoreObject) {
         // Skip lint for `new Object()`, because it can be used for Id creation.
         return;
       }

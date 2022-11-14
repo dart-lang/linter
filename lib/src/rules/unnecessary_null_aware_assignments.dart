@@ -8,12 +8,11 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Avoid null in null-aware assignment.';
 
 const _details = r'''
-
 **AVOID** `null` in null-aware assignment.
 
 Using `null` on the right-hand side of a null-aware assignment effectively makes
@@ -34,12 +33,19 @@ x ??= null;
 ''';
 
 class UnnecessaryNullAwareAssignments extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_null_aware_assignments', "Unnecessary assignment of 'null'.",
+      correctionMessage: 'Try removing the assignment.');
+
   UnnecessaryNullAwareAssignments()
       : super(
             name: 'unnecessary_null_aware_assignments',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -60,7 +66,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.writeElement is PropertyAccessorElement) return;
 
     if (node.operator.type == TokenType.QUESTION_QUESTION_EQ &&
-        DartTypeUtilities.isNullLiteral(node.rightHandSide)) {
+        node.rightHandSide.isNullLiteral) {
       rule.reportLint(node);
     }
   }

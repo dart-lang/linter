@@ -6,12 +6,11 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Use rethrow to rethrow a caught exception.';
 
 const _details = r'''
-
 **DO** use rethrow to rethrow a caught exception.
 
 As Dart provides rethrow as a feature, it should be used to improve terseness
@@ -40,12 +39,19 @@ try {
 ''';
 
 class UseRethrowWhenPossible extends LintRule {
+  static const LintCode code = LintCode('use_rethrow_when_possible',
+      "Use 'rethrow' to rethrow a caught exception.",
+      correctionMessage: "Try replacing the 'throw' with a 'rethrow'.");
+
   UseRethrowWhenPossible()
       : super(
             name: 'use_rethrow_when_possible',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -64,13 +70,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitThrowExpression(ThrowExpression node) {
     if (node.parent is Expression || node.parent is ArgumentList) return;
 
-    var element =
-        DartTypeUtilities.getCanonicalElementFromIdentifier(node.expression);
+    var element = node.expression.canonicalElement;
     if (element != null) {
       var catchClause = node.thisOrAncestorOfType<CatchClause>();
       var exceptionParameter =
-          DartTypeUtilities.getCanonicalElementFromIdentifier(
-              catchClause?.exceptionParameter);
+          catchClause?.exceptionParameter?.declaredElement?.canonicalElement;
       if (element == exceptionParameter) {
         rule.reportLint(node);
       }

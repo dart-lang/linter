@@ -13,8 +13,7 @@ const _desc =
     r"Don't use the Null type, unless you are positive that you don't want void.";
 
 const _details = r'''
-
-**DO NOT** use the type Null where void would work.
+**DON'T** use the type Null where void would work.
 
 **BAD:**
 ```dart
@@ -48,12 +47,19 @@ for any type of map or list:
 ''';
 
 class PreferVoidToNull extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_void_to_null', "Unnecessary use of the type 'Null'.",
+      correctionMessage: "Try using 'void' instead.");
+
   PreferVoidToNull()
       : super(
             name: 'prefer_void_to_null',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -105,7 +111,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     var returnType = member.returnType;
     if (returnType.isVoid) return false;
     if (isFutureOrVoid(returnType)) return false;
-    if (returnType.element is NeverType) return false;
 
     return true;
   }

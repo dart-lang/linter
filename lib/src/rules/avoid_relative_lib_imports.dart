@@ -9,7 +9,8 @@ import '../analyzer.dart';
 
 const _desc = r'Avoid relative imports for files in `lib/`.';
 
-const _details = r'''*DO* avoid relative imports for files in `lib/`.
+const _details = r'''
+**DO** avoid relative imports for files in `lib/`.
 
 When mixing relative and absolute imports it's possible to create confusion
 where the same member gets imported in two different ways.  An easy way to avoid
@@ -74,7 +75,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   bool isRelativeLibImport(ImportDirective node) {
     // Relative paths from within the `lib` folder are covered by the
     // `always_use_package_imports` lint.
-    var uriContent = node.uriContent;
+    var uriContent = node.uri.stringValue;
     if (uriContent != null) {
       var uri = Uri.tryParse(uriContent);
       if (uri != null && uri.scheme.isEmpty) {

@@ -12,7 +12,6 @@ const _desc = r'Use a non-nullable type for a final variable initialized '
     'with a non-nullable value.';
 
 const _details = r'''
-
 Use a non-nullable type for a final variable initialized with a non-nullable
 value.
 
@@ -29,6 +28,11 @@ final int i = 1;
 ''';
 
 class UnnecessaryNullableForFinalVariableDeclarations extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_nullable_for_final_variable_declarations',
+      'Type could be non-nullable.',
+      correctionMessage: 'Try changing the type to be non-nullable.');
+
   UnnecessaryNullableForFinalVariableDeclarations()
       : super(
             name: 'unnecessary_nullable_for_final_variable_declarations',
@@ -36,6 +40,9 @@ class UnnecessaryNullableForFinalVariableDeclarations extends LintRule {
             details: _details,
             maturity: Maturity.experimental,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -52,15 +59,15 @@ class UnnecessaryNullableForFinalVariableDeclarations extends LintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
   final LintRule rule;
+
   final LinterContext context;
+  _Visitor(this.rule, this.context);
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var variable in node.fields.variables) {
-      if (Identifier.isPrivateName(variable.name.name) || node.isStatic) {
+      if (Identifier.isPrivateName(variable.name.lexeme) || node.isStatic) {
         _visit(variable);
       }
     }

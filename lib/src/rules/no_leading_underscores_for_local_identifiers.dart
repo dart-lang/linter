@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -12,7 +13,7 @@ import '../utils.dart';
 const _desc = r'Avoid leading underscores for local identifiers.';
 
 const _details = r'''
-**DON’T** use a leading underscore for identifiers that aren't private. Dart
+**DON'T** use a leading underscore for identifiers that aren't private. Dart
 uses a leading underscore in an identifier to mark members and top-level
 declarations as private. This trains users to associate a leading underscore
 with one of those kinds of declarations. They see `_` and  think "private".
@@ -49,12 +50,21 @@ void print(String name) {
 ''';
 
 class NoLeadingUnderscoresForLocalIdentifiers extends LintRule {
+  static const LintCode code = LintCode(
+      'no_leading_underscores_for_local_identifiers',
+      "The local variable '{0}' starts with an underscore.",
+      correctionMessage:
+          'Try renaming the variable to not start with an underscore.');
+
   NoLeadingUnderscoresForLocalIdentifiers()
       : super(
             name: 'no_leading_underscores_for_local_identifiers',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -74,23 +84,23 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  void checkIdentifier(SimpleIdentifier? id) {
+  void checkIdentifier(Token? id) {
     if (id == null) return;
-    if (!hasLeadingUnderscore(id.name)) return;
-    if (id.name.isJustUnderscores) return;
+    if (!hasLeadingUnderscore(id.lexeme)) return;
+    if (id.lexeme.isJustUnderscores) return;
 
-    rule.reportLint(id);
+    rule.reportLintForToken(id, arguments: [id.lexeme]);
   }
 
   @override
   void visitCatchClause(CatchClause node) {
-    checkIdentifier(node.exceptionParameter);
-    checkIdentifier(node.stackTraceParameter);
+    checkIdentifier(node.exceptionParameter?.name);
+    checkIdentifier(node.stackTraceParameter?.name);
   }
 
   @override
   void visitDeclaredIdentifier(DeclaredIdentifier node) {
-    checkIdentifier(node.identifier);
+    checkIdentifier(node.name);
   }
 
   @override
@@ -99,9 +109,14 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (parameter is DefaultFormalParameter) {
         parameter = parameter.parameter;
       }
-      // Named parameters produce a `private_optional_parameter` diagnostic.
-      if (parameter is! FieldFormalParameter && !parameter.isNamed) {
-        checkIdentifier(parameter.identifier);
+      if (parameter is FieldFormalParameter ||
+          parameter is SuperFormalParameter) {
+        // These are not local identifiers.
+        return;
+      }
+      if (!parameter.isNamed) {
+        // Named parameters produce a `private_optional_parameter` diagnostic.
+        checkIdentifier(parameter.name);
       }
     }
   }

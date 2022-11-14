@@ -12,7 +12,6 @@ import '../analyzer.dart';
 const _desc = r'Prefer declaring const constructors on `@immutable` classes.';
 
 const _details = r'''
-
 **PREFER** declaring const constructors on `@immutable` classes.
 
 If a class is immutable, it is usually a good idea to make its constructor a
@@ -50,12 +49,20 @@ bool _isImmutable(Element? element) =>
     element.library.name == _metaLibName;
 
 class PreferConstConstructorsInImmutables extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_const_constructors_in_immutables',
+      "Constructors in '@immutable' classes should be declared as 'const'.",
+      correctionMessage: "Try adding 'const' to the constructor declaration.");
+
   PreferConstConstructorsInImmutables()
       : super(
             name: 'prefer_const_constructors_in_immutables',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -118,7 +125,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         supertype.constructors.firstWhere((e) => e.name.isEmpty).isConst;
   }
 
-  bool _hasImmutableAnnotation(ClassElement clazz) {
+  bool _hasImmutableAnnotation(InterfaceElement clazz) {
     var selfAndInheritedClasses = _getSelfAndSuperClasses(clazz);
     for (var cls in selfAndInheritedClasses) {
       if (cls.metadata.any((m) => _isImmutable(m.element))) return true;
@@ -126,11 +133,11 @@ class _Visitor extends SimpleAstVisitor<void> {
     return false;
   }
 
-  bool _hasMixin(ClassElement clazz) => clazz.mixins.isNotEmpty;
+  bool _hasMixin(InterfaceElement clazz) => clazz.mixins.isNotEmpty;
 
-  static List<ClassElement> _getSelfAndSuperClasses(ClassElement self) {
-    ClassElement? current = self;
-    var seenElements = <ClassElement>{};
+  static List<InterfaceElement> _getSelfAndSuperClasses(InterfaceElement self) {
+    InterfaceElement? current = self;
+    var seenElements = <InterfaceElement>{};
     while (current != null && seenElements.add(current)) {
       current = current.supertype?.element;
     }

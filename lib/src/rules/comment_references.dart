@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Only reference in scope identifiers in doc comments.';
 
 const _details = r'''
-
 **DO** reference only in scope identifiers in doc comments.
 
 If you surround things like variable, method, or type names in square brackets,
@@ -34,9 +33,9 @@ On the other hand, assuming `outOfScopeId` is out of scope:
 bool isOutOfRange(int value) { ... }
 ```
 
-Note that the square bracket comment format is designed to allow 
-comments to refer to declarations using a fairly natural format 
-but does not allow *arbitrary expressions*.  In particular, code 
+Note that the square bracket comment format is designed to allow
+comments to refer to declarations using a fairly natural format
+but does not allow *arbitrary expressions*.  In particular, code
 references within square brackets can consist of either
 
 - a single identifier where the identifier is any identifier in scope for the comment (see the spec for what is in scope in doc comments),
@@ -47,12 +46,19 @@ references within square brackets can consist of either
 ''';
 
 class CommentReferences extends LintRule {
+  static const LintCode code = LintCode(
+      'comment_references', "The referenced name isn't visible in scope.",
+      correctionMessage: 'Try adding an import for the referenced name.');
+
   CommentReferences()
       : super(
             name: 'comment_references',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -65,11 +71,15 @@ class CommentReferences extends LintRule {
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+  final links = <String>[];
 
   _Visitor(this.rule);
 
   @override
   void visitComment(Comment node) {
+    // clear links of previous comments
+    links.clear();
+
     // Check for keywords that are not treated as references by the parser
     // but should be flagged by the linter.
     // Note that no special care is taken to handle embedded code blocks.
@@ -86,6 +96,10 @@ class _Visitor extends SimpleAstVisitor<void> {
               rule.reporter.reportErrorForOffset(
                   rule.lintCode, nameOffset, reference.length);
             }
+            if (rightIndex + 1 < comment.length &&
+                comment[rightIndex + 1] == ':') {
+              links.add(reference);
+            }
           }
           leftIndex = rightIndex < 0 ? -1 : comment.indexOf('[', rightIndex);
         }
@@ -97,7 +111,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitCommentReference(CommentReference node) {
     var expression = node.expression;
     if (expression.isSynthetic) return;
-    if (expression is Identifier && expression.staticElement == null) {
+    if (expression is Identifier &&
+        expression.staticElement == null &&
+        !links.contains(expression.name)) {
       rule.reportLint(expression);
     }
   }

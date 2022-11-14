@@ -10,11 +10,12 @@ import '../ast.dart';
 
 const _desc = r'Avoid relative imports for files in `lib/`.';
 
-const _details = r'''*DO* avoid relative imports for files in `lib/`.
+const _details = r'''
+**DO** avoid relative imports for files in `lib/`.
 
 When mixing relative and absolute imports it's possible to create confusion
 where the same member gets imported in two different ways. One way to avoid
-that is to ensure you consistently use absolute imports for files withing the
+that is to ensure you consistently use absolute imports for files within the
 `lib/` directory.
 
 This is the opposite of 'prefer_relative_imports'.
@@ -48,12 +49,19 @@ import '../lib/baz.dart';
 ''';
 
 class AlwaysUsePackageImports extends LintRule {
+  static const LintCode code = LintCode('always_use_package_imports',
+      "Use 'package:' imports for files in the 'lib' directory.",
+      correctionMessage: "Try converting the URI to a 'package:' URI.");
+
   AlwaysUsePackageImports()
       : super(
             name: 'always_use_package_imports',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -75,7 +83,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   bool isRelativeImport(ImportDirective node) {
-    var uriContent = node.uriContent;
+    var uriContent = node.uri.stringValue;
     if (uriContent != null) {
       var uri = Uri.tryParse(uriContent);
       return uri != null && uri.scheme.isEmpty;

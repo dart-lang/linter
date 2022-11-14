@@ -8,39 +8,51 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(SortConstructorsFirstTest);
+    defineReflectiveTests(EnableNullSafetyTest);
   });
 }
 
 @reflectiveTest
-class SortConstructorsFirstTest extends LintRuleTest {
+class EnableNullSafetyTest extends LintRuleTest {
   @override
-  List<String> get experiments => [
-        EnableString.enhanced_enums,
-      ];
+  String get lintRule => 'enable_null_safety';
 
-  @override
-  String get lintRule => 'sort_constructors_first';
+  test_2_11() async {
+    await assertDiagnostics(r'''
+// @dart=2.11
+f() {
+}
+''', [
+      lint(0, 13),
+    ]);
+  }
 
-  test_ok() async {
+  test_2_12() async {
     await assertNoDiagnostics(r'''
-enum A {
-  a,b,c;
-  const A();
-  int f() => 0;
+// @dart=2.12
+f() {
 }
 ''');
   }
 
-  test_unsorted() async {
+  test_2_8() async {
     await assertDiagnostics(r'''
-enum A {
-  a,b,c;
-  int f() => 0;
-  const A();
+// @dart=2.8
+f() {
 }
 ''', [
-      lint('sort_constructors_first', 42, 1),
+      lint(0, 12),
+    ]);
+  }
+
+  test_2_8_shebang() async {
+    await assertDiagnostics(r'''
+#!/usr/bin/dart
+// @dart=2.8
+f() {
+}
+''', [
+      lint(16, 12),
     ]);
   }
 }

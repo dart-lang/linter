@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Put required named parameters first.';
 
 const _details = r'''
-
 **DO** specify `required` on named parameter before other named parameters.
 
 **GOOD:**
@@ -36,12 +35,22 @@ m({b, c, @required a}) ;
 ''';
 
 class AlwaysPutRequiredNamedParametersFirst extends LintRule {
+  static const LintCode code = LintCode(
+      'always_put_required_named_parameters_first',
+      'Required named parameters should be before optional named parameters.',
+      correctionMessage:
+          'Try moving the required named parameter to be before any optional '
+          'named parameters.');
+
   AlwaysPutRequiredNamedParametersFirst()
       : super(
             name: 'always_put_required_named_parameters_first',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -63,9 +72,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       var element = param.declaredElement;
       if (element != null && (element.hasRequired || element.isRequiredNamed)) {
         if (nonRequiredSeen) {
-          var identifier = param.identifier;
-          if (identifier != null) {
-            rule.reportLintForToken(identifier.token);
+          var name = param.name;
+          if (name != null) {
+            rule.reportLintForToken(name);
           }
         }
       } else {

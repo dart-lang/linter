@@ -11,7 +11,6 @@ import '../rules/control_flow_in_finally.dart';
 const _desc = r'Avoid `throw` in finally block.';
 
 const _details = r'''
-
 **AVOID** throwing exceptions in finally blocks.
 
 Throwing exceptions in finally blocks will inevitably cause unexpected behavior
@@ -50,12 +49,19 @@ class BadThrow {
 ''';
 
 class ThrowInFinally extends LintRule {
+  static const LintCode code = LintCode(
+      'throw_in_finally', "Use of '{0}' in 'finally' block.",
+      correctionMessage: "Try moving the '{0}' outside the 'finally' block.");
+
   ThrowInFinally()
       : super(
             name: 'throw_in_finally',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -74,6 +80,6 @@ class _Visitor extends SimpleAstVisitor<void>
 
   @override
   void visitThrowExpression(ThrowExpression node) {
-    reportIfFinallyAncestorExists(node);
+    reportIfFinallyAncestorExists(node, kind: 'throw');
   }
 }

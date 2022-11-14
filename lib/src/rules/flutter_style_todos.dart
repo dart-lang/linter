@@ -12,8 +12,7 @@ const _desc = r'Use Flutter TODO format: '
     '// TODO(username): message, https://URL-to-issue.';
 
 const _details = r'''
-
-**DO** Use Flutter TODO format.
+**DO** use Flutter TODO format.
 
 From the [Flutter docs](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#comments):
 
@@ -44,7 +43,7 @@ class FlutterStyleTodos extends LintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  static final _todoRegExp = RegExp(r'//+(.* )?TODO\b');
+  static final _todoRegExp = RegExp(r'//+(.* )?TODO\b', caseSensitive: false);
 
   static final _todoExpectedRegExp =
       RegExp(r'// TODO\([a-zA-Z0-9][-a-zA-Z0-9]*\): ');
@@ -53,25 +52,25 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
+  void checkComments(Token token) {
+    Token? comment = token.precedingComments;
+    while (comment != null) {
+      _checkComment(comment);
+      comment = comment.next;
+    }
+  }
+
   @override
   void visitCompilationUnit(CompilationUnit node) {
     Token? token = node.beginToken;
     while (token != null) {
-      _getPrecedingComments(token).forEach(_visitComment);
+      checkComments(token);
       if (token == token.next) break;
       token = token.next;
     }
   }
 
-  Iterable<Token> _getPrecedingComments(Token token) sync* {
-    Token? comment = token.precedingComments;
-    while (comment != null) {
-      yield comment;
-      comment = comment.next;
-    }
-  }
-
-  void _visitComment(Token node) {
+  void _checkComment(Token node) {
     var content = node.lexeme;
     if (content.startsWith(_todoRegExp) &&
         !content.startsWith(_todoExpectedRegExp)) {

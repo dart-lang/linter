@@ -23,7 +23,6 @@ void main() async {
     Detail.linter,
     Detail.sdk,
     Detail.fix,
-    Detail.pedantic,
     Detail.flutterUser,
     Detail.flutterRepo,
     Detail.status,
@@ -53,20 +52,12 @@ Iterable<LintRule>? get registeredLints {
 }
 
 StringBuffer buildFooter(ScoreCard scorecard, List<Detail> details) {
-  var pedanticLintCount = 0;
   var flutterUserLintCount = 0;
   var flutterRepoLintCount = 0;
   var fixCount = 0;
-  var pedanticFixCount = 0;
 
   for (var score in scorecard.scores) {
     for (var ruleSet in score.ruleSets!) {
-      if (ruleSet == 'pedantic') {
-        ++pedanticLintCount;
-        if (score.hasFix!) {
-          ++pedanticFixCount;
-        }
-      }
       if (ruleSet == 'flutter') {
         ++flutterUserLintCount;
       }
@@ -82,9 +73,6 @@ StringBuffer buildFooter(ScoreCard scorecard, List<Detail> details) {
   var footer = StringBuffer('\n_${scorecard.lintCount} lints');
 
   var breakdowns = StringBuffer();
-  if (details.contains(Detail.pedantic)) {
-    breakdowns.write('$pedanticLintCount pedantic');
-  }
   if (details.contains(Detail.flutterUser)) {
     if (breakdowns.isNotEmpty) {
       breakdowns.write(', ');
@@ -102,9 +90,6 @@ StringBuffer buildFooter(ScoreCard scorecard, List<Detail> details) {
     breakdowns.write('; ');
   }
   breakdowns.write('$fixCount w/ fixes');
-  if (details.contains(Detail.pedantic)) {
-    breakdowns.write(' ($pedanticFixCount pedantic)');
-  }
 
   if (breakdowns.isNotEmpty) {
     footer.write(': $breakdowns');
@@ -121,7 +106,6 @@ class Detail {
   static const Detail sdk = Detail('dart sdk', header: Header.left);
 
   static const Detail fix = Detail('fix');
-  static const Detail pedantic = Detail('pedantic');
   static const Detail flutterUser = Detail('flutter user');
   static const Detail flutterRepo = Detail('flutter repo');
   static const Detail status = Detail('status');
@@ -157,7 +141,7 @@ class LintScore {
       this.bugReferences,
       this.since});
 
-  String get _ruleSets => ruleSets!.isNotEmpty ? ' ${ruleSets.toString()}' : '';
+  String get _ruleSets => ruleSets!.isNotEmpty ? ' $ruleSets' : '';
 
   String toMarkdown(List<Detail> details) {
     var sb = StringBuffer('| ');
@@ -171,15 +155,10 @@ class LintScore {
           sb.write(' ${since!.sinceLinter} |');
           break;
         case Detail.sdk:
-          // See: https://github.com/dart-lang/linter/issues/2824
-          //sb.write(' ${since!.sinceDartSdk} |');
-          sb.write('*untracked*');
+          sb.write(' ${since!.sinceDartSdk} |');
           break;
         case Detail.fix:
           sb.write('${hasFix! ? " $bulb" : ""} |');
-          break;
-        case Detail.pedantic:
-          sb.write('${ruleSets!.contains('pedantic') ? " $checkMark" : ""} |');
           break;
         case Detail.flutterUser:
           sb.write('${ruleSets!.contains('flutter') ? " $checkMark" : ""} |');
@@ -242,7 +221,6 @@ class ScoreCard {
     var lintsWithAssists = await _getLintsWithAssists();
     var flutterRuleset = await flutterRules;
     var flutterRepoRuleset = await flutterRepoRules;
-    var pedanticRuleset = await pedanticRules;
 
     var issues = await getLinterIssues();
     var bugs = issues.where(isBug).toList();
@@ -257,15 +235,12 @@ class ScoreCard {
       if (flutterRepoRuleset.contains(lint.name)) {
         ruleSets.add('flutter_repo');
       }
-      if (pedanticRuleset.contains(lint.name)) {
-        ruleSets.add('pedantic');
-      }
 
       var bugReferences = <String>[];
       for (var bug in bugs) {
         var title = bug.title;
         if (title.contains(lint.name)) {
-          bugReferences.add('#${bug.number.toString()}');
+          bugReferences.add('#${bug.number}');
         }
       }
 
@@ -289,7 +264,7 @@ class ScoreCard {
     var parser = CompilationUnitParser();
     var cu = parser.parse(contents: req.body, name: 'assist.dart');
     var assistKindClass = cu.declarations.firstWhere(
-        (m) => m is ClassDeclaration && m.name.name == 'DartAssistKind');
+        (m) => m is ClassDeclaration && m.name.lexeme == 'DartAssistKind');
 
     var collector = _AssistCollector();
     assistKindClass.accept(collector);
@@ -303,8 +278,8 @@ class ScoreCard {
 
     var parser = CompilationUnitParser();
     var cu = parser.parse(contents: req.body, name: 'lint_names.dart');
-    var lintNamesClass = cu.declarations
-        .firstWhere((m) => m is ClassDeclaration && m.name.name == 'LintNames');
+    var lintNamesClass = cu.declarations.firstWhere(
+        (m) => m is ClassDeclaration && m.name.lexeme == 'LintNames');
 
     var collector = _FixCollector();
     lintNamesClass.accept(collector);
@@ -337,7 +312,7 @@ class _FixCollector extends GeneralizingAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     for (var v in node.fields.variables) {
-      var name = v.name.name;
+      var name = v.name.lexeme;
       lintNames.add(name);
       if (!registeredLintNames.contains(name)) {
         print('WARNING: unrecognized lint in fixes: $name');

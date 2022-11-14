@@ -14,7 +14,6 @@ const _desc =
     r'Avoid overloading operator == and hashCode on classes not marked `@immutable`.';
 
 const _details = r'''
-
 **AVOID** overloading operator == and hashCode on classes not marked `@immutable`.
 
 If a class is not immutable, overloading operator == and hashCode can lead to
@@ -31,7 +30,7 @@ class A {
   @override
   operator ==(other) => other is A && other.key == key;
   @override
-  int hashCode() => key.hashCode;
+  int get hashCode => key.hashCode;
 }
 ```
 
@@ -43,7 +42,7 @@ class B {
   @override
   operator ==(other) => other is B && other.key == key;
   @override
-  int hashCode() => key.hashCode;
+  int get hashCode => key.hashCode;
 }
 ```
 
@@ -56,9 +55,9 @@ class C {
   final String key;
   const C(this.key);
   @override
-  operator ==(other) => other is B && other.key == key;
+  operator ==(other) => other is C && other.key == key;
   @override
-  int hashCode() => key.hashCode;
+  int get hashCode => key.hashCode;
 }
 ```
 
@@ -98,7 +97,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (node.name.token.type == TokenType.EQ_EQ || isHashCode(node)) {
+    if (node.name.type == TokenType.EQ_EQ || isHashCode(node)) {
       var classElement = _getClassForMethod(node);
       if (classElement != null && !_hasImmutableAnnotation(classElement)) {
         rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);
@@ -111,7 +110,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
 
   bool _hasImmutableAnnotation(ClassElement clazz) {
-    var inheritedAndSelfElements = <ClassElement>[
+    var inheritedAndSelfElements = <InterfaceElement>[
       ...clazz.allSupertypes.map((t) => t.element),
       clazz,
     ];

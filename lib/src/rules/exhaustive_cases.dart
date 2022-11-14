@@ -8,7 +8,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 
 const _desc = r'Define case clauses for all constants in enum-like classes.';
 
@@ -75,12 +75,19 @@ void ok(EnumLike e) {
 ''';
 
 class ExhaustiveCases extends LintRule {
+  static const LintCode code = LintCode(
+      'exhaustive_cases', "Missing case clauses for some constants in '{0}'.",
+      correctionMessage: 'Try adding case clauses for the missing constants.');
+
   ExhaustiveCases()
       : super(
             name: 'exhaustive_cases',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -91,12 +98,6 @@ class ExhaustiveCases extends LintRule {
 }
 
 class _Visitor extends SimpleAstVisitor {
-  static const LintCode lintCode = LintCode(
-    'exhaustive_cases',
-    "Missing case clause for '{0}'.",
-    correctionMessage: 'Try adding a case clause for the missing constant.',
-  );
-
   final LintRule rule;
 
   _Visitor(this.rule);
@@ -105,12 +106,12 @@ class _Visitor extends SimpleAstVisitor {
   void visitSwitchStatement(SwitchStatement statement) {
     var expressionType = statement.expression.staticType;
     if (expressionType is InterfaceType) {
-      var classElement = expressionType.element;
+      var interfaceElement = expressionType.element;
       // Handled in analyzer.
-      if (classElement.isEnum) {
+      if (interfaceElement is! ClassElement) {
         return;
       }
-      var enumDescription = DartTypeUtilities.asEnumLikeClass(classElement);
+      var enumDescription = interfaceElement.asEnumLikeClass;
       if (enumDescription == null) {
         return;
       }
@@ -118,7 +119,7 @@ class _Visitor extends SimpleAstVisitor {
       var enumConstants = enumDescription.enumConstants;
       for (var member in statement.members) {
         if (member is SwitchCase) {
-          var expression = member.expression;
+          var expression = member.expression.unParenthesized;
           if (expression is Identifier) {
             var element = expression.staticElement;
             if (element is PropertyAccessorElement) {
@@ -152,7 +153,6 @@ class _Visitor extends SimpleAstVisitor {
           offset,
           end - offset,
           arguments: [preferredElement.name],
-          errorCode: lintCode,
         );
       }
     }

@@ -5,13 +5,13 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
 const _desc = r'Avoid using private types in public APIs.';
 
 const _details = r'''
-
 **AVOID** using library private types in public APIs.
 
 For the purposes of this lint, a public API is considered to be any top-level or
@@ -41,12 +41,21 @@ class _Private {}
 ''';
 
 class LibraryPrivateTypesInPublicAPI extends LintRule {
+  static const LintCode code = LintCode('library_private_types_in_public_api',
+      'Invalid use of a private type in a public API.',
+      correctionMessage:
+          'Try making the private type public, or making the API that uses the '
+          'private type also be private.');
+
   LibraryPrivateTypesInPublicAPI()
       : super(
             name: 'library_private_types_in_public_api',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -63,16 +72,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    if (Identifier.isPrivateName(node.name.name)) {
-      return;
-    }
-    node.typeParameters?.accept(this);
-    node.members.accept(this);
-  }
-
-  @override
-  void visitEnumDeclaration(EnumDeclaration node) {
-    if (Identifier.isPrivateName(node.name.name)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.typeParameters?.accept(this);
@@ -81,7 +81,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitClassTypeAlias(ClassTypeAlias node) {
-    if (Identifier.isPrivateName(node.name.name)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.superclass.accept(this);
@@ -91,7 +91,7 @@ class Validator extends SimpleAstVisitor<void> {
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
     var name = node.name;
-    if (name != null && Identifier.isPrivateName(name.name)) {
+    if (name != null && Identifier.isPrivateName(name.lexeme)) {
       return;
     }
     node.parameters.accept(this);
@@ -103,9 +103,18 @@ class Validator extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitEnumDeclaration(EnumDeclaration node) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
+      return;
+    }
+    node.typeParameters?.accept(this);
+    node.members.accept(this);
+  }
+
+  @override
   void visitExtensionDeclaration(ExtensionDeclaration node) {
     var name = node.name;
-    if (name == null || Identifier.isPrivateName(name.name)) {
+    if (name == null || Identifier.isPrivateName(name.lexeme)) {
       return;
     }
     node.extendedType.accept(this);
@@ -116,14 +125,14 @@ class Validator extends SimpleAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     if (node.fields.variables
-        .any((field) => !Identifier.isPrivateName(field.name.name))) {
+        .any((field) => !Identifier.isPrivateName(field.name.lexeme))) {
       node.fields.type?.accept(this);
     }
   }
 
   @override
   void visitFieldFormalParameter(FieldFormalParameter node) {
-    if (node.isNamed && Identifier.isPrivateName(node.identifier.name)) {
+    if (node.isNamed && Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     // Check for a declared type.
@@ -134,10 +143,12 @@ class Validator extends SimpleAstVisitor<void> {
     }
 
     // Check implicit type.
-    var element = node.identifier.staticElement;
-    if (element is FieldFormalParameterElement &&
-        isPrivateName(element.type.element?.name)) {
-      rule.reportLint(node.identifier);
+    var element = node.declaredElement;
+    if (element is FieldFormalParameterElement) {
+      var type = element.type;
+      if (type is InterfaceType && isPrivateName(type.element.name)) {
+        rule.reportLintForToken(node.name);
+      }
     }
   }
 
@@ -148,7 +159,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    if (Identifier.isPrivateName(node.name.name)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.returnType?.accept(this);
@@ -158,7 +169,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
-    if (Identifier.isPrivateName(node.name.name)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.returnType?.accept(this);
@@ -168,7 +179,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionTypedFormalParameter(FunctionTypedFormalParameter node) {
-    if (node.isNamed && Identifier.isPrivateName(node.identifier.name)) {
+    if (node.isNamed && Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.returnType?.accept(this);
@@ -185,7 +196,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    if (Identifier.isPrivateName(node.name.name)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.typeParameters?.accept(this);
@@ -194,7 +205,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (Identifier.isPrivateName(node.name.name)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.returnType?.accept(this);
@@ -204,7 +215,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitMixinDeclaration(MixinDeclaration node) {
-    if (Identifier.isPrivateName(node.name.name)) {
+    if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
     node.onClause?.superclassConstraints.accept(this);
@@ -223,8 +234,8 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitSimpleFormalParameter(SimpleFormalParameter node) {
-    var name = node.identifier;
-    if (name != null && node.isNamed && Identifier.isPrivateName(name.name)) {
+    var name = node.name;
+    if (name != null && node.isNamed && Identifier.isPrivateName(name.lexeme)) {
       return;
     }
     node.type?.accept(this);
@@ -232,7 +243,7 @@ class Validator extends SimpleAstVisitor<void> {
 
   @override
   void visitSuperFormalParameter(SuperFormalParameter node) {
-    if (node.isNamed && Identifier.isPrivateName(node.identifier.name)) {
+    if (node.isNamed && Identifier.isPrivateName(node.name.lexeme)) {
       return;
     }
 
@@ -244,17 +255,19 @@ class Validator extends SimpleAstVisitor<void> {
     }
 
     // Check implicit type.
-    var element = node.identifier.staticElement;
-    if (element is SuperFormalParameterElement &&
-        isPrivateName(element.type.element?.name)) {
-      rule.reportLint(node.identifier);
+    var element = node.declaredElement;
+    if (element is SuperFormalParameterElement) {
+      var type = element.type;
+      if (type is InterfaceType && isPrivateName(type.element.name)) {
+        rule.reportLintForToken(node.name);
+      }
     }
   }
 
   @override
   void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
     if (node.variables.variables
-        .any((field) => !Identifier.isPrivateName(field.name.name))) {
+        .any((field) => !Identifier.isPrivateName(field.name.lexeme))) {
       node.variables.type?.accept(this);
     }
   }

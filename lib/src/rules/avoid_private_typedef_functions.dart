@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -10,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid private typedef functions.';
 
 const _details = r'''
-
 **AVOID** private typedef functions used only once. Prefer inline function
 syntax.
 
@@ -76,8 +76,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     _countAndReport(node.name);
   }
 
-  void _countAndReport(SimpleIdentifier identifier) {
-    var name = identifier.name;
+  void _countAndReport(Token identifier) {
+    var name = identifier.lexeme;
     if (!Identifier.isPrivateName(name)) {
       return;
     }
@@ -86,7 +86,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       unit.unit.accept(visitor);
     }
     if (visitor.count <= 1) {
-      rule.reportLint(identifier);
+      rule.reportLintForToken(identifier);
     }
   }
 }

@@ -16,9 +16,6 @@ main() {
 @reflectiveTest
 class AvoidRedundantArgumentValuesNamedArgsAnywhereTest extends LintRuleTest {
   @override
-  List<String> get experiments => [EnableString.named_arguments_anywhere];
-
-  @override
   String get lintRule => 'avoid_redundant_argument_values';
 
   test_namedArgumentBeforePositional() async {
@@ -29,7 +26,7 @@ void f() {
   foo(0, c: true, 1);
 }
 ''', [
-      lint('avoid_redundant_argument_values', 67, 4),
+      lint(67, 4),
     ]);
   }
 }
@@ -38,6 +35,21 @@ void f() {
 class AvoidRedundantArgumentValuesTest extends LintRuleTest {
   @override
   String get lintRule => 'avoid_redundant_argument_values';
+
+  /// https://github.com/dart-lang/linter/issues/3617
+  test_enumDeclaration() async {
+    await assertDiagnostics(r'''
+enum TestEnum {
+  a(test: false);
+
+  const TestEnum({this.test = false});
+
+  final bool test;
+}
+''', [
+      lint(26, 5),
+    ]);
+  }
 
   @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3447')
   test_fromEnvironment() async {
@@ -51,6 +63,26 @@ void g() {
     test: !someDefine,
   );
 } 
+''');
+  }
+
+  /// https://github.com/dart-lang/sdk/issues/49596
+  test_legacyRequired() async {
+    var a = newFile('$testPackageLibPath/a.dart', r'''
+class Foo {
+  int? foo;
+  Foo({required this.foo});
+}
+''');
+    await resolveFile(a.path);
+
+    await assertNoDiagnostics(r'''
+// @dart = 2.9
+import 'a.dart';
+
+void f() {
+  Foo(foo: null);
+}
 ''');
   }
 

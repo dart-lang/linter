@@ -68,15 +68,6 @@ void defineRuleTests() {
         }
       }
     });
-    group('format', () {
-      for (var rule in Registry.ruleRegistry.rules) {
-        test('`${rule.name}` description', () {
-          expect(rule.description.endsWith('.'), isTrue,
-              reason:
-                  "Rule description for ${rule.name} should end with a '.'");
-        });
-      }
-    });
   });
 }
 
@@ -324,7 +315,7 @@ void _validateExpectedLints(File file, Iterable<AnalysisErrorInfo> errorInfos,
 
       var features = optionsImpl.contextFeatures;
 
-      Spelunker(file.absolute.path, featureSet: features).spelunk();
+      FileSpelunker(file.absolute.path, featureSet: features).spelunk();
       print('');
       // Lints.
       ResultReporter(errorInfos).write();

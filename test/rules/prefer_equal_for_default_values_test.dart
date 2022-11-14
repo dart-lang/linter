@@ -15,11 +15,6 @@ main() {
 @reflectiveTest
 class PreferEqualForDefaultValuesTest extends LintRuleTest {
   @override
-  List<String> get experiments => [
-        EnableString.super_parameters,
-      ];
-
-  @override
   String get lintRule => 'prefer_equal_for_default_values';
 
   test_super() async {
@@ -33,7 +28,7 @@ class B extends A {
   B({super.a : ''});
 }
 ''', [
-      lint('prefer_equal_for_default_values', 74, 1),
+      lint(74, 1),
     ]);
   }
 }

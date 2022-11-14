@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -39,12 +40,19 @@ var makeA = A.new;
 ''';
 
 class UnnecessaryConstructorName extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_constructor_name', "Unnecessary '.new' constructor name.",
+      correctionMessage: "Try removing the '.new'.");
+
   UnnecessaryConstructorName()
       : super(
             name: 'unnecessary_constructor_name',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -67,12 +75,12 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    _check(node.constructorName.name);
+    _check(node.constructorName.name?.token);
   }
 
-  void _check(SimpleIdentifier? name) {
-    if (name?.name == 'new') {
-      rule.reportLint(name);
+  void _check(Token? name) {
+    if (name?.lexeme == 'new') {
+      rule.reportLintForToken(name);
     }
   }
 }

@@ -183,7 +183,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitClassDeclaration(ClassDeclaration node) {
-    if (node.isAbstract) return;
+    if (node.abstractKeyword != null) return;
     var classElement = node.declaredElement;
     if (classElement == null) return;
 
@@ -223,7 +223,7 @@ class _Visitor extends SimpleAstVisitor {
         var constructor = member.declaredElement;
         if (constructor == null) return;
         if (!constructor.isFactory && !constructor.isConst) return;
-        var name = member.name?.name;
+        var name = member.name?.lexeme;
         if (classElement.isPublic &&
             (name == null || !Identifier.isPrivateName(name))) {
           return;
@@ -240,6 +240,6 @@ class _Visitor extends SimpleAstVisitor {
       return;
     }
 
-    rule.reportLint(node.name);
+    rule.reportLintForToken(node.name);
   }
 }

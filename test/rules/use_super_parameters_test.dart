@@ -15,11 +15,6 @@ main() {
 @reflectiveTest
 class UseSuperParametersTest extends LintRuleTest {
   @override
-  List<String> get experiments => [
-        EnableString.super_parameters,
-      ];
-
-  @override
   String get lintRule => 'use_super_parameters';
 
   test_functionTypedFormalParameter() async {
@@ -31,7 +26,7 @@ class B extends A {
   B(int f(int i)) : super(f);
 }
 ''', [
-      lint('use_super_parameters', 53, 1),
+      lint(53, 1),
     ]);
   }
 
@@ -44,7 +39,7 @@ class B extends A {
   const B({int? x, int? y}) : super(x: x, y: y);
 }
 ''', [
-      lint('use_super_parameters', 69, 1),
+      lint(69, 1),
     ]);
   }
 
@@ -57,7 +52,7 @@ class B extends A {
   B({int? x, int? z}) : super(x: x, y: z);
 }
 ''', [
-      lint('use_super_parameters', 57, 1),
+      lint(57, 1),
     ]);
   }
 
@@ -72,8 +67,7 @@ class B extends A {
   }
 }
 ''', [
-      lint('use_super_parameters', 57, 1,
-          messageContains: "Convert 'y' to a super parameter"),
+      lint(57, 1, messageContains: "Convert 'y' to a super parameter"),
     ]);
   }
 
@@ -87,8 +81,7 @@ class B extends A {
   B({this.x, int? y}) : super(x:x, y:y);
 }
 ''', [
-      lint('use_super_parameters', 67, 1,
-          messageContains: "Convert 'y' to a super parameter."),
+      lint(67, 1, messageContains: "Convert 'y' to a super parameter."),
     ]);
   }
 
@@ -339,7 +332,7 @@ class B extends A {
   B(int x, {int? foo}) : super(x, foo: 0); 
 }
 ''', [
-      lint('use_super_parameters', 59, 1),
+      lint(59, 1),
     ]);
   }
 
@@ -352,7 +345,7 @@ class B extends A {
   B(int x) : super(x);
 }
 ''', [
-      lint('use_super_parameters', 56, 1),
+      lint(56, 1),
     ]);
   }
 
@@ -365,8 +358,24 @@ class B extends A {
   B([int x = 0]) : super(x);
 }
 ''', [
-      lint('use_super_parameters', 46, 1),
+      lint(46, 1),
     ]);
+  }
+
+  /// https://github.com/dart-lang/linter/issues/3569
+  test_repeatedParam() async {
+    await assertNoDiagnostics(r'''
+class Rect {
+  Rect(this.width, this.height);
+
+  final double width;
+  final double height;
+}
+
+class Square extends Rect {
+  Square(double dimension) : super(dimension, dimension);
+}
+''');
   }
 
   test_requiredPositional_allConvertible() async {
@@ -380,7 +389,7 @@ class C extends B {
   C(int foo, int bar) : super(foo, bar);
 }
 ''', [
-      lint('use_super_parameters', 93, 1),
+      lint(93, 1),
     ]);
   }
 
@@ -393,7 +402,7 @@ class B extends A {
   B(int x, int y) : super(x, y: y);
 }
 ''', [
-      lint('use_super_parameters', 56, 1),
+      lint(56, 1),
     ]);
   }
 
@@ -408,7 +417,7 @@ class C extends B {
   C(int baz, int foo, int bar) : super(foo, bar);
 }
 ''', [
-      lint('use_super_parameters', 93, 1),
+      lint(93, 1),
     ]);
   }
 
@@ -421,7 +430,7 @@ class B extends A {
   B(int x, {int? y}) : super(x, y: y);
 }
 ''', [
-      lint('use_super_parameters', 56, 1),
+      lint(56, 1),
     ]);
   }
 }

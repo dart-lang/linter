@@ -15,11 +15,6 @@ main() {
 @reflectiveTest
 class AvoidTypesAsParameterNamesTest extends LintRuleTest {
   @override
-  List<String> get experiments => [
-        EnableString.super_parameters,
-      ];
-
-  @override
   String get lintRule => 'avoid_types_as_parameter_names';
 
   test_super() async {
@@ -32,7 +27,7 @@ class B extends A {
   B(super.String);
 }
 ''', [
-      lint('avoid_types_as_parameter_names', 67, 6),
+      lint(67, 6),
     ]);
   }
 }

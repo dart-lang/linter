@@ -15,11 +15,6 @@ main() {
 @reflectiveTest
 class AnnotateOverridesTest extends LintRuleTest {
   @override
-  List<String> get experiments => [
-        EnableString.enhanced_enums,
-      ];
-
-  @override
   String get lintRule => 'annotate_overrides';
 
   test_field() async {
@@ -33,7 +28,7 @@ enum A implements O {
   int get x => 0;
 }
 ''', [
-      lint('annotate_overrides', 76, 1),
+      lint(76, 1),
     ]);
   }
 
@@ -44,7 +39,7 @@ enum A {
   String toString() => '';
 }
 ''', [
-      lint('annotate_overrides', 27, 8),
+      lint(27, 8),
     ]);
   }
 

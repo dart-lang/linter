@@ -11,7 +11,6 @@ import '../util/ascii_utils.dart';
 const _desc = r'Avoid empty catch blocks.';
 
 const _details = r'''
-
 **AVOID** empty catch blocks.
 
 In general, empty catch blocks should be avoided.  In cases where they are
@@ -83,7 +82,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     // Skip exceptions named with underscores.
     var exceptionParameter = node.exceptionParameter;
     if (exceptionParameter != null &&
-        exceptionParameter.name.isJustUnderscores) {
+        exceptionParameter.name.lexeme.isJustUnderscores) {
       return;
     }
 

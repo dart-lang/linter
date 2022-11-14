@@ -27,10 +27,6 @@ ExpectedError error(ErrorCode code, int offset, int length,
         {Pattern? messageContains}) =>
     ExpectedError(code, offset, length, messageContains: messageContains);
 
-ExpectedLint lint(String lintName, int offset, int length,
-        {Pattern? messageContains}) =>
-    ExpectedLint(lintName, offset, length, messageContains: messageContains);
-
 typedef DiagnosticMatcher = bool Function(AnalysisError error);
 
 class AnalysisOptionsFileConfig {
@@ -197,17 +193,18 @@ abstract class LintRuleTest extends PubPackageResolutionTest {
       buffer.writeln('To accept the current state, expect:');
       for (var actual in errors) {
         late String diagnosticKind;
-        late Object description;
+        Object? description;
         if (actual.errorCode is LintCode) {
           diagnosticKind = 'lint';
-          description = "'${actual.errorCode.name}'";
         } else {
           diagnosticKind = 'error';
           description = actual.errorCode;
         }
         buffer.write('  $diagnosticKind(');
-        buffer.write(description);
-        buffer.write(', ');
+        if (description != null) {
+          buffer.write(description);
+          buffer.write(', ');
+        }
         buffer.write(actual.offset);
         buffer.write(', ');
         buffer.write(actual.length);
@@ -220,10 +217,15 @@ abstract class LintRuleTest extends PubPackageResolutionTest {
   /// Assert that there are no diagnostics in the given [code].
   Future<void> assertNoDiagnostics(String code) async =>
       assertDiagnostics(code, const []);
+
+  ExpectedLint lint(int offset, int length, {Pattern? messageContains}) =>
+      ExpectedLint(lintRule!, offset, length, messageContains: messageContains);
 }
 
 class PubPackageResolutionTest extends _ContextResolutionTest {
   final List<String> _lintRules = const [];
+
+  bool get addFlutterPackageDep => false;
 
   bool get addJsPackageDep => false;
 
@@ -232,15 +234,15 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
   @override
   List<String> get collectionIncludedPaths => [workspaceRootPath];
 
-  List<String> get experiments => [
-        EnableString.constructor_tearoffs,
-      ];
+  List<String> get experiments => [];
 
   /// The path that is not in [workspaceRootPath], contains external packages.
   String get packagesRootPath => '/packages';
 
+  String get testFileName => 'test.dart';
+
   @override
-  String get testFilePath => '$testPackageLibPath/test.dart';
+  String get testFilePath => '$testPackageLibPath/$testFileName';
 
   String? get testPackageLanguageVersion => null;
 
@@ -254,6 +256,14 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
   @mustCallSuper
   void setUp() {
     super.setUp();
+    // Check for any needlessly enabled experiments.
+    for (var experiment in experiments) {
+      var feature = ExperimentStatus.knownFeatures[experiment];
+      if (feature?.isEnabledByDefault ?? false) {
+        fail("The '$experiment' experiment is enabled by default, "
+            'try removing it from `experiments`.');
+      }
+    }
 
     writeTestPackageAnalysisOptionsFile(
       AnalysisOptionsFileConfig(
@@ -295,6 +305,14 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
       languageVersion: testPackageLanguageVersion,
     );
 
+    if (addFlutterPackageDep) {
+      var flutterPath = '/packages/flutter';
+      addFlutterPackageFiles(
+        getFolder(flutterPath),
+      );
+      configCopy.add(name: 'flutter', rootPath: flutterPath);
+    }
+
     if (addJsPackageDep) {
       var jsPath = '/packages/js';
       MockPackages.addJsPackageFiles(
@@ -313,6 +331,27 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
 
     var path = '$testPackageRootPath/.dart_tool/package_config.json';
     writePackageConfig(path, configCopy);
+  }
+
+  /// Create a fake 'flutter' package that can be used by tests.
+  static void addFlutterPackageFiles(Folder rootFolder) {
+    var libFolder = rootFolder.getChildAssumingFolder('lib');
+    libFolder.getChildAssumingFile('widgets.dart').writeAsStringSync(r'''
+export 'src/widgets/framework.dart';
+''');
+
+    libFolder
+        .getChildAssumingFolder('src')
+        .getChildAssumingFolder('widgets')
+        .getChildAssumingFile('framework.dart')
+        .writeAsStringSync(r'''   
+abstract class BuildContext {
+  Widget get widget;
+}
+
+class Widget {
+}
+''');
   }
 }
 

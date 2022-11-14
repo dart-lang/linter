@@ -9,13 +9,13 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
+import '../extensions.dart';
 import '../util/dart_type_utilities.dart';
 
 const _desc =
     r'Equality operator `==` invocation with references of unrelated types.';
 
 const _details = r'''
-
 **DON'T** Compare references of unrelated types for equality.
 
 Comparing references of a type where neither is a subtype of the other most
@@ -139,9 +139,9 @@ bool _hasNonComparableOperands(TypeSystem typeSystem, BinaryExpression node) {
   if (leftType == null || rightType == null) {
     return false;
   }
-  return !DartTypeUtilities.isNullLiteral(left) &&
-      !DartTypeUtilities.isNullLiteral(right) &&
-      DartTypeUtilities.unrelatedTypes(typeSystem, leftType, rightType) &&
+  return !left.isNullLiteral &&
+      !right.isNullLiteral &&
+      typesAreUnrelated(typeSystem, leftType, rightType) &&
       !(_isFixNumIntX(leftType) && _isCoreInt(rightType));
 }
 

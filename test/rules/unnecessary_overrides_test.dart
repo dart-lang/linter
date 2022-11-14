@@ -15,14 +15,9 @@ main() {
 @reflectiveTest
 class UnnecessaryOverridesTest extends LintRuleTest {
   @override
-  List<String> get experiments => [
-        EnableString.enhanced_enums,
-      ];
-
-  @override
   String get lintRule => 'unnecessary_overrides';
 
-  test_field() async {
+  test_enum_field() async {
     await assertDiagnostics(r'''    
 enum A {
   a,b,c;
@@ -30,11 +25,11 @@ enum A {
   Type get runtimeType => super.runtimeType;
 }
 ''', [
-      lint('unnecessary_overrides', 41, 11),
+      lint(41, 11),
     ]);
   }
 
-  test_method() async {
+  test_enum_method() async {
     await assertDiagnostics(r'''    
 enum A {
   a,b,c;
@@ -42,7 +37,50 @@ enum A {
   String toString() => super.toString();
 }
 ''', [
-      lint('unnecessary_overrides', 39, 8),
+      lint(39, 8),
     ]);
+  }
+
+  test_method_ok_commentsInBody() async {
+    await assertNoDiagnostics(r'''
+class A {
+  void a() { }
+}
+
+class B extends A {
+  @override
+  void a() {
+    // There's something we want to document here.
+    super.a();
+  }
+}
+''');
+  }
+
+  test_method_ok_expressionStatement_commentsInBody() async {
+    await assertNoDiagnostics(r'''
+class A {
+  void a() { }
+}
+
+class B extends A {
+  @override
+  void a() =>
+    // There's something we want to document here.
+    super.a();
+}
+''');
+  }
+
+  test_method_ok_returnExpression_commentsInBody() async {
+    await assertNoDiagnostics(r'''
+class A {
+  @override
+  String toString() {
+    // There's something we want to document here.
+    return super.toString();
+  }
+}
+''');
   }
 }

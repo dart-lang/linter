@@ -5,13 +5,13 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
 const _desc = r'Use predefined named constants.';
 
 const _details = r'''
-
 Where possible, use already defined const values.
 
 **BAD:**
@@ -53,7 +53,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     if (node.isConst) {
-      var element = node.staticType?.element;
+      var type = node.staticType;
+      if (type is! InterfaceType) return;
+      var element = type.element;
       if (element is ClassElement) {
         var nodeField =
             node.thisOrAncestorOfType<VariableDeclaration>()?.declaredElement;
@@ -71,7 +73,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         var value = context.evaluateConstant(node).value;
         for (var field
             in element.fields.where((e) => e.isStatic && e.isConst)) {
-          if (field.isAccessibleIn2(library) &&
+          if (field.isAccessibleIn(library) &&
               field.computeConstantValue() == value) {
             rule.reportLint(node,
                 arguments: ['${element.name}.${field.name}'],

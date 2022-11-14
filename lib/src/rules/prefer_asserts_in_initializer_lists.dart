@@ -108,14 +108,14 @@ class _AssertVisitor extends RecursiveAstVisitor {
 /// Lazy cache of elements.
 class _ClassAndSuperClasses {
   final ClassElement? element;
-  final Set<ClassElement> _classes = {};
+  final Set<InterfaceElement> _classes = {};
 
   _ClassAndSuperClasses(this.element);
 
   /// The [element] and its super classes, including mixins.
-  Set<ClassElement> get classes {
+  Set<InterfaceElement> get classes {
     if (_classes.isEmpty) {
-      void addRecursively(ClassElement? element) {
+      void addRecursively(InterfaceElement? element) {
         if (element != null && _classes.add(element)) {
           for (var t in element.mixins) {
             addRecursively(t.element);

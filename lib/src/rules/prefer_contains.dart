@@ -8,11 +8,11 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 import '../ast.dart';
+import '../extensions.dart';
 import '../util/dart_type_utilities.dart';
 
 const _desc = r'Use contains for `List` and `String` instances.';
 const _details = r'''
-
 **DON'T** use `indexOf` to see if a collection contains an element.
 
 Calling `indexOf` to see if a collection contains something is difficult to read
@@ -33,14 +33,18 @@ if (lunchBox.indexOf('sandwich') == -1) return 'so hungry...';
 ''';
 
 class PreferContainsOverIndexOf extends LintRule {
+  // TODO(brianwilkerson) Both `alwaysFalse` and `alwaysTrue` should be warnings
+  //  rather than lints because they represent a bug rather than a style
+  //  preference.
   static const LintCode alwaysFalse = LintCode('prefer_contains',
       'Always false because indexOf is always greater or equal -1.');
 
   static const LintCode alwaysTrue = LintCode('prefer_contains',
       'Always true because indexOf is always greater or equal -1.');
 
-  static const LintCode useContains =
-      LintCode('prefer_contains', 'Use contains instead of indexOf');
+  static const LintCode useContains = LintCode('prefer_contains',
+      "Unnecessary use of 'indexOf' to test for containment.",
+      correctionMessage: "Try using 'contains'.");
 
   PreferContainsOverIndexOf()
       : super(
@@ -48,6 +52,9 @@ class PreferContainsOverIndexOf extends LintRule {
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  List<LintCode> get lintCodes => [alwaysFalse, alwaysTrue, useContains];
 
   @override
   void registerNodeProcessors(
@@ -170,10 +177,20 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (invocation.methodName.name != 'indexOf') return false;
 
     var parentType = invocation.target?.staticType;
-    return parentType != null &&
-        DartTypeUtilities.implementsAnyInterface(parentType, [
-          InterfaceTypeDefinition('Iterable', 'dart.core'),
-          InterfaceTypeDefinition('String', 'dart.core'),
-        ]);
+    if (parentType == null) return false;
+    if (!parentType.implementsAnyInterface([
+      InterfaceTypeDefinition('Iterable', 'dart.core'),
+      InterfaceTypeDefinition('String', 'dart.core'),
+    ])) {
+      return false;
+    }
+
+    var args = invocation.argumentList.arguments;
+    if (args.length == 2) {
+      var start = args[1];
+      if (getIntValue(start, context) != 0) return false;
+    }
+
+    return true;
   }
 }

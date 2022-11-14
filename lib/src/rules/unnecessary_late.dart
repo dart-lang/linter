@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r"Don't specify the `late` modifier when it is not needed.";
 
 const _details = r'''
-
 **DO** not specify the `late` modifier for top-level and static variables
 when the declaration contains an initializer. 
 
@@ -43,12 +42,19 @@ class GoodExample {
 ''';
 
 class UnnecessaryLate extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_late', "Unnecessary 'late' modifier.",
+      correctionMessage: "Try removing the 'late'.");
+
   UnnecessaryLate()
       : super(
             name: 'unnecessary_late',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -83,7 +89,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     for (var variable in node.variables) {
       if (variable.initializer != null) {
-        rule.reportLint(variable.name);
+        rule.reportLintForToken(variable.name);
       }
     }
   }

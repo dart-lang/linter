@@ -8,6 +8,7 @@ analysis server and the `dart analyze` command in the [Dart command-line tool][d
 [![Coverage Status](https://coveralls.io/repos/dart-lang/linter/badge.svg)](https://coveralls.io/r/dart-lang/linter)
 [![Pub](https://img.shields.io/pub/v/linter.svg)](https://pub.dev/packages/linter)
 [![package publisher](https://img.shields.io/pub/publisher/linter.svg)](https://pub.dev/packages/linter/publisher)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/dart-lang/linter/badge)](https://api.securityscorecards.dev/projects/github.com/dart-lang/linter)
 
 ## Installing
 
@@ -37,8 +38,7 @@ you could lint your package like this:
     
 and see any violations of the `annotate_overrides`, `hash_and_equals`, and `prefer_is_not_empty` rules in the console.
 To help you choose the rules you want to enable for your package, we have provided a [complete list of rules][lints]
-with lints recommended by the Dart team collected in [`package:lints`][package-dart-lints]. For the lints that are
-enforced internally at Google, see [`package:pedantic`][package-pedantic]. Lints recommended for Flutter apps, packages,
+with lints recommended by the Dart team collected in [`package:lints`][package-dart-lints]. Lints recommended for Flutter apps, packages,
 and plugins are documented in [`package:flutter_lints`][package-flutter-lints].
 
 If a specific lint warning should be ignored, it can be flagged with a comment.  For example, 
@@ -85,7 +85,7 @@ tells the analyzer to treat `camel_case_types` lints as errors.  For more on con
 ## Contributing
 
 Feedback is greatly appreciated and contributions are welcome! Please read the
-[contribution guidelines](CONTRIBUTING.md); mechanics of writing lints are covered [here](doc/WritingLints.MD).
+[contribution guidelines](CONTRIBUTING.md); mechanics of writing lints are covered [here](doc/writing-lints.md).
 
 ## Features and bugs
 
@@ -97,7 +97,6 @@ Please file feature requests and bugs in the [issue tracker][tracker].
 [lints]: https://dart-lang.github.io/linter/lints/
 [options_file]: https://dart.dev/guides/language/analysis-options#the-analysis-options-file
 [package-dart-lints]: https://github.com/dart-lang/lints
-[package-flutter-lints]: https://github.com/flutter/packages/tree/master/packages/flutter_lints
-[package-pedantic]: https://github.com/dart-lang/pedantic/blob/master/lib/analysis_options.yaml
+[package-flutter-lints]: https://github.com/flutter/packages/tree/main/packages/flutter_lints
 [style_guide]:https://dart.dev/guides/language/effective-dart/style/
 [tracker]: https://github.com/dart-lang/linter/issues

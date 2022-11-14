@@ -8,7 +8,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
+import '../extensions.dart';
 import '../util/flutter_utils.dart';
 
 const _desc = r'Use key in widget constructors.';
@@ -28,18 +28,25 @@ class MyPublicWidget extends StatelessWidget {
 **GOOD:**
 ```dart
 class MyPublicWidget extends StatelessWidget {
-  MyPublicWidget({Key? key}) : super(key: key);
+  MyPublicWidget({super.key});
 }
 ```
 ''';
 
 class UseKeyInWidgetConstructors extends LintRule {
+  static const LintCode code = LintCode('use_key_in_widget_constructors',
+      "Constructors for public widgets should have a named 'key' parameter.",
+      correctionMessage: 'Try adding a named parameter to the constructor.');
+
   UseKeyInWidgetConstructors()
       : super(
             name: 'use_key_in_widget_constructors',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -62,7 +69,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         classElement.isPublic &&
         hasWidgetAsAscendant(classElement) &&
         classElement.constructors.where((e) => !e.isSynthetic).isEmpty) {
-      rule.reportLint(node.name);
+      rule.reportLintForToken(node.name);
     }
     super.visitClassDeclaration(node);
   }
@@ -77,6 +84,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (constructorElement.isPublic &&
         !constructorElement.isFactory &&
         classElement.isPublic &&
+        classElement is ClassElement &&
         hasWidgetAsAscendant(classElement) &&
         !isExactWidget(classElement) &&
         !_hasKeySuperParameterInitializerArg(node) &&
@@ -94,7 +102,8 @@ class _Visitor extends SimpleAstVisitor<void> {
           }
           return false;
         })) {
-      rule.reportLint(node.name ?? node.returnType);
+      var errorNode = node.name ?? node.returnType;
+      rule.reportLintForOffset(errorNode.offset, errorNode.length);
     }
     super.visitConstructorDeclaration(node);
   }
@@ -104,9 +113,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool _defineKeyParameter(ConstructorElement element) =>
       element.parameters.any((e) => e.name == 'key' && _isKeyType(e.type));
-
-  bool _isKeyType(DartType type) =>
-      DartTypeUtilities.implementsInterface(type, 'Key', '');
 
   bool _hasKeySuperParameterInitializerArg(ConstructorDeclaration node) {
     for (var parameter in node.parameters.parameters) {
@@ -118,4 +124,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     return false;
   }
+
+  bool _isKeyType(DartType type) => type.implementsInterface('Key', '');
 }

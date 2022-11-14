@@ -8,7 +8,7 @@ import 'dart:math';
 import 'package:analyzer/error/error.dart';
 
 import 'analyzer.dart';
-import 'util/charcodes.dart' show $pipe, $backslash;
+import 'util/charcodes.dart' show $backslash, $pipe;
 import 'util/score_utils.dart';
 
 // Number of times to perform linting to get stable benchmarks.
@@ -60,7 +60,6 @@ Future writeBenchmarks(
   var coreRuleset = await coreRules;
   var recommendedRuleset = await recommendedRules;
   var flutterRuleset = await flutterRules;
-  var pedanticRuleset = await pedanticRules;
 
   var stats = timings.keys.map((t) {
     var sets = <String>[];
@@ -72,9 +71,6 @@ Future writeBenchmarks(
     }
     if (flutterRuleset.contains(t)) {
       sets.add('flutter');
-    }
-    if (pedanticRuleset.contains(t)) {
-      sets.add('pedantic');
     }
 
     var details = sets.isEmpty ? '' : " [${sets.join(', ')}]";

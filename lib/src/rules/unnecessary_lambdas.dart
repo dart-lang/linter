@@ -14,7 +14,6 @@ import '../util/dart_type_utilities.dart';
 const _desc = r"Don't create a lambda when a tear-off will do.";
 
 const _details = r'''
-
 **DON'T** create a lambda when a tear-off will do.
 
 **BAD:**
@@ -43,9 +42,7 @@ bool _containsNullAwareInvocationInChain(AstNode? node) =>
             _containsNullAwareInvocationInChain(node.target)));
 
 Iterable<Element?> _extractElementsOfSimpleIdentifiers(AstNode node) =>
-    DartTypeUtilities.traverseNodesInDFS(node)
-        .whereType<SimpleIdentifier>()
-        .map((e) => e.staticElement);
+    _IdentifierVisitor().extractElements(node);
 
 class UnnecessaryLambdas extends LintRule {
   UnnecessaryLambdas()
@@ -111,6 +108,23 @@ class _FinalExpressionChecker {
   }
 }
 
+class _IdentifierVisitor extends RecursiveAstVisitor {
+  final _elements = <Element?>[];
+
+  _IdentifierVisitor();
+
+  List<Element?> extractElements(AstNode node) {
+    node.accept(this);
+    return _elements;
+  }
+
+  @override
+  visitSimpleIdentifier(SimpleIdentifier node) {
+    _elements.add(node.staticElement);
+    super.visitSimpleIdentifier(node);
+  }
+}
+
 class _Visitor extends SimpleAstVisitor<void> {
   final bool constructorTearOffsEnabled;
   final LintRule rule;
@@ -160,7 +174,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     bool matches(Expression argument, FormalParameter parameter) {
       if (argument is SimpleIdentifier) {
-        return argument.name == parameter.identifier?.name;
+        return argument.name == parameter.name?.lexeme;
       }
       return false;
     }
@@ -178,7 +192,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       InvocationExpression node, FunctionExpression nodeToLint) {
     var nodeToLintParams = nodeToLint.parameters?.parameters;
     if (nodeToLintParams == null ||
-        !DartTypeUtilities.matchesArgumentsWithParameters(
+        !argumentsMatchParameters(
             node.argumentList.arguments, nodeToLintParams)) {
       return;
     }
@@ -240,4 +254,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     }
   }
+}
+
+extension LibraryImportElementExtension on LibraryImportElement {
+  bool get isDeferred => prefix is DeferredImportElementPrefix;
 }

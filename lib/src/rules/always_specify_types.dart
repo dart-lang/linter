@@ -13,8 +13,7 @@ import '../util/ascii_utils.dart';
 const _desc = r'Specify type annotations.';
 
 const _details = r'''
-
-From the [flutter style guide](https://flutter.dev/style-guide/):
+From the [style guide for the flutter repo](https://flutter.dev/style-guide/):
 
 **DO** specify type annotations.
 
@@ -60,6 +59,10 @@ main() {
 ''';
 
 class AlwaysSpecifyTypes extends LintRule {
+  static const LintCode code = LintCode(
+      'always_specify_types', 'Missing type annotation.',
+      correctionMessage: 'Try adding a type annotation.');
+
   AlwaysSpecifyTypes()
       : super(
             name: 'always_specify_types',
@@ -70,6 +73,9 @@ class AlwaysSpecifyTypes extends LintRule {
   @override
   List<String> get incompatibleRules =>
       const ['avoid_types_on_closure_parameters', 'omit_local_variable_types'];
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -129,10 +135,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitSimpleFormalParameter(SimpleFormalParameter param) {
-    var identifier = param.identifier;
-    if (identifier != null &&
-        param.type == null &&
-        !identifier.name.isJustUnderscores) {
+    var name = param.name;
+    if (name != null && param.type == null && !name.lexeme.isJustUnderscores) {
       if (param.keyword != null) {
         rule.reportLintForToken(param.keyword);
       } else {

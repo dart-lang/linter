@@ -10,7 +10,8 @@ import '../util/flutter_utils.dart';
 
 const _desc = r'Avoid unnecessary containers.';
 
-const _details = r'''Avoid wrapping widgets in unnecessary containers.
+const _details = r'''
+**AVOID** wrapping widgets in unnecessary containers.
 
 Wrapping a widget in `Container` with no other parameters set has no effect 
 and makes code needlessly more complex.
@@ -47,12 +48,21 @@ Widget buildRow() {
 ''';
 
 class AvoidUnnecessaryContainers extends LintRule {
+  static const LintCode code = LintCode(
+      'avoid_unnecessary_containers', "Unnecessary instance of 'Container'.",
+      correctionMessage:
+          "Try removing the 'Container' (but not it's children) from the "
+          'widget tree.');
+
   AvoidUnnecessaryContainers()
       : super(
             name: 'avoid_unnecessary_containers',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

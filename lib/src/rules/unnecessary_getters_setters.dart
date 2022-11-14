@@ -12,7 +12,6 @@ const _desc =
     r'Avoid wrapping fields in getters and setters just to be "safe".';
 
 const _details = r'''
-
 From the [style guide](https://dart.dev/guides/language/effective-dart/style/):
 
 **AVOID** wrapping fields in getters and setters just to be "safe".
@@ -51,12 +50,20 @@ class Box {
 ''';
 
 class UnnecessaryGettersSetters extends LintRule {
+  static const LintCode code = LintCode('unnecessary_getters_setters',
+      'Unnecessary use of getter and setter to wrap a field.',
+      correctionMessage:
+          'Try removing the getter and setter and renaming the field.');
+
   UnnecessaryGettersSetters()
       : super(
             name: 'unnecessary_getters_setters',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -82,7 +89,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     // Build getter/setter maps
     for (var method in members.whereType<MethodDeclaration>()) {
-      var methodName = method.name.toString();
+      var methodName = method.name.lexeme;
       if (method.isGetter) {
         getters[methodName] = method;
       } else if (method.isSetter) {
@@ -106,7 +113,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         getterElement.metadata.isEmpty &&
         setterElement.metadata.isEmpty) {
       // Just flag the getter (https://github.com/dart-lang/linter/issues/2851)
-      rule.reportLint(getter.name);
+      rule.reportLintForToken(getter.name);
     }
   }
 }

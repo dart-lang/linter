@@ -11,7 +11,6 @@ const _desc =
     r'Prefix library names with the package name and a dot-separated path.';
 
 const _details = r'''
-
 **DO** prefix library names with the package name and a dot-separated path.
 
 This guideline helps avoid the warnings you get when two libraries have the same
@@ -52,12 +51,21 @@ bool matchesOrIsPrefixedBy(String name, String prefix) =>
     name == prefix || name.startsWith('$prefix.');
 
 class PackagePrefixedLibraryNames extends LintRule {
+  static const LintCode code = LintCode(
+      'package_prefixed_library_names',
+      'The library name is not prefixed by the package name and a '
+          'dot-separated path.',
+      correctionMessage: "Try changing the name to '{0}'.");
+
   PackagePrefixedLibraryNames()
       : super(
             name: 'package_prefixed_library_names',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -99,7 +107,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     //
     // var name = element.name;
     // if (name == null || !matchesOrIsPrefixedBy(name, prefix)) {
-    //   rule.reportLint(node.name);
+    //   rule.reportLint(node.name, arguments: ['$prefix.$name']);
     // }
   }
 }
