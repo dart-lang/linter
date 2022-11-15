@@ -2463,7 +2463,7 @@
     ],
     "sets": [],
     "fixStatus": "hasFix",
-    "details": "**DON'T** use `final` for local variables.\n\n`var` is shorter, and `final` does not change the meaning of the code.\n\n**BAD:**\n```dart\nvoid badMethod() {\n  final label = 'Final or var?';\n  for (final char in ['v', 'a', 'r']) {\n    print(char);\n  }\n}\n```\n\n**GOOD:**\n```dart\nvoid goodMethod() {\n  var label = 'Final or var?';\n  for (var char in ['v', 'a', 'r']) {\n    print(char);\n  }\n}\n```\n",
+    "details": "Use `var`, not `final`, when declaring local variables.\n\nPer [Effective Dart](https://dart.dev/guides/language/effective-dart/usage#do-follow-a-consistent-rule-for-var-and-final-on-local-variables),\nthere are two styles in wide use. This rule enforces the `var` style.\nFor the alternative style that prefers `final`, enable `prefer_final_locals`\nand `prefer_final_in_for_each` instead.\n\nFor fields, `final` is always recommended; see the rule `prefer_final_fields`.\n\n**BAD:**\n```dart\nvoid badMethod() {\n  final label = 'Final or var?';\n  for (final char in ['v', 'a', 'r']) {\n    print(char);\n  }\n}\n```\n\n**GOOD:**\n```dart\nvoid goodMethod() {\n  var label = 'Final or var?';\n  for (var char in ['v', 'a', 'r']) {\n    print(char);\n  }\n}\n```\n",
     "sinceDartSdk": "2.7.0",
     "sinceLinter": "0.1.104"
   },

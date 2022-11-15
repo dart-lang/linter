@@ -29,8 +29,12 @@
          </header>
          <section>
 
-            <p><strong>DON'T</strong> use <code>final</code> for local variables.</p>
-<p><code>var</code> is shorter, and <code>final</code> does not change the meaning of the code.</p>
+            <p>Use <code>var</code>, not <code>final</code>, when declaring local variables.</p>
+<p>Per <a href="https://dart.dev/guides/language/effective-dart/usage#do-follow-a-consistent-rule-for-var-and-final-on-local-variables">Effective Dart</a>,
+there are two styles in wide use. This rule enforces the <code>var</code> style.
+For the alternative style that prefers <code>final</code>, enable <code>prefer_final_locals</code>
+and <code>prefer_final_in_for_each</code> instead.</p>
+<p>For fields, <code>final</code> is always recommended; see the rule <code>prefer_final_fields</code>.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">void badMethod() {
   final label = 'Final or var?';
