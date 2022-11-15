@@ -869,7 +869,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "hasFix",
-    "details": "**DON'T** declare arguments with values that match the defaults for the\ncorresponding parameter.\n\n**BAD:**\n```dart\nvoid f({bool valWithDefault = true, bool? val}) {\n  ...\n}\n\nvoid main() {\n  f(valWithDefault: true);\n}\n```\n\n**GOOD:**\n```dart\nvoid f({bool valWithDefault = true, bool? val}) {\n  ...\n}\n\nvoid main() {\n  f(valWithDefault: false);\n  f();\n}\n```\n",
+    "details": "**DON'T** pass an argument that matches the corresponding parameter's default\nvalue.\n\n**BAD:**\n```dart\nvoid f({bool valWithDefault = true, bool? val}) {\n  ...\n}\n\nvoid main() {\n  f(valWithDefault: true);\n}\n```\n\n**GOOD:**\n```dart\nvoid f({bool valWithDefault = true, bool? val}) {\n  ...\n}\n\nvoid main() {\n  f(valWithDefault: false);\n  f();\n}\n```\n",
     "sinceDartSdk": "2.8.1",
     "sinceLinter": "0.1.107"
   },
