@@ -32,6 +32,15 @@
             <p><strong>PREFER</strong> using <code>const</code> for instantiating constant constructors.</p>
 <p>If a constructor can be invoked as const to produce a canonicalized instance,
 it's preferable to do so.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">class A {
+  const A();
+}
+
+void accessA() {
+  A a = new A();
+}
+</code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">class A {
   const A();
@@ -49,15 +58,6 @@ void accessA() {
 }
 
 A foo(int x) =&gt; new A(x);
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class A {
-  const A();
-}
-
-void accessA() {
-  A a = new A();
-}
 </code></pre>
 
             

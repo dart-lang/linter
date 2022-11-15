@@ -49,6 +49,11 @@ class _Foo { }
 <li>all <em>public</em> elements in <code>src/baz.dart</code></li>
 </ul>
 <p>All public API members should be documented with <code>///</code> doc-style comments.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">class Bar {
+  void bar();
+}
+</code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">/// A Foo.
 abstract class Foo {
@@ -56,11 +61,6 @@ abstract class Foo {
   void start() =&gt; _start();
 
   _start();
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class Bar {
-  void bar();
 }
 </code></pre>
 <p>Advice for writing good doc comments can be found in the

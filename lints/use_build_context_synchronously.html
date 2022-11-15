@@ -35,14 +35,14 @@ crashes. Asynchronous gaps are implicitly storing <code>BuildContext</code> and 
 the easiest to overlook when writing code.</p>
 <p>When a <code>BuildContext</code> is used, its <code>mounted</code> property must be checked after an
 asynchronous gap.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void onButtonTapped(BuildContext context) {
-  Navigator.of(context).pop();
-}
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">void onButtonTapped(BuildContext context) async {
   await Future.delayed(const Duration(seconds: 1));
+  Navigator.of(context).pop();
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">void onButtonTapped(BuildContext context) {
   Navigator.of(context).pop();
 }
 </code></pre>

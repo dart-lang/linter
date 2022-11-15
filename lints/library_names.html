@@ -35,11 +35,11 @@ be all lowercase. Using a separating character allows names to still be readable
 in that form. Using underscores as the separator ensures that the name is still
 a valid Dart identifier, which may be helpful if the language later supports
 symbolic imports.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">library peg_parser;
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">library peg-parser;
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">library peg_parser;
 </code></pre>
 <p>The lint <code>file_names</code> can be used to enforce the same kind of naming on the
 file.</p>

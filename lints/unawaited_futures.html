@@ -35,6 +35,11 @@ tell us if a method is sync or async (except for some in <code>dart:io</code>).<
 <p>When you really <em>do</em> want to start a fire-and-forget <code>Future</code>, the recommended
 way is to use <code>unawaited</code> from <code>dart:async</code>. The <code>// ignore</code> and
 <code>// ignore_for_file</code> comments also work.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">void main() async {
+  doSomething(); // Likely a bug.
+}
+</code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">Future doSomething() =&gt; ...;
 
@@ -42,11 +47,6 @@ void main() async {
   await doSomething();
 
   unawaited(doSomething()); // Explicitly-ignored fire-and-forget.
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void main() async {
-  doSomething(); // Likely a bug.
 }
 </code></pre>
 

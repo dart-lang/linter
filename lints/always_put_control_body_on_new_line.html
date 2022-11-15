@@ -34,6 +34,15 @@
 <p>Don't put the statement part of an <code>if</code>, <code>for</code>, <code>while</code>, <code>do</code> on the same line
 as the expression, even if it is short.  Doing so makes it unclear that there
 is relevant code there.  This is especially important for early returns.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">if (notReady) return;
+
+if (notReady)
+  return;
+else print('ok')
+
+while (condition) i += 1;
+</code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">if (notReady)
   return;
@@ -45,15 +54,6 @@ else
 
 while (condition)
   i += 1;
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">if (notReady) return;
-
-if (notReady)
-  return;
-else print('ok')
-
-while (condition) i += 1;
 </code></pre>
 <p>Note that this rule can conflict with the
 <a href="https://dart.dev/tools/dart-format">Dart formatter</a>, and should not be enabled

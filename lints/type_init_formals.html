@@ -38,12 +38,6 @@ then the type of the parameter is understood to be the same as the super
 constructor parameter.</p>
 <p>Type annotating an initializing formal with a different type than that of the
 field is OK.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class Point {
-  int x, y;
-  Point(this.x, this.y);
-}
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">class Point {
   int x, y;
@@ -51,13 +45,9 @@ field is OK.</p>
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class A {
-  int a;
-  A(this.a);
-}
-
-class B extends A {
-  B(super.a);
+<pre><code class="language-dart">class Point {
+  int x, y;
+  Point(this.x, this.y);
 }
 </code></pre>
 <p><strong>BAD:</strong></p>
@@ -68,6 +58,16 @@ class B extends A {
 
 class B extends A {
   B(int super.a);
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">class A {
+  int a;
+  A(this.a);
+}
+
+class B extends A {
+  B(super.a);
 }
 </code></pre>
 

@@ -33,15 +33,6 @@
 <p>In new code, use <code>lowerCamelCase</code> for constant variables, including enum values.</p>
 <p>In existing code that uses <code>ALL_CAPS_WITH_UNDERSCORES</code> for constants, you may
 continue to use all caps to stay consistent.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">const pi = 3.14;
-const defaultTimeout = 1000;
-final urlScheme = RegExp('^([a-z]+):');
-
-class Dice {
-  static final numberGenerator = Random();
-}
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">const PI = 3.14;
 const kDefaultTimeout = 1000;
@@ -50,7 +41,15 @@ final URL_SCHEME = RegExp('^([a-z]+):');
 class Dice {
   static final NUMBER_GENERATOR = Random();
 }
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">const pi = 3.14;
+const defaultTimeout = 1000;
+final urlScheme = RegExp('^([a-z]+):');
 
+class Dice {
+  static final numberGenerator = Random();
+}
 </code></pre>
 
             

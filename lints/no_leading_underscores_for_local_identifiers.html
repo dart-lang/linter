@@ -36,11 +36,11 @@ with one of those kinds of declarations. They see <code>_</code> and  think "pri
 There is no concept of "private" for local variables or parameters.  When one of 
 those has a name that starts with an underscore, it sends a confusing signal to
 the reader. To avoid that, don't use leading underscores in those names.</p>
-<p><strong>Exception</strong>: An unused parameter can be named <code>_</code>, <code>__</code>, <code>___</code>, etc.  This is
+<p><strong>EXCEPTION:</strong>: An unused parameter can be named <code>_</code>, <code>__</code>, <code>___</code>, etc.  This is
 common practice in callbacks where you are passed a value but you don't need
 to use it. Giving it a name that consists solely of underscores is the idiomatic
 way to indicate that the value isn't used.</p>
-<p><strong>BAD</strong></p>
+<p><strong>BAD:</strong></p>
 <pre><code class="language-dart">void print(String _name) {
   var _size = _name.length;
   ...

@@ -31,15 +31,15 @@
 
             <p><strong>DO</strong> use library directives if you want to document a library and/or annotate 
 a library.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">library;
+</code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">/// This library does important things
 library;
 </code></pre>
 <pre><code class="language-dart">@TestOn('js')
 library;
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">library;
 </code></pre>
 <p>NOTE: Due to limitations with this lint, libraries with parts will not be
 flagged for unnecessary library directives.</p>

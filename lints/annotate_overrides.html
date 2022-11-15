@@ -32,6 +32,15 @@
             <p><strong>DO</strong> annotate overridden methods and fields.</p>
 <p>This practice improves code readability and helps protect against
 unintentionally overriding superclass members.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">class Cat {
+  int get lives =&gt; 9;
+}
+
+class Lucky extends Cat {
+  final int lives = 14;
+}
+</code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">abstract class Dog {
   String get breed;
@@ -43,15 +52,6 @@ class Husky extends Dog {
   final String breed = 'Husky';
   @override
   void bark() {}
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class Cat {
-  int get lives =&gt; 9;
-}
-
-class Lucky extends Cat {
-  final int lives = 14;
 }
 </code></pre>
 

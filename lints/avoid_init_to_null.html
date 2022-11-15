@@ -35,11 +35,11 @@
 gets initialized to null.  This is reliably specified by the language.  There's
 no concept of "uninitialized memory" in Dart.  Adding <code>= null</code> is redundant and
 unneeded.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">int _nextId;
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">int _nextId = null;
 
 class LazyId {
-  int _id;
+  int _id = null;
 
   int get id {
     if (_nextId == null) _nextId = 0;
@@ -49,11 +49,11 @@ class LazyId {
   }
 }
 </code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">int _nextId = null;
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">int _nextId;
 
 class LazyId {
-  int _id = null;
+  int _id;
 
   int get id {
     if (_nextId == null) _nextId = 0;

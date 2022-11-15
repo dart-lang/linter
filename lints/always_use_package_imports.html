@@ -37,14 +37,6 @@ that is to ensure you consistently use absolute imports for files within the
 <p>This is the opposite of 'prefer_relative_imports'.</p>
 <p>You can also use 'avoid_relative_lib_imports' to disallow relative imports of
 files within <code>lib/</code> directory outside of it (for example <code>test/</code>).</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">import 'package:foo/bar.dart';
-
-import 'package:foo/baz.dart';
-
-import 'package:foo/src/baz.dart';
-...
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">import 'baz.dart';
 
@@ -52,6 +44,14 @@ import 'src/bag.dart'
 
 import '../lib/baz.dart';
 
+...
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">import 'package:foo/bar.dart';
+
+import 'package:foo/baz.dart';
+
+import 'package:foo/src/baz.dart';
 ...
 </code></pre>
 

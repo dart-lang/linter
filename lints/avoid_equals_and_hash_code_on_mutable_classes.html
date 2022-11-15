@@ -34,6 +34,16 @@
 unpredictable and undesirable behavior when used in collections. See
 https://dart.dev/guides/language/effective-dart/design#avoid-defining-custom-equality-for-mutable-classes
 for more information.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">class B {
+  String key;
+  const B(this.key);
+  @override
+  operator ==(other) =&gt; other is B &amp;&amp; other.key == key;
+  @override
+  int get hashCode =&gt; key.hashCode;
+}
+</code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">@immutable
 class A {
@@ -41,16 +51,6 @@ class A {
   const A(this.key);
   @override
   operator ==(other) =&gt; other is A &amp;&amp; other.key == key;
-  @override
-  int get hashCode =&gt; key.hashCode;
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class B {
-  String key;
-  const B(this.key);
-  @override
-  operator ==(other) =&gt; other is B &amp;&amp; other.key == key;
   @override
   int get hashCode =&gt; key.hashCode;
 }

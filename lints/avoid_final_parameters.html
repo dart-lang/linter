@@ -32,27 +32,27 @@
             <p><strong>AVOID</strong> declaring parameters as final.</p>
 <p>Declaring parameters as final can lead to unnecessarily verbose code, especially
 when using the "parameter_assignments" rule.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void badParameter(String label) { // OK
-  print(label);
-}
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">void goodParameter(final String label) { // LINT
   print(label);
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void badExpression(int value) =&gt; print(value); // OK
+<pre><code class="language-dart">void badParameter(String label) { // OK
+  print(label);
+}
 </code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">void goodExpression(final int value) =&gt; print(value); // LINT
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">[1, 4, 6, 8].forEach((value) =&gt; print(value + 2)); // OK
+<pre><code class="language-dart">void badExpression(int value) =&gt; print(value); // OK
 </code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">[1, 4, 6, 8].forEach((final value) =&gt; print(value + 2)); // LINT
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">[1, 4, 6, 8].forEach((value) =&gt; print(value + 2)); // OK
 </code></pre>
 
             <p>

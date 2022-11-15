@@ -36,17 +36,17 @@ that is to ensure you have no relative imports that include <code>lib/</code> in
 paths.</p>
 <p>You can also use 'always_use_package_imports' to disallow relative imports
 between files within <code>lib/</code>.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">import 'package:foo/bar.dart';
-
-import 'baz.dart';
-
-...
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">import 'package:foo/bar.dart';
 
 import '../lib/baz.dart';
+
+...
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">import 'package:foo/bar.dart';
+
+import 'baz.dart';
 
 ...
 </code></pre>

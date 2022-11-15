@@ -35,16 +35,16 @@
 type annotations.  Use <code>dynamic</code> if you are being explicit that the type is
 unknown.  Use <code>Object</code> if you are being explicit that you want an object that
 implements <code>==</code> and <code>hashCode</code>.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">var foo = 10;
+final bar = Bar();
+const quux = 20;
+</code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">int foo = 10;
 final Bar bar = Bar();
 String baz = 'hello';
 const int quux = 20;
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">var foo = 10;
-final bar = Bar();
-const quux = 20;
 </code></pre>
 <p>NOTE: Using the the <code>@optionalTypeArgs</code> annotation in the <code>meta</code> package, API
 authors can special-case type variables whose type needs to by dynamic but whose

@@ -32,6 +32,11 @@
             <p><strong>DO</strong> document all public members.</p>
 <p>All non-overriding public members should be documented with <code>///</code> doc-style
 comments.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">class Bad {
+  void meh() { }
+}
+</code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">/// A good thing.
 abstract class Good {
@@ -39,11 +44,6 @@ abstract class Good {
   void start() =&gt; _start();
 
   _start();
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class Bad {
-  void meh() { }
 }
 </code></pre>
 <p>In case a public member overrides a member it is up to the declaring member

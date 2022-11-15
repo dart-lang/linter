@@ -52,7 +52,7 @@ well. For example, for a given class <code>Size</code>:</p>
   int get hashCode =&gt; inBytes.hashCode;
 }
 </code></pre>
-<p><strong>BAD</strong>:</p>
+<p><strong>BAD:</strong></p>
 <pre><code class="language-dart">class CustomSize implements Size {
   final int inBytes;
   const CustomSize(this.inBytes);
@@ -60,7 +60,7 @@ well. For example, for a given class <code>Size</code>:</p>
   int get inKilobytes =&gt; inBytes ~/ 1000;
 }
 </code></pre>
-<p><strong>BAD</strong>:</p>
+<p><strong>BAD:</strong></p>
 <pre><code class="language-dart">import 'package:test/test.dart';
 import 'size.dart';
 
@@ -74,14 +74,14 @@ void main() {
   });
 }
 </code></pre>
-<p><strong>GOOD</strong>:</p>
+<p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">class ExtendedSize extends Size {
   ExtendedSize(int inBytes) : super(inBytes);
 
   int get inKilobytes =&gt; inBytes ~/ 1000;
 }
 </code></pre>
-<p><strong>GOOD</strong>:</p>
+<p><strong>GOOD:</strong>:</p>
 <pre><code class="language-dart">import 'package:test/test.dart';
 import 'size.dart';
 

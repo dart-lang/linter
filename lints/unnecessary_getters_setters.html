@@ -40,11 +40,6 @@ with accessing a raw field in C#.</p>
 <p>Dart doesn't have this limitation.  Fields and getters/setters are completely
 indistinguishable.  You can expose a field in a class and later wrap it in a
 getter and setter without having to touch any code that uses that field.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class Box {
-  var contents;
-}
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">class Box {
   var _contents;
@@ -52,6 +47,11 @@ getter and setter without having to touch any code that uses that field.</p>
   set contents(value) {
     _contents = value;
   }
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">class Box {
+  var contents;
 }
 </code></pre>
 

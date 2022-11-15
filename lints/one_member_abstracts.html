@@ -36,13 +36,13 @@ for using them.  If all you need is something like a callback, just use a
 function.  If you're defining a class and it only has a single abstract member
 with a meaningless name like <code>call</code> or <code>invoke</code>, there is a good chance
 you just want a function.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">typedef Predicate = bool Function(item);
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">abstract class Predicate {
   bool test(item);
 }
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">typedef Predicate = bool Function(item);
 </code></pre>
 
             

@@ -30,18 +30,18 @@
          <section>
 
             <p><strong>DO</strong> sort constructor declarations before other members.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">abstract class Animation&lt;T&gt; {
-  const Animation(this.value);
-  double value;
-  void addListener(VoidCallback listener);
-}
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">abstract class Visitor {
   double value;
   visitSomething(Something s);
   Visitor();
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">abstract class Animation&lt;T&gt; {
+  const Animation(this.value);
+  double value;
+  void addListener(VoidCallback listener);
 }
 </code></pre>
 

@@ -43,12 +43,12 @@ extension's extended type, or type alias,</li>
 <code>typedef F = _Private Function();</code>), or</li>
 <li>any type used in the <code>on</code> clause of an extension or a mixin</li>
 </ul>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">f(String s) { ... }
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">f(_Private p) { ... }
 class _Private {}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">f(String s) { ... }
 </code></pre>
 
             

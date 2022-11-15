@@ -32,12 +32,12 @@
             <p><strong>AVOID</strong> using <code>null</code> as an operand in <code>if null</code> operators.</p>
 <p>Using <code>null</code> in an <code>if null</code> operator is redundant, regardless of which side
 <code>null</code> is used on.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">var x = a ?? 1;
-</code></pre>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">var x = a ?? null;
 var y = null ?? 1;
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">var x = a ?? 1;
 </code></pre>
 
             
