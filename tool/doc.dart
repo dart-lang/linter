@@ -247,13 +247,14 @@ String getBadges(String rule, [String? fixStatus]) {
 }
 
 String getFixStatus(LintRule rule, Map<String, String> fixStatusMap) {
+  var fallback = 'unregistered';
   for (var code in rule.lintCodes) {
     var status = fixStatusMap[code.uniqueName.substring(9)];
-    if (status != null) {
-      return status;
-    }
+    if (status == null) continue;
+    if (status == 'hasFix') return status;
+    fallback = status;
   }
-  return 'unregistered';
+  return fallback;
 }
 
 void printUsage(ArgParser parser, [String? error]) {
