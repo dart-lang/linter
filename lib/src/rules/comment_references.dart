@@ -17,15 +17,7 @@ then [`dart doc`](https://dart.dev/tools/dart-doc) will look
 up the name and link to its docs.  For this all to work, ensure that all
 identifiers in docs wrapped in brackets are in scope.
 
-For example,
-
-**GOOD:**
-```dart
-/// Return the larger of [a] or [b].
-int max_int(int a, int b) { ... }
-```
-
-On the other hand, assuming `outOfScopeId` is out of scope:
+For example, assuming `outOfScopeId` is out of scope:
 
 **BAD:**
 ```dart
@@ -33,9 +25,15 @@ On the other hand, assuming `outOfScopeId` is out of scope:
 bool isOutOfRange(int value) { ... }
 ```
 
-Note that the square bracket comment format is designed to allow 
-comments to refer to declarations using a fairly natural format 
-but does not allow *arbitrary expressions*.  In particular, code 
+**GOOD:**
+```dart
+/// Return the larger of [a] or [b].
+int max_int(int a, int b) { ... }
+```
+
+Note that the square bracket comment format is designed to allow
+comments to refer to declarations using a fairly natural format
+but does not allow *arbitrary expressions*.  In particular, code
 references within square brackets can consist of either
 
 - a single identifier where the identifier is any identifier in scope for the comment (see the spec for what is in scope in doc comments),
@@ -46,12 +44,19 @@ references within square brackets can consist of either
 ''';
 
 class CommentReferences extends LintRule {
+  static const LintCode code = LintCode(
+      'comment_references', "The referenced name isn't visible in scope.",
+      correctionMessage: 'Try adding an import for the referenced name.');
+
   CommentReferences()
       : super(
             name: 'comment_references',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

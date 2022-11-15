@@ -22,19 +22,19 @@ type annotations.  Use `dynamic` if you are being explicit that the type is
 unknown.  Use `Object` if you are being explicit that you want an object that
 implements `==` and `hashCode`.
 
+**BAD:**
+```dart
+var foo = 10;
+final bar = Bar();
+const quux = 20;
+```
+
 **GOOD:**
 ```dart
 int foo = 10;
 final Bar bar = Bar();
 String baz = 'hello';
 const int quux = 20;
-```
-
-**BAD:**
-```dart
-var foo = 10;
-final bar = Bar();
-const quux = 20;
 ```
 
 NOTE: Using the the `@optionalTypeArgs` annotation in the `meta` package, API
@@ -59,6 +59,10 @@ main() {
 ''';
 
 class AlwaysSpecifyTypes extends LintRule {
+  static const LintCode code = LintCode(
+      'always_specify_types', 'Missing type annotation.',
+      correctionMessage: 'Try adding a type annotation.');
+
   AlwaysSpecifyTypes()
       : super(
             name: 'always_specify_types',
@@ -69,6 +73,9 @@ class AlwaysSpecifyTypes extends LintRule {
   @override
   List<String> get incompatibleRules =>
       const ['avoid_types_on_closure_parameters', 'omit_local_variable_types'];
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

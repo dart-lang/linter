@@ -40,12 +40,21 @@ void main() {
 ''';
 
 class AvoidRedundantArgumentValues extends LintRule {
+  static const LintCode code = LintCode(
+      'avoid_redundant_argument_values',
+      'The value of the argument is redundant because it matches the default '
+          'value.',
+      correctionMessage: 'Try removing the argument.');
+
   AvoidRedundantArgumentValues()
       : super(
             name: 'avoid_redundant_argument_values',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

@@ -23,19 +23,7 @@ This is the opposite of 'prefer_relative_imports'.
 You can also use 'avoid_relative_lib_imports' to disallow relative imports of
 files within `lib/` directory outside of it (for example `test/`).
 
-**GOOD:**
-
-```dart
-import 'package:foo/bar.dart';
-
-import 'package:foo/baz.dart';
-
-import 'package:foo/src/baz.dart';
-...
-```
-
 **BAD:**
-
 ```dart
 import 'baz.dart';
 
@@ -46,15 +34,32 @@ import '../lib/baz.dart';
 ...
 ```
 
+**GOOD:**
+```dart
+import 'package:foo/bar.dart';
+
+import 'package:foo/baz.dart';
+
+import 'package:foo/src/baz.dart';
+...
+```
+
 ''';
 
 class AlwaysUsePackageImports extends LintRule {
+  static const LintCode code = LintCode('always_use_package_imports',
+      "Use 'package:' imports for files in the 'lib' directory.",
+      correctionMessage: "Try converting the URI to a 'package:' URI.");
+
   AlwaysUsePackageImports()
       : super(
             name: 'always_use_package_imports',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

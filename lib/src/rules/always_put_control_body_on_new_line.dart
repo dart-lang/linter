@@ -18,6 +18,17 @@ Don't put the statement part of an `if`, `for`, `while`, `do` on the same line
 as the expression, even if it is short.  Doing so makes it unclear that there
 is relevant code there.  This is especially important for early returns.
 
+**BAD:**
+```dart
+if (notReady) return;
+
+if (notReady)
+  return;
+else print('ok')
+
+while (condition) i += 1;
+```
+
 **GOOD:**
 ```dart
 if (notReady)
@@ -32,17 +43,6 @@ while (condition)
   i += 1;
 ```
 
-**BAD:**
-```dart
-if (notReady) return;
-
-if (notReady)
-  return;
-else print('ok')
-
-while (condition) i += 1;
-```
-
 Note that this rule can conflict with the
 [Dart formatter](https://dart.dev/tools/dart-format), and should not be enabled
 when the Dart formatter is used.
@@ -50,12 +50,19 @@ when the Dart formatter is used.
 ''';
 
 class AlwaysPutControlBodyOnNewLine extends LintRule {
+  static const LintCode code = LintCode('always_put_control_body_on_new_line',
+      'Statement should be on a separate line.',
+      correctionMessage: 'Try moving the statement to a new line.');
+
   AlwaysPutControlBodyOnNewLine()
       : super(
             name: 'always_put_control_body_on_new_line',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
