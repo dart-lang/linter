@@ -25,6 +25,11 @@ m({a: 1})
 m({a = 1})
 ```
 
+**DEPRECATED:** In Dart 2.19, 
+the Dart analyzer reports the old `:` syntax as a warning
+and will report it as an error in Dart 3.0.
+
+The rule will be removed in a future Linter release.
 ''';
 
 class PreferEqualForDefaultValues extends LintRule {
@@ -37,6 +42,7 @@ class PreferEqualForDefaultValues extends LintRule {
             name: 'prefer_equal_for_default_values',
             description: _desc,
             details: _details,
+            maturity: Maturity.deprecated,
             group: Group.style);
 
   @override
