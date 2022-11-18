@@ -2516,7 +2516,7 @@
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsEvaluation",
+    "fixStatus": "hasFix",
     "details": "**DO** use library directives if you want to document a library and/or annotate \na library.\n\n**BAD:**\n```dart\nlibrary;\n```\n\n**GOOD:**\n```dart\n/// This library does important things\nlibrary;\n```\n\n```dart\n@TestOn('js')\nlibrary;\n```\n\nNOTE: Due to limitations with this lint, libraries with parts will not be\nflagged for unnecessary library directives.\n",
     "sinceDartSdk": "Unreleased",
     "sinceLinter": "1.29.0"
