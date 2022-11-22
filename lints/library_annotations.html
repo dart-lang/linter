@@ -32,14 +32,16 @@
             <p>Attach library annotations to library directives, rather than
 some other library-level element.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">import 'package:test/test.dart';
+<pre><code class="language-dart">@TestOn('browser')
 
-@TestOn('browser')
+import 'package:test/test.dart';
+
 void main() {}
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">@TestOn('browser')
 library;
+
 import 'package:test/test.dart';
 
 void main() {}
