@@ -4,6 +4,8 @@
 
 // test w/ `dart test -N prefer_equal_for_default_values`
 
+// @dart = 2.18
+
 f1({a: 1}) => null; // LINT
 f2({a = 1}) => null; // OK
 f3([a = 1]) => null; // OK
