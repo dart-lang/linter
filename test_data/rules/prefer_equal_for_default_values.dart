@@ -4,9 +4,9 @@
 
 // test w/ `dart test -N prefer_equal_for_default_values`
 
-// @dart = 2.18
+// As of 2.19, this is a warning and the lint is a no-op.
 
-f1({a: 1}) => null; // LINT
+f1({a: 1}) => null; // OK
 f2({a = 1}) => null; // OK
 f3([a = 1]) => null; // OK
 f4([a]) => null; // OK

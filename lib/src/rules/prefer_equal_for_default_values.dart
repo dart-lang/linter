@@ -48,33 +48,6 @@ class PreferEqualForDefaultValues extends LintRule {
   @override
   LintCode get lintCode => code;
 
-  @override
-  void registerNodeProcessors(
-      NodeLintRegistry registry, LinterContext context) {
-    var libraryVersion = context
-        .currentUnit.unit.declaredElement?.library.languageVersion.effective;
-    if (libraryVersion != null) {
-      // As of 2.19, this is a warning so we don't want to double-report.
-      if (libraryVersion.major > 2 ||
-          (libraryVersion.major == 2 && libraryVersion.minor >= 19)) {
-        return;
-      }
-    }
-
-    var visitor = _Visitor(this);
-    registry.addDefaultFormalParameter(this, visitor);
-  }
-}
-
-class _Visitor extends SimpleAstVisitor<void> {
-  final LintRule rule;
-
-  _Visitor(this.rule);
-
-  @override
-  void visitDefaultFormalParameter(DefaultFormalParameter node) {
-    if (node.isNamed && node.separator?.type == TokenType.COLON) {
-      rule.reportLintForToken(node.separator);
-    }
-  }
+  // As of 2.19, this is a warning so we don't want to double-report and so
+  // we don't register any processors.
 }
