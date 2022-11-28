@@ -51,6 +51,16 @@ class PreferEqualForDefaultValues extends LintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
+    var libraryVersion = context
+        .currentUnit.unit.declaredElement?.library.languageVersion.effective;
+    if (libraryVersion != null) {
+      // As of 2.19, this is a warning so we don't want to double-report.
+      if (libraryVersion.major > 2 ||
+          (libraryVersion.major == 2 && libraryVersion.minor == 19)) {
+        return;
+      }
+    }
+
     var visitor = _Visitor(this);
     registry.addDefaultFormalParameter(this, visitor);
   }

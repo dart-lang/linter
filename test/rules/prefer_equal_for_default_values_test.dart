@@ -17,8 +17,23 @@ class PreferEqualForDefaultValuesTest extends LintRuleTest {
   @override
   String get lintRule => 'prefer_equal_for_default_values';
 
+  test_disabled_in_219() async {
+    await assertNoDiagnostics(r'''
+// @dart = 2.19   
+class A {
+  String? a;
+  A({this.a});
+}
+
+class B extends A {
+  B({super.a : ''});
+}
+''');
+  }
+
   test_super() async {
     await assertDiagnostics(r'''
+// @dart = 2.18    
 class A {
   String? a;
   A({this.a});
@@ -28,7 +43,7 @@ class B extends A {
   B({super.a : ''});
 }
 ''', [
-      lint(74, 1),
+      lint(94, 1),
     ]);
   }
 }
