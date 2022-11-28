@@ -1368,7 +1368,7 @@
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsFix",
+    "fixStatus": "hasFix",
     "details": "Attach library annotations to library directives, rather than\nsome other library-level element.\n\n**BAD:**\n```dart\n@TestOn('browser')\n\nimport 'package:test/test.dart';\n\nvoid main() {}\n```\n\n**GOOD:**\n```dart\n@TestOn('browser')\nlibrary;\n\nimport 'package:test/test.dart';\n\nvoid main() {}\n```\n\n**NOTE:** An unnamed library, like `library;` above, is only supported in Dart\n2.19 and later. Code which might run in earlier versions of Dart will need to\nprovide a name in the `library` directive.\n",
     "sinceDartSdk": "Unreleased",
     "sinceLinter": "1.30.0"
@@ -1830,14 +1830,14 @@
     "name": "prefer_equal_for_default_values",
     "description": "Use `=` to separate a named parameter from its default value.",
     "group": "style",
-    "maturity": "stable",
+    "maturity": "deprecated",
     "incompatible": [],
     "sets": [
       "recommended",
       "flutter"
     ],
     "fixStatus": "hasFix",
-    "details": "From the [style guide](https://dart.dev/guides/language/effective-dart/usage):\n\n**DO** use `=` to separate a named parameter from its default value.\n\n**BAD:**\n```dart\nm({a: 1})\n```\n\n**GOOD:**\n```dart\nm({a = 1})\n```\n\n",
+    "details": "**DEPRECATED:** In Dart 2.19, \nthe Dart analyzer reports the old `:` syntax as a warning\nand will report it as an error in Dart 3.0.\nAs a result, this rule is unmaintained \nand will be removed in a future Linter release.\n\nFrom the [style guide](https://dart.dev/guides/language/effective-dart/usage):\n\n**DO** use `=` to separate a named parameter from its default value.\n\n**BAD:**\n```dart\nm({a: 1})\n```\n\n**GOOD:**\n```dart\nm({a = 1})\n```\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.46"
   },
