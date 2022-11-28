@@ -56,7 +56,7 @@ class PreferEqualForDefaultValues extends LintRule {
     if (libraryVersion != null) {
       // As of 2.19, this is a warning so we don't want to double-report.
       if (libraryVersion.major > 2 ||
-          (libraryVersion.major == 2 && libraryVersion.minor == 19)) {
+          (libraryVersion.major == 2 && libraryVersion.minor >= 19)) {
         return;
       }
     }
