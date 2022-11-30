@@ -7,6 +7,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:collection/collection.dart';
 
 import '../analyzer.dart';
 import '../extensions.dart';
@@ -153,7 +154,9 @@ bool _isFixNumIntX(DartType type) {
   if (type is! InterfaceType) return false;
   InterfaceElement element = type.element;
   if (element.name != 'Int32' && element.name != 'Int64') return false;
-  return element.library.source.uri.path.startsWith('fixnum/');
+  var uri = element.library.source.uri;
+  if (!uri.isScheme('package')) return false;
+  return uri.pathSegments.firstOrNull == 'fixnum';
 }
 
 class UnrelatedTypeEqualityChecks extends LintRule {
