@@ -1171,7 +1171,7 @@
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsEvaluation",
+    "fixStatus": "hasFix",
     "details": "Attach library doc comments (with `///`) to library directives, rather than\nleaving them dangling near the top of a library.\n\n**BAD:**\n```dart\n/// This is a great library.\nimport 'package:math';\n```\n\n```dart\n/// This is a great library.\n\nclass C {}\n```\n\n**GOOD:**\n```dart\n/// This is a great library.\nlibrary;\n\nimport 'package:math';\n\nclass C {}\n```\n\n**NOTE:** An unnamed library, like `library;` above, is only supported in Dart\n2.19 and later. Code which might run in earlier versions of Dart will need to\nprovide a name in the `library` directive.\n",
     "sinceDartSdk": "Unreleased",
     "sinceLinter": "1.29.0"
@@ -1836,7 +1836,7 @@
       "recommended",
       "flutter"
     ],
-    "fixStatus": "hasFix",
+    "fixStatus": "noFix",
     "details": "**DEPRECATED:** In Dart 2.19, \nthe Dart analyzer reports the old `:` syntax as a warning\nand will report it as an error in Dart 3.0.\nAs a result, this rule is unmaintained \nand will be removed in a future Linter release.\n\nFrom the [style guide](https://dart.dev/guides/language/effective-dart/usage):\n\n**DO** use `=` to separate a named parameter from its default value.\n\n**BAD:**\n```dart\nm({a: 1})\n```\n\n**GOOD:**\n```dart\nm({a = 1})\n```\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.46"
