@@ -7,8 +7,6 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-// ignore: implementation_imports
-import 'package:analyzer/src/dart/element/element.dart';
 
 import '../analyzer.dart';
 import '../extensions.dart';
@@ -153,13 +151,9 @@ bool _isFixNumIntX(DartType type) {
   // todo(pq): add tests that ensure this predicate works with fixnum >= 1.1.0-dev
   // See: https://github.com/dart-lang/linter/issues/3868
   if (type is! InterfaceType) return false;
-  Element element = type.element;
+  InterfaceElement element = type.element;
   if (element.name != 'Int32' && element.name != 'Int64') return false;
-  var libraryElement = element.library;
-  if (libraryElement is! LibraryElementImpl) return false;
-  var reference = libraryElement.reference;
-  if (reference == null) return false;
-  return reference.name.startsWith('package:fixnum/');
+  return element.library.source.uri.path.startsWith('fixnum/');
 }
 
 class UnrelatedTypeEqualityChecks extends LintRule {
