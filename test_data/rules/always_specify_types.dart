@@ -39,16 +39,16 @@ List? list; //LINT
 List<List>? lists; //LINT
 List<int> ints = <int>[1]; //OK
 
-final x = 1; //LINT [1:5] Specify the type annotation.
+final x = 1; //LINT [1:5] Missing type annotation.
 final x1 = 1, x2 = '', x3 = 1.2; //LINT [1:5]
 final int xx = 3;
-const y = 2; //LINT Specify the type annotation.
+const y = 2; //LINT Missing type annotation.
 const int yy = 3;
 String? s1 = '';
-var s2 = '', s3 = s1; //LINT Specify type annotations.
+var s2 = '', s3 = s1; //LINT Missing type annotation.
 
-a(var x) {} //LINT Specify type annotations.
-b(s) {} //LINT [3:1] Specify type annotations.
+a(var x) {} //LINT Missing type annotation.
+b(s) {} //LINT [3:1] Missing type annotation.
 c(int x) {}
 d(final x) {} //LINT
 e(final int x) {}
@@ -66,20 +66,20 @@ void test() {
 }
 
 main() {
-  var x = ''; //LINT [3:3] Specify the type annotation.
+  var x = ''; //LINT [3:3] Missing type annotation.
   var x1 = '', x2 = 1.2; //LINT [3:3]
-  for (var i = 0; i < 10; ++i) {  //LINT [8:3] Specify the type annotation.
+  for (var i = 0; i < 10; ++i) {  //LINT [8:3] Missing type annotation.
     print(i);
   }
   List<String> ls = <String>[];
   // ignore: avoid_function_literals_in_foreach_calls
-  ls.forEach((s) => print(s)); //LINT [15:1] Specify the type annotation.
-  ls.forEach((var s) => print(s)); //LINT [15:3] Specify the type annotation.
-  for (var l in ls) { //LINT [8:3] Specify the type annotation.
+  ls.forEach((s) => print(s)); //LINT [15:1] Missing type annotation.
+  ls.forEach((var s) => print(s)); //LINT [15:3] Missing type annotation.
+  for (var l in ls) { //LINT [8:3] Missing type annotation.
     print(l);
   }
   try {
-    for (final l in ls) { // LINT [10:5] Specify the type annotation.
+    for (final l in ls) { // LINT [10:5] Missing type annotation.
       print(l);
     }
   } on Exception catch (ex) {
@@ -109,10 +109,10 @@ var z; //LINT
 
 class Foo {
   static var bar; //LINT
-  static final baz = 1; //LINT Specify the type annotation.
+  static final baz = 1; //LINT Missing type annotation.
   static final int bazz = 42;
-  var foo; //LINT Specify type annotations.
-  Foo(var bar); //LINT [7:3] Specify type annotations.
+  var foo; //LINT Missing type annotation.
+  Foo(var bar); //LINT [7:3] Missing type annotation.
   void f(List l) { } //LINT
 }
 

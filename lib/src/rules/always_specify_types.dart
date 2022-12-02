@@ -95,19 +95,19 @@ class AlwaysSpecifyTypes extends LintRule {
 class _Visitor extends SimpleAstVisitor<void> {
   static const LintCode keywordCouldBeTypeCode = LintCode(
       "always_specify_types", // ignore: prefer_single_quotes
-      "Specify the type annotation.", // ignore: prefer_single_quotes
-      correction: "Try replacing '{0}' with '{1}'.");
+      "Missing type annotation.", // ignore: prefer_single_quotes
+      correctionMessage: "Try replacing '{0}' with '{1}'.");
 
   static const LintCode keywordCouldBeSplitToTypesCode = LintCode(
       "always_specify_types", // ignore: prefer_single_quotes
-      "Specify type annotations.", // ignore: prefer_single_quotes
-      correction:
+      "Missing type annotation.", // ignore: prefer_single_quotes
+      correctionMessage:
           "Try splitting the declaration and specify the different type annotations."); // ignore: prefer_single_quotes
 
   static const LintCode specifyTypeCode = LintCode(
       "always_specify_types", // ignore: prefer_single_quotes
-      "Specify the type annotation.", // ignore: prefer_single_quotes
-      correction:
+      "Missing type annotation.", // ignore: prefer_single_quotes
+      correctionMessage:
           "Try specifying the type '{0}'."); // ignore: prefer_single_quotes
 
   final LintRule rule;
@@ -124,15 +124,15 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitDeclaredIdentifier(DeclaredIdentifier node) {
     var keyword = node.keyword;
     if (node.type == null && keyword != null) {
-      var element = node.identifier.staticElement;
+      var element = node.declaredElement;
       if (element is VariableElement) {
         if (keyword.keyword == Keyword.VAR) {
           rule.reportLintForToken(keyword,
-              arguments: [keyword, element.type],
+              arguments: [keyword.lexeme, element!.type],
               errorCode: keywordCouldBeTypeCode);
         } else {
           rule.reportLintForToken(keyword,
-              arguments: [element.type], errorCode: specifyTypeCode);
+              arguments: [element!.type], errorCode: specifyTypeCode);
         }
       }
     }
@@ -175,7 +175,7 @@ class _Visitor extends SimpleAstVisitor<void> {
             type != null &&
             type is! DynamicType) {
           rule.reportLintForToken(keyword,
-              arguments: [keyword, type], errorCode: keywordCouldBeTypeCode);
+              arguments: [keyword.lexeme, type], errorCode: keywordCouldBeTypeCode);
         } else {
           rule.reportLintForToken(keyword);
         }
@@ -217,7 +217,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         arguments = [];
       } else if (keyword.type == Keyword.VAR) {
         if (singleType) {
-          arguments = [keyword, types.first];
+          arguments = [keyword.lexeme, types.first];
           errorCode = keywordCouldBeTypeCode;
         } else {
           arguments = [];
