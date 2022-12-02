@@ -94,18 +94,18 @@ class AlwaysSpecifyTypes extends LintRule {
 
 class _Visitor extends SimpleAstVisitor<void> {
   static const LintCode keywordCouldBeTypeCode = LintCode(
-      "always_specify_types", // ignore: prefer_single_quotes
+      'always_specify_types',
       "Missing type annotation.", // ignore: prefer_single_quotes
       correctionMessage: "Try replacing '{0}' with '{1}'.");
 
   static const LintCode keywordCouldBeSplitToTypesCode = LintCode(
-      "always_specify_types", // ignore: prefer_single_quotes
+      'always_specify_types',
       "Missing type annotation.", // ignore: prefer_single_quotes
       correctionMessage:
           "Try splitting the declaration and specify the different type annotations."); // ignore: prefer_single_quotes
 
   static const LintCode specifyTypeCode = LintCode(
-      "always_specify_types", // ignore: prefer_single_quotes
+      'always_specify_types',
       "Missing type annotation.", // ignore: prefer_single_quotes
       correctionMessage:
           "Try specifying the type '{0}'."); // ignore: prefer_single_quotes
