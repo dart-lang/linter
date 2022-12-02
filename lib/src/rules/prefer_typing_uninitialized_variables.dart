@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Prefer typing uninitialized variables and fields.';
 
 const _details = r'''
-
 **PREFER** specifying a type annotation for uninitialized variables and fields.
 
 Forgoing type annotations for uninitialized variables is a bad practice because
@@ -57,6 +56,16 @@ class GoodClass {
 ''';
 
 class PreferTypingUninitializedVariables extends LintRule {
+  static const LintCode forField = LintCode(
+      'prefer_typing_uninitialized_variables',
+      'An uninitialized field should have an explicit type annotation.',
+      correctionMessage: 'Try adding a type annotation.');
+
+  static const LintCode forVariable = LintCode(
+      'prefer_typing_uninitialized_variables',
+      'An uninitialized variable should have an explicit type annotation.',
+      correctionMessage: 'Try adding a type annotation.');
+
   PreferTypingUninitializedVariables()
       : super(
             name: 'prefer_typing_uninitialized_variables',
@@ -83,9 +92,13 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
+    var code = node.parent is FieldDeclaration
+        ? PreferTypingUninitializedVariables.forField
+        : PreferTypingUninitializedVariables.forVariable;
+
     for (var v in node.variables) {
       if (v.initializer == null) {
-        rule.reportLint(v);
+        rule.reportLint(v, errorCode: code);
       }
     }
   }

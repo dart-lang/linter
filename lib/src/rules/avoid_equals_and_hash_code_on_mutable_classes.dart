@@ -14,13 +14,24 @@ const _desc =
     r'Avoid overloading operator == and hashCode on classes not marked `@immutable`.';
 
 const _details = r'''
-
 **AVOID** overloading operator == and hashCode on classes not marked `@immutable`.
 
 If a class is not immutable, overloading operator == and hashCode can lead to
 unpredictable and undesirable behavior when used in collections. See
 https://dart.dev/guides/language/effective-dart/design#avoid-defining-custom-equality-for-mutable-classes
 for more information.
+
+**BAD:**
+```dart
+class B {
+  String key;
+  const B(this.key);
+  @override
+  operator ==(other) => other is B && other.key == key;
+  @override
+  int get hashCode => key.hashCode;
+}
+```
 
 **GOOD:**
 ```dart
@@ -31,23 +42,11 @@ class A {
   @override
   operator ==(other) => other is A && other.key == key;
   @override
-  int hashCode() => key.hashCode;
+  int get hashCode => key.hashCode;
 }
 ```
 
-**BAD:**
-```dart
-class B {
-  String key;
-  const B(this.key);
-  @override
-  operator ==(other) => other is B && other.key == key;
-  @override
-  int hashCode() => key.hashCode;
-}
-```
-
-NOTE: The lint checks the use of the @immutable annotation, and will trigger
+NOTE: The lint checks the use of the `@immutable` annotation, and will trigger
 even if the class is otherwise not mutable. Thus:
 
 **BAD:**
@@ -56,9 +55,9 @@ class C {
   final String key;
   const C(this.key);
   @override
-  operator ==(other) => other is B && other.key == key;
+  operator ==(other) => other is C && other.key == key;
   @override
-  int hashCode() => key.hashCode;
+  int get hashCode => key.hashCode;
 }
 ```
 
@@ -76,12 +75,21 @@ bool _isImmutable(Element? element) =>
     element.library.name == _metaLibName;
 
 class AvoidOperatorEqualsOnMutableClasses extends LintRule {
+  static const LintCode code = LintCode(
+      'avoid_equals_and_hash_code_on_mutable_classes',
+      "The method '{0}' should not be overriden in classes not annotated with '@immutable'.",
+      correctionMessage:
+          "Try removing the override or annotating the class with '@immutable'.");
+
   AvoidOperatorEqualsOnMutableClasses()
       : super(
             name: 'avoid_equals_and_hash_code_on_mutable_classes',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -98,10 +106,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    if (node.name.token.type == TokenType.EQ_EQ || isHashCode(node)) {
+    if (node.name.type == TokenType.EQ_EQ || isHashCode(node)) {
       var classElement = _getClassForMethod(node);
       if (classElement != null && !_hasImmutableAnnotation(classElement)) {
-        rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);
+        rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata,
+            arguments: [node.name.lexeme]);
       }
     }
   }
@@ -111,7 +120,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       node.thisOrAncestorOfType<ClassDeclaration>()?.declaredElement;
 
   bool _hasImmutableAnnotation(ClassElement clazz) {
-    var inheritedAndSelfElements = <ClassElement>[
+    var inheritedAndSelfElements = <InterfaceElement>[
       ...clazz.allSupertypes.map((t) => t.element),
       clazz,
     ];

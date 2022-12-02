@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid empty statements.';
 
 const _details = r'''
-
 **AVOID** empty statements.
 
 Empty statements almost always indicate a bug.
@@ -42,12 +41,20 @@ if (complicated.expression.foo())
 ''';
 
 class EmptyStatements extends LintRule {
+  static const LintCode code = LintCode(
+      'empty_statements', 'Unnecessary empty statement.',
+      correctionMessage:
+          'Try removing the empty statement or restructuring the code.');
+
   EmptyStatements()
       : super(
             name: 'empty_statements',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

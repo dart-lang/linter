@@ -10,13 +10,12 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/error/error.dart';
 
 import '../analyzer.dart';
-import '../utils.dart';
+import '../util/ascii_utils.dart';
 
 const _desc = r'Specify type annotations.';
 
 const _details = r'''
-
-From the [flutter style guide](https://flutter.dev/style-guide/):
+From the [style guide for the flutter repo](https://flutter.dev/style-guide/):
 
 **DO** specify type annotations.
 
@@ -25,19 +24,19 @@ type annotations.  Use `dynamic` if you are being explicit that the type is
 unknown.  Use `Object` if you are being explicit that you want an object that
 implements `==` and `hashCode`.
 
+**BAD:**
+```dart
+var foo = 10;
+final bar = Bar();
+const quux = 20;
+```
+
 **GOOD:**
 ```dart
 int foo = 10;
 final Bar bar = Bar();
 String baz = 'hello';
 const int quux = 20;
-```
-
-**BAD:**
-```dart
-var foo = 10;
-final bar = Bar();
-const quux = 20;
 ```
 
 NOTE: Using the the `@optionalTypeArgs` annotation in the `meta` package, API
@@ -61,24 +60,11 @@ main() {
 
 ''';
 
-/// The name of `meta` library, used to define analysis annotations.
-String _metaLibName = 'meta';
-
-/// The name of the top-level variable used to mark a Class as having optional
-/// type args.
-String _optionalTypeArgsVarName = 'optionalTypeArgs';
-
-bool _isOptionallyParameterized(TypeParameterizedElement element) {
-  var metadata = element.metadata;
-  return metadata.any((ElementAnnotation a) => _isOptionalTypeArgs(a.element));
-}
-
-bool _isOptionalTypeArgs(Element? element) =>
-    element is PropertyAccessorElement &&
-    element.name == _optionalTypeArgsVarName &&
-    element.library.name == _metaLibName;
-
 class AlwaysSpecifyTypes extends LintRule {
+  static const LintCode code = LintCode(
+      'always_specify_types', 'Missing type annotation.',
+      correctionMessage: 'Try adding a type annotation.');
+
   AlwaysSpecifyTypes()
       : super(
             name: 'always_specify_types',
@@ -91,6 +77,9 @@ class AlwaysSpecifyTypes extends LintRule {
       const ['avoid_types_on_closure_parameters', 'omit_local_variable_types'];
 
   @override
+  LintCode get lintCode => code;
+
+  @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
@@ -98,7 +87,7 @@ class AlwaysSpecifyTypes extends LintRule {
     registry.addListLiteral(this, visitor);
     registry.addSetOrMapLiteral(this, visitor);
     registry.addSimpleFormalParameter(this, visitor);
-    registry.addTypeName(this, visitor);
+    registry.addNamedType(this, visitor);
     registry.addVariableDeclarationList(this, visitor);
   }
 }
@@ -154,14 +143,16 @@ class _Visitor extends SimpleAstVisitor<void> {
     checkLiteral(literal);
   }
 
+  @override
   void visitNamedType(NamedType namedType) {
     var type = namedType.type;
     if (type is InterfaceType) {
-      var element = type.aliasElement ?? type.element;
-      if (element.typeParameters.isNotEmpty &&
+      var element = namedType.name.staticElement;
+      if (element is TypeParameterizedElement &&
+          element.typeParameters.isNotEmpty &&
           namedType.typeArguments == null &&
           namedType.parent is! IsExpression &&
-          !_isOptionallyParameterized(element)) {
+          !element.hasOptionalTypeArgs) {
         rule.reportLint(namedType);
       }
     }
@@ -174,10 +165,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitSimpleFormalParameter(SimpleFormalParameter param) {
-    var identifier = param.identifier;
-    if (identifier != null &&
-        param.type == null &&
-        !isJustUnderscores(identifier.name)) {
+    var name = param.name;
+    if (name != null && param.type == null && !name.lexeme.isJustUnderscores) {
       if (param.keyword != null) {
         var keyword = param.keyword!;
         var type = param.declaredElement?.type;
@@ -200,11 +189,6 @@ class _Visitor extends SimpleAstVisitor<void> {
         }
       }
     }
-  }
-
-  @override
-  void visitTypeName(NamedType typeName) {
-    visitNamedType(typeName);
   }
 
   @override

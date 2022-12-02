@@ -6,6 +6,8 @@
 
 // @dart=2.9
 
+// ignore_for_file: unused_local_variable
+
 import 'dart:async';
 
 Never fail() { throw 'nope'; }
@@ -30,7 +32,7 @@ void m2() {
   });
 }
 
-void foo(FutureOr<void> x) {}
+void foo2(FutureOr<void> x) {}
 
 void main() {
   FutureOr<void> x;
@@ -191,6 +193,7 @@ allow_functionWithReturnType_forFunctionWithout() {
   void Function() returnsVoidFn() {
     return nonVoidFn; // OK
   }
+  returnsVoidFn();
 }
 
 allow_functionWithReturnType_forFunctionWithout_asComplexExpr() {
@@ -204,6 +207,7 @@ allow_functionWithReturnType_forFunctionWithout_asComplexExpr() {
   void Function() returnsVoidFn() {
     return listNonVoidFn[0]; // OK
   }
+  returnsVoidFn();
 }
 
 allow_Null_for_void() {
@@ -235,15 +239,6 @@ allow_expression_function_body() {
   f = () => i++; // OK
 }
 
-missing_parameter_for_argument() {
-  void foo() {}
-  foo(0);
-}
-
 void emptyFunctionExpressionReturningFutureOrVoid(FutureOr<void> Function() f) {
   f = () {}; // OK
-}
-
-void bug2813() {
-  return 1; //OK this gives compiler error
 }

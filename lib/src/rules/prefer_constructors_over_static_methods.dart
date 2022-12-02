@@ -7,13 +7,11 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
-import '../util/dart_type_utilities.dart';
 
 const _desc =
     r'Prefer defining constructors instead of static methods to create instances.';
 
 const _details = r'''
-
 **PREFER** defining constructors instead of static methods to create instances.
 
 In most cases, it makes more sense to use a named constructor rather than a
@@ -43,13 +41,8 @@ class Point {
 ```
 ''';
 
-bool _hasNewInvocation(DartType returnType, FunctionBody body) {
-  bool _isInstanceCreationExpression(AstNode node) =>
-      node is InstanceCreationExpression && node.staticType == returnType;
-
-  return DartTypeUtilities.traverseNodesInDFS(body)
-      .any(_isInstanceCreationExpression);
-}
+bool _hasNewInvocation(DartType returnType, FunctionBody body) =>
+    _BodyVisitor(returnType).containsInstanceCreation(body);
 
 class PreferConstructorsInsteadOfStaticMethods extends LintRule {
   PreferConstructorsInsteadOfStaticMethods()
@@ -67,6 +60,26 @@ class PreferConstructorsInsteadOfStaticMethods extends LintRule {
   }
 }
 
+class _BodyVisitor extends RecursiveAstVisitor {
+  bool found = false;
+
+  final DartType returnType;
+  _BodyVisitor(this.returnType);
+
+  bool containsInstanceCreation(FunctionBody body) {
+    body.accept(this);
+    return found;
+  }
+
+  @override
+  visitInstanceCreationExpression(InstanceCreationExpression node) {
+    found = node.staticType == returnType;
+    if (!found) {
+      super.visitInstanceCreationExpression(node);
+    }
+  }
+}
+
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
   final LinterContext context;
@@ -78,7 +91,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var returnType = node.returnType?.type;
     var parent = node.parent;
     if (node.isStatic &&
-        parent is ClassOrMixinDeclaration &&
+        parent is ClassDeclaration &&
         returnType is InterfaceType &&
         parent.typeParameters == null &&
         node.typeParameters == null) {
@@ -89,7 +102,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           return;
         }
         if (_hasNewInvocation(returnType, node.body)) {
-          rule.reportLint(node.name);
+          rule.reportLintForToken(node.name);
         }
       }
     }

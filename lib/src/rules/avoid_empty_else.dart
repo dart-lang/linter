@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Avoid empty else statements.';
 
 const _details = r'''
-
 **AVOID** empty else statements.
 
 **BAD:**
@@ -24,6 +23,14 @@ else ;
 ''';
 
 class AvoidEmptyElse extends LintRule {
+  static const LintCode code = LintCode('avoid_empty_else',
+      "Empty statements are not allowed in an 'else' clause.",
+      correctionMessage:
+          'Try removing the empty statement or removing the else clause.');
+
+  @override
+  LintCode get lintCode => code;
+
   AvoidEmptyElse()
       : super(
             name: 'avoid_empty_else',
