@@ -104,8 +104,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       correctionMessage:
           "Try splitting the declaration and specify the different type annotations."); // ignore: prefer_single_quotes
 
-  static const LintCode specifyTypeCode = LintCode(
-      'always_specify_types',
+  static const LintCode specifyTypeCode = LintCode('always_specify_types',
       "Missing type annotation.", // ignore: prefer_single_quotes
       correctionMessage:
           "Try specifying the type '{0}'."); // ignore: prefer_single_quotes
@@ -175,7 +174,8 @@ class _Visitor extends SimpleAstVisitor<void> {
             type != null &&
             type is! DynamicType) {
           rule.reportLintForToken(keyword,
-              arguments: [keyword.lexeme, type], errorCode: keywordCouldBeTypeCode);
+              arguments: [keyword.lexeme, type],
+              errorCode: keywordCouldBeTypeCode);
         } else {
           rule.reportLintForToken(keyword);
         }
