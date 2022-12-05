@@ -16,7 +16,7 @@ const _desc = r"Don't explicitly initialize variables to null.";
 const _details = r'''
 From [Effective Dart](https://dart.dev/guides/language/effective-dart/usage#dont-explicitly-initialize-variables-to-null):
 
-**DON'T** explicitly initialize nullable variables to `null`.
+**DON'T** explicitly initialize variables to `null`.
 
 If a variable has a non-nullable type or is `final`, 
 Dart reports a compile error if you try to use it
