@@ -116,7 +116,40 @@ main() async {
   List<String> list = <String>[];
   (list[list.length]).toString(); // LINT
 
+  print(!({"a": "b"}["a"]!.isEmpty)); // LINT
+
+  print((1 + 2)); // LINT
+
+  print((1 == 1 ? 2 : 3)); // LINT
+  print('a'.substring((1 == 1 ? 2 : 3), 4)); // OK
+  var a1 = (1 == 1 ? 2 : 3); // OK
+  print('${(1 == 1 ? 2 : 3)}'); // LINT
+  print([(1 == 1 ? 2 : 3)]); // OK
+
+  var a2 = (1 == 1); // OK
+  a2 = (1 == 1); // OK
+  a2 = (1 == 1) || "".isEmpty; // OK
+  var a3 = (1 + 1); // LINT
 }
+
+bool test() {
+  if ((1 == 1 ? true : false)) // LINT
+  {
+    return true;
+  } else if ((1 == 1 ? true : false)) // LINT
+  {
+    return false;
+  }
+  if ((1 == 1)) // LINT
+  {
+    return (1 != 1); // OK
+  } else {
+    return (1 > 1); // LINT
+  }
+}
+
+int test2() => (1 == 1 ? 2 : 3); // OK
+bool test3() => (1 == 1); // LINT
 
 Invocation? invocation() => null;
 

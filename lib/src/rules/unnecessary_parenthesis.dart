@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -100,8 +101,19 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
     }
 
-    if (parent is ParenthesizedExpression) {
+    // Directly wrapped into parentheses already - always report.
+    if (parent is ParenthesizedExpression ||
+        parent is InterpolationExpression ||
+        (parent is ArgumentList && parent.arguments.length == 1) ||
+        (parent is IfStatement && node == parent.condition) ||
+        (parent is WhileStatement && node == parent.condition) ||
+        (parent is IfElement && node == parent.condition)) {
       rule.reportLint(node);
+      return;
+    }
+
+    // `(foo ? bar : baz)` is OK.
+    if (expression is ConditionalExpression) {
       return;
     }
 
@@ -119,6 +131,18 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (parent is ConstructorFieldInitializer &&
         _containsFunctionExpression(node)) {
       return;
+    }
+
+    // `foo = (a == b)` is OK, `return (count != 0)` is OK.
+    if (expression is BinaryExpression &&
+        (expression.operator.type == TokenType.EQ_EQ ||
+            expression.operator.type == TokenType.BANG_EQ)) {
+      if (parent is AssignmentExpression ||
+          parent is VariableDeclaration ||
+          parent is ReturnStatement ||
+          parent is YieldStatement) {
+        return;
+      }
     }
 
     if (parent is Expression) {
