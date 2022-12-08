@@ -1263,7 +1263,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "hasFix",
-    "details": "**DO** put a single newline at the end of non-empty files.\n\n**BAD:**\n```dart\na {\n}\n```\n\n**GOOD:**\n```dart\nb {\n}\n    <-- newline\n```    \n",
+    "details": "**DO** put a single newline at the end of non-empty files.\n\n**BAD:**\n```dart\na {\n}\n```\n\n**GOOD:**\n```dart\nb {\n}\n    <-- newline\n```\n",
     "sinceDartSdk": "2.14.0",
     "sinceLinter": "1.8.0"
   },
@@ -1426,7 +1426,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "needsEvaluation",
-    "details": "**AVOID** lines longer than 80 characters\n\nReadability studies show that long lines of text are harder to read because your\neye has to travel farther when moving to the beginning of the next line. This is\nwhy newspapers and magazines use multiple columns of text.\n\nIf you really find yourself wanting lines longer than 80 characters, our\nexperience is that your code is likely too verbose and could be a little more\ncompact. The main offender is usually `VeryLongCamelCaseClassNames`. Ask\nyourself, “Does each word in that type name tell me something critical or\nprevent a name collision?” If not, consider omitting it.\n\nNote that `dart format` does 99% of this for you, but the last 1% is you. It \ndoes not split long string literals to fit in 80 columns, so you have to do \nthat manually.\n\nWe make an exception for URIs and file paths. When those occur in comments or\nstrings (usually in imports and exports), they may remain on a single line even\nif they go over the line limit. This makes it easier to search source files for\na given path.\n",
+    "details": "**AVOID** lines longer than 80 characters\n\nReadability studies show that long lines of text are harder to read because your\neye has to travel farther when moving to the beginning of the next line. This is\nwhy newspapers and magazines use multiple columns of text.\n\nIf you really find yourself wanting lines longer than 80 characters, our\nexperience is that your code is likely too verbose and could be a little more\ncompact. The main offender is usually `VeryLongCamelCaseClassNames`. Ask\nyourself, “Does each word in that type name tell me something critical or\nprevent a name collision?” If not, consider omitting it.\n\nNote that `dart format` does 99% of this for you, but the last 1% is you. It\ndoes not split long string literals to fit in 80 columns, so you have to do\nthat manually.\n\nWe make an exception for URIs and file paths. When those occur in comments or\nstrings (usually in imports and exports), they may remain on a single line even\nif they go over the line limit. This makes it easier to search source files for\na given path.\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.56"
   },
@@ -1932,7 +1932,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "needsEvaluation",
-    "details": "**DO** use `forEach` if you are only going to apply a function or a method\nto all the elements of an iterable.\n\nUsing `forEach` when you are only going to apply a function or method to all\nelements of an iterable is a good practice because it makes your code more\nterse.\n\n**BAD:**\n```dart\nfor (final key in map.keys.toList()) {\n  map.remove(key);\n}\n```\n\n**GOOD:**\n```dart\nmap.keys.toList().forEach(map.remove);\n```\n\n**NOTE:** Replacing a for each statement with a forEach call may change the \nbehavior in the case where there are side-effects on the iterable itself.\n```dart\nfor (final v in myList) {\n  foo().f(v); // This code invokes foo() many times.\n}\n\nmyList.forEach(foo().f); // But this one invokes foo() just once.\n```\n\n",
+    "details": "**DO** use `forEach` if you are only going to apply a function or a method\nto all the elements of an iterable.\n\nUsing `forEach` when you are only going to apply a function or method to all\nelements of an iterable is a good practice because it makes your code more\nterse.\n\n**BAD:**\n```dart\nfor (final key in map.keys.toList()) {\n  map.remove(key);\n}\n```\n\n**GOOD:**\n```dart\nmap.keys.toList().forEach(map.remove);\n```\n\n**NOTE:** Replacing a for each statement with a forEach call may change the\nbehavior in the case where there are side-effects on the iterable itself.\n```dart\nfor (final v in myList) {\n  foo().f(v); // This code invokes foo() many times.\n}\n\nmyList.forEach(foo().f); // But this one invokes foo() just once.\n```\n\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.31"
   },
