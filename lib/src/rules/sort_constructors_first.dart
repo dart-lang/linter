@@ -10,17 +10,7 @@ import '../analyzer.dart';
 const _desc = r'Sort constructor declarations before other members.';
 
 const _details = r'''
-
 **DO** sort constructor declarations before other members.
-
-**GOOD:**
-```dart
-abstract class Animation<T> {
-  const Animation(this.value);
-  double value;
-  void addListener(VoidCallback listener);
-}
-```
 
 **BAD:**
 ```dart
@@ -31,9 +21,23 @@ abstract class Visitor {
 }
 ```
 
+**GOOD:**
+```dart
+abstract class Animation<T> {
+  const Animation(this.value);
+  double value;
+  void addListener(VoidCallback listener);
+}
+```
+
 ''';
 
-class SortConstructorsFirst extends LintRule implements NodeLintRule {
+class SortConstructorsFirst extends LintRule {
+  static const LintCode code = LintCode('sort_constructors_first',
+      'Invalid location for a constructor declaration.',
+      correctionMessage:
+          'Try moving the constructor declaration before all other members.');
+
   SortConstructorsFirst()
       : super(
             name: 'sort_constructors_first',
@@ -42,10 +46,14 @@ class SortConstructorsFirst extends LintRule implements NodeLintRule {
             group: Group.style);
 
   @override
+  LintCode get lintCode => code;
+
+  @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addClassDeclaration(this, visitor);
+    registry.addEnumDeclaration(this, visitor);
   }
 }
 
@@ -54,13 +62,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  @override
-  void visitClassDeclaration(ClassDeclaration node) {
-    // Sort members by offset.
-    var members = node.members.toList()
-      ..sort((ClassMember m1, ClassMember m2) => m1.offset - m2.offset);
-
+  void check(NodeList<ClassMember> members) {
     var other = false;
+    // Members are sorted by source position in the AST.
     for (var member in members) {
       if (member is ConstructorDeclaration) {
         if (other) {
@@ -70,5 +74,15 @@ class _Visitor extends SimpleAstVisitor<void> {
         other = true;
       }
     }
+  }
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    check(node.members);
+  }
+
+  @override
+  void visitEnumDeclaration(EnumDeclaration node) {
+    check(node.members);
   }
 }

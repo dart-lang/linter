@@ -15,39 +15,31 @@ conditionals.
 
 **BAD:**
 ```dart
-Widget build(BuildContext context) {
-  return Row(
-    children: [
-      IconButton(icon: Icon(Icons.menu)),
-      Expanded(child: title),
-      isAndroid ? IconButton(icon: Icon(Icons.search)) : null,
-    ].where((child) => child != null).toList(),
-  );
-}
+var list = ['a', 'b', condition ? 'c' : null].where((e) => e != null).toList();
 ```
 
 **GOOD:**
 ```dart
-Widget build(BuildContext context) {
-  return Row(
-    children: [
-      IconButton(icon: Icon(Icons.menu)),
-      Expanded(child: title),
-      if (isAndroid) IconButton(icon: Icon(Icons.search)),
-    ]
-  );
-}
+var list = ['a', 'b', if (condition) 'c'];
 ```
 ''';
 
-class PreferIfElementsToConditionalExpressions extends LintRule
-    implements NodeLintRule {
+class PreferIfElementsToConditionalExpressions extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_if_elements_to_conditional_expressions',
+      "Use an 'if' element to conditionally add elements.",
+      correctionMessage:
+          "Try using an 'if' element rather than a conditional expression.");
+
   PreferIfElementsToConditionalExpressions()
       : super(
             name: 'prefer_if_elements_to_conditional_expressions',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

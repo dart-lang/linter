@@ -10,17 +10,7 @@ import '../analyzer.dart';
 const _desc = r'Sort unnamed constructor declarations first.';
 
 const _details = r'''
-
 **DO** sort unnamed constructor declarations first, before named ones.
-
-**GOOD:**
-```dart
-abstract class CancelableFuture<T> implements Future<T>  {
-  factory CancelableFuture(computation()) => ...
-  factory CancelableFuture.delayed(Duration duration, [computation()]) => ...
-  ...
-}
-```
 
 **BAD:**
 ```dart
@@ -31,9 +21,23 @@ class _PriorityItem {
 }
 ```
 
+**GOOD:**
+```dart
+abstract class CancelableFuture<T> implements Future<T>  {
+  factory CancelableFuture(computation()) => ...
+  factory CancelableFuture.delayed(Duration duration, [computation()]) => ...
+  ...
+}
+```
+
 ''';
 
-class SortUnnamedConstructorsFirst extends LintRule implements NodeLintRule {
+class SortUnnamedConstructorsFirst extends LintRule {
+  static const LintCode code = LintCode('sort_unnamed_constructors_first',
+      'Invalid location for the unnamed constructor.',
+      correctionMessage:
+          'Try moving the unnamed constructor before all other constructors.');
+
   SortUnnamedConstructorsFirst()
       : super(
             name: 'sort_unnamed_constructors_first',
@@ -42,10 +46,14 @@ class SortUnnamedConstructorsFirst extends LintRule implements NodeLintRule {
             group: Group.style);
 
   @override
+  LintCode get lintCode => code;
+
+  @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addClassDeclaration(this, visitor);
+    registry.addEnumDeclaration(this, visitor);
   }
 }
 
@@ -54,13 +62,9 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  @override
-  void visitClassDeclaration(ClassDeclaration node) {
-    // Sort members by offset.
-    var members = node.members.toList()
-      ..sort((ClassMember m1, ClassMember m2) => m1.offset - m2.offset);
-
+  void check(NodeList<ClassMember> members) {
     var seenConstructor = false;
+    // Members are sorted by source position in the AST.
     for (var member in members) {
       if (member is ConstructorDeclaration) {
         if (member.name == null) {
@@ -72,5 +76,15 @@ class _Visitor extends SimpleAstVisitor<void> {
         }
       }
     }
+  }
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    check(node.members);
+  }
+
+  @override
+  void visitEnumDeclaration(EnumDeclaration node) {
+    check(node.members);
   }
 }

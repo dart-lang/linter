@@ -6,13 +6,13 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
 const _desc = r'Avoid calling toString() on runtimeType.';
 
 const _details = r'''
-
 Calling `toString` on a runtime type is a non-trivial operation that can
 negatively impact performance. It's better to avoid it.
 
@@ -41,13 +41,19 @@ type information is more important than performance:
 
 ''';
 
-class NoRuntimeTypeToString extends LintRule implements NodeLintRule {
+class NoRuntimeTypeToString extends LintRule {
+  static const LintCode code = LintCode('no_runtimeType_toString',
+      "Using 'toString' on a 'Type' is not safe in production code.");
+
   NoRuntimeTypeToString()
       : super(
             name: 'no_runtimeType_toString',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -64,6 +70,16 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   @override
+  void visitInterpolationExpression(InterpolationExpression node) {
+    if (_canSkip(node)) {
+      return;
+    }
+    if (_isRuntimeTypeAccess(node.expression)) {
+      rule.reportLint(node.expression);
+    }
+  }
+
+  @override
   void visitMethodInvocation(MethodInvocation node) {
     if (_canSkip(node)) {
       return;
@@ -74,15 +90,27 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  @override
-  void visitInterpolationExpression(InterpolationExpression node) {
-    if (_canSkip(node)) {
-      return;
-    }
-    if (_isRuntimeTypeAccess(node.expression)) {
-      rule.reportLint(node.expression);
-    }
-  }
+  bool _canSkip(AstNode node) =>
+      node.thisOrAncestorMatching((n) {
+        if (n is Assertion) return true;
+        if (n is ThrowExpression) return true;
+        if (n is CatchClause) return true;
+        if (n is MixinDeclaration) return true;
+        if (n is ClassDeclaration && n.abstractKeyword != null) return true;
+        if (n is ExtensionDeclaration) {
+          var declaredElement = n.declaredElement;
+          if (declaredElement != null) {
+            var extendedType = declaredElement.extendedType;
+            if (extendedType is InterfaceType) {
+              var extendedElement = extendedType.element;
+              return !(extendedElement is ClassElement &&
+                  !extendedElement.isAbstract);
+            }
+          }
+        }
+        return false;
+      }) !=
+      null;
 
   bool _isRuntimeTypeAccess(Expression? target) =>
       target is PropertyAccess &&
@@ -92,23 +120,4 @@ class _Visitor extends SimpleAstVisitor<void> {
       target is SimpleIdentifier &&
           target.name == 'runtimeType' &&
           target.staticElement is PropertyAccessorElement;
-
-  bool _canSkip(AstNode node) =>
-      node.thisOrAncestorMatching((n) {
-        if (n is Assertion) return true;
-        if (n is ThrowExpression) return true;
-        if (n is CatchClause) return true;
-        if (n is MixinDeclaration) return true;
-        if (n is ClassDeclaration && n.isAbstract) return true;
-        if (n is ExtensionDeclaration) {
-          var declaredElement = n.declaredElement;
-          if (declaredElement != null) {
-            var extendedElement = declaredElement.extendedType.element;
-            return !(extendedElement is ClassElement &&
-                !extendedElement.isAbstract);
-          }
-        }
-        return false;
-      }) !=
-      null;
 }

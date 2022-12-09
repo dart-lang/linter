@@ -13,7 +13,7 @@ const _details = r'''
 Using values derived from the environment at compile-time, creates
 hidden global state and makes applications hard to understand and maintain.
 
-**DO NOT** use `fromEnvironment` or `hasEnvironment` factory constructors.
+**DON'T** use `fromEnvironment` or `hasEnvironment` factory constructors.
 
 **BAD:**
 ```dart
@@ -22,13 +22,19 @@ const loggingLevel =
 ```
 ''';
 
-class DoNotUseEnvironment extends LintRule implements NodeLintRule {
+class DoNotUseEnvironment extends LintRule {
+  static const LintCode code =
+      LintCode('do_not_use_environment', 'Invalid use of a declared variable.');
+
   DoNotUseEnvironment()
       : super(
             name: 'do_not_use_environment',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

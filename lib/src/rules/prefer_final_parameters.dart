@@ -11,7 +11,6 @@ const _desc =
     r'Prefer final for parameter declarations if they are not reassigned.';
 
 const _details = r'''
-
 **DO** prefer declaring parameters as final if they are not reassigned in
 the function body.
 
@@ -63,7 +62,11 @@ void mutableParameter(String label) { // OK
 
 ''';
 
-class PreferFinalParameters extends LintRule implements NodeLintRule {
+class PreferFinalParameters extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_final_parameters', "The parameter '{0}' should be final.",
+      correctionMessage: 'Try making the parameter final.');
+
   PreferFinalParameters()
       : super(
             name: 'prefer_final_parameters',
@@ -72,7 +75,11 @@ class PreferFinalParameters extends LintRule implements NodeLintRule {
             group: Group.style);
 
   @override
-  List<String> get incompatibleRules => const ['unnecessary_final'];
+  List<String> get incompatibleRules =>
+      const ['unnecessary_final', 'avoid_final_parameters'];
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -89,24 +96,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  /// Report the lint for parameters in the [parameters] list that are not
-  /// const or final already and not potentially mutated in the function [body].
-  void _reportApplicableParameters(
-      FormalParameterList? parameters, FunctionBody body) {
-    if (parameters != null) {
-      for (var param in parameters.parameters) {
-        if (param.isFinal || param.isConst || param is FieldFormalParameter) {
-          continue;
-        }
-        var declaredElement = param.declaredElement;
-        if (declaredElement != null &&
-            !body.isPotentiallyMutatedInScope(declaredElement)) {
-          rule.reportLint(param);
-        }
-      }
-    }
-  }
-
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) =>
       _reportApplicableParameters(node.parameters, node.body);
@@ -118,4 +107,33 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitMethodDeclaration(MethodDeclaration node) =>
       _reportApplicableParameters(node.parameters, node.body);
+
+  /// Report the lint for parameters in the [parameters] list that are not
+  /// const or final already and not potentially mutated in the function [body].
+  void _reportApplicableParameters(
+      FormalParameterList? parameters, FunctionBody body) {
+    if (parameters != null) {
+      for (var param in parameters.parameters) {
+        if (param is DefaultFormalParameter) {
+          param = param.parameter;
+        }
+        if (param.isFinal ||
+            param.isConst ||
+            // A field formal parameter is final even without the `final`
+            // modifier.
+            param is FieldFormalParameter ||
+            // A super formal parameter is final even without the `final`
+            // modifier.
+            param is SuperFormalParameter) {
+          continue;
+        }
+        var declaredElement = param.declaredElement;
+        if (declaredElement != null &&
+            !declaredElement.isInitializingFormal &&
+            !body.isPotentiallyMutatedInScope(declaredElement)) {
+          rule.reportLint(param, arguments: [param.name!.lexeme]);
+        }
+      }
+    }
+  }
 }

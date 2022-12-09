@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Prefer asserts with message.';
 
 const _details = r'''
-
 When assertions fail it's not always simple to understand why. Adding a message
 to the `assert` helps the developer to understand why the AssertionError occurs.
 
@@ -38,13 +37,20 @@ class A {
 
 ''';
 
-class PreferAssertsWithMessage extends LintRule implements NodeLintRule {
+class PreferAssertsWithMessage extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_asserts_with_message', 'Missing a message in an assert.',
+      correctionMessage: 'Try adding a message to the assert.');
+
   PreferAssertsWithMessage()
       : super(
             name: 'prefer_asserts_with_message',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

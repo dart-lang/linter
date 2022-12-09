@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Only use double quotes for strings containing single quotes.';
 
 const _details = '''
-
 **DO** use single quotes where they wouldn't require additional escapes.
 
 That means strings with an apostrophe may use double quotes so that the
@@ -43,7 +42,12 @@ useStrings(
 
 ''';
 
-class PreferSingleQuotes extends LintRule implements NodeLintRule {
+class PreferSingleQuotes extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_single_quotes', 'Unnecessary use of double quotes.',
+      correctionMessage:
+          'Try using single quotes unless the string contains single quotes.');
+
   PreferSingleQuotes()
       : super(
             name: 'prefer_single_quotes',
@@ -53,6 +57,9 @@ class PreferSingleQuotes extends LintRule implements NodeLintRule {
 
   @override
   List<String> get incompatibleRules => const ['prefer_double_quotes'];
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
