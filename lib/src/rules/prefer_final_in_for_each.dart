@@ -11,7 +11,6 @@ const _desc =
     r'Prefer final in for-each loop variable if reference is not reassigned.';
 
 const _details = r'''
-
 **DO** prefer declaring for-each loop variables as final if they are not
 reassigned later in the code.
 
@@ -43,13 +42,20 @@ for (var element in elements) {
 
 ''';
 
-class PreferFinalInForEach extends LintRule implements NodeLintRule {
+class PreferFinalInForEach extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_final_in_for_each', "The variable '{0}' should be final.",
+      correctionMessage: 'Try making the variable final.');
+
   PreferFinalInForEach()
       : super(
             name: 'prefer_final_in_for_each',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -83,7 +89,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (function != null &&
           loopVariableElement != null &&
           !function.isPotentiallyMutatedInScope(loopVariableElement)) {
-        rule.reportLint(loopVariable.identifier);
+        var name = loopVariable.name;
+        rule.reportLintForToken(name, arguments: [name.lexeme]);
       }
     }
   }

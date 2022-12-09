@@ -11,7 +11,6 @@ const _desc =
     r'Use => for short members whose body is a single return statement.';
 
 const _details = r'''
-
 **CONSIDER** using => for short members whose body is a single return statement.
 
 **BAD:**
@@ -52,13 +51,20 @@ containsValue(String value) => getValues().contains(value);
 
 ''';
 
-class PreferExpressionFunctionBodies extends LintRule implements NodeLintRule {
+class PreferExpressionFunctionBodies extends LintRule {
+  static const LintCode code = LintCode('prefer_expression_function_bodies',
+      'Unnecessary use of a block function body.',
+      correctionMessage: 'Try using an expression function body.');
+
   PreferExpressionFunctionBodies()
       : super(
             name: 'prefer_expression_function_bodies',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

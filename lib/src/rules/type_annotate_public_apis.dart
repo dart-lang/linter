@@ -7,13 +7,12 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 import '../ast.dart';
-import '../utils.dart';
+import '../util/ascii_utils.dart';
 
 const _desc = r'Type annotate public APIs.';
 
 const _details = r'''
-
-From [effective dart](https://dart.dev/guides/language/effective-dart/design#prefer-type-annotating-public-fields-and-top-level-variables-if-the-type-isnt-obvious):
+From [Effective Dart](https://dart.dev/guides/language/effective-dart/design#do-type-annotate-fields-and-top-level-variables-if-the-type-isnt-obvious):
 
 **PREFER** type annotating public APIs.
 
@@ -49,13 +48,20 @@ With types, all of this is clarified.
 
 ''';
 
-class TypeAnnotatePublicApis extends LintRule implements NodeLintRule {
+class TypeAnnotatePublicApis extends LintRule {
+  static const LintCode code = LintCode(
+      'type_annotate_public_apis', 'Missing type annotation on a public API.',
+      correctionMessage: 'Try adding a type annotation.');
+
   TypeAnnotatePublicApis()
       : super(
             name: 'type_annotate_public_apis',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -88,7 +94,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         // scope of another function.
         node.parent is CompilationUnit) {
       if (node.returnType == null && !node.isSetter) {
-        rule.reportLint(node.name);
+        rule.reportLintForToken(node.name);
       } else {
         node.functionExpression.parameters?.accept(v);
       }
@@ -99,7 +105,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitFunctionTypeAlias(FunctionTypeAlias node) {
     if (!isPrivate(node.name)) {
       if (node.returnType == null) {
-        rule.reportLint(node.name);
+        rule.reportLintForToken(node.name);
       } else {
         node.parameters.accept(v);
       }
@@ -110,7 +116,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     if (!isPrivate(node.name)) {
       if (node.returnType == null && !node.isSetter) {
-        rule.reportLint(node.name);
+        rule.reportLintForToken(node.name);
       } else {
         node.parameters?.accept(v);
       }
@@ -140,8 +146,8 @@ class _VisitorHelper extends RecursiveAstVisitor {
   @override
   void visitSimpleFormalParameter(SimpleFormalParameter param) {
     if (param.type == null) {
-      var paramName = param.identifier?.name;
-      if (paramName != null && !isJustUnderscores(paramName)) {
+      var paramName = param.name?.lexeme;
+      if (paramName != null && !paramName.isJustUnderscores) {
         rule.reportLint(param);
       }
     }
@@ -152,7 +158,7 @@ class _VisitorHelper extends RecursiveAstVisitor {
     if (!isPrivate(node.name) &&
         !node.isConst &&
         !(node.isFinal && hasInferredType(node))) {
-      rule.reportLint(node.name);
+      rule.reportLintForToken(node.name);
     }
   }
 }

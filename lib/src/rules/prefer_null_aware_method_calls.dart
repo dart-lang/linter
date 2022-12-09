@@ -11,7 +11,6 @@ import '../analyzer.dart';
 const _desc = r'Prefer null aware method calls.';
 
 const _details = r'''
-
 Instead of checking nullability of a function/method `f` before calling it you
 can use `f?.call()`.
 
@@ -27,7 +26,11 @@ f?.call();
 
 ''';
 
-class PreferNullAwareMethodCalls extends LintRule implements NodeLintRule {
+class PreferNullAwareMethodCalls extends LintRule {
+  static const LintCode code = LintCode('prefer_null_aware_method_calls',
+      "Use a null-aware invocation of the 'call' method rather than explicitly testing for 'null'.",
+      correctionMessage: "Try using '?.call()' to invoke the function.");
+
   PreferNullAwareMethodCalls()
       : super(
           name: 'prefer_null_aware_method_calls',
@@ -35,6 +38,9 @@ class PreferNullAwareMethodCalls extends LintRule implements NodeLintRule {
           details: _details,
           group: Group.style,
         );
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -49,6 +55,17 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
   _Visitor(this.rule);
+
+  @override
+  void visitConditionalExpression(ConditionalExpression node) {
+    var condition = node.condition;
+    if (condition is BinaryExpression &&
+        condition.operator.type == TokenType.BANG_EQ &&
+        condition.rightOperand is NullLiteral &&
+        node.elseExpression is NullLiteral) {
+      _check(node.thenExpression, condition);
+    }
+  }
 
   @override
   void visitIfStatement(IfStatement node) {
@@ -67,17 +84,6 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (then is ExpressionStatement) {
         _check(then.expression, condition);
       }
-    }
-  }
-
-  @override
-  void visitConditionalExpression(ConditionalExpression node) {
-    var condition = node.condition;
-    if (condition is BinaryExpression &&
-        condition.operator.type == TokenType.BANG_EQ &&
-        condition.rightOperand is NullLiteral &&
-        node.elseExpression is NullLiteral) {
-      _check(node.thenExpression, condition);
     }
   }
 

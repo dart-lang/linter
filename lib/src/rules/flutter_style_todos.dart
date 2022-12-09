@@ -12,8 +12,7 @@ const _desc = r'Use Flutter TODO format: '
     '// TODO(username): message, https://URL-to-issue.';
 
 const _details = r'''
-
-**DO** Use Flutter TODO format.
+**DO** use Flutter TODO format.
 
 From the [Flutter docs](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#comments):
 
@@ -27,13 +26,20 @@ From the [Flutter docs](https://github.com/flutter/flutter/wiki/Style-guide-for-
 
 ''';
 
-class FlutterStyleTodos extends LintRule implements NodeLintRule {
+class FlutterStyleTodos extends LintRule {
+  static const LintCode code = LintCode(
+      'flutter_style_todos', "To-do comment doesn't follow the Flutter style.",
+      correctionMessage: 'Try following the Flutter style for to-do comments.');
+
   FlutterStyleTodos()
       : super(
             name: 'flutter_style_todos',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -44,34 +50,34 @@ class FlutterStyleTodos extends LintRule implements NodeLintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  static final _todoRegExp = RegExp(r'//+(.* )?TODO\b');
+  static final _todoRegExp = RegExp(r'//+(.* )?TODO\b', caseSensitive: false);
 
   static final _todoExpectedRegExp =
-      RegExp(r'// TODO\([a-zA-Z][-a-zA-Z0-9]*\): ');
+      RegExp(r'// TODO\([a-zA-Z0-9][-a-zA-Z0-9]*\): ');
 
   final LintRule rule;
 
   _Visitor(this.rule);
 
+  void checkComments(Token token) {
+    Token? comment = token.precedingComments;
+    while (comment != null) {
+      _checkComment(comment);
+      comment = comment.next;
+    }
+  }
+
   @override
   void visitCompilationUnit(CompilationUnit node) {
     Token? token = node.beginToken;
     while (token != null) {
-      _getPrecedingComments(token).forEach(_visitComment);
+      checkComments(token);
       if (token == token.next) break;
       token = token.next;
     }
   }
 
-  Iterable<Token> _getPrecedingComments(Token token) sync* {
-    Token? comment = token.precedingComments;
-    while (comment != null) {
-      yield comment;
-      comment = comment.next;
-    }
-  }
-
-  void _visitComment(Token node) {
+  void _checkComment(Token node) {
     var content = node.lexeme;
     if (content.startsWith(_todoRegExp) &&
         !content.startsWith(_todoExpectedRegExp)) {

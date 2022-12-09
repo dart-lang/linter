@@ -11,8 +11,7 @@ import '../analyzer.dart';
 const _desc = r"Don't cast a nullable value to a non nullable type.";
 
 const _details = r'''
-
-Don't cast a nullable value to a non nullable type. This hides a null check
+**DON'T** cast a nullable value to a non nullable type. This hides a null check
 and most of the time it is not what is expected.
 
 **BAD:**
@@ -37,7 +36,13 @@ var v = a!;
 
 ''';
 
-class CastNullableToNonNullable extends LintRule implements NodeLintRule {
+class CastNullableToNonNullable extends LintRule {
+  static const LintCode code = LintCode('cast_nullable_to_non_nullable',
+      "Don't cast a nullable value to a non-nullable type.",
+      correctionMessage:
+          "Try adding a not-null assertion ('!') to make the type "
+          'non-nullable.');
+
   CastNullableToNonNullable()
       : super(
           name: 'cast_nullable_to_non_nullable',
@@ -46,6 +51,9 @@ class CastNullableToNonNullable extends LintRule implements NodeLintRule {
           maturity: Maturity.experimental,
           group: Group.style,
         );
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -60,10 +68,10 @@ class CastNullableToNonNullable extends LintRule implements NodeLintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule, this.context);
-
   final LintRule rule;
+
   final LinterContext context;
+  _Visitor(this.rule, this.context);
 
   @override
   void visitAsExpression(AsExpression node) {

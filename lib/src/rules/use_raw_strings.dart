@@ -10,7 +10,6 @@ import '../analyzer.dart';
 const _desc = r'Use raw string to avoid escapes.';
 
 const _details = r'''
-
 A raw string can be used to avoid escaping only backslashes and dollars.
 
 **BAD:**
@@ -25,13 +24,21 @@ var s = r'A string with only \ and $';
 
 ''';
 
-class UseRawStrings extends LintRule implements NodeLintRule {
+class UseRawStrings extends LintRule {
+  static const LintCode code = LintCode(
+      'use_raw_strings', 'Use a raw string to avoid using escapes.',
+      correctionMessage:
+          'Try making the string a raw string and removing the escapes.');
+
   UseRawStrings()
       : super(
             name: 'use_raw_strings',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

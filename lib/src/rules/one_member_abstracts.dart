@@ -11,7 +11,6 @@ const _desc =
     r'Avoid defining a one-member abstract class when a simple function will do.';
 
 const _details = r'''
-
 From the [style guide](https://dart.dev/guides/language/effective-dart/style/):
 
 **AVOID** defining a one-member abstract class when a simple function will do.
@@ -22,11 +21,6 @@ function.  If you're defining a class and it only has a single abstract member
 with a meaningless name like `call` or `invoke`, there is a good chance
 you just want a function.
 
-**GOOD:**
-```dart
-typedef Predicate = bool Function(item);
-```
-
 **BAD:**
 ```dart
 abstract class Predicate {
@@ -34,15 +28,28 @@ abstract class Predicate {
 }
 ```
 
+**GOOD:**
+```dart
+typedef Predicate = bool Function(item);
+```
+
 ''';
 
-class OneMemberAbstracts extends LintRule implements NodeLintRule {
+class OneMemberAbstracts extends LintRule {
+  static const LintCode code = LintCode(
+      'one_member_abstracts', 'Unnecessary use of an abstract class.',
+      correctionMessage:
+          "Try making '{0}' a top-level function and removing the class.");
+
   OneMemberAbstracts()
       : super(
             name: 'one_member_abstracts',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -69,15 +76,15 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (declaredElement.mixins.isNotEmpty) {
       return;
     }
-    if (node.isAbstract &&
+    if (node.abstractKeyword != null &&
         node.extendsClause == null &&
         node.members.length == 1) {
-      var member = node.members[0];
+      var member = node.members.first;
       if (member is MethodDeclaration &&
           member.isAbstract &&
           !member.isGetter &&
           !member.isSetter) {
-        rule.reportLint(node.name);
+        rule.reportLintForToken(node.name, arguments: [member.name.lexeme]);
       }
     }
   }

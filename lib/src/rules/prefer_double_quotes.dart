@@ -9,7 +9,6 @@ const _desc =
     r"Prefer double quotes where they won't require escape sequences.";
 
 const _details = '''
-
 **DO** use double quotes where they wouldn't require additional escapes.
 
 That means strings with a double quote may use apostrophes so that the double
@@ -42,7 +41,12 @@ useStrings(
 
 ''';
 
-class PreferDoubleQuotes extends LintRule implements NodeLintRule {
+class PreferDoubleQuotes extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_double_quotes', 'Unnecessary use of single quotes.',
+      correctionMessage:
+          'Try using double quotes unless the string contains double quotes.');
+
   PreferDoubleQuotes()
       : super(
             name: 'prefer_double_quotes',
@@ -52,6 +56,9 @@ class PreferDoubleQuotes extends LintRule implements NodeLintRule {
 
   @override
   List<String> get incompatibleRules => const ['prefer_single_quotes'];
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
