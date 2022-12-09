@@ -108,11 +108,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitGenericFunctionType(GenericFunctionType node) {
-    var parametersToLint =
-    node.parameters.parameters.where(_isFormalParameterToLint);
-    if (parametersToLint.isNotEmpty) {
-      rule.reportLint(parametersToLint.first);
-    }
+    checkParams(node.parameters.parameters);
   }
 
   bool _isOverridingMember(Element member) {
