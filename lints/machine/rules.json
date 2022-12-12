@@ -1830,7 +1830,7 @@
     "name": "prefer_equal_for_default_values",
     "description": "Use `=` to separate a named parameter from its default value.",
     "group": "style",
-    "maturity": "deprecated",
+    "maturity": "stable",
     "incompatible": [],
     "sets": [
       "recommended",
