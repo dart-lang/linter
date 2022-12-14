@@ -30,23 +30,24 @@
          <section>
 
             <p><strong>DON'T</strong> check for null in custom == operators.</p>
-<p>As null is a special type, no class can be equivalent to it.  Thus, it is
-redundant to check whether the other instance is null.</p>
+<p>As null is a special value, no instance of any class (other than <code>Null</code>) can be
+equivalent to it.  Thus, it is redundant to check whether the other instance is
+null.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">class Person {
-  final String name;
+  final String? name;
 
   @override
-  operator ==(other) =&gt;
+  operator ==(Object? other) =&gt;
       other != null &amp;&amp; other is Person &amp;&amp; name == other.name;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">class Person {
-  final String name;
+  final String? name;
 
   @override
-  operator ==(other) =&gt; other is Person &amp;&amp; name == other.name;
+  operator ==(Object? other) =&gt; other is Person &amp;&amp; name == other.name;
 }
 </code></pre>
 
