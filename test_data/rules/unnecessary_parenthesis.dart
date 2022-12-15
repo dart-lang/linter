@@ -116,6 +116,16 @@ main() async {
   List<String> list = <String>[];
   (list[list.length]).toString(); // LINT
 
+  (a?.sign).hashCode;
+  (a?.abs()).hashCode;
+  (a?..abs()).hashCode;
+  (a?[0]).hashCode;
+
+  (a?.sign)!;
+  (a?.abs())!;
+  (a?..abs())!;
+  (a?[0])!;
+
   print(!({"a": "b"}["a"]!.isEmpty)); // LINT
 
   print((1 + 2)); // LINT
