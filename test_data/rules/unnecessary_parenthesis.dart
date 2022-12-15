@@ -142,20 +142,32 @@ main() async {
   var a3 = (1 + 1); // LINT
 }
 
-bool test() {
+bool testTernaryAndEquality() {
   if ((1 == 1 ? true : false)) // LINT
   {
-    return true;
+    return (1 != 1); // OK
   } else if ((1 == 1 ? true : false)) // LINT
   {
-    return false;
-  }
-  if ((1 == 1)) // LINT
-  {
-    return (1 != 1); // OK
-  } else {
     return (1 > 1); // LINT
   }
+  while ((1 == 1)) // LINT
+  {
+    print('');
+  }
+  switch ((5 == 6)) // LINT
+  {
+    case true:
+      return false;
+    default:
+      return true;
+  }
+}
+
+class TestConstructorFieldInitializer {
+  bool _x, _y;
+  TestConstructorFieldInitializer()
+      : _x = (1 == 2), // OK
+        _y = (true && false); // LINT
 }
 
 int test2() => (1 == 1 ? 2 : 3); // OK
