@@ -16,24 +16,14 @@ void list_firstWhere() {
 void iterable_singleWhere() {
   // singleWhere has a _named_ closure argument.
   <int>{2, 4, 6}.singleWhere((e) => e.isEven, orElse: null); // LINT
-  <int?>[2, 4, 6].singleWhere((e) => e?.isEven ?? false, orElse: () => null); // OK
-}
-
-void map_putIfAbsent() {
-  // putIfAbsent has a _required_ closure argument.
-  var map = <int, int?>{};
-  map.putIfAbsent(7, () => null); // OK
+  <int?>[2, 4, 6]
+      .singleWhere((e) => e?.isEven ?? false, orElse: () => null); // OK
 }
 
 void future_wait() {
   // Future.wait is a _static_ function with a _named_ argument.
   Future.wait([], cleanUp: null); // LINT
   Future.wait([], cleanUp: (_) => print('clean')); // OK
-}
-
-void list_generate() {
-  // List.generate is a _constructor_ with a _positional_ argument.
-  new List.generate(3, (_) => null); // OK
 }
 
 void map_otherMethods() {
