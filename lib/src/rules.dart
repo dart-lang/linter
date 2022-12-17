@@ -103,6 +103,7 @@ import 'rules/no_leading_underscores_for_local_identifiers.dart';
 import 'rules/no_logic_in_create_state.dart';
 import 'rules/no_runtimeType_toString.dart';
 import 'rules/non_constant_identifier_names.dart';
+import 'rules/non_nullable_equals_parameter.dart';
 import 'rules/noop_primitive_operations.dart';
 import 'rules/null_check_on_nullable_type_parameter.dart';
 import 'rules/null_closures.dart';
@@ -322,6 +323,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(NoDefaultCases())
     ..register(NoDuplicateCaseValues())
     ..register(NonConstantIdentifierNames())
+    ..register(NonNullableEqualsParameter())
     ..register(NoLeadingUnderscoresForLibraryPrefixes())
     ..register(NoLeadingUnderscoresForLocalIdentifiers())
     ..register(NoLogicInCreateState())
