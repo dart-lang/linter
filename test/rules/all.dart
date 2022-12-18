@@ -51,6 +51,8 @@ import 'missing_whitespace_between_adjacent_strings_test.dart'
     as missing_whitespace_between_adjacent_strings;
 import 'non_constant_identifier_names_test.dart'
     as non_constant_identifier_names;
+import 'non_nullable_equals_parameter_test.dart'
+    as non_nullable_equals_parameter;
 import 'null_closures_test.dart' as null_closures;
 import 'omit_local_variable_types_test.dart' as omit_local_variable_types;
 import 'overridden_fields_test.dart' as overridden_fields;
@@ -130,6 +132,7 @@ void main() {
   literal_only_boolean_expressions.main();
   missing_whitespace_between_adjacent_strings.main();
   non_constant_identifier_names.main();
+  non_nullable_equals_parameter.main();
   null_closures.main();
   omit_local_variable_types.main();
   overridden_fields.main();
