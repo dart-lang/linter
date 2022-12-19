@@ -78,7 +78,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    if (parameters.parameters.isEmpty) {
+    if (parameters.parameters.length != 1) {
       return;
     }
 

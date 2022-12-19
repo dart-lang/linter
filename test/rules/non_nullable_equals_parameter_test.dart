@@ -36,6 +36,14 @@ class D extends C {
 ''');
   }
 
+  test_class_nonNullableParameter_narrowedType() async {
+    await assertNoDiagnostics(r'''
+class C {
+  bool operator ==(int other) => other is C;
+}
+''');
+  }
+
   test_class_nullableParameter() async {
     await assertDiagnostics(r'''
 class C {
