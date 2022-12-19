@@ -39,7 +39,7 @@ class D extends C {
   test_class_nonNullableParameter_narrowedType() async {
     await assertNoDiagnostics(r'''
 class C {
-  bool operator ==(int other) => other is C;
+  bool operator ==(covariant int other) => other is C;
 }
 ''');
   }
