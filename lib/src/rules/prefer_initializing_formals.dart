@@ -134,15 +134,16 @@ class PreferInitializingFormals extends LintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this);
+    var visitor = _Visitor(this, context);
     registry.addConstructorDeclaration(this, visitor);
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
+  final LinterContext context;
 
-  _Visitor(this.rule);
+  _Visitor(this.rule, this.context);
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
@@ -160,13 +161,16 @@ class _Visitor extends SimpleAstVisitor<void> {
       var leftElement = _getLeftElement(assignment);
       var rightElement = _getRightElement(assignment);
       return leftElement != null &&
-          rightElement != null &&
+          rightElement is VariableElement &&
           leftElement.name == rightElement.name &&
           !leftElement.isPrivate &&
           leftElement is FieldElement &&
           !leftElement.isSynthetic &&
           leftElement.enclosingElement ==
               node.declaredElement?.enclosingElement &&
+          context.typeSystem.isSubtypeOf(
+              context.typeSystem.promoteToNonNull(leftElement.type),
+              rightElement.type) &&
           parameters.contains(rightElement) &&
           (!parametersUsedMoreThanOnce.contains(rightElement) &&
                   !(rightElement as ParameterElement).isNamed ||
@@ -182,14 +186,18 @@ class _Visitor extends SimpleAstVisitor<void> {
           return false;
         }
         var staticElement = expression.staticElement;
+        var fieldElement = fieldName.staticElement;
         return staticElement is ParameterElement &&
-            !(constructorFieldInitializer.fieldName.staticElement?.isPrivate ??
-                true) &&
+            fieldElement is FieldElement &&
+            !fieldElement.isPrivate &&
+            expression.staticType != null &&
+            context.typeSystem.isSubtypeOf(
+                context.typeSystem.promoteToNonNull(fieldElement.type),
+                expression.staticType!) &&
             parameters.contains(staticElement) &&
             (!parametersUsedMoreThanOnce.contains(expression.staticElement) &&
                     !staticElement.isNamed ||
-                (constructorFieldInitializer.fieldName.staticElement?.name ==
-                    expression.staticElement?.name));
+                (fieldElement.name == expression.staticElement?.name));
       }
       return false;
     }
