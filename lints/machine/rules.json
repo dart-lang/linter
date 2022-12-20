@@ -677,7 +677,7 @@
     "maturity": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsEvaluation",
+    "fixStatus": "unregistered",
     "details": "**DON'T** explicitly catch Error or types that implement it.\n\nErrors differ from Exceptions in that Errors can be analyzed and prevented prior\nto runtime.  It should almost never be necessary to catch an error at runtime.\n\n**BAD:**\n```dart\ntry {\n  somethingRisky();\n} on Error catch(e) {\n  doSomething(e);\n}\n```\n\n**GOOD:**\n```dart\ntry {\n  somethingRisky();\n} on Exception catch(e) {\n  doSomething(e);\n}\n```\n\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.31"
