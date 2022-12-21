@@ -31,15 +31,13 @@
 
             <p><strong>DO</strong> use collection literals when possible.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">var points = List();
-var addresses = Map&lt;String, String&gt;();
+<pre><code class="language-dart">var addresses = Map&lt;String, String&gt;();
 var uniqueNames = Set&lt;String&gt;();
 var ids = LinkedHashSet&lt;int&gt;();
 var coordinates = LinkedHashMap&lt;int, int&gt;();
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">var points = [];
-var addresses = &lt;String, String&gt;{};
+<pre><code class="language-dart">var addresses = &lt;String, String&gt;{};
 var uniqueNames = &lt;String&gt;{};
 var ids = &lt;int&gt;{};
 var coordinates = &lt;int, int&gt;{};
