@@ -20,6 +20,7 @@ class FlutterStyleTodosTest extends LintRuleTest {
   // TODO(srawlins): This test is called, "bad patterns", contains 10 TODO-like
   // comment lines, but then only expects 9 lints. Why?
   test_badPatterns() async {
+    // Test with comments that will be recognized as TODOs.
     await assertDiagnostics(
       r'''
 // TODO something
@@ -44,6 +45,12 @@ class FlutterStyleTodosTest extends LintRuleTest {
         lint(159, 28),
         lint(245, 64),
       ],
+    );
+    // Test with comments that will not be recognized as TODOs.
+    await assertNoDiagnostics(
+      r'''
+/// final todo = Todo(name: 'test todo', description: 'todo description');
+''',
     );
   }
 
