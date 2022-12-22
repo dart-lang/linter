@@ -1,3 +1,67 @@
+# 1.32.0
+
+- update `avoid_types_as_parameter_names` to handle type variables
+- update `avoid_positional_boolean_parameters` to handle typedefs
+- improve `unnecessary_parenthesis` support for property accesses and method invocations
+- update `avoid_redundant_argument_values` to check parameters of redirecting constructors
+- performance improvements for `prefer_const_literals_to_create_immutables`
+- update `use_build_context_synchronously` to check context properties
+- fix false positive for `avoid_private_typedef_functions` with generalized type aliases
+
+# 1.31.0
+
+- update `prefer_equal_for_default_values` to not report for SDKs `>=2.19`,
+  where this lint is now an analyzer diagnostic.
+- update `unrelated_type_equality_checks` to support updated `package:fixnum`
+  structure.
+
+# 1.30.0
+
+- new lint: `enable_null_safety`
+- new lint: `library_annotations`
+- miscellaneous documentation improvements
+
+# 1.29.0
+
+- new lint: `dangling_library_doc_comments`
+- fix `no_leading_underscores_for_local_identifiers` to not report super formals as local variables
+- fix `unnecessary_overrides` false negatives
+- fix `cancel_subscriptions` for nullable fields 
+- new lint: `collection_methods_unrelated_type`
+- update `library_names` to support unnamed libraries
+- fix `unnecessary_parenthesis` support for as-expressions
+- fix `use_build_context_synchronously` to check for context property accesses
+- fix false positive in `comment_references`
+- improved unrelated type checks to handle enums and cascades
+- fix `unnecessary_brace_in_string_interps` for `this` expressions 
+- update `use_build_context_synchronously` for `BuildContext.mounted`
+- improve `flutter_style_todos` to handle more cases
+- fix `use_build_context_synchronously` to check for `BuildContext`s in named expressions
+- fix `exhaustive_cases` to check parenthesized expressions
+- performance improvements for:
+  - `avoid_null_checks_in_equality_operators`
+  - `join_return_with_statement`
+  - `recursive_getters`
+  - `unnecessary_lambdas`
+  - `diagnostic_describe_all_properties`
+  - `prefer_foreach`
+  - `avoid_escaping_inner_quotes`
+  - `cascade_invocations`
+  - `tighten_type_of_initializing_formals`
+  - `prefer_interpolation_to_compose_strings`
+  - `prefer_constructors_over_static_methods`
+  - `avoid_returning_null`
+  - `parameter_assignments`
+  - `prefer_constructors_over_static_methods`
+  - `prefer_interpolation_to_compose_strings`
+  - `avoid_returning_null`
+  - `avoid_returning_this`
+  - `flutter_style_todos`
+  - `avoid_positional_boolean_parameters`
+  - `prefer_const_constructors`
+- new lint: `implicit_call_tearoffs`
+- new lint: `unnecessary_library_directive`
+
 # 1.28.0
 
 - update `avoid_redundant_argument_values` to work with enum declarations

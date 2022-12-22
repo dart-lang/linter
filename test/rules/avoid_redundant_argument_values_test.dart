@@ -86,6 +86,206 @@ void f() {
 ''');
   }
 
+  test_redirectingFactoryConstructor() async {
+    await assertNoDiagnostics(r'''
+class A {
+  factory A([int? value]) = B;
+  A._();
+}
+class B extends A {
+  B([int? value = 2]) : super._();
+}
+void f() {
+  A();
+  A(null);
+  A(1);
+}
+''');
+  }
+
+  test_redirectingFactoryConstructor_multipleOptional() async {
+    await assertNoDiagnostics(r'''
+class A {
+  factory A([int? one, int? two]) = B;
+  A._();
+}
+class B extends A {
+  int? one;
+  int? two;
+  B([this.one = 2, this.two = 2]) : super._();
+}
+void f() {
+  A();
+  A(null, null);
+  A(1, 1);
+}
+''');
+  }
+
+  test_redirectingFactoryConstructor_named() async {
+    await assertNoDiagnostics(r'''
+class A {
+  factory A({int? value}) = B;
+  A._();
+}
+class B extends A {
+  B({int? value = 2}) : super._();
+}
+void f() {
+  A();
+  A(value: null);
+  A(value: 1);
+}
+''');
+  }
+
+  test_redirectingFactoryConstructor_named_redundant() async {
+    await assertDiagnostics(r'''
+class A {
+  factory A({int? value}) = B;
+  A._();
+}
+class B extends A {
+  B({int? value = 2}) : super._();
+}
+void f() {
+  A(value: 2);
+}
+''', [
+      lint(124, 8),
+    ]);
+  }
+
+  test_redirectingFactoryConstructor_namedArgumentsAnywhere() async {
+    await assertNoDiagnostics(r'''
+class A {
+  factory A(int? one, int? two, {int? three}) = B;
+  A._();
+}
+class B extends A {
+  B(int? one, int? two, {int? three = 3}) : super._();
+}
+void f() {
+  A(1, 2);
+  A(1, three: null, 2);
+  A(1, 2, three: null);
+  A(1, three: 4, 2);
+  A(three: 4, 1, 2);
+}
+''');
+  }
+
+  test_redirectingFactoryConstructor_namedArgumentsAnywhere_redundant() async {
+    await assertDiagnostics(r'''
+class A {
+  factory A(int? one, int? two, {int? three}) = B;
+  A._();
+}
+class B extends A {
+  B(int? one, int? two, {int? three = 3}) : super._();
+}
+void f() {
+  A(1, three: 3, 2);
+}
+''', [
+      lint(167, 8),
+    ]);
+  }
+
+  test_redirectingFactoryConstructor_nested() async {
+    await assertNoDiagnostics(r'''
+class A {
+  factory A([num? value]) = B;
+  A._();
+}
+class B extends A {
+  factory B([num? value]) = C;
+  B._() : super._();
+}
+class C extends B {
+  num? value;
+  C([this.value = 2]) : super._();
+
+  @override
+  String toString() => '$value';
+}
+void f() {
+  A();
+  A(null);
+  A(1);
+}
+''');
+  }
+
+  test_redirectingFactoryConstructor_redundant() async {
+    await assertDiagnostics(r'''
+class A {
+  factory A([int? value]) = B;
+  A._();
+}
+class B extends A {
+  B([int? value = 2]) : super._();
+}
+void f() {
+  A(2);
+}
+''', [
+      lint(124, 1),
+    ]);
+  }
+
+  test_redirectingGenerativeConstructor() async {
+    await assertNoDiagnostics(r'''
+class A {
+  A([int? value]) : this._(value);
+  A._([int? value = 2]);
+}
+void f() {
+  A(2);
+}
+''');
+  }
+
+  test_redirectingGenerativeConstructor_named() async {
+    await assertNoDiagnostics(r'''
+class A {
+  A({int? value}) : this._(value: value);
+  A._({int? value = 2});
+}
+void f() {
+  A(value: 2);
+}
+''');
+  }
+
+  test_redirectingGenerativeConstructor_named_redundant() async {
+    await assertDiagnostics(r'''
+class A {
+  A({int? value}) : this._(value: value);
+  A._({int? value = 2});
+}
+void f() {
+  A(value: null);
+}
+''', [
+      lint(101, 4),
+    ]);
+  }
+
+  test_redirectingGenerativeConstructor_redundant() async {
+    await assertDiagnostics(r'''
+class A {
+  A([int? value]) : this._(value);
+  A._([int? value = 2]);
+}
+void f() {
+  A(null);
+}
+''', [
+      lint(87, 4),
+    ]);
+  }
+
   test_requiredNullable() async {
     await assertNoDiagnostics(r'''
 void f({required int? x}) { }

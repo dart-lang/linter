@@ -39,7 +39,7 @@ class Size {
 }
 ```
 
-**BAD**:
+**BAD:**
 ```dart
 class CustomSize implements Size {
   final int inBytes;
@@ -49,7 +49,7 @@ class CustomSize implements Size {
 }
 ```
 
-**BAD**:
+**BAD:**
 ```dart
 import 'package:test/test.dart';
 import 'size.dart';
@@ -65,7 +65,7 @@ void main() {
 }
 ```
 
-**GOOD**:
+**GOOD:**
 ```dart
 class ExtendedSize extends Size {
   ExtendedSize(int inBytes) : super(inBytes);
@@ -74,7 +74,7 @@ class ExtendedSize extends Size {
 }
 ```
 
-**GOOD**:
+**GOOD:**:
 ```dart
 import 'package:test/test.dart';
 import 'size.dart';
@@ -89,12 +89,20 @@ void main() {
 ''';
 
 class AvoidImplementingValueTypes extends LintRule {
+  static const LintCode code = LintCode('avoid_implementing_value_types',
+      "Classes that override '==' should not be implemented.",
+      correctionMessage:
+          "Try removing the class from the 'implements' clause.");
+
   AvoidImplementingValueTypes()
       : super(
             name: 'avoid_implementing_value_types',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -118,7 +126,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     for (var interface in implementsClause.interfaces) {
       var interfaceType = interface.type;
       if (interfaceType is InterfaceType &&
-          _overridesEquals(interfaceType.element2)) {
+          _overridesEquals(interfaceType.element)) {
         rule.reportLint(interface);
       }
     }
@@ -126,7 +134,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   static bool _overridesEquals(InterfaceElement element) {
     var method = element.lookUpConcreteMethod('==', element.library);
-    var enclosing = method?.enclosingElement3;
+    var enclosing = method?.enclosingElement;
     return enclosing is ClassElement && !enclosing.isDartCoreObject;
   }
 }

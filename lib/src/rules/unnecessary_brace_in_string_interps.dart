@@ -16,14 +16,14 @@ const _details = r'''
 If you're just interpolating a simple identifier, and it's not immediately
 followed by more alphanumeric text, the `{}` can and should be omitted.
 
-**GOOD:**
-```dart
-print("Hi, $name!");
-```
-
 **BAD:**
 ```dart
 print("Hi, ${name}!");
+```
+
+**GOOD:**
+```dart
+print("Hi, $name!");
 ```
 
 ''';
@@ -34,12 +34,19 @@ bool isIdentifierPart(Token? token) =>
     token is StringToken && token.lexeme.startsWith(identifierPart);
 
 class UnnecessaryBraceInStringInterps extends LintRule {
+  static const LintCode code = LintCode('unnecessary_brace_in_string_interps',
+      'Unnecessary braces in a string interpolation.',
+      correctionMessage: 'Try removing the braces.');
+
   UnnecessaryBraceInStringInterps()
       : super(
             name: 'unnecessary_brace_in_string_interps',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

@@ -13,7 +13,7 @@ import '../analyzer.dart';
 const _desc = r'Use if-null operators to convert nulls to bools.';
 
 const _details = r'''
-From [effective dart](https://dart.dev/guides/language/effective-dart/usage#prefer-using--to-convert-null-to-a-boolean-value):
+From [Effective Dart](https://dart.dev/guides/language/effective-dart/usage#prefer-using--to-convert-null-to-a-boolean-value):
 
 Use if-null operators to convert nulls to bools.
 
@@ -36,6 +36,10 @@ if (nullableBool ?? true) {
 ''';
 
 class UseIfNullToConvertNullsToBools extends LintRule {
+  static const LintCode code = LintCode('use_if_null_to_convert_nulls_to_bools',
+      "Use an if-null operator to convert a 'null' to a 'bool'.",
+      correctionMessage: 'Try using an if-null operator.');
+
   UseIfNullToConvertNullsToBools()
       : super(
           name: 'use_if_null_to_convert_nulls_to_bools',
@@ -43,6 +47,9 @@ class UseIfNullToConvertNullsToBools extends LintRule {
           details: _details,
           group: Group.style,
         );
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -59,6 +66,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LinterContext context;
 
   _Visitor(this.rule, this.context);
+
+  bool isNullableBool(DartType? type) =>
+      type != null &&
+      type.isDartCoreBool &&
+      context.typeSystem.isNullable(type);
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
@@ -77,9 +89,4 @@ class _Visitor extends SimpleAstVisitor<void> {
       rule.reportLint(node);
     }
   }
-
-  bool isNullableBool(DartType? type) =>
-      type != null &&
-      type.isDartCoreBool &&
-      context.typeSystem.isNullable(type);
 }

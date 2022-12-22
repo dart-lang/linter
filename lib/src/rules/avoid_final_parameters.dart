@@ -12,15 +12,8 @@ const _desc = r'Avoid final for parameter declarations.';
 const _details = r'''
 **AVOID** declaring parameters as final.
 
-Declaring parameters as final can lead to unecessarily verbose code, especially
+Declaring parameters as final can lead to unnecessarily verbose code, especially
 when using the "parameter_assignments" rule.
-
-**GOOD:**
-```dart
-void badParameter(String label) { // OK
-  print(label);
-}
-```
 
 **BAD:**
 ```dart
@@ -31,7 +24,9 @@ void goodParameter(final String label) { // LINT
 
 **GOOD:**
 ```dart
-void badExpression(int value) => print(value); // OK
+void badParameter(String label) { // OK
+  print(label);
+}
 ```
 
 **BAD:**
@@ -41,7 +36,7 @@ void goodExpression(final int value) => print(value); // LINT
 
 **GOOD:**
 ```dart
-[1, 4, 6, 8].forEach((value) => print(value + 2)); // OK
+void badExpression(int value) => print(value); // OK
 ```
 
 **BAD:**
@@ -49,9 +44,18 @@ void goodExpression(final int value) => print(value); // LINT
 [1, 4, 6, 8].forEach((final value) => print(value + 2)); // LINT
 ```
 
+**GOOD:**
+```dart
+[1, 4, 6, 8].forEach((value) => print(value + 2)); // OK
+```
+
 ''';
 
 class AvoidFinalParameters extends LintRule {
+  static const LintCode code = LintCode(
+      'avoid_final_parameters', "Parameters should not be marked as 'final'.",
+      correctionMessage: "Try removing the keyword 'final'.");
+
   AvoidFinalParameters()
       : super(
             name: 'avoid_final_parameters',
@@ -61,6 +65,9 @@ class AvoidFinalParameters extends LintRule {
 
   @override
   List<String> get incompatibleRules => const ['prefer_final_parameters'];
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

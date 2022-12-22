@@ -21,6 +21,18 @@ unpredictable and undesirable behavior when used in collections. See
 https://dart.dev/guides/language/effective-dart/design#avoid-defining-custom-equality-for-mutable-classes
 for more information.
 
+**BAD:**
+```dart
+class B {
+  String key;
+  const B(this.key);
+  @override
+  operator ==(other) => other is B && other.key == key;
+  @override
+  int get hashCode => key.hashCode;
+}
+```
+
 **GOOD:**
 ```dart
 @immutable
@@ -34,19 +46,7 @@ class A {
 }
 ```
 
-**BAD:**
-```dart
-class B {
-  String key;
-  const B(this.key);
-  @override
-  operator ==(other) => other is B && other.key == key;
-  @override
-  int get hashCode => key.hashCode;
-}
-```
-
-NOTE: The lint checks the use of the @immutable annotation, and will trigger
+NOTE: The lint checks the use of the `@immutable` annotation, and will trigger
 even if the class is otherwise not mutable. Thus:
 
 **BAD:**
@@ -75,12 +75,21 @@ bool _isImmutable(Element? element) =>
     element.library.name == _metaLibName;
 
 class AvoidOperatorEqualsOnMutableClasses extends LintRule {
+  static const LintCode code = LintCode(
+      'avoid_equals_and_hash_code_on_mutable_classes',
+      "The method '{0}' should not be overriden in classes not annotated with '@immutable'.",
+      correctionMessage:
+          "Try removing the override or annotating the class with '@immutable'.");
+
   AvoidOperatorEqualsOnMutableClasses()
       : super(
             name: 'avoid_equals_and_hash_code_on_mutable_classes',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -100,7 +109,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (node.name.type == TokenType.EQ_EQ || isHashCode(node)) {
       var classElement = _getClassForMethod(node);
       if (classElement != null && !_hasImmutableAnnotation(classElement)) {
-        rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata);
+        rule.reportLintForToken(node.firstTokenAfterCommentAndMetadata,
+            arguments: [node.name.lexeme]);
       }
     }
   }
@@ -111,7 +121,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   bool _hasImmutableAnnotation(ClassElement clazz) {
     var inheritedAndSelfElements = <InterfaceElement>[
-      ...clazz.allSupertypes.map((t) => t.element2),
+      ...clazz.allSupertypes.map((t) => t.element),
       clazz,
     ];
     var inheritedAndSelfAnnotations = inheritedAndSelfElements

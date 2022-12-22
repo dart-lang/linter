@@ -12,11 +12,13 @@ const _desc =
     r'Start the name of the method with to/_to or as/_as if applicable.';
 
 const _details = r'''
-From the [design guide](https://dart.dev/guides/language/effective-dart/design):
+From the [Effective Dart](https://dart.dev/guides/language/effective-dart/design):
 
-**PREFER** naming a method to___() if it copies the object's state to a new object.
+**PREFER** naming a method `to___()` if it copies the object's state to a new
+object.
 
-**PREFER** naming a method as___() if it returns a different representation backed by the original object.
+**PREFER** naming a method `as___()` if it returns a different representation
+backed by the original object.
 
 **BAD:**
 ```dart
@@ -56,12 +58,19 @@ bool _isVoid(TypeAnnotation? returnType) =>
     returnType is NamedType && returnType.name.name == 'void';
 
 class UseToAndAsIfApplicable extends LintRule {
+  static const LintCode code = LintCode('use_to_and_as_if_applicable',
+      "Start the name of the method with 'to' or 'as'.",
+      correctionMessage: "Try renaming the method to use either 'to' or 'as'.");
+
   UseToAndAsIfApplicable()
       : super(
             name: 'use_to_and_as_if_applicable',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

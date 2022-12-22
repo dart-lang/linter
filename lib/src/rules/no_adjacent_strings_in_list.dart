@@ -14,15 +14,6 @@ const _details = r'''
 
 This can indicate a forgotten comma.
 
-**GOOD:**
-```dart
-List<String> list = <String>[
-  'a' +
-  'b',
-  'c',
-];
-```
-
 **BAD:**
 ```dart
 List<String> list = <String>[
@@ -32,15 +23,31 @@ List<String> list = <String>[
 ];
 ```
 
+**GOOD:**
+```dart
+List<String> list = <String>[
+  'a' +
+  'b',
+  'c',
+];
+```
+
 ''';
 
 class NoAdjacentStringsInList extends LintRule {
+  static const LintCode code = LintCode('no_adjacent_strings_in_list',
+      "Don't use adjacent strings in a list literal.",
+      correctionMessage: 'Try adding a comma between the strings.');
+
   NoAdjacentStringsInList()
       : super(
             name: 'no_adjacent_strings_in_list',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

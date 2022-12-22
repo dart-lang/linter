@@ -15,6 +15,30 @@ const _details = r'''
 Not testing types might result in null pointer exceptions which will be
 unexpected for consumers of your class.
 
+**BAD:**
+```dart
+class Field {
+}
+
+class Bad {
+  final Field someField;
+
+  Bad(this.someField);
+
+  @override
+  bool operator ==(Object other) {
+    Bad otherBad = other as Bad; // LINT
+    bool areEqual = otherBad != null && otherBad.someField == someField;
+    return areEqual;
+  }
+
+  @override
+  int get hashCode {
+    return someField.hashCode;
+  }
+}
+```
+
 **GOOD:**
 ```dart
 class Field {
@@ -41,39 +65,22 @@ class Good {
 }
 ```
 
-**BAD:**
-```dart
-class Field {
-}
-
-class Bad {
-  final Field someField;
-
-  Bad(this.someField);
-
-  @override
-  bool operator ==(Object other) {
-    Bad otherBad = other as Bad; // LINT
-    bool areEqual = otherBad != null && otherBad.someField == someField;
-    return areEqual;
-  }
-
-  @override
-  int get hashCode {
-    return someField.hashCode;
-  }
-}
-```
-
 ''';
 
 class TestTypesInEquals extends LintRule {
+  static const LintCode code = LintCode(
+      'test_types_in_equals', "Missing type test for '{0}' in '=='.",
+      correctionMessage: "Try testing the type of '{0}'.");
+
   TestTypesInEquals()
       : super(
             name: 'test_types_in_equals',
             description: _desc,
             details: _details,
             group: Group.errors);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -91,17 +98,31 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitAsExpression(AsExpression node) {
     var declaration = node.thisOrAncestorOfType<MethodDeclaration>();
-    if (!_isEqualsOverride(declaration) ||
-        node.expression is! SimpleIdentifier) {
+    var expression = node.expression;
+    if (!_isEqualsOverride(declaration) || expression is! SimpleIdentifier) {
       return;
     }
 
-    var identifier = node.expression as SimpleIdentifier;
     var parameters = declaration?.parameters;
     var parameterName = parameters?.parameterElements.first?.name;
-    if (identifier.name == parameterName) {
-      rule.reportLint(node);
+    if (expression.name == parameterName) {
+      var typeName = _getTypeName(declaration!);
+      rule.reportLint(node, arguments: [typeName]);
     }
+  }
+
+  String _getTypeName(MethodDeclaration method) {
+    var parent = method.parent;
+    if (parent is ClassOrAugmentationDeclaration) {
+      return parent.name.lexeme;
+    } else if (parent is EnumDeclaration) {
+      return parent.name.lexeme;
+    } else if (parent is MixinOrAugmentationDeclaration) {
+      return parent.name.lexeme;
+    } else if (parent is ExtensionDeclaration) {
+      return parent.extendedType.toSource();
+    }
+    return 'unknown';
   }
 
   bool _isEqualsOverride(MethodDeclaration? declaration) =>

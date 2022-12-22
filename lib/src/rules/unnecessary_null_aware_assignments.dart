@@ -18,27 +18,34 @@ const _details = r'''
 Using `null` on the right-hand side of a null-aware assignment effectively makes
 the assignment redundant.
 
-**GOOD:**
-```dart
-var x;
-x ??= 1;
-```
-
 **BAD:**
 ```dart
 var x;
 x ??= null;
 ```
 
+**GOOD:**
+```dart
+var x;
+x ??= 1;
+```
+
 ''';
 
 class UnnecessaryNullAwareAssignments extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_null_aware_assignments', "Unnecessary assignment of 'null'.",
+      correctionMessage: 'Try removing the assignment.');
+
   UnnecessaryNullAwareAssignments()
       : super(
             name: 'unnecessary_null_aware_assignments',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

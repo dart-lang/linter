@@ -21,12 +21,12 @@ There is no concept of "private" for local variables or parameters.  When one of
 those has a name that starts with an underscore, it sends a confusing signal to
 the reader. To avoid that, don't use leading underscores in those names.
 
-**Exception**: An unused parameter can be named `_`, `__`, `___`, etc.  This is
+**EXCEPTION:**: An unused parameter can be named `_`, `__`, `___`, etc.  This is
 common practice in callbacks where you are passed a value but you don't need
 to use it. Giving it a name that consists solely of underscores is the idiomatic
 way to indicate that the value isn't used.
 
-**BAD**
+**BAD:**
 ```dart
 void print(String _name) {
   var _size = _name.length;
@@ -50,12 +50,21 @@ void print(String name) {
 ''';
 
 class NoLeadingUnderscoresForLocalIdentifiers extends LintRule {
+  static const LintCode code = LintCode(
+      'no_leading_underscores_for_local_identifiers',
+      "The local variable '{0}' starts with an underscore.",
+      correctionMessage:
+          'Try renaming the variable to not start with an underscore.');
+
   NoLeadingUnderscoresForLocalIdentifiers()
       : super(
             name: 'no_leading_underscores_for_local_identifiers',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -80,13 +89,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (!hasLeadingUnderscore(id.lexeme)) return;
     if (id.lexeme.isJustUnderscores) return;
 
-    rule.reportLintForToken(id);
+    rule.reportLintForToken(id, arguments: [id.lexeme]);
   }
 
   @override
   void visitCatchClause(CatchClause node) {
-    checkIdentifier(node.exceptionParameter2?.name);
-    checkIdentifier(node.stackTraceParameter2?.name);
+    checkIdentifier(node.exceptionParameter?.name);
+    checkIdentifier(node.stackTraceParameter?.name);
   }
 
   @override
@@ -100,8 +109,13 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (parameter is DefaultFormalParameter) {
         parameter = parameter.parameter;
       }
-      // Named parameters produce a `private_optional_parameter` diagnostic.
-      if (parameter is! FieldFormalParameter && !parameter.isNamed) {
+      if (parameter is FieldFormalParameter ||
+          parameter is SuperFormalParameter) {
+        // These are not local identifiers.
+        return;
+      }
+      if (!parameter.isNamed) {
+        // Named parameters produce a `private_optional_parameter` diagnostic.
         checkIdentifier(parameter.name);
       }
     }

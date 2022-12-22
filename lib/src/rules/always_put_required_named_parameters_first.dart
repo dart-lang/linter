@@ -12,11 +12,6 @@ const _desc = r'Put required named parameters first.';
 const _details = r'''
 **DO** specify `required` on named parameter before other named parameters.
 
-**GOOD:**
-```dart
-m({required a, b, c}) ;
-```
-
 **BAD:**
 ```dart
 m({b, c, required a}) ;
@@ -24,7 +19,7 @@ m({b, c, required a}) ;
 
 **GOOD:**
 ```dart
-m({@required a, b, c}) ;
+m({required a, b, c}) ;
 ```
 
 **BAD:**
@@ -32,15 +27,30 @@ m({@required a, b, c}) ;
 m({b, c, @required a}) ;
 ```
 
+**GOOD:**
+```dart
+m({@required a, b, c}) ;
+```
+
 ''';
 
 class AlwaysPutRequiredNamedParametersFirst extends LintRule {
+  static const LintCode code = LintCode(
+      'always_put_required_named_parameters_first',
+      'Required named parameters should be before optional named parameters.',
+      correctionMessage:
+          'Try moving the required named parameter to be before any optional '
+          'named parameters.');
+
   AlwaysPutRequiredNamedParametersFirst()
       : super(
             name: 'always_put_required_named_parameters_first',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

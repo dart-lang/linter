@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -12,14 +13,14 @@ const _desc = r'Unnecessary parentheses can be removed.';
 const _details = r'''
 **AVOID** using parentheses when not needed.
 
-**GOOD:**
-```dart
-a = b;
-```
-
 **BAD:**
 ```dart
 a = (b);
+```
+
+**GOOD:**
+```dart
+a = b;
 ```
 
 Parentheses are considered unnecessary if they do not change the meaning of the
@@ -40,6 +41,10 @@ include:
 ''';
 
 class UnnecessaryParenthesis extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_parenthesis', 'Unnecessary use of parentheses.',
+      correctionMessage: 'Try removing the parentheses.');
+
   UnnecessaryParenthesis()
       : super(
             name: 'unnecessary_parenthesis',
@@ -48,10 +53,29 @@ class UnnecessaryParenthesis extends LintRule {
             group: Group.style);
 
   @override
+  LintCode get lintCode => code;
+
+  @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addParenthesizedExpression(this, visitor);
+  }
+}
+
+class _ContainsFunctionExpressionVisitor extends UnifyingAstVisitor<void> {
+  bool hasFunctionExpression = false;
+
+  @override
+  void visitFunctionExpression(FunctionExpression node) {
+    hasFunctionExpression = true;
+  }
+
+  @override
+  void visitNode(AstNode node) {
+    if (!hasFunctionExpression) {
+      node.visitChildren(this);
+    }
   }
 }
 
@@ -64,19 +88,26 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitParenthesizedExpression(ParenthesizedExpression node) {
     var parent = node.parent;
     var expression = node.expression;
-    if (expression is SimpleIdentifier) {
+    if (expression is SimpleIdentifier ||
+        (expression is CascadeExpression && expression.isNullAware) ||
+        (expression is PropertyAccess && expression.isNullAware) ||
+        (expression is MethodInvocation && expression.isNullAware) ||
+        (expression is IndexExpression && expression.isNullAware)) {
       if (parent is PropertyAccess) {
-        if (parent.propertyName.name == 'hashCode' ||
-            parent.propertyName.name == 'runtimeType') {
+        var name = parent.propertyName.name;
+        if (name == 'hashCode' || name == 'runtimeType') {
           // Code like `(String).hashCode` is allowed.
           return;
         }
       } else if (parent is MethodInvocation) {
-        if (parent.methodName.name == 'noSuchMethod' ||
-            parent.methodName.name == 'toString') {
+        var name = parent.methodName.name;
+        if (name == 'noSuchMethod' || name == 'toString') {
           // Code like `(String).noSuchMethod()` is allowed.
           return;
         }
+      } else if (parent is PostfixExpression &&
+          parent.operator.type == TokenType.BANG) {
+        return;
       }
       rule.reportLint(node);
       return;
@@ -125,7 +156,12 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (parent is BinaryExpression) return;
       if (parent is ConditionalExpression) return;
       if (parent is CascadeExpression) return;
-      if (parent is FunctionExpressionInvocation) return;
+      if (parent is FunctionExpressionInvocation) {
+        if (expression is PrefixedIdentifier) {
+          rule.reportLint(node);
+        }
+        return;
+      }
       if (parent is AsExpression) return;
       if (parent is IsExpression) return;
 
@@ -153,13 +189,19 @@ class _Visitor extends SimpleAstVisitor<void> {
         return;
       }
 
-      if (parent.precedence < node.expression.precedence) {
+      // TODO an API to the AST for better usage
+      // Precedence isn't sufficient (e.g. PostfixExpression requires parenthesis)
+      if (expression is PropertyAccess ||
+          expression is MethodInvocation ||
+          expression is IndexExpression) {
         rule.reportLint(node);
-        return;
+      }
+
+      if (parent.precedence < expression.precedence) {
+        rule.reportLint(node);
       }
     } else {
       rule.reportLint(node);
-      return;
     }
   }
 
@@ -168,22 +210,6 @@ class _Visitor extends SimpleAstVisitor<void> {
         _ContainsFunctionExpressionVisitor();
     node.accept(containsFunctionExpressionVisitor);
     return containsFunctionExpressionVisitor.hasFunctionExpression;
-  }
-}
-
-class _ContainsFunctionExpressionVisitor extends UnifyingAstVisitor<void> {
-  bool hasFunctionExpression = false;
-
-  @override
-  void visitFunctionExpression(FunctionExpression node) {
-    hasFunctionExpression = true;
-  }
-
-  @override
-  void visitNode(AstNode node) {
-    if (!hasFunctionExpression) {
-      node.visitChildren(this);
-    }
   }
 }
 
@@ -220,7 +246,7 @@ extension on Expression? {
             (self is InstanceCreationExpression && self.keyword != null) ||
             // No TypedLiteral (ListLiteral, MapLiteral, SetLiteral) accepts `-`
             // or `!` as a prefix operator, but this method can be called
-            // rescursively, so this catches things like
+            // recursively, so this catches things like
             // `!(const [].contains(42))`.
             (self is TypedLiteral && self.constKeyword != null) ||
             // As in, `!(const List(3).contains(7))`, and chains like

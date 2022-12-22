@@ -59,6 +59,9 @@ enum LogPriority {
 ''';
 
 class UseEnums extends LintRule {
+  static const LintCode code = LintCode('use_enums', 'Class should be an enum.',
+      correctionMessage: 'Try using an enum rather than a class.');
+
   UseEnums()
       : super(
             name: 'use_enums',
@@ -66,6 +69,9 @@ class UseEnums extends LintRule {
             details: _details,
             maturity: Maturity.experimental,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -90,7 +96,7 @@ class _BaseVisitor extends RecursiveAstVisitor<void> {
     var constructorElement = node.constructorName.staticElement;
     return constructorElement != null &&
         !constructorElement.isFactory &&
-        constructorElement.enclosingElement3 == classElement;
+        constructorElement.enclosingElement == classElement;
   }
 }
 
@@ -150,13 +156,13 @@ class _NonEnumVisitor extends _BaseVisitor {
       throw _InvalidEnumException();
     }
     if (element != classElement) {
-      if (element.supertype?.element2 == classElement) {
+      if (element.supertype?.element == classElement) {
         throw _InvalidEnumException();
       } else if (element.interfaces
-          .map((e) => e.element2)
+          .map((e) => e.element)
           .contains(classElement)) {
         throw _InvalidEnumException();
-      } else if (element.mixins.map((e) => e.element2).contains(classElement)) {
+      } else if (element.mixins.map((e) => e.element).contains(classElement)) {
         // This case won't occur unless there's an error in the source code, but
         // it's easier to check for the condition than it is to check for the
         // diagnostic.
@@ -212,7 +218,7 @@ class _Visitor extends SimpleAstVisitor {
           var constructorElement = initializer.constructorName.staticElement;
           if (constructorElement == null) continue;
           if (constructorElement.isFactory) continue;
-          if (constructorElement.enclosingElement3 != classElement) continue;
+          if (constructorElement.enclosingElement != classElement) continue;
 
           if (fieldElement.computeConstantValue() == null) continue;
 

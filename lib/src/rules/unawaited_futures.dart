@@ -22,6 +22,13 @@ When you really _do_ want to start a fire-and-forget `Future`, the recommended
 way is to use `unawaited` from `dart:async`. The `// ignore` and
 `// ignore_for_file` comments also work.
 
+**BAD:**
+```dart
+void main() async {
+  doSomething(); // Likely a bug.
+}
+```
+
 **GOOD:**
 ```dart
 Future doSomething() => ...;
@@ -33,22 +40,23 @@ void main() async {
 }
 ```
 
-**BAD:**
-```dart
-void main() async {
-  doSomething(); // Likely a bug.
-}
-```
-
 ''';
 
 class UnawaitedFutures extends LintRule {
+  static const LintCode code = LintCode('unawaited_futures',
+      "Missing an 'await' for the 'Future' computed by this expression.",
+      correctionMessage:
+          "Try adding an 'await' or wrapping the expression un 'unawaited'.");
+
   UnawaitedFutures()
       : super(
             name: 'unawaited_futures',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -122,7 +130,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   bool _isMapPutIfAbsentInvocation(Expression expr) =>
       expr is MethodInvocation &&
       expr.methodName.name == 'putIfAbsent' &&
-      _isMapClass(expr.methodName.staticElement?.enclosingElement3);
+      _isMapClass(expr.methodName.staticElement?.enclosingElement);
 
   void _visit(Expression expr) {
     if ((expr.staticType?.isDartAsyncFuture ?? false) &&

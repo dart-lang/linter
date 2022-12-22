@@ -108,6 +108,23 @@ main() async {
   ({1, 2, 3}).length;
   print(({1, 2, 3}).length); // LINT
   ([false, true]).forEach(print); // LINT
+  (0.sign).isEven; // LINT
+  (0.isEven).toString(); // LINT
+  (0.toString()).isEmpty; // LINT
+  (0.toDouble()).toString(); // LINT
+
+  List<String> list = <String>[];
+  (list[list.length]).toString(); // LINT
+
+  (a?.sign).hashCode;
+  (a?.abs()).hashCode;
+  (a?..abs()).hashCode;
+  (a?[0]).hashCode;
+
+  (a?.sign)!;
+  (a?.abs())!;
+  (a?..abs())!;
+  (a?[0])!;
 }
 
 Invocation? invocation() => null;
@@ -144,4 +161,10 @@ class UnnecessaryParenthesis {
 
 extension<T> on Set<T> {
   Set<T> operator +(Set<T> other) => {...this, ...other};
+}
+
+class MyType extends Type {
+  MyType.withString(String s) {}
+  MyType.withSelf(MyType myType)
+      : this.withString((myType.toString)()); // LINT
 }
