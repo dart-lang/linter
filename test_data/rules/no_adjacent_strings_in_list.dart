@@ -23,6 +23,17 @@ void bad() {
   ];
 
   var list4 = [
+    if (1 == 2) 'a' // OK
+    'b'
+    else 'c'
+  ];
+
+  var list5 = [
+    if (1 == 2) 'a'
+    else 'b' 'c' // LINT
+  ];
+
+  var list6 = [
     for (var v in []) 'a' // LINT
     'b'
   ];
