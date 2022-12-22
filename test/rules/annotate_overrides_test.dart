@@ -128,7 +128,7 @@ enum A implements O {
   int get x => 0;
 }
 ''', [
-      lint(76, 1),
+      lint(72, 1),
     ]);
   }
 
