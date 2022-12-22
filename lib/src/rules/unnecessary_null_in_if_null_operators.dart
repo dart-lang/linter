@@ -17,26 +17,34 @@ const _details = r'''
 Using `null` in an `if null` operator is redundant, regardless of which side
 `null` is used on.
 
-**GOOD:**
-```dart
-var x = a ?? 1;
-```
-
 **BAD:**
 ```dart
 var x = a ?? null;
 var y = null ?? 1;
 ```
 
+**GOOD:**
+```dart
+var x = a ?? 1;
+```
+
 ''';
 
 class UnnecessaryNullInIfNullOperators extends LintRule {
+  static const LintCode code = LintCode('unnecessary_null_in_if_null_operators',
+      "Unnecessary use of '??' with 'null'.",
+      correctionMessage:
+          "Try removing the '??' operator and the 'null' operand.");
+
   UnnecessaryNullInIfNullOperators()
       : super(
             name: 'unnecessary_null_in_if_null_operators',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

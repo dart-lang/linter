@@ -16,20 +16,18 @@ const _details = r'''
 
 **BAD:**
 ```dart
-var points = List();
-var addresses = Map();
-var uniqueNames = Set();
-var ids = LinkedHashSet();
-var coordinates = LinkedHashMap();
+var addresses = Map<String, String>();
+var uniqueNames = Set<String>();
+var ids = LinkedHashSet<int>();
+var coordinates = LinkedHashMap<int, int>();
 ```
 
 **GOOD:**
 ```dart
-var points = [];
-var addresses = <String,String>{};
+var addresses = <String, String>{};
 var uniqueNames = <String>{};
 var ids = <int>{};
-var coordinates = <int,int>{};
+var coordinates = <int, int>{};
 ```
 
 **EXCEPTIONS:**
@@ -57,12 +55,19 @@ void printHashMap(LinkedHashMap map) => printMap(map);
 ''';
 
 class PreferCollectionLiterals extends LintRule {
+  static const LintCode code = LintCode(
+      'prefer_collection_literals', 'Unnecessary constructor invocation.',
+      correctionMessage: 'Try using a collection literal.');
+
   PreferCollectionLiterals()
       : super(
             name: 'prefer_collection_literals',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -78,22 +83,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   @override
-  void visitMethodInvocation(MethodInvocation node) {
-    // ['foo', 'bar', 'baz'].toSet();
-    if (node.methodName.name != 'toSet') {
-      return;
-    }
-    if (node.target is ListLiteral) {
-      rule.reportLint(node);
-    }
-  }
-
-  @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     var constructorName = node.constructorName.name?.name;
 
-    // Lists, Maps.
-    if (_isList(node) || _isMap(node) || _isHashMap(node)) {
+    // Maps.
+    if (_isMap(node) || _isHashMap(node)) {
       if (_shouldSkipLinkedHashLint(node, _isTypeHashMap)) {
         return;
       }
@@ -126,26 +120,34 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  bool _isSet(Expression expression) =>
-      expression.staticType?.isDartCoreSet ?? false;
-
-  bool _isHashSet(Expression expression) =>
-      _isTypeHashSet(expression.staticType);
-
-  bool _isList(Expression expression) =>
-      expression.staticType?.isDartCoreList ?? false;
-
-  bool _isMap(Expression expression) =>
-      expression.staticType?.isDartCoreMap ?? false;
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    // ['foo', 'bar', 'baz'].toSet();
+    if (node.methodName.name != 'toSet') {
+      return;
+    }
+    if (node.target is ListLiteral) {
+      rule.reportLint(node);
+    }
+  }
 
   bool _isHashMap(Expression expression) =>
       _isTypeHashMap(expression.staticType);
 
-  bool _isTypeHashSet(DartType? type) =>
-      type.isSameAs('LinkedHashSet', 'dart.collection');
+  bool _isHashSet(Expression expression) =>
+      _isTypeHashSet(expression.staticType);
+
+  bool _isMap(Expression expression) =>
+      expression.staticType?.isDartCoreMap ?? false;
+
+  bool _isSet(Expression expression) =>
+      expression.staticType?.isDartCoreSet ?? false;
 
   bool _isTypeHashMap(DartType? type) =>
       type.isSameAs('LinkedHashMap', 'dart.collection');
+
+  bool _isTypeHashSet(DartType? type) =>
+      type.isSameAs('LinkedHashSet', 'dart.collection');
 
   bool _shouldSkipLinkedHashLint(
       InstanceCreationExpression node, bool Function(DartType node) typeCheck) {

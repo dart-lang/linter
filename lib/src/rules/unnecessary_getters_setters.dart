@@ -27,16 +27,7 @@ Dart doesn't have this limitation.  Fields and getters/setters are completely
 indistinguishable.  You can expose a field in a class and later wrap it in a
 getter and setter without having to touch any code that uses that field.
 
-**GOOD:**
-
-```dart
-class Box {
-  var contents;
-}
-```
-
 **BAD:**
-
 ```dart
 class Box {
   var _contents;
@@ -47,15 +38,30 @@ class Box {
 }
 ```
 
+**GOOD:**
+```dart
+class Box {
+  var contents;
+}
+```
+
 ''';
 
 class UnnecessaryGettersSetters extends LintRule {
+  static const LintCode code = LintCode('unnecessary_getters_setters',
+      'Unnecessary use of getter and setter to wrap a field.',
+      correctionMessage:
+          'Try removing the getter and setter and renaming the field.');
+
   UnnecessaryGettersSetters()
       : super(
             name: 'unnecessary_getters_setters',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

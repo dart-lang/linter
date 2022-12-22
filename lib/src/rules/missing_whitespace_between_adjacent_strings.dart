@@ -33,12 +33,20 @@ var s =
 ''';
 
 class MissingWhitespaceBetweenAdjacentStrings extends LintRule {
+  static const LintCode code = LintCode(
+      'missing_whitespace_between_adjacent_strings',
+      'Missing whitespace between adjacent strings.',
+      correctionMessage: 'Try adding whitespace between the strings.');
+
   MissingWhitespaceBetweenAdjacentStrings()
       : super(
             name: 'missing_whitespace_between_adjacent_strings',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -86,7 +94,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   static bool _isRegExpInstanceCreation(AstNode? node) {
     if (node is InstanceCreationExpression) {
       var constructorElement = node.constructorName.staticElement;
-      return constructorElement?.enclosingElement3.name == 'RegExp';
+      return constructorElement?.enclosingElement.name == 'RegExp';
     }
     return false;
   }
@@ -108,6 +116,19 @@ extension on StringLiteral {
         '$runtimeType');
   }
 
+  /// Returns whether this contains whitespace, where any
+  /// [InterpolationExpression] does not count as whitespace.
+  bool get hasWhitespace {
+    var self = this;
+    if (self is SimpleStringLiteral) {
+      return self.value.hasWhitespace;
+    } else if (self is StringInterpolation) {
+      return self.elements
+          .any((e) => e is InterpolationString && e.value.hasWhitespace);
+    }
+    return false;
+  }
+
   /// Returns whether this starts with whitespace, where an initial
   /// [InterpolationExpression] counts as whitespace.
   bool get startsWithWhitespace {
@@ -122,25 +143,12 @@ extension on StringLiteral {
         'Expected SimpleStringLiteral or StringInterpolation, but got '
         '$runtimeType');
   }
-
-  /// Returns whether this contains whitespace, where any
-  /// [InterpolationExpression] does not count as whitespace.
-  bool get hasWhitespace {
-    if (this is SimpleStringLiteral) {
-      return (this as SimpleStringLiteral).value.hasWhitespace;
-    } else if (this is StringInterpolation) {
-      return (this as StringInterpolation)
-          .elements
-          .any((e) => e is InterpolationString && e.value.hasWhitespace);
-    }
-    return false;
-  }
 }
 
 extension on String {
-  bool get hasWhitespace => whitespaces.any(contains);
-  bool get endsWithWhitespace => whitespaces.any(endsWith);
-  bool get startsWithWhitespace => whitespaces.any(startsWith);
-
   static const whitespaces = [' ', '\n', '\r', '\t'];
+  bool get endsWithWhitespace => whitespaces.any(endsWith);
+  bool get hasWhitespace => whitespaces.any(contains);
+
+  bool get startsWithWhitespace => whitespaces.any(startsWith);
 }

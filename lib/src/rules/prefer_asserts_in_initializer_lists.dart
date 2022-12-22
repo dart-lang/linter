@@ -14,13 +14,6 @@ const _desc = r'Prefer putting asserts in initializer lists.';
 const _details = r'''
 **DO** put asserts in initializer lists.
 
-**GOOD:**
-```dart
-class A {
-  A(int a) : assert(a != 0);
-}
-```
-
 **BAD:**
 ```dart
 class A {
@@ -29,15 +22,30 @@ class A {
   }
 }
 ```
+
+**GOOD:**
+```dart
+class A {
+  A(int a) : assert(a != 0);
+}
+```
+
 ''';
 
 class PreferAssertsInInitializerLists extends LintRule {
+  static const LintCode code = LintCode('prefer_asserts_in_initializer_lists',
+      'Assert should be in the initializer list.',
+      correctionMessage: 'Try moving the assert to the initializer list.');
+
   PreferAssertsInInitializerLists()
       : super(
             name: 'prefer_asserts_in_initializer_lists',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -79,12 +87,12 @@ class _AssertVisitor extends RecursiveAstVisitor {
 
   bool _hasAccessor(PropertyAccessorElement element) {
     var classes = classAndSuperClasses?.classes;
-    return classes != null && classes.contains(element.enclosingElement3);
+    return classes != null && classes.contains(element.enclosingElement);
   }
 
   bool _hasMethod(MethodElement element) {
     var classes = classAndSuperClasses?.classes;
-    return classes != null && classes.contains(element.enclosingElement3);
+    return classes != null && classes.contains(element.enclosingElement);
   }
 
   bool _paramMatchesField(
@@ -118,9 +126,9 @@ class _ClassAndSuperClasses {
       void addRecursively(InterfaceElement? element) {
         if (element != null && _classes.add(element)) {
           for (var t in element.mixins) {
-            addRecursively(t.element2);
+            addRecursively(t.element);
           }
-          addRecursively(element.supertype?.element2);
+          addRecursively(element.supertype?.element);
         }
       }
 

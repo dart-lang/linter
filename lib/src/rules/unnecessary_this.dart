@@ -49,12 +49,19 @@ class Box {
 ''';
 
 class UnnecessaryThis extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_this', "Unnecessary 'this.' qualifier.",
+      correctionMessage: "Try removing 'this.'.");
+
   UnnecessaryThis()
       : super(
             name: 'unnecessary_this',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -124,7 +131,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     //  - prevents us from going up to the library scope;
     //  - the requested element must be inherited, or from an extension.
     if (result.isDifferentName) {
-      var enclosing = result.element?.enclosingElement3;
+      var enclosing = result.element?.enclosingElement;
       return enclosing is ClassElement;
     }
 

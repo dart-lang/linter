@@ -11,6 +11,8 @@ import '../analyzer.dart';
 const _desc = r'Avoid defining a class that contains only static members.';
 
 const _details = r'''
+From [Effective Dart](https://dart.dev/guides/language/effective-dart/design#avoid-defining-a-class-that-contains-only-static-members):
+
 **AVOID** defining a class that contains only static members.
 
 Creating classes with the sole purpose of providing utility or otherwise static
@@ -54,12 +56,21 @@ bool _isStaticMember(ClassMember classMember) {
 }
 
 class AvoidClassesWithOnlyStaticMembers extends LintRule {
+  static const LintCode code = LintCode(
+      'avoid_classes_with_only_static_members',
+      'Classes should define instance members.',
+      correctionMessage:
+          'Try adding instance behavior or moving the members out of the class.');
+
   AvoidClassesWithOnlyStaticMembers()
       : super(
             name: 'avoid_classes_with_only_static_members',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -85,7 +96,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     var interface = context.inheritanceManager.getInterface(declaredElement);
     var map = interface.map;
     for (var member in map.values) {
-      var enclosingElement = member.enclosingElement3;
+      var enclosingElement = member.enclosingElement;
       if (enclosingElement is ClassElement &&
           !enclosingElement.isDartCoreObject) {
         return;

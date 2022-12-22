@@ -12,15 +12,6 @@ const _desc = r'Sort unnamed constructor declarations first.';
 const _details = r'''
 **DO** sort unnamed constructor declarations first, before named ones.
 
-**GOOD:**
-```dart
-abstract class CancelableFuture<T> implements Future<T>  {
-  factory CancelableFuture(computation()) => ...
-  factory CancelableFuture.delayed(Duration duration, [computation()]) => ...
-  ...
-}
-```
-
 **BAD:**
 ```dart
 class _PriorityItem {
@@ -30,15 +21,32 @@ class _PriorityItem {
 }
 ```
 
+**GOOD:**
+```dart
+abstract class CancelableFuture<T> implements Future<T>  {
+  factory CancelableFuture(computation()) => ...
+  factory CancelableFuture.delayed(Duration duration, [computation()]) => ...
+  ...
+}
+```
+
 ''';
 
 class SortUnnamedConstructorsFirst extends LintRule {
+  static const LintCode code = LintCode('sort_unnamed_constructors_first',
+      'Invalid location for the unnamed constructor.',
+      correctionMessage:
+          'Try moving the unnamed constructor before all other constructors.');
+
   SortUnnamedConstructorsFirst()
       : super(
             name: 'sort_unnamed_constructors_first',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

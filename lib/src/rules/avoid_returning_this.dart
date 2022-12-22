@@ -43,11 +43,14 @@ var buffer = StringBuffer()
 
 ''';
 
-bool _isFunctionExpression(AstNode node) => node is FunctionExpression;
-
 bool _returnsThis(ReturnStatement node) => node.expression is ThisExpression;
 
 class AvoidReturningThis extends LintRule {
+  static const LintCode code = LintCode(
+      'avoid_returning_this', "Don't return 'this' from a method.",
+      correctionMessage:
+          "Try changing the return type to 'void' and removing the return.");
+
   AvoidReturningThis()
       : super(
             name: 'avoid_returning_this',
@@ -56,10 +59,36 @@ class AvoidReturningThis extends LintRule {
             group: Group.style);
 
   @override
+  LintCode get lintCode => code;
+
+  @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addMethodDeclaration(this, visitor);
+  }
+}
+
+class _BodyVisitor extends RecursiveAstVisitor {
+  List<ReturnStatement> returnStatements = [];
+
+  List<ReturnStatement> collectReturns(BlockFunctionBody body) {
+    body.accept(this);
+    return returnStatements;
+  }
+
+  @override
+  visitFunctionExpression(FunctionExpression node) {
+    // Short-circuit visiting on Function expressions.
+  }
+
+  @override
+  visitReturnStatement(ReturnStatement node) {
+    // Short-circuit if not returning this.
+    if (!_returnsThis(node)) return;
+
+    returnStatements.add(node);
+    super.visitReturnStatement(node);
   }
 }
 
@@ -83,7 +112,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       var returnType = node.declaredElement?.returnType;
       if (returnType is InterfaceType &&
           // ignore: cast_nullable_to_non_nullable
-          returnType.element2 == (parent as Declaration).declaredElement) {
+          returnType.element == (parent as Declaration).declaredElement) {
       } else {
         return;
       }
@@ -94,10 +123,8 @@ class _Visitor extends SimpleAstVisitor<void> {
 
     var body = node.body;
     if (body is BlockFunctionBody) {
-      var returnStatements = body.block
-          .traverseNodesInDFS(excludeCriteria: _isFunctionExpression)
-          .whereType<ReturnStatement>();
-      if (returnStatements.isNotEmpty && returnStatements.every(_returnsThis)) {
+      var returnStatements = _BodyVisitor().collectReturns(body);
+      if (returnStatements.isNotEmpty) {
         rule.reportLint(returnStatements.first.expression);
       }
     } else if (body is ExpressionFunctionBody) {

@@ -7,10 +7,13 @@ import 'avoid_annotating_with_dynamic_test.dart'
     as avoid_annotating_with_dynamic;
 import 'avoid_equals_and_hash_code_on_mutable_classes_test.dart'
     as avoid_equals_and_hash_code_on_mutable_classes;
+import 'avoid_escaping_inner_quotes_test.dart' as avoid_escaping_inner_quotes;
 import 'avoid_final_parameters_test.dart' as avoid_final_parameters;
 import 'avoid_function_literals_in_foreach_calls_test.dart'
     as avoid_function_literals_in_foreach_calls;
 import 'avoid_init_to_null_test.dart' as avoid_init_to_null;
+import 'avoid_private_typedef_functions_test.dart'
+    as avoid_private_typedef_functions;
 import 'avoid_redundant_argument_values_test.dart'
     as avoid_redundant_argument_values;
 import 'avoid_renaming_method_parameters_test.dart'
@@ -30,11 +33,15 @@ import 'collection_methods_unrelated_type_test.dart'
 import 'conditional_uri_does_not_exist_test.dart'
     as conditional_uri_does_not_exist;
 import 'constant_identifier_names_test.dart' as constant_identifier_names;
+import 'dangling_library_doc_comments_test.dart'
+    as dangling_library_doc_comments;
 import 'deprecated_consistency_test.dart' as deprecated_consistency;
 import 'discarded_futures_test.dart' as discarded_futures;
+import 'enable_null_safety_test.dart' as enable_null_safety;
 import 'file_names_test.dart' as file_names;
 import 'flutter_style_todos_test.dart' as flutter_style_todos;
 import 'hash_and_equals_test.dart' as hash_and_equals;
+import 'library_annotations_test.dart' as library_annotations;
 import 'library_names_test.dart' as library_names;
 import 'library_private_types_in_public_api_test.dart'
     as library_private_types_in_public_api;
@@ -47,6 +54,7 @@ import 'non_constant_identifier_names_test.dart'
 import 'null_closures_test.dart' as null_closures;
 import 'omit_local_variable_types_test.dart' as omit_local_variable_types;
 import 'overridden_fields_test.dart' as overridden_fields;
+import 'parameter_assignments_test.dart' as parameter_assignments;
 import 'prefer_asserts_in_initializer_lists_test.dart'
     as prefer_asserts_in_initializer_lists;
 import 'prefer_collection_literals_test.dart' as prefer_collection_literals;
@@ -93,13 +101,15 @@ void main() {
   annotate_overrides.main();
   avoid_annotating_with_dynamic.main();
   avoid_equals_and_hash_code_on_mutable_classes.main();
+  avoid_escaping_inner_quotes.main();
   avoid_function_literals_in_foreach_calls.main();
-  avoid_setters_without_getters.main();
   avoid_final_parameters.main();
   avoid_init_to_null.main();
+  avoid_private_typedef_functions.main();
   avoid_redundant_argument_values.main();
   avoid_renaming_method_parameters.main();
   avoid_returning_this.main();
+  avoid_setters_without_getters.main();
   avoid_shadowing_type_parameters.main();
   avoid_types_as_parameter_names.main();
   avoid_unused_constructor_parameters.main();
@@ -107,11 +117,14 @@ void main() {
   collection_methods_unrelated_type.main();
   conditional_uri_does_not_exist.main();
   constant_identifier_names.main();
+  dangling_library_doc_comments.main();
   deprecated_consistency.main();
   discarded_futures.main();
+  enable_null_safety.main();
   file_names.main();
   flutter_style_todos.main();
   hash_and_equals.main();
+  library_annotations.main();
   library_names.main();
   library_private_types_in_public_api.main();
   literal_only_boolean_expressions.main();
@@ -120,6 +133,7 @@ void main() {
   null_closures.main();
   omit_local_variable_types.main();
   overridden_fields.main();
+  parameter_assignments.main();
   prefer_asserts_in_initializer_lists.main();
   prefer_collection_literals.main();
   prefer_const_constructors.main();

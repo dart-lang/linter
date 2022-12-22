@@ -42,12 +42,18 @@ type information is more important than performance:
 ''';
 
 class NoRuntimeTypeToString extends LintRule {
+  static const LintCode code = LintCode('no_runtimeType_toString',
+      "Using 'toString' on a 'Type' is not safe in production code.");
+
   NoRuntimeTypeToString()
       : super(
             name: 'no_runtimeType_toString',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -64,17 +70,6 @@ class _Visitor extends SimpleAstVisitor<void> {
   _Visitor(this.rule);
 
   @override
-  void visitMethodInvocation(MethodInvocation node) {
-    if (_canSkip(node)) {
-      return;
-    }
-    if (node.methodName.name == 'toString' &&
-        _isRuntimeTypeAccess(node.realTarget)) {
-      rule.reportLint(node.methodName);
-    }
-  }
-
-  @override
   void visitInterpolationExpression(InterpolationExpression node) {
     if (_canSkip(node)) {
       return;
@@ -84,14 +79,16 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  bool _isRuntimeTypeAccess(Expression? target) =>
-      target is PropertyAccess &&
-          (target.target is ThisExpression ||
-              target.target is SuperExpression) &&
-          target.propertyName.name == 'runtimeType' ||
-      target is SimpleIdentifier &&
-          target.name == 'runtimeType' &&
-          target.staticElement is PropertyAccessorElement;
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    if (_canSkip(node)) {
+      return;
+    }
+    if (node.methodName.name == 'toString' &&
+        _isRuntimeTypeAccess(node.realTarget)) {
+      rule.reportLint(node.methodName);
+    }
+  }
 
   bool _canSkip(AstNode node) =>
       node.thisOrAncestorMatching((n) {
@@ -105,7 +102,7 @@ class _Visitor extends SimpleAstVisitor<void> {
           if (declaredElement != null) {
             var extendedType = declaredElement.extendedType;
             if (extendedType is InterfaceType) {
-              var extendedElement = extendedType.element2;
+              var extendedElement = extendedType.element;
               return !(extendedElement is ClassElement &&
                   !extendedElement.isAbstract);
             }
@@ -114,4 +111,13 @@ class _Visitor extends SimpleAstVisitor<void> {
         return false;
       }) !=
       null;
+
+  bool _isRuntimeTypeAccess(Expression? target) =>
+      target is PropertyAccess &&
+          (target.target is ThisExpression ||
+              target.target is SuperExpression) &&
+          target.propertyName.name == 'runtimeType' ||
+      target is SimpleIdentifier &&
+          target.name == 'runtimeType' &&
+          target.staticElement is PropertyAccessorElement;
 }

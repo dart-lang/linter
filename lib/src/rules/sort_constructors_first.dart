@@ -12,15 +12,6 @@ const _desc = r'Sort constructor declarations before other members.';
 const _details = r'''
 **DO** sort constructor declarations before other members.
 
-**GOOD:**
-```dart
-abstract class Animation<T> {
-  const Animation(this.value);
-  double value;
-  void addListener(VoidCallback listener);
-}
-```
-
 **BAD:**
 ```dart
 abstract class Visitor {
@@ -30,15 +21,32 @@ abstract class Visitor {
 }
 ```
 
+**GOOD:**
+```dart
+abstract class Animation<T> {
+  const Animation(this.value);
+  double value;
+  void addListener(VoidCallback listener);
+}
+```
+
 ''';
 
 class SortConstructorsFirst extends LintRule {
+  static const LintCode code = LintCode('sort_constructors_first',
+      'Invalid location for a constructor declaration.',
+      correctionMessage:
+          'Try moving the constructor declaration before all other members.');
+
   SortConstructorsFirst()
       : super(
             name: 'sort_constructors_first',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

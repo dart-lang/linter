@@ -23,17 +23,17 @@ the easiest to overlook when writing code.
 When a `BuildContext` is used, its `mounted` property must be checked after an
 asynchronous gap.
 
-**GOOD:**
-```dart
-void onButtonTapped(BuildContext context) {
-  Navigator.of(context).pop();
-}
-```
-
 **BAD:**
 ```dart
 void onButtonTapped(BuildContext context) async {
   await Future.delayed(const Duration(seconds: 1));
+  Navigator.of(context).pop();
+}
+```
+
+**GOOD:**
+```dart
+void onButtonTapped(BuildContext context) {
   Navigator.of(context).pop();
 }
 ```
@@ -50,6 +50,11 @@ void onButtonTapped() async {
 ''';
 
 class UseBuildContextSynchronously extends LintRule {
+  static const LintCode code = LintCode('use_build_context_synchronously',
+      "Don't use 'BuildContext's across async gaps.",
+      correctionMessage:
+          "Try rewriting the code to not reference the 'BuildContext'.");
+
   /// Flag to short-circuit `inTestDir` checking when running tests.
   final bool inTestMode;
 
@@ -60,6 +65,9 @@ class UseBuildContextSynchronously extends LintRule {
             details: _details,
             group: Group.errors,
             maturity: Maturity.experimental);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -104,6 +112,9 @@ class _Visitor extends SimpleAstVisitor {
     for (var argument in argumentList.arguments) {
       if (argument is NamedExpression) {
         argument = argument.expression;
+      }
+      if (argument is PropertyAccess) {
+        argument = argument.propertyName;
       }
       if (argument is Identifier) {
         var element = argument.staticElement;

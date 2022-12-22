@@ -9,8 +9,8 @@ import '../analyzer.dart';
 
 const _desc = r'Adhere to Effective Dart Guide directives sorting conventions.';
 const _details = r'''
-**DO** follow the conventions in the 
-[Effective Dart Guide](https://dart.dev/guides/language/effective-dart/style#ordering)
+**DO** follow the directive ordering conventions in
+[Effective Dart](https://dart.dev/guides/language/effective-dart/style#ordering):
 
 **DO** place `dart:` imports before other imports.
 
@@ -149,18 +149,22 @@ bool _isRelativeDirective(NamespaceDirective node) =>
     !_isAbsoluteDirective(node);
 
 class DirectivesOrdering extends LintRule {
-  static const LintCode dartDirectiveGoFirst =
-      LintCode('directives_ordering', "Place 'dart:' {0}s before other {0}s.");
+  static const LintCode dartDirectiveGoFirst = LintCode(
+      'directives_ordering', "Place 'dart:' {0}s before other {0}s.",
+      correctionMessage: 'Try sorting the directives.');
 
   static const LintCode directiveSectionOrderedAlphabetically = LintCode(
-      'directives_ordering', 'Sort directive sections alphabetically.');
+      'directives_ordering', 'Sort directive sections alphabetically.',
+      correctionMessage: 'Try sorting the directives.');
 
   static const LintCode exportDirectiveAfterImportDirectives = LintCode(
       'directives_ordering',
-      'Specify exports in a separate section after all imports.');
+      'Specify exports in a separate section after all imports.',
+      correctionMessage: 'Try sorting the directives.');
 
   static const LintCode packageDirectiveBeforeRelative = LintCode(
-      'directives_ordering', "Place 'package:' {0}s before relative {0}s.");
+      'directives_ordering', "Place 'package:' {0}s before relative {0}s.",
+      correctionMessage: 'Try sorting the directives.');
 
   DirectivesOrdering()
       : super(

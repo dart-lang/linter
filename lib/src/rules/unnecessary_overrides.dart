@@ -51,12 +51,20 @@ It's valid to override a member in the following cases:
 ''';
 
 class UnnecessaryOverrides extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_overrides', 'Unnecessary override.',
+      correctionMessage:
+          'Try adding behavior in the overriding member or removing the override.');
+
   UnnecessaryOverrides()
       : super(
             name: 'unnecessary_overrides',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -132,11 +140,13 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
 
   @override
   void visitReturnStatement(ReturnStatement node) {
+    if (node.beginToken.precedingComments != null) return;
     node.expression?.accept(this);
   }
 
   @override
   void visitSuperExpression(SuperExpression node) {
+    if (node.beginToken.precedingComments != null) return;
     rule.reportLintForToken(declaration.name);
   }
 
@@ -154,20 +164,6 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
       }
     }
     return false;
-  }
-
-  /// Returns true if [_inheritedMethod] is `@protected` and [declaration] is
-  /// not `@protected`, and false otherwise.
-  ///
-  /// This indicates that [_inheritedMethod] may have been overridden in order
-  /// to expand its visibility.
-  bool _makesPublicFromProtected() {
-    var declaredElement = declaration.declaredElement;
-    if (declaredElement == null) return false;
-    if (declaredElement.hasProtected) {
-      return false;
-    }
-    return _inheritedMethod.hasProtected;
   }
 
   bool _haveSameDeclaration() {
@@ -194,6 +190,20 @@ abstract class _AbstractUnnecessaryOverrideVisitor extends SimpleAstVisitor {
     return true;
   }
 
+  /// Returns true if [_inheritedMethod] is `@protected` and [declaration] is
+  /// not `@protected`, and false otherwise.
+  ///
+  /// This indicates that [_inheritedMethod] may have been overridden in order
+  /// to expand its visibility.
+  bool _makesPublicFromProtected() {
+    var declaredElement = declaration.declaredElement;
+    if (declaredElement == null) return false;
+    if (declaredElement.hasProtected) {
+      return false;
+    }
+    return _inheritedMethod.hasProtected;
+  }
+
   bool _sameKind(ParameterElement first, ParameterElement second) {
     if (first.isRequired) {
       return second.isRequired;
@@ -211,12 +221,22 @@ class _UnnecessaryGetterOverrideVisitor
   _UnnecessaryGetterOverrideVisitor(super.rule);
 
   @override
-  ExecutableElement? getInheritedElement(MethodDeclaration node) =>
-      node.lookUpInheritedConcreteGetter();
+  ExecutableElement? getInheritedElement(MethodDeclaration node) {
+    var element = node.declaredElement;
+    if (element == null) return null;
+    var enclosingElement = element.enclosingElement;
+    if (enclosingElement is! InterfaceElement) return null;
+    return enclosingElement.thisType.lookUpGetter2(
+      element.name,
+      element.library,
+      concrete: true,
+      inherited: true,
+    );
+  }
 
   @override
   void visitPropertyAccess(PropertyAccess node) {
-    if (node.propertyName.staticElement == _inheritedMethod) {
+    if (node.propertyName.name == _inheritedMethod.name) {
       node.target?.accept(this);
     }
   }
@@ -227,13 +247,24 @@ class _UnnecessaryMethodOverrideVisitor
   _UnnecessaryMethodOverrideVisitor(super.rule);
 
   @override
-  ExecutableElement? getInheritedElement(node) => node.lookUpInheritedMethod();
+  ExecutableElement? getInheritedElement(node) {
+    var element = node.declaredElement;
+    if (element == null) return null;
+    var enclosingElement = element.enclosingElement;
+    if (enclosingElement is! InterfaceElement) return null;
+    return enclosingElement.thisType.lookUpMethod2(
+      node.name.lexeme,
+      element.library,
+      concrete: true,
+      inherited: true,
+    );
+  }
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
     var declarationParameters = declaration.parameters;
     if (declarationParameters != null &&
-        node.methodName.staticElement == _inheritedMethod &&
+        node.methodName.name == _inheritedMethod.name &&
         argumentsMatchParameters(
             node.argumentList.arguments, declarationParameters.parameters)) {
       node.target?.accept(this);
@@ -246,8 +277,18 @@ class _UnnecessaryOperatorOverrideVisitor
   _UnnecessaryOperatorOverrideVisitor(super.rule);
 
   @override
-  ExecutableElement? getInheritedElement(node) =>
-      node.lookUpInheritedConcreteMethod();
+  ExecutableElement? getInheritedElement(node) {
+    var element = node.declaredElement;
+    if (element == null) return null;
+    var enclosingElement = element.enclosingElement;
+    if (enclosingElement is! InterfaceElement) return null;
+    return enclosingElement.thisType.lookUpMethod2(
+      element.name,
+      element.library,
+      concrete: true,
+      inherited: true,
+    );
+  }
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
@@ -283,8 +324,18 @@ class _UnnecessarySetterOverrideVisitor
   _UnnecessarySetterOverrideVisitor(super.rule);
 
   @override
-  ExecutableElement? getInheritedElement(node) =>
-      node.lookUpInheritedConcreteSetter();
+  ExecutableElement? getInheritedElement(node) {
+    var element = node.declaredElement;
+    if (element == null) return null;
+    var enclosingElement = element.enclosingElement;
+    if (enclosingElement is! InterfaceElement) return null;
+    return enclosingElement.thisType.lookUpSetter2(
+      node.name.lexeme,
+      element.library,
+      concrete: true,
+      inherited: true,
+    );
+  }
 
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
@@ -295,7 +346,7 @@ class _UnnecessarySetterOverrideVisitor
             node.rightHandSide.canonicalElement) {
       var leftPart = node.leftHandSide.unParenthesized;
       if (leftPart is PropertyAccess) {
-        if (node.writeElement == _inheritedMethod) {
+        if (node.writeElement?.name == _inheritedMethod.name) {
           leftPart.target?.accept(this);
         }
       }

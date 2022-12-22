@@ -12,7 +12,7 @@ import '../util/ascii_utils.dart';
 const _desc = r'Type annotate public APIs.';
 
 const _details = r'''
-From [effective dart](https://dart.dev/guides/language/effective-dart/design#prefer-type-annotating-public-fields-and-top-level-variables-if-the-type-isnt-obvious):
+From [Effective Dart](https://dart.dev/guides/language/effective-dart/design#do-type-annotate-fields-and-top-level-variables-if-the-type-isnt-obvious):
 
 **PREFER** type annotating public APIs.
 
@@ -49,12 +49,19 @@ With types, all of this is clarified.
 ''';
 
 class TypeAnnotatePublicApis extends LintRule {
+  static const LintCode code = LintCode(
+      'type_annotate_public_apis', 'Missing type annotation on a public API.',
+      correctionMessage: 'Try adding a type annotation.');
+
   TypeAnnotatePublicApis()
       : super(
             name: 'type_annotate_public_apis',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

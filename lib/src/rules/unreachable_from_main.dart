@@ -256,8 +256,8 @@ class _IdentifierVisitor extends RecursiveAstVisitor {
   void _addDeclaration(Element element) {
     // First add the enclosing top-level declaration.
     var enclosingTopLevelElement = element.thisOrAncestorMatching((a) =>
-        a.enclosingElement3 == null ||
-        a.enclosingElement3 is CompilationUnitElement);
+        a.enclosingElement == null ||
+        a.enclosingElement is CompilationUnitElement);
     var enclosingTopLevelDeclaration = declarationMap[enclosingTopLevelElement];
     if (enclosingTopLevelDeclaration != null) {
       declarations.add(enclosingTopLevelDeclaration);
@@ -268,7 +268,7 @@ class _IdentifierVisitor extends RecursiveAstVisitor {
     if (element.isPrivate) {
       return;
     }
-    var enclosingElement = element.enclosingElement3;
+    var enclosingElement = element.enclosingElement;
     if (enclosingElement == null || enclosingElement.isPrivate) {
       return;
     }
@@ -305,6 +305,6 @@ extension on Annotation {
       // Dunno what this is.
       return false;
     }
-    return type is InterfaceType && type.element2.isPragma;
+    return type is InterfaceType && type.element.isPragma;
   }
 }

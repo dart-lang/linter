@@ -24,6 +24,14 @@ constructor parameter.
 Type annotating an initializing formal with a different type than that of the
 field is OK.
 
+**BAD:**
+```dart
+class Point {
+  int x, y;
+  Point(int this.x, int this.y);
+}
+```
+
 **GOOD:**
 ```dart
 class Point {
@@ -34,9 +42,13 @@ class Point {
 
 **BAD:**
 ```dart
-class Point {
-  int x, y;
-  Point(int this.x, int this.y);
+class A {
+  int a;
+  A(this.a);
+}
+
+class B extends A {
+  B(int super.a);
 }
 ```
 
@@ -52,26 +64,22 @@ class B extends A {
 }
 ```
 
-**BAD:**
-```dart
-class A {
-  int a;
-  A(this.a);
-}
-
-class B extends A {
-  B(int super.a);
-}
-```
 ''';
 
 class TypeInitFormals extends LintRule {
+  static const LintCode code = LintCode('type_init_formals',
+      "Don't needlessly type annotate initializing formals.",
+      correctionMessage: 'Try removing the type.');
+
   TypeInitFormals()
       : super(
             name: 'type_init_formals',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

@@ -84,26 +84,16 @@ const ruleLeadMatter = 'Rules are organized into familiar rule groups.';
 
 final coreRules = <String?>[];
 final flutterRules = <String?>[];
-final pedanticRules = <String?>[];
 final recommendedRules = <String?>[];
 
 /// Sorted list of contributed lint rules.
 final List<LintRule> rules =
-    List<LintRule>.of(Registry.ruleRegistry, growable: false)..sort();
+    List<LintRule>.of(Registry.ruleRegistry, growable: false)
+      ..sort((a, b) => a.name.compareTo(b.name));
 
 late Map<String, SinceInfo> sinceInfo;
 
 final Map<String, String> _fixStatusMap = <String, String>{};
-
-Future<String> get pedanticLatestVersion async {
-  var url =
-      'https://raw.githubusercontent.com/dart-lang/pedantic/master/lib/analysis_options.yaml';
-  var client = http.Client();
-  print('loading $url...');
-  var req = await client.get(Uri.parse(url));
-  var parts = req.body.split('package:pedantic/analysis_options.');
-  return parts[1].split('.yaml')[0];
-}
 
 String describeMaturity(LintRule r) =>
     r.maturity == Maturity.stable ? '' : ' (${r.maturity.name})';
@@ -123,15 +113,6 @@ Future<void> fetchBadgeInfo() async {
     recommendedRules.addAll(coreRules);
     for (var ruleConfig in recommended.ruleConfigs) {
       recommendedRules.add(ruleConfig.name);
-    }
-  }
-
-  var latestPedantic = await pedanticLatestVersion;
-  var pedantic = await fetchConfig(
-      'https://raw.githubusercontent.com/dart-lang/pedantic/master/lib/analysis_options.$latestPedantic.yaml');
-  if (pedantic != null) {
-    for (var ruleConfig in pedantic.ruleConfigs) {
-      pedanticRules.add(ruleConfig.name);
     }
   }
 
@@ -217,20 +198,20 @@ Future<void> generateDocs(String? dir,
   var fixStatusMap = await fetchFixStatusMap();
 
   // Generate rule files.
-  for (var l in rules) {
-    var fixStatus = fixStatusMap[l.name] ?? 'unregistered';
-    RuleHtmlGenerator(l, fixStatus).generate(outDir);
+  for (var rule in rules) {
+    var fixStatus = getFixStatus(rule, fixStatusMap);
+    RuleHtmlGenerator(rule, fixStatus).generate(outDir);
     if (enableMarkdown) {
-      RuleMarkdownGenerator(l).generate(filePath: outDir, fixStatus: fixStatus);
+      RuleMarkdownGenerator(rule)
+          .generate(filePath: outDir, fixStatus: fixStatus);
     }
   }
 
   // Generate index.
-  HtmlIndexer(Registry.ruleRegistry, fixStatusMap).generate(outDir);
+  HtmlIndexer(rules, fixStatusMap).generate(outDir);
 
   if (enableMarkdown) {
-    MarkdownIndexer(Registry.ruleRegistry, fixStatusMap)
-        .generate(filePath: outDir);
+    MarkdownIndexer(rules, fixStatusMap).generate(filePath: outDir);
   }
 
   // Generate options samples.
@@ -257,17 +238,23 @@ String getBadges(String rule, [String? fixStatus]) {
         '<a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml">'
         '<!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>');
   }
-  if (pedanticRules.contains(rule)) {
-    sb.write(
-        '<a class="style-type" href="https://github.com/dart-lang/pedantic/#enabled-lints">'
-        '<!--suppress HtmlUnknownTarget --><img alt="pedantic" src="style-pedantic.svg"></a>');
-  }
   if (fixStatus == 'hasFix') {
     sb.write(
         '<a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a">'
         '<!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>');
   }
   return sb.toString();
+}
+
+String getFixStatus(LintRule rule, Map<String, String> fixStatusMap) {
+  var fallback = 'unregistered';
+  for (var code in rule.lintCodes) {
+    var status = fixStatusMap[code.uniqueName.substring(9)];
+    if (status == null) continue;
+    if (status == 'hasFix') return status;
+    fallback = status;
+  }
+  return fallback;
 }
 
 void printUsage(ArgParser parser, [String? error]) {
@@ -403,7 +390,8 @@ class MachineSummaryGenerator {
   MachineSummaryGenerator(this.rules, this.fixStatusMap);
 
   void generate(String? filePath) {
-    var generated = getMachineListing(rules, fixStatusMap: fixStatusMap);
+    var generated = getMachineListing(rules,
+        fixStatusMap: fixStatusMap, sinceInfo: sinceInfo);
     if (filePath != null) {
       var outPath = '$filePath/machine/rules.json';
       print('Writing to $outPath');
@@ -460,10 +448,6 @@ class MarkdownIndexer {
         buffer.writeln('[![flutter](style-flutter.svg)]'
             '(https://github.com/flutter/packages/blob/main/packages/'
             'flutter_lints/lib/flutter.yaml)');
-      }
-      if (pedanticRules.contains(rule.name)) {
-        buffer.writeln('[![pedantic](style-pedantic.svg)]'
-            '(https://github.com/dart-lang/pedantic/#enabled-lints)');
       }
       if (fixStatusMap[rule.name] == 'hasFix') {
         buffer.writeln('[![has-fix](has-fix.svg)]'
@@ -634,14 +618,14 @@ class RuleHtmlGenerator {
   String get name => rule.name;
 
   String get since {
-    // See: https://github.com/dart-lang/linter/issues/2824
-    // var info = sinceInfo[name]!;
-    // var version = info.sinceDartSdk != null
-    //     ? '>= ${info.sinceDartSdk}'
-    //     : '<strong>unreleased</strong>';
-    //return 'Dart SDK: $version • <small>(Linter v${info.sinceLinter})</small>';
-    var sinceLinter = sinceInfo[name]!.sinceLinter;
-    return sinceLinter != null ? 'Linter v$sinceLinter' : 'Unreleased';
+    var info = sinceInfo[name]!;
+    var sdkVersion = info.sinceDartSdk != null
+        ? '>= ${info.sinceDartSdk}'
+        : '<strong>Unreleased</strong>';
+    var linterVersion = info.sinceLinter != null
+        ? 'v${info.sinceLinter}'
+        : '<strong>Unreleased</strong>';
+    return 'Dart SDK: $sdkVersion • <small>(Linter $linterVersion)</small>';
   }
 
   void generate([String? filePath]) {
@@ -714,14 +698,13 @@ class RuleMarkdownGenerator {
   String get name => rule.name;
 
   String get since {
-    // See: https://github.com/dart-lang/linter/issues/2824
-    // var info = sinceInfo[name]!;
-    // var version = info.sinceDartSdk != null
-    //     ? '>= ${info.sinceDartSdk}'
-    //     : '<strong>unreleased</strong>';
-    //return 'Dart SDK: $version • <small>(Linter v${info.sinceLinter})</small>';
-    var sinceLinter = sinceInfo[name]!.sinceLinter;
-    return sinceLinter != null ? 'Linter v$sinceLinter' : 'Unreleased';
+    var info = sinceInfo[name]!;
+    var sdkVersion = info.sinceDartSdk != null
+        ? '>= ${info.sinceDartSdk}'
+        : '**Unreleased**';
+    var linterVersion =
+        info.sinceLinter != null ? 'v${info.sinceLinter}' : '**Unreleased**';
+    return 'Dart SDK: $sdkVersion • _(Linter $linterVersion)_';
   }
 
   void generate({String? filePath, String? fixStatus}) {
@@ -747,10 +730,6 @@ class RuleMarkdownGenerator {
       buffer.writeln('[![flutter](style-flutter.svg)]'
           '(https://github.com/flutter/packages/blob/main/packages/'
           'flutter_lints/lib/flutter.yaml)');
-    }
-    if (pedanticRules.contains(name)) {
-      buffer.writeln('[![pedantic](style-pedantic.svg)]'
-          '(https://github.com/dart-lang/pedantic/#enabled-lints)');
     }
     if (fixStatus == 'hasFix') {
       buffer.writeln('[![has-fix](has-fix.svg)]'
