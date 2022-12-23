@@ -15,17 +15,24 @@ main() {
 @reflectiveTest
 class OneMemberAbstractsTest extends LintRuleTest {
   @override
-  String get lintRule => 'one_member_abstracts';
-
-  @override
   List<String> get experiments => ['sealed-class'];
 
-  test_sealed_noDiagnostic() async {
+  @override
+  String get lintRule => 'one_member_abstracts';
+
+  test_sealed_concreteMethod_noDiagnostic() async {
     await assertNoDiagnostics(r'''
 sealed class C {
   void f() { }
 }
 ''');
   }
-}
 
+  test_sealed_noDiagnostic() async {
+    await assertNoDiagnostics(r'''
+sealed class C {
+  void f();
+}
+''');
+  }
+}
