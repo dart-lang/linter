@@ -17,11 +17,13 @@ const _details = r'''
 **DON'T** use BuildContext across asynchronous gaps.
 
 Storing `BuildContext` for later usage can easily lead to difficult to diagnose
-crashes. Asynchronous gaps are implicitly storing `BuildContext` and are some of
-the easiest to overlook when writing code.
+crashes, because it can change its state during the async gap and no longer be 
+asociated to an `Element`. Asynchronous gaps are implicitly storing 
+`BuildContext` and are some of the easiest to overlook when writing code.
 
-When a `BuildContext` is used, its `mounted` property must be checked after an
-asynchronous gap.
+
+In any `Widget` it is possible to store the data related to the `BuildContext`
+before the async gap.
 
 **BAD:**
 ```dart
@@ -37,6 +39,20 @@ void onButtonTapped(BuildContext context) {
   Navigator.of(context).pop();
 }
 ```
+
+**GOOD:**
+```dart
+void onButtonTapped() async {
+  final navigator = Navigator.of(context);
+  await Future.delayed(const Duration(seconds: 1));
+
+  navigator.pop();
+}
+```
+
+**EXCEPTION:**
+In a `StatefulWidget` it is possible to check the `State`'s `mounted` property, after an
+asynchronous gap and before using `BuildContext`.
 
 **GOOD:**
 ```dart
