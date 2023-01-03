@@ -317,7 +317,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "needsEvaluation",
-    "details": "**DON'T** use adjacent strings in list.\n\nThis can be sign of forgotten comma.\n\n**BAD:**\n```dart\nList<String> list = <String>[\n  'a'\n  'b',\n  'c',\n];\n```\n\n**GOOD:**\n```dart\nList<String> list = <String>[\n  'a' +\n  'b',\n  'c',\n];\n```\n\n",
+    "details": "**DON'T** use adjacent strings in a list.\n\nThis can indicate a forgotten comma.\n\n**BAD:**\n```dart\nList<String> list = <String>[\n  'a'\n  'b',\n  'c',\n];\n```\n\n**GOOD:**\n```dart\nList<String> list = <String>[\n  'a' +\n  'b',\n  'c',\n];\n```\n\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.30"
   },
