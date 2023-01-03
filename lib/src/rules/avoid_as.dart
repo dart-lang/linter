@@ -45,10 +45,9 @@ performance impact.
 HasScrollDirection scrollable = renderObject as dynamic;
 ```
 
+**DEPRECATED:** This advice is no longer recommended.
 
-**REMOVED:** This advice is no longer recommended.
-
-Support for this rule was removed in Dart 3.0.
+The rule will be removed in a future Linter release.
 ''';
 
 class AvoidAs extends LintRule {
