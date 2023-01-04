@@ -96,7 +96,7 @@ late Map<String, SinceInfo> sinceInfo;
 
 final Map<String, String> _fixStatusMap = <String, String>{};
 
-String describeMaturity(LintRule r) => r.state.isStable ? '' : r.state.label;
+String describeState(LintRule r) => r.state.isStable ? '' : r.state.label;
 
 Future<void> fetchBadgeInfo() async {
   var core = await fetchConfig(
@@ -269,7 +269,7 @@ ${parser.usage}
 ''');
 }
 
-String qualify(LintRule r) => r.name + describeMaturity(r);
+String qualify(LintRule r) => r.name + describeState(r);
 
 class CountBadger {
   Iterable<LintRule> rules;
@@ -694,7 +694,7 @@ class RuleMarkdownGenerator {
 
   String get group => rule.group.name;
 
-  String get maturity => describeMaturity(rule);
+  String get maturity => describeState(rule);
 
   String get name => rule.name;
 
