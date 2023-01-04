@@ -602,18 +602,16 @@ class RuleHtmlGenerator {
     return sb.toString();
   }
 
-  String get maturity => rule.state.label;
+  State get state => rule.state;
 
-  String get maturityString {
-    // ignore: deprecated_member_use, seriously we really mean it!
-    switch (rule.maturity) {
-      case Maturity.deprecated:
-        return '<span style="color:orangered;font-weight:bold;" >$maturity</span>';
-      case Maturity.experimental:
-        return '<span style="color:hotpink;font-weight:bold;" >$maturity</span>';
-      default:
-        return maturity;
+  String get stateString {
+    if (state.isDeprecated) {
+      return '<span style="color:orangered;font-weight:bold;" >${state.label}</span>';
     }
+    if (state.isExperimental) {
+      return '<span style="color:hotpink;font-weight:bold;" >${state.label}</span>';
+    }
+    return state.label;
   }
 
   String get name => rule.name;
@@ -657,7 +655,7 @@ class RuleHtmlGenerator {
          <header>
             <h1>$humanReadableName</h1>
             <p>Group: $group</p>
-            <p>Maturity: $maturityString</p>
+            <p>Maturity: $stateString</p>
             <div class="tooltip">
                <p>$since</p>
                <span class="tooltip-content">Since info is static, may be stale</span>
