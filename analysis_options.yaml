@@ -1,8 +1,6 @@
 include: package:lints/recommended.yaml
 
 analyzer:
-  strong-mode:
-    implicit-casts: false
   exclude:
     # ignore vscode .history files
     - .history/**
