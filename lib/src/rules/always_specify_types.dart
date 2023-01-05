@@ -107,7 +107,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   static const LintCode specifyTypeCode = LintCode('always_specify_types',
       "Missing type annotation.", // ignore: prefer_single_quotes
       correctionMessage:
-          "Try specifying the type '{0}'."); // ignore: prefer_single_quotes
+          "Try specifying the type '{0}'.");
 
   final LintRule rule;
 
