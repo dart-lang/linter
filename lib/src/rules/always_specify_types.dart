@@ -165,8 +165,8 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitSimpleFormalParameter(SimpleFormalParameter param) {
     var name = param.name;
     if (name != null && param.type == null && !name.lexeme.isJustUnderscores) {
-      if (param.keyword != null) {
-        var keyword = param.keyword!;
+      var keyword = param.keyword;
+      if (keyword != null) {
         var type = param.declaredElement?.type;
 
         if (keyword.type == Keyword.VAR &&
