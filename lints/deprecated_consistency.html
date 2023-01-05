@@ -32,8 +32,10 @@
             <p><strong>DO</strong> apply <code>@Deprecated()</code> consistently:</p>
 <ul>
 <li>if a class is deprecated, its constructors should also be deprecated.</li>
-<li>if a field is deprecated, the constructor parameter pointing to it should also be deprecated.</li>
-<li>if a constructor parameter pointing to a field is deprecated, the field should also be deprecated.</li>
+<li>if a field is deprecated, the constructor parameter pointing to it should also
+be deprecated.</li>
+<li>if a constructor parameter pointing to a field is deprecated, the field should
+also be deprecated.</li>
 </ul>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">@deprecated
@@ -58,6 +60,10 @@ class B {
   B({@deprecated this.field});
   @deprecated
   Object field;
+}
+
+class C extends B {
+  C({@deprecated super.field});
 }
 </code></pre>
 

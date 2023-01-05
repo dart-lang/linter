@@ -1273,7 +1273,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "needsEvaluation",
-    "details": "**DO** apply `@Deprecated()` consistently:\n\n- if a class is deprecated, its constructors should also be deprecated.\n- if a field is deprecated, the constructor parameter pointing to it should also be deprecated.\n- if a constructor parameter pointing to a field is deprecated, the field should also be deprecated.\n\n**BAD:**\n```dart\n@deprecated\nclass A {\n  A();\n}\n\nclass B {\n  B({this.field});\n  @deprecated\n  Object field;\n}\n```\n\n**GOOD:**\n```dart\n@deprecated\nclass A {\n  @deprecated\n  A();\n}\n\nclass B {\n  B({@deprecated this.field});\n  @deprecated\n  Object field;\n}\n```\n\n",
+    "details": "**DO** apply `@Deprecated()` consistently:\n\n- if a class is deprecated, its constructors should also be deprecated.\n- if a field is deprecated, the constructor parameter pointing to it should also\n  be deprecated.\n- if a constructor parameter pointing to a field is deprecated, the field should\n  also be deprecated.\n\n**BAD:**\n```dart\n@deprecated\nclass A {\n  A();\n}\n\nclass B {\n  B({this.field});\n  @deprecated\n  Object field;\n}\n```\n\n**GOOD:**\n```dart\n@deprecated\nclass A {\n  @deprecated\n  A();\n}\n\nclass B {\n  B({@deprecated this.field});\n  @deprecated\n  Object field;\n}\n\nclass C extends B {\n  C({@deprecated super.field});\n}\n```\n",
     "sinceDartSdk": "2.13.0",
     "sinceLinter": "1.0.0"
   },
