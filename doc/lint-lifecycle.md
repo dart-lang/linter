@@ -19,10 +19,10 @@ Lints can be marked experimental.
 Reasons a lint might be marked experimental include a lint
 
 * being tentatively introduced
-* have unknown value
-* have incomplete semantics
-* have outstanding (fixable) false positives or
-* might be known to be temporary.
+* having unknown value
+* having incomplete semantics
+* having outstanding (fixable) false positives or
+* that might be known to be temporary.
 
 ### Stable
 
