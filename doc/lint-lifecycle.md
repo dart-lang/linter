@@ -10,6 +10,8 @@ A lint begins its life as a **proposal** which is _pending_ until _accepted_.
 
 After discussion and sufficient agreement within the team, a proposed lint becomes **accepted**.
 
+An accepted lint is ready for implementation.
+
 ### Experimental
 
 Lints can be marked experimental. 
