@@ -60,11 +60,12 @@ class UseBuildContextSynchronously extends LintRule {
 
   UseBuildContextSynchronously({this.inTestMode = false})
       : super(
-            name: 'use_build_context_synchronously',
-            description: _desc,
-            details: _details,
-            group: Group.errors,
-            maturity: Maturity.experimental);
+          name: 'use_build_context_synchronously',
+          description: _desc,
+          details: _details,
+          group: Group.errors,
+          state: State.experimental(),
+        );
 
   @override
   LintCode get lintCode => code;
@@ -171,7 +172,8 @@ class _Visitor extends SimpleAstVisitor {
           return;
         }
       } else if (parent is IfStatement) {
-        if (parent.hasAsyncInCondition) {
+        // Only check the actual statement(s), not the IF condition
+        if (child is Statement && parent.hasAsyncInCondition) {
           rule.reportLint(node);
         }
 
