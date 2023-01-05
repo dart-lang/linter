@@ -135,13 +135,20 @@ DartType? getExpectedType(PostfixExpression node) {
 }
 
 class UnnecessaryNullChecks extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_null_checks', "Unnecessary use of a null check ('!').",
+      correctionMessage: 'Try removing the null check.');
+
   UnnecessaryNullChecks()
       : super(
             name: 'unnecessary_null_checks',
             description: _desc,
             details: _details,
-            maturity: Maturity.experimental,
+            state: State.experimental(),
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

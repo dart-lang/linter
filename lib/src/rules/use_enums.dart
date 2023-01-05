@@ -59,13 +59,19 @@ enum LogPriority {
 ''';
 
 class UseEnums extends LintRule {
+  static const LintCode code = LintCode('use_enums', 'Class should be an enum.',
+      correctionMessage: 'Try using an enum rather than a class.');
+
   UseEnums()
       : super(
             name: 'use_enums',
             description: _desc,
             details: _details,
-            maturity: Maturity.experimental,
+            state: State.experimental(),
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
