@@ -19,8 +19,6 @@ Do apply `@Deprecated()` consistently:
   be deprecated.
 - if a constructor parameter pointing to a field is deprecated, the field should
   also be deprecated.
-- if a super initializing formal parameter is marked deprecated, the parameter
-  it forwards to in the superclass should also be deprecated.
 
 **BAD:**
 ```dart
