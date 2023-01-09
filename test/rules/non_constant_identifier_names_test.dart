@@ -26,27 +26,27 @@ class NonConstantIdentifierNamesPatternsTest extends LintRuleTest {
   test_patternForStatement() async {
     await assertDiagnostics(r'''
 void f() {
-  for (var (ABC, def) = (0, 1); ABC <= 13; (ABC, def) = (def, ABC + def)) { }
+  for (var (AB, ) = (0, 1); AB <= 13; (AB, ) = ( , AB++)) { }
 }
 ''', [
-      lint(18, 3),
+      lint(18, 2),
     ]);
   }
 
   test_patternIfStatement() async {
     await assertDiagnostics(r'''
 void f() {
-  if ([1,2] case [int ABC, int def]) print('hi');
+  if ([1,2] case [int AB, int]) { }
 }
 ''', [
-      lint(33, 3),
+      lint(33, 2),
     ]);
   }
 
   test_patternIfStatement_underscores() async {
     await assertNoDiagnostics(r'''
 void f() {
-  if ([1,2] case [int _, int __]) print('hi');
+  if ([1,2] case [int _, int __]) { }
 }
 ''');
   }
@@ -54,17 +54,17 @@ void f() {
   test_patternRecordField() async {
     await assertDiagnostics(r'''
 void f() {
-  var (ABC, def) = (1, 2);
+  var (AB, ) = (1, );
 }
 ''', [
-      lint(18, 3),
+      lint(18, 2),
     ]);
   }
 
   test_patternRecordField_underscores() async {
     await assertDiagnostics(r'''
 void f() {
-  var (___, def) = (1, 2);
+  var (___, ) = (1, );
 }
 ''', [
       lint(18, 3),
@@ -86,6 +86,36 @@ var a = (x: 1);
 var b = (XX: 1);
 ''', [
       lint(25, 2),
+    ]);
+  }
+
+  test_recordFields_fieldNameDuplicated() async {
+    // This will produce a compile-time error and we don't want to over-report.
+    await assertDiagnostics(r'''
+var r = (a: 1, a: 2);
+''', [
+      // No Lint.
+      error(CompileTimeErrorCode.DUPLICATE_FIELD_NAME, 15, 1),
+    ]);
+  }
+
+  test_recordFields_fieldNameFromObject() async {
+    // This will produce a compile-time error and we don't want to over-report.
+    await assertDiagnostics(r'''
+var a = (hashCode: 1);
+''', [
+      // No Lint.
+      error(CompileTimeErrorCode.INVALID_FIELD_NAME_FROM_OBJECT, 9, 8),
+    ]);
+  }
+
+  test_recordFields_fieldNamePositional() async {
+    // This will produce a compile-time error and we don't want to over-report.
+    await assertDiagnostics(r'''
+var r = (0, $0: 2);
+''', [
+      // No Lint.
+      error(CompileTimeErrorCode.INVALID_FIELD_NAME_POSITIONAL, 12, 2),
     ]);
   }
 
