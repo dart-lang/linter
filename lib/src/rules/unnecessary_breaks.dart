@@ -13,7 +13,8 @@ const _desc = r"Don't use explicit `breaks`s when a break is implied.";
 const _details = r'''
 Only use a `break` in a non-empty switch case statement if you need to break
 before the end of the case body.  Dart does not support fallthrough execution
-for non-empty cases, so these break statements are unnecessary.
+for non-empty cases, so `break`s at the end of non-empty switch case statements
+are unnecessary.
 
 **BAD:**
 ```dart
