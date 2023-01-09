@@ -20,6 +20,9 @@ void foo() {
   {
     print('oh');
   }
+
+  print((x && f) != true); // LINT
+  print(x && (f != true)); // LINT
 }
 
 void bar(bool x, bool? y) {

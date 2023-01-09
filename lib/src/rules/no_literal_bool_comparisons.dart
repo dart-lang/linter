@@ -17,7 +17,7 @@ From [Effective Dart](https://dart.dev/guides/language/effective-dart/usage#dont
 
 **DON'T** use `true` or `false` in equality operations.
 
-This lint applies only if the variable is of a non-nullable `bool` type.
+This lint applies only if the expression is of a non-nullable `bool` type.
 
 **BAD:**
 ```dart
