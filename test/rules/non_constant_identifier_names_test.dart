@@ -10,7 +10,66 @@ main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(NonConstantIdentifierNamesTest);
     defineReflectiveTests(NonConstantIdentifierNamesRecordsTest);
+    defineReflectiveTests(NonConstantIdentifierNamesPatternsTest);
   });
+}
+
+@reflectiveTest
+class NonConstantIdentifierNamesPatternsTest extends LintRuleTest {
+  @override
+  List<String> get experiments => ['patterns', 'records'];
+
+  @override
+  String get lintRule => 'non_constant_identifier_names';
+
+  @FailingTest(reason: 'Flow analysis fails w/ a Bad state exception')
+  test_patternForStatement() async {
+    await assertDiagnostics(r'''
+void f() {
+  for (var (ABC, def) = (0, 1); ABC <= 13; (ABC, def) = (def, ABC + def)) { }
+}
+''', [
+      lint(18, 3),
+    ]);
+  }
+
+  test_patternIfStatement() async {
+    await assertDiagnostics(r'''
+void f() {
+  if ([1,2] case [int ABC, int def]) print('hi');
+}
+''', [
+      lint(33, 3),
+    ]);
+  }
+
+  test_patternIfStatement_underscores() async {
+    await assertNoDiagnostics(r'''
+void f() {
+  if ([1,2] case [int _, int __]) print('hi');
+}
+''');
+  }
+
+  test_patternRecordField() async {
+    await assertDiagnostics(r'''
+void f() {
+  var (ABC, def) = (1, 2);
+}
+''', [
+      lint(18, 3),
+    ]);
+  }
+
+  test_patternRecordField_underscores() async {
+    await assertDiagnostics(r'''
+void f() {
+  var (___, def) = (1, 2);
+}
+''', [
+      lint(18, 3),
+    ]);
+  }
 }
 
 @reflectiveTest
@@ -27,6 +86,16 @@ var a = (x: 1);
 var b = (XX: 1);
 ''', [
       lint(25, 2),
+    ]);
+  }
+
+  test_recordFields_privateFieldName() async {
+    // This will produce a compile-time error and we don't want to over-report.
+    await assertDiagnostics(r'''
+var a = (_x: 1);
+''', [
+      // No Lint.
+      error(CompileTimeErrorCode.INVALID_FIELD_NAME_PRIVATE, 9, 2),
     ]);
   }
 
@@ -52,16 +121,6 @@ var AA = (x: 1);
 const BB = (x: 1);
 ''', [
       lint(4, 2),
-    ]);
-  }
-
-  test_test_recordFields_underscores() async {
-    // This will produce a compile-time error and we don't want to over-report.
-    await assertDiagnostics(r'''
-var a = (_x: 1);
-''', [
-      // No Lint.
-      error(CompileTimeErrorCode.INVALID_FIELD_NAME_PRIVATE, 9, 2),
     ]);
   }
 }
