@@ -4,6 +4,7 @@
 
 import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/type.dart';
 
@@ -15,6 +16,8 @@ const _details = r'''
 From [Effective Dart](https://dart.dev/guides/language/effective-dart/usage#dont-use-true-or-false-in-equality-operations):
 
 **DON'T** use `true` or `false` in equality operations.
+
+This lint applies only if the variable is of a non-nullable `bool` type.
 
 **BAD:**
 ```dart
@@ -60,12 +63,15 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
-    var left = node.leftOperand;
-    var right = node.rightOperand;
-    if (right is BooleanLiteral && isBool(left.staticType)) {
-      rule.reportLint(right);
-    } else if (left is BooleanLiteral && isBool(right.staticType)) {
-      rule.reportLint(left);
+    if (node.operator.type == TokenType.EQ_EQ ||
+        node.operator.type == TokenType.BANG_EQ) {
+      var left = node.leftOperand;
+      var right = node.rightOperand;
+      if (right is BooleanLiteral && isBool(left.staticType)) {
+        rule.reportLint(right);
+      } else if (left is BooleanLiteral && isBool(right.staticType)) {
+        rule.reportLint(left);
+      }
     }
   }
 

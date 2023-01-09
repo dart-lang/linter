@@ -9,18 +9,23 @@ void foo() {
     print('oh');
   }
   var f = true;
-  while (true == f) { // LINT
+  while (true == f) // LINT
+  {
     print('oh');
     f = false;
   }
 
   var c = TestClass();
-  if (c.x == true) { // LINT
+  if (c.x == true) // LINT
+  {
     print('oh');
   }
 }
 
 void bar(bool x, bool? y) {
   print(x == true); // LINT
+  print(x != true); // LINT
   print(y == true); // OK
+
+  if (x && true) print('oh'); // OK
 }
