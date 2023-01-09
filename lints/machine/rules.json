@@ -615,7 +615,7 @@
     "state": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsFix",
+    "fixStatus": "hasFix",
     "details": "**DO** specify `required` on named parameter before other named parameters.\n\n**BAD:**\n```dart\nm({b, c, required a}) ;\n```\n\n**GOOD:**\n```dart\nm({required a, b, c}) ;\n```\n\n**BAD:**\n```dart\nm({b, c, @required a}) ;\n```\n\n**GOOD:**\n```dart\nm({@required a, b, c}) ;\n```\n\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.33"
