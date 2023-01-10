@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r"Don't use explicit `breaks`s when a break is implied.";
+const _desc = r"Don't use explicit `break`s when a break is implied.";
 
 const _details = r'''
 Only use a `break` in a non-empty switch case statement if you need to break
