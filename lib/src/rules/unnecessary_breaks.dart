@@ -6,7 +6,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
-import '../extensions.dart';
 
 const _desc = r"Don't use explicit `breaks`s when a break is implied.";
 
