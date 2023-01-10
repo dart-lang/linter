@@ -56,12 +56,19 @@ switch (1) {
 ''';
 
 class UnnecessaryBreaks extends LintRule {
+  static const LintCode code = LintCode(
+      'unnecessary_breaks', "Unnecessary 'break' statement.",
+      correctionMessage: "Try removing the 'break'.");
+
   UnnecessaryBreaks()
       : super(
             name: 'unnecessary_breaks',
             description: _desc,
             details: _details,
             group: Group.style);
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -78,6 +85,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitBreakStatement(BreakStatement node) {
+    if (node.label != null) return;
     var parent = node.parent;
     if (parent is SwitchPatternCase) {
       var statements = parent.statements;

@@ -49,7 +49,23 @@ f() {
 ''');
   }
 
-  test_switchPatternCase_notLast_ok() async {
+  test_switchPatternCase_labeled_ok() async {
+    await assertNoDiagnostics(
+      r'''
+f() {
+  l:
+  switch (1) {
+    case 1:
+      break l;
+    case 2:
+      f();
+  }
+}
+''',
+    );
+  }
+
+  test_switchPatternCase_notDirectChild_ok() async {
     await assertNoDiagnostics(r'''
 f(bool c) {
   switch (1) {
@@ -61,5 +77,22 @@ f(bool c) {
   }
 }
 ''');
+  }
+
+  test_switchPatternCase_notLast_ok() async {
+    await assertDiagnostics(r'''
+f(bool c) {
+  switch (1) {
+    case 1:
+      break;
+      f(true);
+    case 2:
+      f(true);
+  }
+}
+''', [
+      // No lint.
+      error(HintCode.DEAD_CODE, 58, 8),
+    ]);
   }
 }
