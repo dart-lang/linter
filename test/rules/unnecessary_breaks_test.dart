@@ -20,6 +20,19 @@ class UnnecessaryBreaksTest extends LintRuleTest {
   @override
   String get lintRule => 'unnecessary_breaks';
 
+  test_switch_pre30_ok() async {
+    await assertNoDiagnostics(r'''
+// @dart=2.19    
+f() {
+  switch (1) {
+    case 1:
+      f();
+      break;
+  }
+}
+''');
+  }
+
   test_switchPatternCase() async {
     await assertDiagnostics(r'''
 f() {
