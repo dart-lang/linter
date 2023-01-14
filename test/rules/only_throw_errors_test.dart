@@ -17,45 +17,12 @@ class OnlyThrowErrorsTest extends LintRuleTest {
   @override
   String get lintRule => 'only_throw_errors';
 
-  test_string() async {
-    await assertDiagnostics(r'''
+  test_argumentError() async {
+    await assertNoDiagnostics(r'''
 void f() {
-  throw 'hello';
+  throw ArgumentError('hello');
 }
-''', [
-      lint(19, 7),
-    ]);
-  }
-
-  test_nullInPreNullSafe() async {
-    await assertDiagnostics(r'''
-// @dart=2.9
-void f() {
-  throw null;
-}
-''', [
-      lint(32, 4),
-    ]);
-  }
-
-  test_int() async {
-    await assertDiagnostics(r'''
-void f() {
-  throw 7;
-}
-''', [
-      lint(19, 1),
-    ]);
-  }
-
-  test_object() async {
-    await assertDiagnostics(r'''
-void f() {
-  throw Object();
-}
-''', [
-      lint(19, 8),
-    ]);
+''');
   }
 
   test_error() async {
@@ -66,28 +33,10 @@ void f() {
 ''');
   }
 
-  test_argumentError() async {
-    await assertNoDiagnostics(r'''
-void f() {
-  throw ArgumentError('hello');
-}
-''');
-  }
-
   test_exception() async {
     await assertNoDiagnostics(r'''
 void f() {
   throw ArgumentError('hello');
-}
-''');
-  }
-
-  test_exceptionMixedIn() async {
-    await assertNoDiagnostics(r'''
-class Err extends Object with Exception {}
-
-void f() {
-  throw Err();
 }
 ''');
   }
@@ -108,5 +57,56 @@ void f<E>(E error) {
   }
 }
 ''');
+  }
+
+  test_exceptionMixedIn() async {
+    await assertNoDiagnostics(r'''
+class Err extends Object with Exception {}
+
+void f() {
+  throw Err();
+}
+''');
+  }
+
+  test_int() async {
+    await assertDiagnostics(r'''
+void f() {
+  throw 7;
+}
+''', [
+      lint(19, 1),
+    ]);
+  }
+
+  test_nullInPreNullSafe() async {
+    await assertDiagnostics(r'''
+// @dart=2.9
+void f() {
+  throw null;
+}
+''', [
+      lint(32, 4),
+    ]);
+  }
+
+  test_object() async {
+    await assertDiagnostics(r'''
+void f() {
+  throw Object();
+}
+''', [
+      lint(19, 8),
+    ]);
+  }
+
+  test_string() async {
+    await assertDiagnostics(r'''
+void f() {
+  throw 'hello';
+}
+''', [
+      lint(19, 7),
+    ]);
   }
 }
