@@ -14,37 +14,33 @@ import '../extensions.dart';
 
 /// Returns a predicate that returns true for a node `n` if `n` is a
 /// [ConstructorFieldInitializer] initializing [v].
-_Predicate _hasConstructorFieldInitializers(
-        VariableDeclaration v) =>
-    (AstNode n) =>
-        n is ConstructorFieldInitializer &&
-        n.fieldName.staticElement == v.declaredElement;
+_Predicate _hasConstructorFieldInitializers(VariableElement v) => (AstNode n) =>
+    n is ConstructorFieldInitializer && n.fieldName.staticElement == v;
 
 /// Returns a predicate that returns true for a node `n` if `n` is a
 /// [FieldFormalParameter] initializing [v].
-_Predicate _hasFieldFormalParameter(VariableDeclaration v) => (AstNode n) {
+_Predicate _hasFieldFormalParameter(VariableElement v) => (AstNode n) {
       if (n is! FieldFormalParameter) {
         return false;
       }
       var staticElement = n.declaredElement;
       return staticElement is FieldFormalParameterElement &&
-          staticElement.field == v.declaredElement;
+          staticElement.field == v;
     };
 
 /// Returns a predicate that returns true for a node `n` if `n` is a
 /// [ReturnStatement] initializing [v].
-_Predicate _hasReturn(VariableDeclaration v) => (AstNode n) {
+_Predicate _hasReturn(VariableElement v) => (AstNode n) {
       if (n is! ReturnStatement) {
         return false;
       }
       var expression = n.expression;
-      return expression is SimpleIdentifier &&
-          expression.staticElement == v.declaredElement;
+      return expression is SimpleIdentifier && expression.staticElement == v;
     };
 
-/// Builds a function that reports a variable node if the set of nodes inside
-/// the [container] node is empty for all the predicates resulting from building
-/// [predicates] with [predicateBuilders] evaluated with the variable.
+/// Builds a function that reports a variable node if none of the predicates
+/// which result from building [predicates] with [predicateBuilders] return
+/// `true` for any node inside the [container] node.
 _VisitVariableDeclaration _buildVariableReporter(
         AstNode container,
         Iterable<_PredicateBuilder> predicateBuilders,
@@ -66,7 +62,7 @@ _VisitVariableDeclaration _buildVariableReporter(
       var containerNodes = container.traverseNodesInDFS();
 
       for (var predicateBuilder in predicateBuilders) {
-        if (containerNodes.any(predicateBuilder(variable))) {
+        if (containerNodes.any(predicateBuilder(variableElement))) {
           return;
         }
       }
@@ -110,7 +106,7 @@ bool _findMethodCallbackNodes(
       _hasMatch(predicates, variableElement.type, n.identifier.token.lexeme));
 }
 
-// TODO(srawlins): Rename to `hasMethodInvocationsWithVariableAsArgument`.
+// TODO(srawlins): Rename to `_hasMethodInvocationsWithVariableAsArgument`.
 bool _findMethodInvocationsWithVariableAsArgument(
     Iterable<AstNode> containerNodes, VariableElement variableElement) {
   var methodInvocations = containerNodes.whereType<MethodInvocation>();
@@ -172,7 +168,7 @@ bool _isElementEqualToVariable(
         propertyElement.variable == variableElement;
 
 bool _isInvocationThroughCascadeExpression(
-    MethodInvocation invocation, VariableElement? variableElement) {
+    MethodInvocation invocation, VariableElement variableElement) {
   if (invocation.realTarget is! SimpleIdentifier) {
     return false;
   }
@@ -188,7 +184,7 @@ bool _isInvocationThroughCascadeExpression(
 }
 
 bool _isPropertyAccessThroughThis(
-    Expression? n, VariableElement? variableElement) {
+    Expression? n, VariableElement variableElement) {
   if (n is! PropertyAccess) {
     return false;
   }
@@ -203,12 +199,12 @@ bool _isPropertyAccessThroughThis(
 }
 
 bool _isSimpleIdentifierElementEqualToVariable(
-        AstNode? n, VariableElement? variableElement) =>
+        AstNode? n, VariableElement variableElement) =>
     n is SimpleIdentifier &&
     _isElementEqualToVariable(n.staticElement, variableElement);
 
 bool _isPostfixExpressionOperandEqualToVariable(
-    AstNode? n, VariableElement? variableElement) {
+    AstNode? n, VariableElement variableElement) {
   if (n is PostfixExpression) {
     var operand = n.operand;
     return operand is SimpleIdentifier &&
@@ -221,7 +217,7 @@ typedef DartTypePredicate = bool Function(DartType type);
 
 typedef _Predicate = bool Function(AstNode node);
 
-typedef _PredicateBuilder = _Predicate Function(VariableDeclaration v);
+typedef _PredicateBuilder = _Predicate Function(VariableElement v);
 
 typedef _VisitVariableDeclaration = void Function(VariableDeclaration node);
 
