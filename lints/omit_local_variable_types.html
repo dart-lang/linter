@@ -62,7 +62,7 @@ example, you may intend to assign values of other types later. In that case,
 annotate the variable with the type you want.</p>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">Widget build(BuildContext context) {
-  [!Widget!] result = Text('You won!');
+  Widget result = Text('You won!');
   if (applyPadding) {
     result = Padding(padding: EdgeInsets.all(8.0), child: result);
   }
