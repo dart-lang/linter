@@ -583,8 +583,8 @@ class RuleHtmlGenerator {
   String get detailsHeader {
     if (state.isRemoved) {
       var since = state.since;
-      var sinceDetail = since != null ? 'in Dart $since.' : '';
-      return 'Removed $sinceDetail';
+      var sinceDetail = since != null ? ' in Dart $since.' : '';
+      return '<p style="font-size:30px"><strong>Removed$sinceDetail</strong></p>';
     }
     return '';
   }
