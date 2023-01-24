@@ -634,14 +634,13 @@ class RuleHtmlGenerator {
   String get stateString {
     if (state.isDeprecated) {
       return '<span style="color:orangered;font-weight:bold;" >${state.label}</span>';
-    }
-    if (state.isRemoved) {
+    } else if (state.isRemoved) {
       return '<span style="color:darkgray;font-weight:bold;" >${state.label}</span>';
-    }
-    if (state.isExperimental) {
+    } else if (state.isExperimental) {
       return '<span style="color:hotpink;font-weight:bold;" >${state.label}</span>';
+    } else {
+      return state.label;
     }
-    return state.label;
   }
 
   void generate([String? filePath]) {
