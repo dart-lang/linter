@@ -270,7 +270,11 @@ ${parser.usage}
 ''');
 }
 
-String qualify(LintRule r) => r.name + describeState(r);
+String qualify(LintRule r) {
+  var name = r.name;
+  var label = r.state.isRemoved ? '<s>$name</s>' : name;
+  return label + describeState(r);
+}
 
 class CountBadger {
   Iterable<LintRule> rules;
@@ -705,8 +709,6 @@ class RuleMarkdownGenerator {
 
   String get group => rule.group.name;
 
-  String get maturity => describeState(rule);
-
   String get name => rule.name;
 
   String get since {
@@ -719,13 +721,15 @@ class RuleMarkdownGenerator {
     return 'Dart SDK: $sdkVersion • _(Linter $linterVersion)_';
   }
 
+  String get state => describeState(rule);
+
   void generate({String? filePath, String? fixStatus}) {
     var buffer = StringBuffer();
 
     buffer.writeln('# Rule $name');
     buffer.writeln();
     buffer.writeln('**Group**: $group\\');
-    buffer.writeln('**Maturity**: $maturity\\');
+    buffer.writeln('**State**: $state\\');
     buffer.writeln('**Since**: $since\\');
     buffer.writeln();
 
