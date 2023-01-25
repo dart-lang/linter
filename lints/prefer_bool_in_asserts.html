@@ -14,7 +14,7 @@
          <header>
             <h1>prefer_bool_in_asserts</h1>
             <p>Group: style</p>
-            <p>Maturity: <span style="color:orangered;font-weight:bold;" >deprecated</span></p>
+            <p>Maturity: <span style="color:darkgray;font-weight:bold;" >removed</span></p>
             <div class="tooltip">
                <p>Dart SDK: >= 2.0.0 • <small>(Linter v0.1.36)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
@@ -28,7 +28,7 @@
             <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
          </header>
          <section>
-            
+            <p style="font-size:30px"><strong>Removed in Dart 3.0.0.</strong></p>
             <p><strong>DO</strong> use a boolean for assert conditions.</p>
 <p>Not using booleans in assert conditions can lead to code where it isn't clear
 what the intention of the assert statement is.</p>
@@ -44,10 +44,6 @@ what the intention of the assert statement is.</p>
   return true;
 }());
 </code></pre>
-<p><strong>DEPRECATED:</strong> In Dart 2, <code>assert</code>s no longer accept  non-<code>bool</code> values so this
-rule is made redundant by the Dart analyzer's basic checks and is no longer
-necessary.</p>
-<p>The rule will be removed in a future Linter release.</p>
 
             
          </section>
