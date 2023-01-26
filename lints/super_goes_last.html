@@ -14,7 +14,7 @@
          <header>
             <h1>super_goes_last</h1>
             <p>Group: style</p>
-            <p>Maturity: <span style="color:orangered;font-weight:bold;" >deprecated</span></p>
+            <p>Maturity: <span style="color:darkgray;font-weight:bold;" >removed</span></p>
             <div class="tooltip">
                <p>Dart SDK: >= 2.0.0 • <small>(Linter v0.1.1)</small></p>
                <span class="tooltip-content">Since info is static, may be stale</span>
@@ -28,7 +28,7 @@
             <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
          </header>
          <section>
-            
+            <p style="font-size:30px"><strong>Removed in Dart 3.0.0.</strong></p>
             <p>From the <a href="https://dart.dev/guides/language/effective-dart/style/">style guide</a>:</p>
 <p><strong>DO</strong> place the <code>super</code> call last in a constructor initialization list.</p>
 <p>Field initializers are evaluated in the order that they appear in the
@@ -52,11 +52,6 @@ performance.</p>
     : _children = children,
       super(style) {
 </code></pre>
-<p><strong>DEPRECATED:</strong> In Dart 2, it is a compile-time error if a superinitializer
-appears in an initializer list at any other position than at the end so this
-rule is made redundant by the Dart analyzer's basic checks and is no longer
-necessary.</p>
-<p>The rule will be removed in a future Linter release.</p>
 
             
          </section>
