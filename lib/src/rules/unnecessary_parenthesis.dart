@@ -235,8 +235,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     return containsFunctionExpressionVisitor.hasFunctionExpression;
   }
 
-  /// Return if the expression is null aware, or one of its recursive targets
-  /// is null aware.
+  /// Return `true` if the expression is null aware, or if one of its recursive
+  /// targets is null aware.
   bool _isNullAware(Expression? expression) {
     if (expression is CascadeExpression) {
       // No need to check the target.
