@@ -68,6 +68,95 @@ class UnreachableFromMain extends LintRule {
   }
 }
 
+/// A visitor which gathers the declarations of the identifiers it visits.
+class _IdentifierVisitor extends RecursiveAstVisitor {
+  Map<Element, Declaration> declarationMap;
+
+  Set<Declaration> declarations = {};
+
+  _IdentifierVisitor(this.declarationMap);
+
+  @override
+  void visitAssignmentExpression(AssignmentExpression node) {
+    _visitCompoundAssignmentExpression(node);
+    super.visitAssignmentExpression(node);
+  }
+
+  @override
+  void visitPostfixExpression(PostfixExpression node) {
+    _visitCompoundAssignmentExpression(node);
+    super.visitPostfixExpression(node);
+  }
+
+  @override
+  void visitPrefixExpression(PrefixExpression node) {
+    _visitCompoundAssignmentExpression(node);
+    super.visitPrefixExpression(node);
+  }
+
+  @override
+  void visitSimpleIdentifier(SimpleIdentifier node) {
+    if (!node.inDeclarationContext()) {
+      var e = node.staticElement;
+      if (e != null) {
+        _addDeclaration(e);
+      }
+    }
+    super.visitSimpleIdentifier(node);
+  }
+
+  /// Adds the declaration of the top-level element which contains [element] to
+  /// [declarations], if it is found in [declarationMap].
+  ///
+  /// Also adds the declaration of [element] if it is a public static accessor
+  /// or static method on a public top-level element.
+  void _addDeclaration(Element element) {
+    // First add the enclosing top-level declaration.
+    var enclosingTopLevelElement = element.thisOrAncestorMatching((a) =>
+        a.enclosingElement == null ||
+        a.enclosingElement is CompilationUnitElement);
+    var enclosingTopLevelDeclaration = declarationMap[enclosingTopLevelElement];
+    if (enclosingTopLevelDeclaration != null) {
+      declarations.add(enclosingTopLevelDeclaration);
+    }
+
+    // Also add [element]'s declaration if it is a static accessor or static
+    // method.
+    if (element.isPrivate) {
+      return;
+    }
+    var enclosingElement = element.enclosingElement;
+    if (enclosingElement == null || enclosingElement.isPrivate) {
+      return;
+    }
+    if (enclosingElement is InterfaceElement ||
+        enclosingElement is ExtensionElement) {
+      if (element is PropertyAccessorElement && element.isStatic) {
+        var declaration = declarationMap[element];
+        if (declaration != null) {
+          declarations.add(declaration);
+        }
+      } else if (element is MethodElement && element.isStatic) {
+        var declaration = declarationMap[element];
+        if (declaration != null) {
+          declarations.add(declaration);
+        }
+      }
+    }
+  }
+
+  void _visitCompoundAssignmentExpression(CompoundAssignmentExpression node) {
+    var readElement = node.readElement;
+    if (readElement != null) {
+      _addDeclaration(readElement);
+    }
+    var writeElement = node.writeElement;
+    if (writeElement != null) {
+      _addDeclaration(writeElement);
+    }
+  }
+}
+
 class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
@@ -204,95 +293,6 @@ class _Visitor extends SimpleAstVisitor<void> {
     return name != null &&
         name.hasKnownValue &&
         name.toStringValue() == 'vm:entry-point';
-  }
-}
-
-/// A visitor which gathers the declarations of the identifiers it visits.
-class _IdentifierVisitor extends RecursiveAstVisitor {
-  Map<Element, Declaration> declarationMap;
-
-  Set<Declaration> declarations = {};
-
-  _IdentifierVisitor(this.declarationMap);
-
-  @override
-  void visitAssignmentExpression(AssignmentExpression node) {
-    _visitCompoundAssignmentExpression(node);
-    super.visitAssignmentExpression(node);
-  }
-
-  @override
-  void visitPostfixExpression(PostfixExpression node) {
-    _visitCompoundAssignmentExpression(node);
-    super.visitPostfixExpression(node);
-  }
-
-  @override
-  void visitPrefixExpression(PrefixExpression node) {
-    _visitCompoundAssignmentExpression(node);
-    super.visitPrefixExpression(node);
-  }
-
-  @override
-  void visitSimpleIdentifier(SimpleIdentifier node) {
-    if (!node.inDeclarationContext()) {
-      var e = node.staticElement;
-      if (e != null) {
-        _addDeclaration(e);
-      }
-    }
-    super.visitSimpleIdentifier(node);
-  }
-
-  void _visitCompoundAssignmentExpression(CompoundAssignmentExpression node) {
-    var readElement = node.readElement;
-    if (readElement != null) {
-      _addDeclaration(readElement);
-    }
-    var writeElement = node.writeElement;
-    if (writeElement != null) {
-      _addDeclaration(writeElement);
-    }
-  }
-
-  /// Adds the declaration of the top-level element which contains [element] to
-  /// [declarations], if it is found in [declarationMap].
-  ///
-  /// Also adds the declaration of [element] if it is a public static accessor
-  /// or static method on a public top-level element.
-  void _addDeclaration(Element element) {
-    // First add the enclosing top-level declaration.
-    var enclosingTopLevelElement = element.thisOrAncestorMatching((a) =>
-        a.enclosingElement == null ||
-        a.enclosingElement is CompilationUnitElement);
-    var enclosingTopLevelDeclaration = declarationMap[enclosingTopLevelElement];
-    if (enclosingTopLevelDeclaration != null) {
-      declarations.add(enclosingTopLevelDeclaration);
-    }
-
-    // Also add [element]'s declaration if it is a static accessor or static
-    // method.
-    if (element.isPrivate) {
-      return;
-    }
-    var enclosingElement = element.enclosingElement;
-    if (enclosingElement == null || enclosingElement.isPrivate) {
-      return;
-    }
-    if (enclosingElement is InterfaceElement ||
-        enclosingElement is ExtensionElement) {
-      if (element is PropertyAccessorElement && element.isStatic) {
-        var declaration = declarationMap[element];
-        if (declaration != null) {
-          declarations.add(declaration);
-        }
-      } else if (element is MethodElement && element.isStatic) {
-        var declaration = declarationMap[element];
-        if (declaration != null) {
-          declarations.add(declaration);
-        }
-      }
-    }
   }
 }
 
