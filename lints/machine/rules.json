@@ -2612,7 +2612,7 @@
     "fixStatus": "unregistered",
     "details": "Only use a `break` in a non-empty switch case statement if you need to break\nbefore the end of the case body.  Dart does not support fallthrough execution\nfor non-empty cases, so `break`s at the end of non-empty switch case statements\nare unnecessary.\n\n**BAD:**\n```dart\nswitch (1) {\n  case 1:\n    print(\"one\");\n    break;\n  case 2:\n    print(\"two\");\n    break;\n}\n```\n\n**GOOD:**\n```dart\nswitch (1) {\n  case 1:\n    print(\"one\");\n  case 2:\n    print(\"two\");\n}\n```\n\n```dart\nswitch (1) {\n  case 1:\n  case 2:\n    print(\"one or two\");\n}\n```\n\n```dart\nswitch (1) {\n  case 1:\n    break;\n  case 2:\n    print(\"just two\");\n}\n```\n",
     "sinceDartSdk": "Unreleased",
-    "sinceLinter": "Unreleased"
+    "sinceLinter": "1.33.0"
   },
   {
     "name": "unnecessary_const",
