@@ -5,6 +5,7 @@
 import 'dart:io';
 
 import 'package:analyzer/src/lint/io.dart';
+import 'package:analyzer/src/lint/state.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/cli.dart' as cli;
 import 'package:linter/src/rules.dart';
@@ -14,8 +15,6 @@ import 'package:yaml/yaml.dart';
 import '../test_data/rules/experiments/experiments.dart';
 import 'integration/always_require_non_null_named_parameters.dart'
     as always_require_non_null_named_parameters;
-import 'integration/avoid_private_typedef_functions.dart'
-    as avoid_private_typedef_functions;
 import 'integration/avoid_relative_lib_imports.dart'
     as avoid_relative_lib_imports;
 import 'integration/avoid_renaming_method_parameters.dart'
@@ -26,17 +25,10 @@ import 'integration/cancel_subscriptions.dart' as cancel_subscriptions;
 import 'integration/close_sinks.dart' as close_sinks;
 import 'integration/depend_on_referenced_packages.dart'
     as depend_on_referenced_packages;
-import 'integration/directives_ordering.dart' as directives_ordering;
 import 'integration/exhaustive_cases.dart' as exhaustive_cases;
 import 'integration/flutter_style_todos.dart' as flutter_style_todos;
 import 'integration/lines_longer_than_80_chars.dart'
     as lines_longer_than_80_chars;
-import 'integration/only_throw_errors.dart' as only_throw_errors;
-import 'integration/overridden_fields.dart' as overridden_fields;
-import 'integration/prefer_asserts_in_initializer_lists.dart'
-    as prefer_asserts_in_initializer_lists;
-import 'integration/prefer_const_constructors.dart'
-    as prefer_const_constructors;
 import 'integration/prefer_const_constructors_in_immutables.dart'
     as prefer_const_constructors_in_immutables;
 import 'integration/prefer_mixin.dart' as prefer_mixin;
@@ -45,8 +37,6 @@ import 'integration/public_member_api_docs.dart' as public_member_api_docs;
 import 'integration/secure_pubspec_urls.dart' as secure_pubspec_urls;
 import 'integration/sort_pub_dependencies.dart' as sort_pub_dependencies;
 import 'integration/unnecessary_lambdas.dart' as unnecessary_lambdas;
-import 'integration/unnecessary_library_directive.dart'
-    as unnecessary_library_directive;
 import 'integration/unnecessary_string_escapes.dart'
     as unnecessary_string_escapes;
 import 'integration/use_build_context_synchronously.dart'
@@ -155,7 +145,9 @@ void coreTests() {
 
         var registered = Analyzer.facade.registeredRules
             .where((r) =>
-                r.maturity != Maturity.deprecated && !experiments.contains(r))
+                !r.state.isDeprecated &&
+                !r.state.isRemoved &&
+                !experiments.contains(r))
             .map((r) => r.name);
 
         for (var l in configuredLints) {
@@ -164,13 +156,7 @@ void coreTests() {
           }
         }
 
-        expect(
-            configuredLints,
-            unorderedEquals(Analyzer.facade.registeredRules
-                .where((r) =>
-                    r.maturity != Maturity.deprecated &&
-                    !experiments.contains(r))
-                .map((r) => r.name)));
+        expect(configuredLints, unorderedEquals(registered));
       });
     });
   });
@@ -181,29 +167,22 @@ void ruleTests() {
     unnecessary_lambdas.main();
     exhaustive_cases.main();
     avoid_web_libraries_in_flutter.main();
-    overridden_fields.main();
     close_sinks.main();
     cancel_subscriptions.main();
     depend_on_referenced_packages.main();
-    directives_ordering.main();
     flutter_style_todos.main();
     lines_longer_than_80_chars.main();
-    only_throw_errors.main();
     always_require_non_null_named_parameters.main();
-    prefer_asserts_in_initializer_lists.main();
     prefer_const_constructors_in_immutables.main();
     avoid_relative_lib_imports.main();
     prefer_relative_imports.main();
     public_member_api_docs.main();
     secure_pubspec_urls.main();
     avoid_renaming_method_parameters.main();
-    avoid_private_typedef_functions.main();
     sort_pub_dependencies.main();
     unnecessary_string_escapes.main();
     prefer_mixin.main();
     use_build_context_synchronously.main();
-    prefer_const_constructors.main();
-    unnecessary_library_directive.main();
   });
 }
 

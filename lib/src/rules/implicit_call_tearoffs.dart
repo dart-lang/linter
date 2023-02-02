@@ -43,14 +43,20 @@ callIt(Callable().call);
 ''';
 
 class ImplicitCallTearoffs extends LintRule {
+  static const LintCode code = LintCode(
+      'implicit_call_tearoffs', "Implicit tear-off of the 'call' method.",
+      correctionMessage: "Try explicitly tearing off the 'call' method.");
+
   ImplicitCallTearoffs()
       : super(
           name: 'implicit_call_tearoffs',
           description: _desc,
           details: _details,
           group: Group.style,
-          maturity: Maturity.experimental,
         );
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

@@ -38,7 +38,6 @@ class UnnecessaryNullableForFinalVariableDeclarations extends LintRule {
             name: 'unnecessary_nullable_for_final_variable_declarations',
             description: _desc,
             details: _details,
-            maturity: Maturity.experimental,
             group: Group.style);
 
   @override

@@ -46,7 +46,7 @@ class Absorber extends Widget {
     properties.add(DiagnosticsProperty<bool>('absorbing', absorbing));
     // Missing reference to ignoringSemantics
   }
-}  
+}
 ```
 
 **GOOD:**
@@ -62,19 +62,27 @@ class Absorber extends Widget {
     properties.add(DiagnosticsProperty<bool>('absorbing', absorbing));
     properties.add(DiagnosticsProperty<bool>('ignoringSemantics', ignoringSemantics));
   }
-}  
+}
 ```
 ''';
 
 class DiagnosticsDescribeAllProperties extends LintRule {
+  static const LintCode code = LintCode(
+      'diagnostic_describe_all_properties',
+      "The public property isn't described by either 'debugFillProperties' or "
+          "'debugDescribeChildren'.",
+      correctionMessage: 'Try describing the property.');
+
   DiagnosticsDescribeAllProperties()
       : super(
           name: 'diagnostic_describe_all_properties',
           description: _desc,
           details: _details,
-          maturity: Maturity.stable,
           group: Group.errors,
         );
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(

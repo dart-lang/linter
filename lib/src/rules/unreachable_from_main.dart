@@ -42,14 +42,21 @@ void f() {}
 ''';
 
 class UnreachableFromMain extends LintRule {
+  static const LintCode code = LintCode('unreachable_from_main',
+      'Unreachable top-level member in an executable library.',
+      correctionMessage: 'Try referencing the member or removing it.');
+
   UnreachableFromMain()
       : super(
           name: 'unreachable_from_main',
           description: _desc,
           details: _details,
           group: Group.style,
-          maturity: Maturity.experimental,
+          state: State.experimental(),
         );
+
+  @override
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
@@ -62,9 +69,9 @@ class UnreachableFromMain extends LintRule {
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
-  _Visitor(this.rule);
-
   final LintRule rule;
+
+  _Visitor(this.rule);
 
   @override
   void visitCompilationUnit(CompilationUnit node) {

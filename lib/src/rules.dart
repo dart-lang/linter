@@ -176,6 +176,7 @@ import 'rules/type_init_formals.dart';
 import 'rules/unawaited_futures.dart';
 import 'rules/unnecessary_await_in_return.dart';
 import 'rules/unnecessary_brace_in_string_interps.dart';
+import 'rules/unnecessary_breaks.dart';
 import 'rules/unnecessary_const.dart';
 import 'rules/unnecessary_constructor_name.dart';
 import 'rules/unnecessary_final.dart';
@@ -399,14 +400,13 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(UnawaitedFutures())
     ..register(UnnecessaryAwaitInReturn())
     ..register(UnnecessaryBraceInStringInterps())
+    ..register(UnnecessaryBreaks())
     ..register(UnnecessaryConst())
     ..register(UnnecessaryConstructorName())
     ..register(UnnecessaryFinal())
     ..register(UnnecessaryNew())
     ..register(UnnecessaryNullAwareAssignments())
     ..register(UnnecessaryNullInIfNullOperators())
-    // Disabled pending fix: https://github.com/dart-lang/linter/issues/23
-    //..register(UnnecessaryGetters())
     ..register(UnnecessaryGettersSetters())
     ..register(UnnecessaryLambdas())
     ..register(UnnecessaryLate())
