@@ -132,7 +132,7 @@ main() async {
   (a?[0])!;
 
   (a?..toString())?.abs();
-  (a?..field = true)?.setter;
+  (a?..field = true)?.setter = 1;
   (a?..[0] = 1)?.length;
 
   print(!({"a": "b"}["a"]!.isEmpty)); // LINT
