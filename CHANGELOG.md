@@ -9,7 +9,7 @@
   - `prefer_bool_in_asserts`
   - `prefer_equal_for_default_values`
   - `super_goes_last`
-- update `unnecessary_parens` to detect some doubled parens
+- update `unnecessary_parenthesis` to detect some doubled parens
 - update `void_checks` to allow returning `Never` as void
 - new lint: `unnecessary_breaks`
 - fix `use_build_context_synchronously` in if conditions
