@@ -12,7 +12,7 @@ const _desc = r'Use case expressions that are valid in Dart 3.0.';
 /// todo(pq): add details or link out to a doc?
 const _details = r'''
 Some case expressions that are valid in Dart 2.19 and below will become an error
-or have changed semantics when the library is upgraded to 3.0. This lint flags
+or have changed semantics when a library is upgraded to 3.0. This lint flags
 those expressions in order to ease migration to Dart 3.0.
 ''';
 
