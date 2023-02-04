@@ -55,8 +55,7 @@ class _Visitor extends SimpleAstVisitor {
     } else if (expression is ParenthesizedExpression) {
       rule.reportLint(expression);
     } else if (expression is MethodInvocation) {
-      var methodName = expression.methodName;
-      if (methodName.isDartCoreFunction(named: 'identical')) {
+      if (expression.methodName.isDartCoreIdentifier(named: 'identical')) {
         rule.reportLint(expression);
       }
     } else if (expression is PrefixExpression) {
@@ -66,8 +65,7 @@ class _Visitor extends SimpleAstVisitor {
     } else if (expression is ConditionalExpression) {
       rule.reportLint(expression);
     } else if (expression is PropertyAccess) {
-      var propertyName = expression.propertyName;
-      if (propertyName.isDartCoreFunction(named: 'length')) {
+      if (expression.propertyName.isDartCoreIdentifier(named: 'length')) {
         rule.reportLint(expression);
       }
     } else if (expression is IsExpression) {
@@ -86,7 +84,7 @@ class _Visitor extends SimpleAstVisitor {
 }
 
 extension on SimpleIdentifier {
-  bool isDartCoreFunction({required String named}) {
+  bool isDartCoreIdentifier({required String named}) {
     if (name != named) return false;
     var library = staticElement?.library;
     return library != null && library.isDartCore;
