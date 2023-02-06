@@ -123,7 +123,6 @@ void f(Object o) {
     ]);
   }
 
-
   test_lengthCall() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -148,6 +147,16 @@ void f(Object o) {
     ]);
   }
 
+  test_listLiteral_ok() async {
+    await assertNoDiagnostics(r'''
+void f(Object o) {
+  switch (o) {
+    case const [1, 2]:
+  }
+}
+''');
+  }
+
   test_listLiteral_typeArgs() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -170,6 +179,16 @@ void f(Object o) {
 ''', [
       lint(42, 10),
     ]);
+  }
+
+  test_mapLiteral_ok() async {
+    await assertNoDiagnostics(r'''
+void f(Object o) {
+  switch (o) {
+   case const {'k': 'v'}:
+  }
+}
+''');
   }
 
   test_mapLiteral_typeArgs() async {
@@ -216,6 +235,16 @@ void f(Object o) {
 ''', [
       lint(43, 3),
     ]);
+  }
+
+  test_setLiteral_ok() async {
+    await assertNoDiagnostics(r'''
+void f(Object o) {
+  switch (o) {
+    case const {1}:
+  }
+}
+''');
   }
 
   test_setLiteral_typeArgs() async {

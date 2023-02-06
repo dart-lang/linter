@@ -9,7 +9,8 @@ import '../analyzer.dart';
 
 const _desc = r'Use case expressions that are valid in Dart 3.0.';
 
-/// todo(pq): add details or link out to a doc?
+/// todo(pq): add details
+/// todo(pq): add a doc link
 const _details = r'''
 Some case expressions that are valid in Dart 2.19 and below will become an error
 or have changed semantics when a library is upgraded to 3.0. This lint flags
@@ -49,9 +50,13 @@ class _Visitor extends SimpleAstVisitor {
   visitSwitchCase(SwitchCase node) {
     var expression = node.expression;
     if (expression is SetOrMapLiteral) {
-      rule.reportLint(expression);
+      if (expression.constKeyword == null) {
+        rule.reportLint(expression);
+      }
     } else if (expression is ListLiteral) {
-      rule.reportLint(expression);
+      if (expression.constKeyword == null) {
+        rule.reportLint(expression);
+      }
     } else if (expression is ParenthesizedExpression) {
       rule.reportLint(expression);
     } else if (expression is MethodInvocation) {
