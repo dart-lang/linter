@@ -70,8 +70,8 @@ f(C c) {
     ]);
   }
 
-  test_constConstructorCall_explicitConst() async {
-    await assertDiagnostics(r'''
+  test_constConstructorCall_explicitConst_ok() async {
+    await assertNoDiagnostics(r'''
 class C {
   const C();
 }
@@ -80,9 +80,7 @@ f(C c) {
     case const C():
   }
 }
-''', [
-      lint(58, 9),
-    ]);
+''');
   }
 
   test_identicalCall() async {

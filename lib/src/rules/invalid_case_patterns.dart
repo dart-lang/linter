@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -78,7 +79,7 @@ class _Visitor extends SimpleAstVisitor {
     } else if (expression is IsExpression) {
       rule.reportLint(expression);
     } else if (expression is InstanceCreationExpression) {
-      if (expression.isConst) {
+      if (expression.isConst && expression.keyword?.type != Keyword.CONST) {
         rule.reportLint(expression);
       }
     } else if (expression is SimpleIdentifier) {
