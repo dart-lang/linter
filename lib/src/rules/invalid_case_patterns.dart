@@ -17,9 +17,8 @@ those expressions in order to ease migration to Dart 3.0.
 ''';
 
 class InvalidCasePatterns extends LintRule {
-  static const LintCode code = LintCode(
-      'invalid_case_patterns', 'Invalid case pattern.',
-      // todo(pq): can we have a doc link here?
+  static const LintCode code = LintCode('invalid_case_patterns',
+      "This expression is not valid in a 'case' clause in Dart 3.0.",
       correctionMessage: 'Try refactoring the expression to be valid in 3.0.');
 
   InvalidCasePatterns()
@@ -27,6 +26,7 @@ class InvalidCasePatterns extends LintRule {
             name: 'invalid_case_patterns',
             description: _desc,
             details: _details,
+            state: State.experimental(),
             group: Group.errors);
 
   @override
@@ -59,7 +59,9 @@ class _Visitor extends SimpleAstVisitor {
         rule.reportLint(expression);
       }
     } else if (expression is PrefixExpression) {
-      rule.reportLint(expression);
+      if (expression.operand is! IntegerLiteral) {
+        rule.reportLint(expression);
+      }
     } else if (expression is BinaryExpression) {
       rule.reportLint(expression);
     } else if (expression is ConditionalExpression) {

@@ -17,19 +17,7 @@ class InvalidCasePatternsTest extends LintRuleTest {
   @override
   String get lintRule => 'invalid_case_patterns';
 
-  test_binaryExpression() async {
-    await assertDiagnostics(r'''
-void f(Object o) {
-  switch (o) {
-    case 1 + 2:
-  }
-}
-''', [
-      lint(43, 5),
-    ]);
-  }
-
-  test_binaryExpression_logic() async {
+  test_binaryExpression_logicalAnd() async {
     await assertDiagnostics(r'''
 f(bool b) {
   switch (b) {
@@ -38,6 +26,18 @@ f(bool b) {
 }
 ''', [
       lint(36, 13),
+    ]);
+  }
+
+  test_binaryExpression_plus() async {
+    await assertDiagnostics(r'''
+void f(Object o) {
+  switch (o) {
+    case 1 + 2:
+  }
+}
+''', [
+      lint(43, 5),
     ]);
   }
 
@@ -70,6 +70,21 @@ f(C c) {
     ]);
   }
 
+  test_constConstructorCall_explicitConst() async {
+    await assertDiagnostics(r'''
+class C {
+  const C();
+}
+f(C c) {
+  switch (c) {
+    case const C():
+  }
+}
+''', [
+      lint(58, 9),
+    ]);
+  }
+
   test_identicalCall() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -86,14 +101,28 @@ void f(Object o) {
     await assertDiagnostics(r'''
 void f(Object o) {
   switch (o) {
-      case 1 is int:
+    case 1 is int:
   }
 }
 ''', [
-      error(HintCode.UNNECESSARY_TYPE_CHECK_TRUE, 45, 8),
-      lint(45, 8),
+      error(HintCode.UNNECESSARY_TYPE_CHECK_TRUE, 43, 8),
+      lint(43, 8),
     ]);
   }
+
+  test_isNotExpression() async {
+    await assertDiagnostics(r'''
+void f(Object o) {
+  switch (o) {
+    case 1 is! int:
+  }
+}
+''', [
+      error(HintCode.UNNECESSARY_TYPE_CHECK_FALSE, 43, 9),
+      lint(43, 9),
+    ]);
+  }
+
 
   test_lengthCall() async {
     await assertDiagnostics(r'''
@@ -119,6 +148,18 @@ void f(Object o) {
     ]);
   }
 
+  test_listLiteral_typeArgs() async {
+    await assertDiagnostics(r'''
+void f(Object o) {
+  switch (o) {
+    case <int>[1, 2]:
+  }
+}
+''', [
+      lint(43, 11),
+    ]);
+  }
+
   test_mapLiteral() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -128,6 +169,18 @@ void f(Object o) {
 }
 ''', [
       lint(42, 10),
+    ]);
+  }
+
+  test_mapLiteral_typeArgs() async {
+    await assertDiagnostics(r'''
+void f(Object o) {
+  switch (o) {
+   case <String,String>{'k': 'v'}:
+  }
+}
+''', [
+      lint(42, 25),
     ]);
   }
 
@@ -143,16 +196,14 @@ void f(Object o) {
     ]);
   }
 
-  test_prefixedExpression() async {
-    await assertDiagnostics(r'''
+  test_prefixedExpression_intLiteral_ok() async {
+    await assertNoDiagnostics(r'''
 void f(Object o) {
   switch (o) {
     case -1:
   }
 }
-''', [
-      lint(43, 2),
-    ]);
+''');
   }
 
   test_setLiteral() async {
@@ -164,6 +215,44 @@ void f(Object o) {
 }
 ''', [
       lint(43, 3),
+    ]);
+  }
+
+  test_setLiteral_typeArgs() async {
+    await assertDiagnostics(r'''
+void f(Object o) {
+  switch (o) {
+    case <int>{1}:
+  }
+}
+''', [
+      lint(43, 8),
+    ]);
+  }
+
+  test_unaryOperator_minus() async {
+    await assertDiagnostics(r'''
+void f() {
+  const o = 1;
+  switch (1) {
+    case -o:
+  }
+}
+''', [
+      lint(50, 2),
+    ]);
+  }
+
+  test_unaryOperator_not() async {
+    await assertDiagnostics(r'''
+  void f() {
+    const b = false;
+    switch (true) {
+      case !b:
+    }
+  }
+''', [
+      lint(65, 2),
     ]);
   }
 
