@@ -112,7 +112,7 @@ class ControlFlowInFinally extends LintRule {
 /// [ControlFlowInFinally] which is in a separate rule to allow a more granular
 /// configurability given that reporting throw statements in a finally clause is
 /// controversial.
-abstract class ControlFlowInFinallyBlockReporterMixin {
+mixin ControlFlowInFinallyBlockReporterMixin {
   LintRule get rule;
 
   void reportIfFinallyAncestorExists(AstNode node,
