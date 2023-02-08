@@ -64,6 +64,17 @@ void f(Object o) {
 ''');
   }
 
+  test_constConstructor() async {
+    await assertDiagnostics(r'''
+class C {
+  const C();
+}
+const c = const C();
+''', [
+      lint(35, 9),
+    ]);
+  }
+
   test_listLiteral() async {
     await assertDiagnostics(r'''
 const l = const [];
