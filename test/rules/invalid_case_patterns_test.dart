@@ -189,6 +189,30 @@ void f(Object o) {
 ''');
   }
 
+  test_mapLiteral_parenthesized() async {
+    await assertDiagnostics(r'''
+void f(Object o) {
+  switch (o) {
+   case ({'k': 'v'}):
+  }
+}
+''', [
+      lint(43, 10),
+    ]);
+  }
+
+  test_mapLiteral_parenthesized_twice() async {
+    await assertDiagnostics(r'''
+void f(Object o) {
+  switch (o) {
+   case (({'k': 'v'})):
+  }
+}
+''', [
+      lint(44, 10),
+    ]);
+  }
+
   test_mapLiteral_typeArgs() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -201,16 +225,14 @@ void f(Object o) {
     ]);
   }
 
-  test_parenthesizedExpression() async {
-    await assertDiagnostics(r'''
+  test_parenthesizedExpression_ok() async {
+    await assertNoDiagnostics(r'''
 void f(Object o) {
   switch (o) {
     case (1):
   }
 }
-''', [
-      lint(43, 3),
-    ]);
+''');
   }
 
   test_prefixedExpression_intLiteral_ok() async {

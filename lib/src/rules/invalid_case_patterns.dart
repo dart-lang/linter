@@ -267,7 +267,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitSwitchCase(SwitchCase node) {
-    var expression = node.expression;
+    var expression = node.expression.unParenthesized;
     if (expression is SetOrMapLiteral) {
       if (expression.constKeyword == null) {
         rule.reportLint(expression);
@@ -276,8 +276,6 @@ class _Visitor extends SimpleAstVisitor {
       if (expression.constKeyword == null) {
         rule.reportLint(expression);
       }
-    } else if (expression is ParenthesizedExpression) {
-      rule.reportLint(expression);
     } else if (expression is MethodInvocation) {
       if (expression.methodName.isDartCoreIdentifier(named: 'identical')) {
         rule.reportLint(expression);
