@@ -74,7 +74,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitListLiteral(ListLiteral node) {
-    if (node.parent is ConstantPattern) return;
+    if (node.unParenthesized.parent is ConstantPattern) return;
     _visitTypedLiteral(node);
   }
 
@@ -89,7 +89,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitSetOrMapLiteral(SetOrMapLiteral node) {
-    if (node.parent is ConstantPattern) return;
+    if (node.unParenthesized.parent is ConstantPattern) return;
     _visitTypedLiteral(node);
   }
 
