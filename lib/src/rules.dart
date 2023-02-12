@@ -111,6 +111,7 @@ import 'rules/omit_local_variable_types.dart';
 import 'rules/one_member_abstracts.dart';
 import 'rules/only_throw_errors.dart';
 import 'rules/overridden_fields.dart';
+import 'rules/override_void_return.dart';
 import 'rules/package_api_docs.dart';
 import 'rules/package_prefixed_library_names.dart';
 import 'rules/parameter_assignments.dart';
@@ -305,6 +306,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(ExhaustiveCases())
     ..register(FileNames())
     ..register(FlutterStyleTodos())
+    ..register(OverrideVoidReturn())
     ..register(HashAndEquals())
     ..register(ImplementationImports())
     ..register(ImplicitCallTearoffs())

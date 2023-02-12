@@ -56,6 +56,7 @@ import 'null_closures_test.dart' as null_closures;
 import 'omit_local_variable_types_test.dart' as omit_local_variable_types;
 import 'only_throw_errors_test.dart' as only_throw_errors;
 import 'overridden_fields_test.dart' as overridden_fields;
+import 'override_void_return_test.dart' as override_void_return;
 import 'parameter_assignments_test.dart' as parameter_assignments;
 import 'prefer_asserts_in_initializer_lists_test.dart'
     as prefer_asserts_in_initializer_lists;
@@ -139,6 +140,7 @@ void main() {
   omit_local_variable_types.main();
   only_throw_errors.main();
   overridden_fields.main();
+  override_void_return.main();
   parameter_assignments.main();
   prefer_asserts_in_initializer_lists.main();
   prefer_collection_literals.main();
