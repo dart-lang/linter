@@ -50,6 +50,7 @@ import 'literal_only_boolean_expressions_test.dart'
     as literal_only_boolean_expressions;
 import 'missing_whitespace_between_adjacent_strings_test.dart'
     as missing_whitespace_between_adjacent_strings;
+import 'no_self_assign_test.dart' as no_self_assign;
 import 'non_constant_identifier_names_test.dart'
     as non_constant_identifier_names;
 import 'null_closures_test.dart' as null_closures;
@@ -134,6 +135,7 @@ void main() {
   library_private_types_in_public_api.main();
   literal_only_boolean_expressions.main();
   missing_whitespace_between_adjacent_strings.main();
+  no_self_assign.main();
   non_constant_identifier_names.main();
   null_closures.main();
   omit_local_variable_types.main();
