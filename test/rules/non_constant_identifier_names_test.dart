@@ -114,7 +114,7 @@ var a = (hashCode: 1);
   test_recordFields_fieldNamePositional() async {
     // This will produce a compile-time error and we don't want to over-report.
     await assertDiagnostics(r'''
-var r = (0, $0: 2);
+var r = (0, $1: 2);
 ''', [
       // No Lint.
       error(CompileTimeErrorCode.INVALID_FIELD_NAME_POSITIONAL, 12, 2),
