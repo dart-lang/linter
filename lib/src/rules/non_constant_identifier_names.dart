@@ -130,19 +130,19 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitPatternField(PatternField node) {
+    var pattern = node.pattern;
+    if (pattern is DeclaredVariablePattern) {
+      checkIdentifier(pattern.name);
+    }
+  }
+
+  @override
   void visitRecordLiteral(RecordLiteral node) {
     for (var fieldExpression in node.fields) {
       if (fieldExpression is NamedExpression) {
         checkIdentifier(fieldExpression.name.label.token);
       }
-    }
-  }
-
-  @override
-  void visitRecordPatternField(PatternField node) {
-    var pattern = node.pattern;
-    if (pattern is DeclaredVariablePattern) {
-      checkIdentifier(pattern.name);
     }
   }
 
