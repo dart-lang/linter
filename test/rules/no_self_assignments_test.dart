@@ -8,14 +8,14 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(NoSelfAssignTest);
+    defineReflectiveTests(NoSelfAssignmentsTest);
   });
 }
 
 @reflectiveTest
-class NoSelfAssignTest extends LintRuleTest {
+class NoSelfAssignmentsTest extends LintRuleTest {
   @override
-  String get lintRule => 'no_self_assign';
+  String get lintRule => 'no_self_assignments';
 
   test_fieldAssignment() async {
     await assertDiagnostics(r'''

@@ -111,15 +111,15 @@ class C {
 
 ''';
 
-class NoSelfAssign extends LintRule {
-  static const LintCode code = LintCode(
-      'no_self_assign', 'The variable or property is being assigned to itself.',
+class NoSelfAssignments extends LintRule {
+  static const LintCode code = LintCode('no_self_assignments',
+      'The variable or property is being assigned to itself.',
       correctionMessage:
           'Try removing the assignment that has no direct effect.');
 
-  NoSelfAssign()
+  NoSelfAssignments()
       : super(
-            name: 'no_self_assign',
+            name: 'no_self_assignments',
             description: _desc,
             details: _details,
             group: Group.errors);
