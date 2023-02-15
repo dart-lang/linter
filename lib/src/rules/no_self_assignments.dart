@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import '../analyzer.dart';
 
-const _desc = r"Don't assign a variable to itself";
+const _desc = r"Don't assign a variable to itself.";
 
 const _details = r'''
 **DON'T** assign a variable to itself. Usually this is a mistake.
