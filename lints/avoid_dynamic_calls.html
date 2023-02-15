@@ -30,14 +30,14 @@
          <section>
             
             <p><strong>DO</strong> avoid method calls or accessing properties on an object that is either
-explicitly or implicitly statically typed "dynamic". Dynamic calls are treated
+explicitly or implicitly statically typed &quot;dynamic&quot;. Dynamic calls are treated
 slightly different in every runtime environment and compiler, but most
 production modes (and even some development modes) have both compile size and
 runtime performance penalties associated with dynamic calls.</p>
-<p>Additionally, targets typed "dynamic" disables most static analysis, meaning it
-is easier to lead to a runtime "NoSuchMethodError" or "NullError" than properly
+<p>Additionally, targets typed &quot;dynamic&quot; disables most static analysis, meaning it
+is easier to lead to a runtime &quot;NoSuchMethodError&quot; or &quot;NullError&quot; than properly
 statically typed Dart code.</p>
-<p>There is an exception to methods and properties that exist on "Object?":</p>
+<p>There is an exception to methods and properties that exist on &quot;Object?&quot;:</p>
 <ul>
 <li>a.hashCode</li>
 <li>a.runtimeType</li>
@@ -47,8 +47,8 @@ statically typed Dart code.</p>
 <p>... these members are dynamically dispatched in the web-based runtimes, but not
 in the VM-based ones. Additionally, they are so common that it would be very
 punishing to disallow <code>any.toString()</code> or <code>any == true</code>, for example.</p>
-<p>Note that despite "Function" being a type, the semantics are close to identical
-to "dynamic", and calls to an object that is typed "Function" will also trigger
+<p>Note that despite &quot;Function&quot; being a type, the semantics are close to identical
+to &quot;dynamic&quot;, and calls to an object that is typed &quot;Function&quot; will also trigger
 this lint.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">void explicitDynamicType(dynamic object) {

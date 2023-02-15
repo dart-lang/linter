@@ -77,14 +77,14 @@ as the constant. So:</p>
 }
 
 main() {
-  test(const [1, 2]); // Prints "Matched".
-  test([1, 2]); // Prints "Did not match".
+  test(const [1, 2]); // Prints &quot;Matched&quot;.
+  test([1, 2]); // Prints &quot;Did not match&quot;.
 }
 </code></pre>
 <p>With patterns, a list or map literal becomes a list or map pattern. The pattern
 destructures the incoming object and matches if the subpatterns all match. In
 other words, list and map pattern match using something more like deep equality.</p>
-<p>With Dart 3.0, the above program prints "Matched" twice.</p>
+<p>With Dart 3.0, the above program prints &quot;Matched&quot; twice.</p>
 <p><strong>Constant constructor calls.</strong> Similar to collections, you can construct a
 constant instance of a class in a case:</p>
 <pre><code class="language-dart">class Point {
@@ -101,15 +101,15 @@ test(Point p) {
 }
 
 main() {
-  test(const Point(1, 2)); // Prints "Matched".
-  test(Point(1, 2)); // Prints "Did not match".
+  test(const Point(1, 2)); // Prints &quot;Matched&quot;.
+  test(Point(1, 2)); // Prints &quot;Did not match&quot;.
 }
 </code></pre>
 <p>Again, like collections, the case currently only matches if the incoming value
 has the same identity. With patterns, the <code>Point(...)</code> syntax becomes an object
 pattern that destructures the incoming point, calls the <code>x</code> and <code>y</code> getters on
 it and then matches the results of those against the corresponding subpatterns.</p>
-<p>In this example, it will print "Matched" twice.</p>
+<p>In this example, it will print &quot;Matched&quot; twice.</p>
 <p>Note that object patterns only support named fields. So any constant constructor
 in a case today that has positional arguments will become a compile-time error
 when parsed as a pattern. A constant constructor call with no arguments is a
@@ -126,11 +126,11 @@ test(Thing t) {
 }
 
 main() {
-  test(const Thing()); // Prints "Matched".
-  test(Thing()); // Prints "Did not match".
+  test(const Thing()); // Prints &quot;Matched&quot;.
+  test(Thing()); // Prints &quot;Did not match&quot;.
 }
 </code></pre>
-<p>When interpreted as a pattern, this prints "Matched" twice.</p>
+<p>When interpreted as a pattern, this prints &quot;Matched&quot; twice.</p>
 <p><strong>Wildcards.</strong> Today, you can have a constant named <code>_</code>:</p>
 <pre><code class="language-dart">test(int n) {
   const _ = 3;
@@ -141,12 +141,12 @@ main() {
 }
 
 main() {
-  test(3); // Prints "Matched".
-  test(5); // Prints "Did not match".
+  test(3); // Prints &quot;Matched&quot;.
+  test(5); // Prints &quot;Did not match&quot;.
 }
 </code></pre>
-<p>With patterns, the identifier <code>_</code> is treated as a pattern that matches all 
-values, so this prints "Matched" twice.</p>
+<p>With patterns, the identifier <code>_</code> is treated as a pattern that matches all
+values, so this prints &quot;Matched&quot; twice.</p>
 <p><strong>Logic operators.</strong> The logic operators <code>&amp;&amp;</code> and <code>||</code> are valid constant
 expressions and also valid patterns. As a constant expression, they simply
 evaluate the expression to a boolean and match if the incoming value is equal to
@@ -159,11 +159,11 @@ that boolean value. So:</p>
 }
 
 main() {
-  test(false); // Prints "Matched".
-  test(true); // Prints "Did not match".
+  test(false); // Prints &quot;Matched&quot;.
+  test(true); // Prints &quot;Did not match&quot;.
 }
 </code></pre>
-<p>With Dart 3.0, these become patterns. The above example prints "Did not match"
+<p>With Dart 3.0, these become patterns. The above example prints &quot;Did not match&quot;
 twice because no boolean value can be both true and false.</p>
 <p>Many of invalid cases can be mechanically changed to something that is valid
 both in Dart today and valid and means the same in Dart 3.0.</p>
@@ -206,7 +206,7 @@ this:</p>
 <pre><code class="language-dart">const three = 1 + 2;
 
 switch (n) {
-  case three: ...
+ case three: ...
 }
 </code></pre>
 

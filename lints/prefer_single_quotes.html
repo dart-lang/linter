@@ -39,18 +39,18 @@ quotes are allowed either within, or containing, an interpolated string literal.
 Arguably strings within string interpolations should be its own type of lint.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">useStrings(
-    "should be single quote",
-    r"should be single quote",
-    r"""should be single quotes""")
+    &quot;should be single quote&quot;,
+    r&quot;should be single quote&quot;,
+    r&quot;&quot;&quot;should be single quotes&quot;&quot;&quot;)
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">useStrings(
     'should be single quote',
     r'should be single quote',
     r'''should be single quotes''',
-    "here's ok",
-    "nested ${a ? 'strings' : 'can'} be wrapped by a double quote",
-    'and nested ${a ? "strings" : "can be double quoted themselves"}');
+    &quot;here's ok&quot;,
+    &quot;nested ${a ? 'strings' : 'can'} be wrapped by a double quote&quot;,
+    'and nested ${a ? &quot;strings&quot; : &quot;can be double quoted themselves&quot;}');
 </code></pre>
 
             <p>

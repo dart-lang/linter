@@ -31,13 +31,13 @@
             
             <p>From <a href="https://dart.dev/guides/language/effective-dart/usage#dont-explicitly-initialize-variables-to-null">Effective Dart</a>:</p>
 <p><strong>DON'T</strong> explicitly initialize variables to <code>null</code>.</p>
-<p>If a variable has a non-nullable type or is <code>final</code>, 
+<p>If a variable has a non-nullable type or is <code>final</code>,
 Dart reports a compile error if you try to use it
-before it has been definitely initialized. 
-If the variable is nullable and not <code>const</code> or <code>final</code>, 
-then it is implicitly initialized to <code>null</code> for you. 
-There's no concept of "uninitialized memory" in Dart 
-and no need to explicitly initialize a variable to <code>null</code> to be "safe".
+before it has been definitely initialized.
+If the variable is nullable and not <code>const</code> or <code>final</code>,
+then it is implicitly initialized to <code>null</code> for you.
+There's no concept of &quot;uninitialized memory&quot; in Dart
+and no need to explicitly initialize a variable to <code>null</code> to be &quot;safe&quot;.
 Adding <code>= null</code> is redundant and unneeded.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">Item? bestDeal(List&lt;Item&gt; cart) {

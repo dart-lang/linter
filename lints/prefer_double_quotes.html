@@ -45,12 +45,12 @@ Arguably strings within string interpolations should be its own type of lint.</p
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">useStrings(
-    "should be double quote",
-    r"should be double quote",
-    r"""should be double quotes""",
-    'ok with " inside',
-    'nested ${a ? "strings" : "can"} be wrapped by a double quote',
-    "and nested ${a ? 'strings' : 'can be double quoted themselves'}");
+    &quot;should be double quote&quot;,
+    r&quot;should be double quote&quot;,
+    r&quot;&quot;&quot;should be double quotes&quot;&quot;&quot;,
+    'ok with &quot; inside',
+    'nested ${a ? &quot;strings&quot; : &quot;can&quot;} be wrapped by a double quote',
+    &quot;and nested ${a ? 'strings' : 'can be double quoted themselves'}&quot;);
 </code></pre>
 
             <p>

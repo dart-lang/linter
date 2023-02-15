@@ -36,32 +36,32 @@ are unnecessary.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">switch (1) {
   case 1:
-    print("one");
+    print(&quot;one&quot;);
     break;
   case 2:
-    print("two");
+    print(&quot;two&quot;);
     break;
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">switch (1) {
   case 1:
-    print("one");
+    print(&quot;one&quot;);
   case 2:
-    print("two");
+    print(&quot;two&quot;);
 }
 </code></pre>
 <pre><code class="language-dart">switch (1) {
   case 1:
   case 2:
-    print("one or two");
+    print(&quot;one or two&quot;);
 }
 </code></pre>
 <pre><code class="language-dart">switch (1) {
   case 1:
     break;
   case 2:
-    print("just two");
+    print(&quot;just two&quot;);
 }
 </code></pre>
 
