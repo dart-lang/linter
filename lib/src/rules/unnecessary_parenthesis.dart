@@ -60,6 +60,7 @@ class UnnecessaryParenthesis extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addParenthesizedExpression(this, visitor);
+    registry.addParenthesizedPattern(this, visitor);
   }
 }
 
@@ -83,6 +84,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
   _Visitor(this.rule);
+
+  @override
+  void visitParenthesizedPattern(ParenthesizedPattern node) {
+    var parent = node.parent;
+    if (parent is DartPattern && parent.precedence < node.precedence) {
+      rule.reportLint(node);
+    }
+  }
 
   @override
   void visitParenthesizedExpression(ParenthesizedExpression node) {
