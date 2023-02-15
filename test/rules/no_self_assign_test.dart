@@ -65,6 +65,30 @@ class C {
 ''', [lint(53, 17)]);
   }
 
+  test_fieldAssignmentThisAndDifferentTarget() async {
+    await assertNoDiagnostics(r'''
+class C {
+  int x = 5;
+
+  void update(C other) {
+    this.x = other.x;
+  }
+}
+''');
+  }
+
+  test_fieldAssignmentDifferentTargets() async {
+    await assertNoDiagnostics(r'''
+class C {
+  String hello = 'ok';
+}
+
+void test(C one, C two) {
+  one.hello = two.hello;
+}
+''');
+  }
+
   test_fieldInitialization() async {
     await assertNoDiagnostics(r'''
 class C {
@@ -101,10 +125,21 @@ class C {
 
 void main() {
   C.foo = C.foo;
+}
+''', [lint(58, 13)]);
+  }
+
+  test_classMemberAssignmentUnrelated() async {
+    await assertNoDiagnostics(r'''
+class C {
+  static String foo = "foo";
+}
+
+void main() {
   String foo;
   foo = C.foo; // OK
   print(foo);
 }
-''', [lint(58, 13)]);
+''');
   }
 }
