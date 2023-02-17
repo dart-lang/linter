@@ -36,6 +36,15 @@ void f(List<String>? people) {
 ''');
   }
 
+  test_functionExpression_nullableTarget_legacy() async {
+    await assertNoDiagnostics(r'''
+// @dart=2.9
+void f(List<String> people) {
+  people?.forEach((person) => print('$person'));
+}
+''');
+  }
+
   test_functionExpression_targetDoesNotHaveMethodChain() async {
     await assertDiagnostics(r'''
 void f(List<List<String>> people) {
