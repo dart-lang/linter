@@ -41,6 +41,7 @@ import 'discarded_futures_test.dart' as discarded_futures;
 import 'file_names_test.dart' as file_names;
 import 'flutter_style_todos_test.dart' as flutter_style_todos;
 import 'hash_and_equals_test.dart' as hash_and_equals;
+import 'invalid_case_patterns_test.dart' as invalid_case_patterns;
 import 'library_annotations_test.dart' as library_annotations;
 import 'library_names_test.dart' as library_names;
 import 'library_private_types_in_public_api_test.dart'
@@ -88,6 +89,8 @@ import 'unnecessary_library_directive_test.dart'
     as unnecessary_library_directive;
 import 'unnecessary_null_checks_test.dart' as unnecessary_null_checks;
 import 'unnecessary_overrides_test.dart' as unnecessary_overrides;
+import 'unnecessary_parenthesis_test.dart' as unnecessary_parenthesis;
+import 'unreachable_from_main_test.dart' as unreachable_from_main;
 import 'use_build_context_synchronously_test.dart'
     as use_build_context_synchronously;
 import 'use_enums_test.dart' as use_enums;
@@ -125,6 +128,7 @@ void main() {
   file_names.main();
   flutter_style_todos.main();
   hash_and_equals.main();
+  invalid_case_patterns.main();
   library_annotations.main();
   library_names.main();
   library_private_types_in_public_api.main();
@@ -160,6 +164,8 @@ void main() {
   unnecessary_library_directive.main();
   unnecessary_null_checks.main();
   unnecessary_overrides.main();
+  unnecessary_parenthesis.main();
+  unreachable_from_main.main();
   use_build_context_synchronously.main();
   use_enums.main();
   use_is_even_rather_than_modulo.main();
