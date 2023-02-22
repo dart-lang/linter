@@ -22,14 +22,13 @@ class NonConstantIdentifierNamesPatternsTest extends LintRuleTest {
   @override
   String get lintRule => 'non_constant_identifier_names';
 
-  @FailingTest(reason: 'Flow analysis fails w/ a Bad state exception')
   test_patternForStatement() async {
     await assertDiagnostics(r'''
 void f() {
-  for (var (AB, ) = (0, 1); AB <= 13; (AB, ) = ( , AB++)) { }
+  for (var (AB, c) = (0, 1); AB <= 13; (AB, c) = (c, AB + c)) { }
 }
 ''', [
-      lint(18, 2),
+      lint(23, 2),
     ]);
   }
 
