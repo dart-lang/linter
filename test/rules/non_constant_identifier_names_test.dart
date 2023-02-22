@@ -39,9 +39,9 @@ void f() {
   if ([1,2] case [int AB, int c]) { }
 }
 ''', [
-      error(HintCode.UNUSED_LOCAL_VARIABLE, 33, 2),
+      error(WarningCode.UNUSED_LOCAL_VARIABLE, 33, 2),
       lint(33, 2),
-      error(HintCode.UNUSED_LOCAL_VARIABLE, 41, 1),
+      error(WarningCode.UNUSED_LOCAL_VARIABLE, 41, 1),
     ]);
   }
 
