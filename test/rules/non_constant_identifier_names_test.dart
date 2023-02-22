@@ -36,11 +36,12 @@ void f() {
   test_patternIfStatement() async {
     await assertDiagnostics(r'''
 void f() {
-  if ([1,2] case [int AB, int]) { }
+  if ([1,2] case [int AB, int c]) { }
 }
 ''', [
-      error(WarningCode.UNUSED_LOCAL_VARIABLE, 33, 2),
+      error(HintCode.UNUSED_LOCAL_VARIABLE, 33, 2),
       lint(33, 2),
+      error(HintCode.UNUSED_LOCAL_VARIABLE, 41, 1),
     ]);
   }
 
