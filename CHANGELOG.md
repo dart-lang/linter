@@ -4,7 +4,7 @@
 - update `prefer_mixin` to handle class mixins
 - update `unnecessary_null_checks` to ignore `Future.value` and 
   `Completer.complete`
-- fix `unnecessary_parenthesis` false-positives on constant patterns
+- fix `unnecessary_parenthesis` false positives on constant patterns
 - new lint: `invalid_case_patterns`
 - update `unnecessary_const` to handle case patterns
 - improve handling of null-aware cascades in `unnecessary_parenthesis`
