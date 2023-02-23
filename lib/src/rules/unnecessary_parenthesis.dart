@@ -88,10 +88,10 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitParenthesizedPattern(ParenthesizedPattern node) {
     //https://github.com/dart-lang/linter/issues/4062
-    // var parent = node.parent;
-    // if (parent is DartPattern && parent.precedence < node.precedence) {
-    //   rule.reportLint(node);
-    // }
+    var parent = node.parent;
+    if (parent is DartPattern && parent.precedence < node.pattern.precedence) {
+      rule.reportLint(node);
+    }
   }
 
   @override

@@ -36,26 +36,27 @@ void f(int i) {
   }
 
   ///https://github.com/dart-lang/linter/issues/4062
-  @FailingTest(issue: 'https://github.com/dart-lang/sdk/issues/51426')
+  //@FailingTest(issue: 'https://github.com/dart-lang/sdk/issues/51426')
+  @soloTest
   test_parenthesized_listPattern() async {
     await assertDiagnostics(r'''
-void f(Object x) {
-  if (x case [(<3), 12]) return;
+void f(List<int> l) {
+  if (l case [(<3), 12]) return;
 }
 ''', [
       lint(41, 11),
     ]);
   }
 
-  ///https://github.com/dart-lang/linter/issues/4062
-  @FailingTest(issue: 'https://github.com/dart-lang/sdk/issues/51426')
+  @soloTest
   test_parenthesized_relationalPattern() async {
     await assertDiagnostics(r'''
-void f(int x) {
-  if (x case (<3) || (>5)) return;
+void f(List<int> l) {
+  if (l case [(<3) || (>5)]) return;
 }
 ''', [
-      lint(41, 11),
+      lint(36, 4),
+      lint(44, 4),
     ]);
   }
 }
