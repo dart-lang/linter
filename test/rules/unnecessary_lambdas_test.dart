@@ -136,7 +136,7 @@ void f({int Function(dynamic)? fn}) {}
 ''');
   }
 
-  @failingTest
+  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/3516')
   test_matchingArg_dynamicParameterToOtherArg_positional() async {
     await assertNoDiagnostics(r'''
 var x = f((s) => count(s));
