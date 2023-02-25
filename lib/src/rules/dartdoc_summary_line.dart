@@ -8,10 +8,6 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-/// The maximum amount of lines that can be considered part of a single
-/// summary line (like this one!).
-const maxSummaryLines = 2;
-
 const _desc =
     r'Start your DartDoc comment with a single, brief sentence that ends with a period.';
 
@@ -82,8 +78,7 @@ void delete(String path) {
 ```
 ''';
 
-/// Enforces that DartDoc blocks start with a single, brief line that ends in
-/// a period.
+/// Enforces that DartDoc blocks start with a single line that ends in a period.
 ///
 /// (Like the one above!)
 class DartdocSummaryLine extends LintRule {
@@ -125,22 +120,16 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
 
     Iterable<Token> summary = _getSummary(node);
+    if (summary.length > 1) {
+      int length = summary.last.charEnd - summary.first.charOffset;
+      rule.reportLintForOffset(summary.first.charOffset, length);
+      return;
+    }
 
-    if (!_endsWithPeriod(summary)) {
-      Token last = summary.last;
-      // Highlight the last character of the sentence...
-      rule.reportLintForOffset(last.offset + last.lexeme.length, 1);
-    }
-    int? sentenceBreakOffset = _findSentenceBreak(summary);
-    if (sentenceBreakOffset != null) {
-      // Highlight the position of the period that is breaking the summary.
-      rule.reportLintForOffset(sentenceBreakOffset, 1);
-    }
-    if (summary.length > maxSummaryLines) {
-      // Highlight the extra lines.
-      summary.skip(maxSummaryLines).forEach((token) {
-        rule.reportLintForOffset(token.offset, 3);
-      });
+    Token token = summary.last; // and only
+    if (!_endsWithPeriod(token)) {
+      rule.reportLintForToken(token);
+      return;
     }
   }
 }
@@ -148,38 +137,16 @@ class _Visitor extends SimpleAstVisitor<void> {
 // Some utility functions
 
 /// Removes the first triple slash of a `line` and returns its trimmed value.
-String _trimSlashes(String line) => line.replaceFirst('///', '');
+String _trimSlashes(String line) => line.replaceFirst('///', '').trim();
 
 /// Determines if a token `tk` represents an empty comment line.
-bool _isNotBlankLine(Token tk) => _trimSlashes(tk.lexeme).trim().isNotEmpty;
+bool _isNotBlankLine(Token tk) => _trimSlashes(tk.lexeme).isNotEmpty;
 
-/// Retrieves the summary line of a [Comment] node.
+/// Retrieves the summary line of a [Comment] `node`.
 ///
-/// This will take "lines" (tokens or actual strings) from the beginning of the
-/// node until an empty line is found.
+/// This will take tokens (each comment line) until an empty line is found.
 Iterable<Token> _getSummary(Comment node) =>
     node.tokens.takeWhile(_isNotBlankLine);
 
 /// Checks that the last of the `lines` ends in a period.
-bool _endsWithPeriod(Iterable<Token> tokens) =>
-    tokens.last.lexeme.endsWith('.');
-
-/// See: https://regexr.com/71rtq for docs and tests.
-RegExp _sentenceBreak = RegExp(r'[^\.]+\.\s+[^\.]+');
-
-/// Returns the offset of the token that contains a sentence break.
-int? _findSentenceBreak(Iterable<Token> tokens) {
-  for (Token tk in tokens) {
-    // "Corner case": If token is not last, and ends with a period.
-    // This used to be accepted, but shouldn't.
-    if (tk != tokens.last && tk.lexeme.endsWith('.')) {
-      return tk.end - 1;
-    }
-    // Attempt to locate the period in the middle of the lexeme.
-    RegExpMatch? match = _sentenceBreak.firstMatch(tk.lexeme);
-    if (match != null) {
-      return tk.offset + tk.lexeme.indexOf('.', match.start);
-    }
-  }
-  return null;
-}
+bool _endsWithPeriod(Token token) => token.lexeme.endsWith('.');
