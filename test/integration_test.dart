@@ -34,8 +34,6 @@ import 'integration/prefer_relative_imports.dart' as prefer_relative_imports;
 import 'integration/public_member_api_docs.dart' as public_member_api_docs;
 import 'integration/secure_pubspec_urls.dart' as secure_pubspec_urls;
 import 'integration/sort_pub_dependencies.dart' as sort_pub_dependencies;
-import 'integration/unnecessary_string_escapes.dart'
-    as unnecessary_string_escapes;
 import 'integration/use_build_context_synchronously.dart'
     as use_build_context_synchronously;
 import 'mocks.dart';
@@ -174,7 +172,6 @@ void ruleTests() {
     secure_pubspec_urls.main();
     avoid_renaming_method_parameters.main();
     sort_pub_dependencies.main();
-    unnecessary_string_escapes.main();
     prefer_mixin.main();
     use_build_context_synchronously.main();
   });
