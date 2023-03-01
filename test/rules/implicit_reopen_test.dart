@@ -9,7 +9,30 @@ import '../rule_test_support.dart';
 main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(ImplicitReopenTest);
+    defineReflectiveTests(ImplicitReopenClassTypeAliasTest);
   });
+}
+
+@reflectiveTest
+class ImplicitReopenClassTypeAliasTest extends LintRuleTest {
+  @override
+  bool get addMetaPackageDep => true;
+
+  @override
+  List<String> get experiments => ['class-modifiers', 'sealed-class'];
+
+  @override
+  String get lintRule => 'implicit_reopen';
+
+  test_classBase_with_mixinFinal() async {
+    await assertDiagnostics(r'''
+final mixin M {}
+
+base class C = Object with M;
+''', [
+      lint(29, 1),
+    ]);
+  }
 }
 
 @reflectiveTest
@@ -24,11 +47,17 @@ class ImplicitReopenTest extends LintRuleTest {
   String get lintRule => 'implicit_reopen';
 
   test_extends_class_classFinal_ok() async {
-    await assertNoDiagnostics(r'''
+    await assertDiagnostics(r'''
 final class F {}
 
 class C extends F {}
-''');
+''', [
+      error(
+          CompileTimeErrorCode
+              .SUBTYPE_OF_BASE_OR_FINAL_IS_NOT_BASE_FINAL_OR_SEALED,
+          24,
+          1),
+    ]);
   }
 
   test_extends_class_classInterface() async {
@@ -156,11 +185,17 @@ final class C extends I {}
   }
 
   test_with_class_mixinFinal_ok() async {
-    await assertNoDiagnostics(r'''
+    await assertDiagnostics(r'''
 final mixin M {}
 
 class C with M {}
-''');
+''', [
+      error(
+          CompileTimeErrorCode
+              .SUBTYPE_OF_BASE_OR_FINAL_IS_NOT_BASE_FINAL_OR_SEALED,
+          24,
+          1),
+    ]);
   }
 
   test_with_class_mixinInterface() async {

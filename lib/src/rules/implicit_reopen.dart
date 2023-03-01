@@ -50,9 +50,9 @@ class C extends I {}
 
 class ImplicitReopen extends LintRule {
   static const LintCode code = LintCode('implicit_reopen',
-      "The class '{0}' reopens '{1}' because it is not marked '{2}'",
+      "The {0} '{1}' reopens '{2}' because it is not marked '{3}'",
       correctionMessage:
-          "Try marking '{0}' '{2}' or annotating it with '@reopen'");
+          "Try marking '{1}' '{3}' or annotating it with '@reopen'");
 
   ImplicitReopen()
       : super(
@@ -70,6 +70,7 @@ class ImplicitReopen extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addClassDeclaration(this, visitor);
+    registry.addClassTypeAlias(this, visitor);
   }
 }
 
@@ -78,14 +79,78 @@ class _Visitor extends SimpleAstVisitor {
 
   _Visitor(this.rule);
 
+  void checkElement(InterfaceElement element, NamedCompilationUnitMember node,
+      {required String type}) {
+    var library = element.library;
+
+    // | subtype          |  supertype   | `extends`/`with` |
+    // | _none_ or `base` |  `interface` | lint             |
+    // | `base`           |  `final`     | lint             |
+    if (element.hasNoModifiers || element.isBase) {
+      var supertype = element.superElement;
+      if (supertype.library == library) {
+        if (supertype.isInterface || supertype.isInducedInterface) {
+          reportLint(node,
+              target: element,
+              other: supertype!,
+              reason: 'interface',
+              type: type);
+          return;
+        }
+      }
+
+      for (var m in element.mixins) {
+        var mixin = m.element;
+        if (mixin.library != library) continue;
+        if (mixin.isInterface || mixin.isInducedInterface) {
+          reportLint(node,
+              target: element, other: mixin, reason: 'interface', type: type);
+          return;
+        }
+      }
+    }
+
+    if (element.isBase) {
+      var supertype = element.superElement;
+      if (supertype.library == library) {
+        if (supertype.isFinal || supertype.isInducedFinal) {
+          reportLint(node,
+              target: element, other: supertype!, reason: 'final', type: type);
+          return;
+        }
+      }
+
+      for (var m in element.mixins) {
+        var mixin = m.element;
+        if (mixin.library != library) continue;
+        if (mixin.isFinal || mixin.isInducedFinal) {
+          reportLint(node,
+              target: element, other: mixin, reason: 'final', type: type);
+          return;
+        }
+      }
+    }
+  }
+
   void reportLint(
     NamedCompilationUnitMember member, {
+    required String type,
     required InterfaceElement target,
     required InterfaceElement other,
     required String reason,
   }) {
     rule.reportLintForToken(member.name,
-        arguments: [target.name, other.name, reason]);
+        arguments: [type, target.name, other.name, reason]);
+  }
+
+  @override
+  visitClassTypeAlias(ClassTypeAlias node) {
+    print(node);
+    var classElement = node.declaredElement;
+    if (classElement == null) return;
+    if (classElement.hasReopen) return;
+
+    checkElement(classElement, node, type: 'class');
   }
 
   @override
@@ -94,52 +159,9 @@ class _Visitor extends SimpleAstVisitor {
     if (classElement == null) return;
     if (classElement.hasReopen) return;
 
-    var library = classElement.library;
-
-    // | subtype          |  supertype   | `extends`/`with` |
-    // | _none_ or `base` |  `interface` | lint             |
-    // | `base`           |  `final`     | lint             |
-    if (classElement.hasNoModifiers || classElement.isBase) {
-      var supertype = classElement.superElement;
-      if (supertype.library == library) {
-        if (supertype.isInterface || supertype.isInducedInterface) {
-          reportLint(node,
-              target: classElement, other: supertype!, reason: 'interface');
-          return;
-        }
-      }
-
-      for (var m in classElement.mixins) {
-        var mixin = m.element;
-        if (mixin.library != library) continue;
-        if (mixin.isInterface || mixin.isInducedInterface) {
-          reportLint(node,
-              target: classElement, other: mixin, reason: 'interface');
-          return;
-        }
-      }
-    }
-
-    if (classElement.isBase) {
-      var supertype = classElement.superElement;
-      if (supertype.library == library) {
-        if (supertype.isFinal || supertype.isInducedFinal) {
-          reportLint(node,
-              target: classElement, other: supertype!, reason: 'final');
-          return;
-        }
-      }
-
-      for (var m in classElement.mixins) {
-        var mixin = m.element;
-        if (mixin.library != library) continue;
-        if (mixin.isFinal || mixin.isInducedFinal) {
-          reportLint(node, target: classElement, other: mixin, reason: 'final');
-          return;
-        }
-      }
-    }
+    checkElement(classElement, node, type: 'class');
   }
+
 }
 
 extension on InterfaceElement? {
