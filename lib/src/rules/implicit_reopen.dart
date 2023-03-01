@@ -154,7 +154,6 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitClassTypeAlias(ClassTypeAlias node) {
-    print(node);
     var classElement = node.declaredElement;
     if (classElement == null) return;
     if (classElement.hasReopen) return;
