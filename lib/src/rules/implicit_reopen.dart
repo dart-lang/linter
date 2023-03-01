@@ -150,10 +150,10 @@ extension on InterfaceElement? {
     return self != null && self.isFinal;
   }
 
-  /// A sealed declaration D is considered final if it has a direct extends or
-  /// with superinterface which is final, or it has a direct superinterface
-  /// which is base as well as a direct extends or with superinterface which is
-  /// interface.
+  /// A sealed declaration `D` is considered final if it has a direct `extends` or
+  /// `with` superinterface which is `final`, or it has a direct superinterface
+  /// which is `base` as well as a direct `extends` or `with` superinterface
+  /// which is `interface`.
   bool get isInducedFinal {
     if (!isSealed) return false;
 
@@ -170,8 +170,8 @@ extension on InterfaceElement? {
     return false;
   }
 
-  /// A sealed declaration D is considered interface if it has a direct extends
-  /// or with superinterface which is interface.
+  /// A sealed declaration `D` is considered interface if it has a direct
+  /// `extends` or `with` superinterface which is `interface`.
   bool get isInducedInterface {
     if (!isSealed) return false;
 
