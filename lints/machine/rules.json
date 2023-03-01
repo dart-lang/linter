@@ -1650,7 +1650,7 @@
     "state": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsFix",
+    "fixStatus": "hasFix",
     "details": "Some operations on primitive types are idempotent and can be removed.\n\n**BAD:**\n\n```dart\ndoubleValue.toDouble();\n\nintValue.toInt();\nintValue.round();\nintValue.ceil();\nintValue.floor();\nintValue.truncate();\n\nstring.toString();\nstring = 'hello\\n'\n    'world\\n'\n    ''; // useless empty string\n\n'string with ${x.toString()}';\n```\n",
     "sinceDartSdk": "2.14.0",
     "sinceLinter": "1.5.0"
