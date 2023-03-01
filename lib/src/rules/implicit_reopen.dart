@@ -161,7 +161,6 @@ class _Visitor extends SimpleAstVisitor {
 
     checkElement(classElement, node, type: 'class');
   }
-
 }
 
 extension on InterfaceElement? {
