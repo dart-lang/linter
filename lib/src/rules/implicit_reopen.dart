@@ -11,14 +11,16 @@ import '../analyzer.dart';
 
 const _desc = r"Don't implicitly reopen classes or mixins";
 
-/// todo(pq): link out to the spec or dart.dev docs.
+/// todo(pq): link out to (upcoming) dart.dev docs.
 const _details = r'''
 Using the `interface`, `final`, `base`, `mixin`, and `sealed` class modifiers,
 authors can control whether classes and mixins allow being implemented,
 extended, and/or mixed in from outside of the library where they're defined.
 In some cases, it's possible for an author to inadvertantly relax these controls
-and implicitly "reopen" a class or mixin. This lint guards against that,
-requiring such cases to be made explicit with the 
+and implicitly "reopen" a class or mixin. 
+
+This lint guards against unintentionally reopening a type by requiring such
+cases to be made explicit with the 
 [`@reopen`](https://pub.dev/documentation/meta/latest/meta/reopen-constant.html)
 annotation in `package:meta`.
 
@@ -50,7 +52,7 @@ class ImplicitReopen extends LintRule {
   static const LintCode code = LintCode('implicit_reopen',
       "The class '{0}' reopens '{1}' because it is not marked '{2}'",
       correctionMessage:
-          "Try marking {0} '{2}' or annotating it with '@reopen'");
+          "Try marking '{0}' '{2}' or annotating it with '@reopen'");
 
   ImplicitReopen()
       : super(
