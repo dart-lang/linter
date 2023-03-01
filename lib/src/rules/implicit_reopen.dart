@@ -9,7 +9,7 @@ import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
-const _desc = r"Don't implicitly reopen classes or mixins";
+const _desc = r"Don't implicitly reopen classes or mixins.";
 
 /// todo(pq): link out to (upcoming) dart.dev docs.
 const _details = r'''
