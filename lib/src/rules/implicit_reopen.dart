@@ -144,8 +144,7 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   @override
-  visitClassTypeAlias(ClassTypeAlias node) {
-    print(node);
+  void visitClassDeclaration(ClassDeclaration node) {
     var classElement = node.declaredElement;
     if (classElement == null) return;
     if (classElement.hasReopen) return;
@@ -154,7 +153,8 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   @override
-  void visitClassDeclaration(ClassDeclaration node) {
+  visitClassTypeAlias(ClassTypeAlias node) {
+    print(node);
     var classElement = node.declaredElement;
     if (classElement == null) return;
     if (classElement.hasReopen) return;
@@ -179,11 +179,11 @@ extension on InterfaceElement? {
     if (!isSealed) return false;
 
     if (superElement.isFinal) return true;
+    if (!superElement.isInterface) return false;
     if (mixins.any((m) => m.element.isFinal)) return true;
 
     for (var i in interfaces) {
       if (i.element.isBase) {
-        if (superElement.isInterface) return true;
         if (mixins.any((m) => m.element.isInterface)) return true;
       }
     }
