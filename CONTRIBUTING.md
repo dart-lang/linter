@@ -4,7 +4,6 @@ Contributing to the Linter
 [![Build Status](https://github.com/dart-lang/linter/workflows/linter/badge.svg)](https://github.com/dart-lang/linter/actions)
 ![GitHub contributors](https://img.shields.io/github/contributors/dart-lang/linter.svg)
 
-
 Want to contribute? Great! First, read this page (including the small print at
 the end).
 

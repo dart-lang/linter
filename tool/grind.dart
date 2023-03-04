@@ -31,7 +31,7 @@ Iterable<FileSystemEntity> get sources => existingSourceDirs.expand((dir) {
 Future<void> docs() async {
   var args = context.invocation.arguments;
   var dir = args.getOption('dir');
-  await generateDocs(dir);
+  await generateDocs(dir, emitHtml: true, emitJson: true, emitMarkdown: true);
 }
 
 @Task('Format linter sources.')

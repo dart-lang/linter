@@ -2,9 +2,8 @@ name: linter
 version: 1.34.0
 
 description: >-
-  The implementation of the lint rules supported by the analyzer framework.
-  This package is not intended to be used directly.
-homepage: https://github.com/dart-lang/linter
+  The implementation of the lint rules supported by the analyzer framework. This
+  package is not intended to be used directly.
 repository: https://github.com/dart-lang/linter
 documentation: https://dart-lang.github.io/linter/lints
 
@@ -25,6 +24,7 @@ dependencies:
 dev_dependencies:
   benchmark_harness: ^2.0.0
   cli_util: ^0.3.0
+  flutter_lints: ^2.0.0
   github: ^9.0.0
   grinder: ^0.9.0
   lints: ^2.0.0
