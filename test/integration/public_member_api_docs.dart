@@ -33,6 +33,7 @@ void main() {
           collectingOut.trim(),
           stringContainsInOrder([
             'a.dart 7:7 [lint]',
+            'a.dart 8:16 [lint]',
             'a.dart 9:11 [lint]',
             'a.dart 10:9 [lint]',
             'a.dart 14:16 [lint]',
