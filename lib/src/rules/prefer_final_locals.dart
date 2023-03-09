@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
@@ -68,6 +69,8 @@ class PreferFinalLocals extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addVariableDeclarationList(this, visitor);
+    registry.addRecordPattern(this, visitor);
+    registry.addListPattern(this, visitor);
   }
 }
 
@@ -75,6 +78,65 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
   _Visitor(this.rule);
+
+  @override
+  void visitListPattern(ListPattern node) {
+    var declaration = node.thisOrAncestorOfType<PatternVariableDeclaration>();
+    if (declaration == null || declaration.keyword.keyword == Keyword.FINAL) {
+      return;
+    }
+
+    var function = node.thisOrAncestorOfType<FunctionBody>();
+    if (function == null) return;
+
+    for (var element in node.elements) {
+      if (element is DeclaredVariablePattern) {
+        var declaredElement = element.declaredElement;
+        if (declaredElement == null ||
+            function.isPotentiallyMutatedInScope(declaredElement)) {
+          return;
+        }
+      }
+    }
+
+    rule.reportLint(node);
+  }
+
+  @override
+  void visitRecordPattern(RecordPattern node) {
+    var parent = node.unParenthesized.parent;
+    var inPatternVariableDeclaration = false;
+    if (parent is PatternVariableDeclaration) {
+      if (parent.keyword.keyword == Keyword.FINAL) return;
+      inPatternVariableDeclaration = true;
+    }
+
+    var function = node.thisOrAncestorOfType<FunctionBody>();
+    if (function == null) return;
+
+    for (var field in node.fields) {
+      var pattern = field.pattern;
+      if (pattern is DeclaredVariablePattern) {
+        var element = pattern.declaredElement;
+        if (element == null) continue;
+        if (function.isPotentiallyMutatedInScope(element)) {
+          if (inPatternVariableDeclaration) {
+            return;
+          } else {
+            continue;
+          }
+        }
+        if (inPatternVariableDeclaration) {
+          rule.reportLint((parent! as PatternVariableDeclaration).expression);
+          return;
+        } else {
+          if (pattern.keyword?.keyword != Keyword.FINAL) {
+            rule.reportLintForToken(pattern.name);
+          }
+        }
+      }
+    }
+  }
 
   @override
   void visitVariableDeclarationList(VariableDeclarationList node) {
