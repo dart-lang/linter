@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/file_system/file_system.dart';
@@ -10,6 +11,7 @@ import 'package:analyzer/src/dart/analysis/byte_store.dart';
 import 'package:analyzer/src/dart/analysis/driver_based_analysis_context.dart';
 import 'package:analyzer/src/dart/analysis/experiments.dart';
 import 'package:analyzer/src/lint/registry.dart';
+import 'package:analyzer/src/lint/util.dart';
 import 'package:analyzer/src/test_utilities/mock_packages.dart';
 import 'package:analyzer/src/test_utilities/mock_sdk.dart';
 import 'package:analyzer/src/test_utilities/package_config_file_builder.dart';
@@ -18,6 +20,8 @@ import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
+
+import 'mocks.dart';
 
 export 'package:analyzer/src/dart/analysis/experiments.dart';
 export 'package:analyzer/src/dart/error/syntactic_errors.dart';
@@ -113,6 +117,8 @@ class ExpectedLint extends ExpectedDiagnostic {
 }
 
 abstract class LintRuleTest extends PubPackageResolutionTest {
+  bool get dumpAstOnFailures => false;
+
   String? get lintRule;
 
   @override
@@ -203,6 +209,17 @@ abstract class LintRuleTest extends PubPackageResolutionTest {
       }
     }
     if (buffer.isNotEmpty) {
+      if (dumpAstOnFailures) {
+        buffer.writeln();
+        buffer.writeln();
+        var astSink = CollectingSink();
+        StringSpelunker(result.unit.toSource(),
+                sink: astSink, featureSet: result.unit.featureSet)
+            .spelunk();
+        buffer.write(astSink.buffer);
+        buffer.writeln();
+      }
+
       errors.sort((first, second) => first.offset.compareTo(second.offset));
       buffer.writeln();
       buffer.writeln('To accept the current state, expect:');
