@@ -213,6 +213,7 @@ extension on DartPattern {
   DeclaredVariablePattern? get declaredVariablePattern {
     var self = this;
     if (self is DeclaredVariablePattern) return self;
+    // todo(pq): more cases?
     if (self is LogicalAndPattern) {
       return self.rightOperand.declaredVariablePattern;
     }
