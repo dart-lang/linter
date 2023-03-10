@@ -88,6 +88,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
+  void checkIdentifier(Token? id) {
+    if (id == null) return;
+    if (!hasLeadingUnderscore(id.lexeme)) return;
+    if (id.lexeme.isJustUnderscores) return;
+
+    rule.reportLintForToken(id, arguments: [id.lexeme]);
+  }
+
   void checkPattern(DartPattern pattern) {
     if (pattern is DeclaredVariablePattern) {
       checkIdentifier(pattern.name);
@@ -100,50 +108,6 @@ class _Visitor extends SimpleAstVisitor<void> {
       // checkPattern(pattern.leftOperand);
       checkPattern(pattern.rightOperand);
     }
-  }
-
-  @override
-  void visitListPattern(ListPattern node) {
-    for (var element in node.elements) {
-      if (element is RestPatternElement) {
-        element = element.pattern ?? element;
-      }
-      if (element is DartPattern) {
-        checkPattern(element);
-      }
-    }
-  }
-
-  @override
-  void visitMapPattern(MapPattern node) {
-    for (var element in node.elements) {
-      if (element is MapPatternEntry) {
-        checkPattern(element.value);
-      }
-    }
-  }
-
-  @override
-  void visitObjectPattern(ObjectPattern node) {
-    for (var field in node.fields) {
-      checkPattern(field.pattern);
-    }
-  }
-
-  @override
-  void visitRecordPattern(RecordPattern node) {
-    print(node);
-    for (var field in node.fields) {
-      checkPattern(field.pattern);
-    }
-  }
-
-  void checkIdentifier(Token? id) {
-    if (id == null) return;
-    if (!hasLeadingUnderscore(id.lexeme)) return;
-    if (id.lexeme.isJustUnderscores) return;
-
-    rule.reportLintForToken(id, arguments: [id.lexeme]);
   }
 
   @override
@@ -185,6 +149,41 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitFunctionDeclarationStatement(FunctionDeclarationStatement node) {
     checkIdentifier(node.functionDeclaration.name);
+  }
+
+  @override
+  void visitListPattern(ListPattern node) {
+    for (var element in node.elements) {
+      if (element is RestPatternElement) {
+        element = element.pattern ?? element;
+      }
+      if (element is DartPattern) {
+        checkPattern(element);
+      }
+    }
+  }
+
+  @override
+  void visitMapPattern(MapPattern node) {
+    for (var element in node.elements) {
+      if (element is MapPatternEntry) {
+        checkPattern(element.value);
+      }
+    }
+  }
+
+  @override
+  void visitObjectPattern(ObjectPattern node) {
+    for (var field in node.fields) {
+      checkPattern(field.pattern);
+    }
+  }
+
+  @override
+  void visitRecordPattern(RecordPattern node) {
+    for (var field in node.fields) {
+      checkPattern(field.pattern);
+    }
   }
 
   @override

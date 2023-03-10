@@ -15,42 +15,43 @@ main() {
 @reflectiveTest
 class NoLeadingUnderscoresForLocalIdentifiersTest extends LintRuleTest {
   @override
-  String get lintRule => 'no_leading_underscores_for_local_identifiers';
-
-  @override
   List<String> get experiments => ['patterns', 'records'];
 
+  @override
+  String get lintRule => 'no_leading_underscores_for_local_identifiers';
 
-  // todo(pq): switch map
-  // todo(pq): switch list
-
-
-  test_listPattern_destructured() async {
+  test_listPattern_switch() async {
     await assertDiagnostics(r'''
 f() {
-  var [_a, b, ..._rest] = [1, 2, 3, 4, 5, 6, 7];
-  print('$_a$b$_rest');
+  switch ([1,2]) {
+    case [1 && var _a, 2 && var b]: print('$_a$b');
+  }
 }
 ''', [
-      lint(13, 2),
-      lint(23, 5),
+      lint(44, 2),
     ]);
   }
 
-
-  test_objectPattern_switch() async {
+  test_mapPattern_destructured() async {
     await assertDiagnostics(r'''
-class A {
-  int a;
-  A(this.a);
-}
 f() {
-  switch (A(1)) {
-    case A(a: >0 && var _b): print('$_b');
+  final {'first': _a, 'second': b} = {'first': 1, 'second': 2};
+  print('$_a$b');
+}
+''', [
+      lint(24, 2),
+    ]);
+  }
+
+  test_mapPattern_switch() async {
+    await assertDiagnostics(r'''
+f() {
+  switch ({1: 2}) {
+    case {'a': var _a, 'b': var b} : print('$_a$b');
   }
 }
 ''', [
-      lint(82, 2),
+      lint(45, 2),
     ]);
   }
 
@@ -69,27 +70,19 @@ f() {
     ]);
   }
 
-
-  test_mapPattern_destructured() async {
+  test_objectPattern_switch() async {
     await assertDiagnostics(r'''
-f() {
-  final {'first': _a, 'second': b} = {'first': 1, 'second': 2};
-  print('$_a$b');
+class A {
+  int a;
+  A(this.a);
 }
-''', [
-      lint(24, 2),
-    ]);
-  }
-
-  test_recordPattern_switch() async {
-    await assertDiagnostics(r'''
 f() {
-  switch ((1, 2)) {
-    case (var _a, var b): print('$_a$b');
+  switch (A(1)) {
+    case A(a: >0 && var _b): print('$_b');
   }
 }
 ''', [
-      lint(40, 2),
+      lint(82, 2),
     ]);
   }
 
@@ -104,5 +97,15 @@ f() {
     ]);
   }
 
-
+  test_recordPattern_switch() async {
+    await assertDiagnostics(r'''
+f() {
+  switch ((1, 2)) {
+    case (var _a, var b): print('$_a$b');
+  }
+}
+''', [
+      lint(40, 2),
+    ]);
+  }
 }
