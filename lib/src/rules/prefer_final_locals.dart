@@ -68,9 +68,11 @@ class PreferFinalLocals extends LintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
-    registry.addVariableDeclarationList(this, visitor);
-    registry.addRecordPattern(this, visitor);
     registry.addListPattern(this, visitor);
+    registry.addMapPattern(this, visitor);
+    registry.addObjectPattern(this, visitor);
+    registry.addRecordPattern(this, visitor);
+    registry.addVariableDeclarationList(this, visitor);
   }
 }
 
@@ -79,31 +81,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   _Visitor(this.rule);
 
-  @override
-  void visitListPattern(ListPattern node) {
-    var declaration = node.thisOrAncestorOfType<PatternVariableDeclaration>();
-    if (declaration == null || declaration.keyword.keyword == Keyword.FINAL) {
-      return;
-    }
-
+  void checkPatternFields(DartPattern node) {
     var function = node.thisOrAncestorOfType<FunctionBody>();
     if (function == null) return;
 
-    for (var element in node.elements) {
-      if (element is DeclaredVariablePattern) {
-        var declaredElement = element.declaredElement;
-        if (declaredElement == null ||
-            function.isPotentiallyMutatedInScope(declaredElement)) {
-          return;
-        }
-      }
-    }
+    late NodeList<PatternField> fields;
+    if (node is RecordPattern) fields = node.fields;
+    if (node is ObjectPattern) fields = node.fields;
 
-    rule.reportLint(node);
-  }
-
-  @override
-  void visitRecordPattern(RecordPattern node) {
     var parent = node.unParenthesized.parent;
     var inPatternVariableDeclaration = false;
     if (parent is PatternVariableDeclaration) {
@@ -111,11 +96,8 @@ class _Visitor extends SimpleAstVisitor<void> {
       inPatternVariableDeclaration = true;
     }
 
-    var function = node.thisOrAncestorOfType<FunctionBody>();
-    if (function == null) return;
-
-    for (var field in node.fields) {
-      var pattern = field.pattern;
+    for (var field in fields) {
+      var pattern = field.pattern.declaredVariablePattern;
       if (pattern is DeclaredVariablePattern) {
         var element = pattern.declaredElement;
         if (element == null) continue;
@@ -130,12 +112,68 @@ class _Visitor extends SimpleAstVisitor<void> {
           rule.reportLint((parent! as PatternVariableDeclaration).expression);
           return;
         } else {
-          if (pattern.keyword?.keyword != Keyword.FINAL) {
+          if (!pattern.keyword.isFinal) {
             rule.reportLintForToken(pattern.name);
           }
         }
       }
     }
+  }
+
+  bool isDeclaredFinal(AstNode node) {
+    var declaration = node.thisOrAncestorOfType<PatternVariableDeclaration>();
+    if (declaration == null) return false; // To be safe.
+    return declaration.keyword.isFinal;
+  }
+
+  bool isPotentiallyMutated(AstNode pattern, FunctionBody function) {
+    if (pattern is DeclaredVariablePattern) {
+      var element = pattern.declaredElement;
+      if (element == null || function.isPotentiallyMutatedInScope(element)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @override
+  void visitListPattern(ListPattern node) {
+    if (isDeclaredFinal(node)) return;
+
+    var function = node.thisOrAncestorOfType<FunctionBody>();
+    if (function == null) return;
+
+    for (var element in node.elements) {
+      if (isPotentiallyMutated(element, function)) return;
+    }
+
+    rule.reportLint(node);
+  }
+
+  @override
+  void visitMapPattern(MapPattern node) {
+    if (isDeclaredFinal(node)) return;
+
+    var function = node.thisOrAncestorOfType<FunctionBody>();
+    if (function == null) return;
+
+    for (var element in node.elements) {
+      if (element is MapPatternEntry) {
+        if (isPotentiallyMutated(element.value, function)) return;
+      }
+    }
+
+    rule.reportLint(node);
+  }
+
+  @override
+  void visitObjectPattern(ObjectPattern node) {
+    checkPatternFields(node);
+  }
+
+  @override
+  void visitRecordPattern(RecordPattern node) {
+    checkPatternFields(node);
   }
 
   @override
@@ -160,5 +198,24 @@ class _Visitor extends SimpleAstVisitor<void> {
     } else if (node.type != null) {
       rule.reportLint(node.type);
     }
+  }
+}
+
+extension on Token? {
+  bool get isFinal {
+    var self = this;
+    if (self == null) return false;
+    return self.keyword == Keyword.FINAL;
+  }
+}
+
+extension on DartPattern {
+  DeclaredVariablePattern? get declaredVariablePattern {
+    var self = this;
+    if (self is DeclaredVariablePattern) return self;
+    if (self is LogicalAndPattern) {
+      return self.rightOperand.declaredVariablePattern;
+    }
+    return null;
   }
 }

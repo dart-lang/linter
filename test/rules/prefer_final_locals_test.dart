@@ -20,6 +20,76 @@ class PreferFinalLocalsPatternsTest extends LintRuleTest {
   @override
   String get lintRule => 'prefer_final_locals';
 
+  test_destructured_mapPattern() async {
+    await assertDiagnostics(r'''
+f() {
+  var {'first': a, 'second': b} = {'first': 1, 'second': 2};
+  print('$a$b');
+}
+''', [
+      lint(12, 25),
+    ]);
+  }
+
+  test_destructured_mapPattern_mutated_ok() async {
+    await assertNoDiagnostics(r'''
+f() {
+  var {'first': a, 'second': b} = {'first': 1, 'second': 2};
+  print('${++a}$b');
+}
+''');
+  }
+
+  test_destructured_mapPattern_ok() async {
+    await assertNoDiagnostics(r'''
+f() {
+  final {'first': a, 'second': b} = {'first': 1, 'second': 2};
+  print('$a$b');
+}
+''');
+  }
+
+  test_destructured_objectPattern() async {
+    await assertDiagnostics(r'''
+class A {
+  int a;
+  A(this.a);
+}
+f() {
+  var A(a: b) = A(1);
+  print('$b');
+}
+''', [
+      lint(56, 4),
+    ]);
+  }
+
+  test_destructured_objectPattern_mutated_ok() async {
+    await assertNoDiagnostics(r'''
+class A {
+  int a;
+  A(this.a);
+}
+f() {
+  var A(a: b) = A(1);
+  print('${++b}');
+}
+''');
+  }
+
+  test_destructured_objectPattern_ok() async {
+    await assertNoDiagnostics(r'''
+class A {
+  int a;
+  A(this.a);
+}
+f() {
+  final A(a: b) = A(1);
+  print('$b');
+}
+''');
+  }
+
   test_destructured_recordPattern() async {
     await assertDiagnostics(r'''
 f() {
@@ -74,6 +144,53 @@ f() {
 f() {
   final (a, b) = ('a', 'b');
   print('$a$b');
+}
+''');
+  }
+
+  test_switch_objectPattern() async {
+    await assertDiagnostics(r'''
+class A {
+  int a;
+  A(this.a);
+}
+
+f() {
+  switch (A(1)) {
+    case A(a: >0 && var b): print('$b');
+  }
+}
+''', [
+      lint(83, 1),
+    ]);
+  }
+
+  test_switch_objectPattern_mutated_ok() async {
+    await assertNoDiagnostics(r'''
+class A {
+  int a;
+  A(this.a);
+}
+
+f() {
+  switch (A(1)) {
+    case A(a: >0 && var b): print('${++b}');
+  }
+}
+''');
+  }
+
+  test_switch_objectPattern_ok() async {
+    await assertNoDiagnostics(r'''
+class A {
+  int a;
+  A(this.a);
+}
+
+f() {
+  switch (A(1)) {
+    case A(a: >0 && final b): print('$b');
+  }
 }
 ''');
   }
