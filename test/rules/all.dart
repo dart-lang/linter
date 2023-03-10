@@ -53,7 +53,8 @@ import 'literal_only_boolean_expressions_test.dart'
     as literal_only_boolean_expressions;
 import 'missing_whitespace_between_adjacent_strings_test.dart'
     as missing_whitespace_between_adjacent_strings;
-import 'no_leading_underscores_for_local_identifiers_test.dart' as no_leading_underscores_for_local_identifiers;
+import 'no_leading_underscores_for_local_identifiers_test.dart'
+    as no_leading_underscores_for_local_identifiers;
 import 'non_constant_identifier_names_test.dart'
     as non_constant_identifier_names;
 import 'null_closures_test.dart' as null_closures;
@@ -110,7 +111,6 @@ import 'use_late_for_private_fields_and_variables_test.dart'
     as use_late_for_private_fields_and_variables;
 import 'use_super_parameters_test.dart' as use_super_parameters;
 import 'void_checks_test.dart' as void_checks;
-
 
 void main() {
   annotate_overrides.main();
