@@ -110,6 +110,9 @@ import 'use_late_for_private_fields_and_variables_test.dart'
 import 'use_super_parameters_test.dart' as use_super_parameters;
 import 'void_checks_test.dart' as void_checks;
 
+import 'no_leading_underscores_for_local_identifiers_test.dart' as no_leading_underscores_for_local_identifiers;
+
+
 void main() {
   annotate_overrides.main();
   avoid_annotating_with_dynamic.main();
@@ -146,6 +149,7 @@ void main() {
   library_private_types_in_public_api.main();
   literal_only_boolean_expressions.main();
   missing_whitespace_between_adjacent_strings.main();
+  no_leading_underscores_for_local_identifiers.main();
   non_constant_identifier_names.main();
   null_closures.main();
   omit_local_variable_types.main();

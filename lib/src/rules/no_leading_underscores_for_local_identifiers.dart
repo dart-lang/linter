@@ -75,6 +75,10 @@ class NoLeadingUnderscoresForLocalIdentifiers extends LintRule {
     registry.addFormalParameterList(this, visitor);
     registry.addForPartsWithDeclarations(this, visitor);
     registry.addFunctionDeclarationStatement(this, visitor);
+    registry.addListPattern(this, visitor);
+    registry.addMapPattern(this, visitor);
+    registry.addObjectPattern(this, visitor);
+    registry.addRecordPattern(this, visitor);
     registry.addVariableDeclarationStatement(this, visitor);
   }
 }
@@ -83,6 +87,56 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
   _Visitor(this.rule);
+
+  void checkPattern(DartPattern pattern) {
+    if (pattern is DeclaredVariablePattern) {
+      checkIdentifier(pattern.name);
+    } else if (pattern is LogicalAndPattern) {
+      // ?
+      // checkPattern(pattern.leftOperand);
+      checkPattern(pattern.rightOperand);
+    } else if (pattern is LogicalOrPattern) {
+      // ?
+      // checkPattern(pattern.leftOperand);
+      checkPattern(pattern.rightOperand);
+    }
+  }
+
+  @override
+  void visitListPattern(ListPattern node) {
+    for (var element in node.elements) {
+      if (element is RestPatternElement) {
+        element = element.pattern ?? element;
+      }
+      if (element is DartPattern) {
+        checkPattern(element);
+      }
+    }
+  }
+
+  @override
+  void visitMapPattern(MapPattern node) {
+    for (var element in node.elements) {
+      if (element is MapPatternEntry) {
+        checkPattern(element.value);
+      }
+    }
+  }
+
+  @override
+  void visitObjectPattern(ObjectPattern node) {
+    for (var field in node.fields) {
+      checkPattern(field.pattern);
+    }
+  }
+
+  @override
+  void visitRecordPattern(RecordPattern node) {
+    print(node);
+    for (var field in node.fields) {
+      checkPattern(field.pattern);
+    }
+  }
 
   void checkIdentifier(Token? id) {
     if (id == null) return;
