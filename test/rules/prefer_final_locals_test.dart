@@ -20,6 +20,26 @@ class PreferFinalLocalsPatternsTest extends LintRuleTest {
   @override
   String get lintRule => 'prefer_final_locals';
 
+  test_destructured_listPattern_mutated_ok() async {
+    await assertNoDiagnostics(r'''
+f() {
+  var [a, b, ...rest] = [1, 2, 3, 4, 5, 6, 7];
+  print('${++a}$b$rest');
+}
+''');
+  }
+
+  test_destructured_listPattern_ok() async {
+    await assertDiagnostics(r'''
+f() {
+  var [a, b, ...rest] = [1, 2, 3, 4, 5, 6, 7];
+  print('$a$b$rest');
+}
+''', [
+      lint(12, 15),
+    ]);
+  }
+
   test_destructured_mapPattern() async {
     await assertDiagnostics(r'''
 f() {
