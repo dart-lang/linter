@@ -314,7 +314,9 @@ class _Visitor extends SimpleAstVisitor {
   visitPrefixedIdentifier(PrefixedIdentifier node) {
     // Getter access.
     if (isBuildContext(node.prefix.staticType, skipNullable: true)) {
-      check(node);
+      if (node.identifier.name != 'mounted') {
+        check(node);
+      }
     }
   }
 }
