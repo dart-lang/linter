@@ -13,14 +13,14 @@ main() {
   });
 }
 
-abstract class BaseNoDuplicateCaseValuesTestTest extends LintRuleTest {
+abstract class BaseNoDuplicateCaseValuesTest extends LintRuleTest {
   @override
   String get lintRule => 'no_duplicate_case_values';
 }
 
 @reflectiveTest
-class NoDuplicateCaseValuesTestLanguage219
-    extends BaseNoDuplicateCaseValuesTestTest with LanguageVersion219Mixin {
+class NoDuplicateCaseValuesTestLanguage219 extends BaseNoDuplicateCaseValuesTest
+    with LanguageVersion219Mixin {
   test_duplicateConstClassValue() async {
     await assertDiagnostics(r'''
 class ConstClass {
@@ -112,8 +112,8 @@ void switchString() {
 }
 
 @reflectiveTest
-class NoDuplicateCaseValuesTestLanguage300
-    extends BaseNoDuplicateCaseValuesTestTest with LanguageVersion300Mixin {
+class NoDuplicateCaseValuesTestLanguage300 extends BaseNoDuplicateCaseValuesTest
+    with LanguageVersion300Mixin {
   @override
   List<String> get experiments => ['records', 'patterns'];
 
