@@ -1,0 +1,6 @@
+analyzer:
+  enable-experiment:
+    - class-modifiers
+    - patterns
+    - records
+    - sealed-class
