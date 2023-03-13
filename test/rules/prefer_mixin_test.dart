@@ -8,8 +8,8 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(PreferMixinTest_language219);
-    defineReflectiveTests(PreferMixinTest_language300);
+    defineReflectiveTests(PreferMixinTestLanguage219);
+    defineReflectiveTests(PreferMixinTestLanguage300);
   });
 }
 
