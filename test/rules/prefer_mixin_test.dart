@@ -50,7 +50,7 @@ abstract class CCC with AAA { }
 }
 
 @reflectiveTest
-class PreferMixinTest_language219 extends BasePreferMixinTest
+class PreferMixinTestLanguage219 extends BasePreferMixinTest
     with LanguageVersion219Mixin {
   test_mixedInClass() async {
     await assertDiagnostics(r'''
@@ -76,7 +76,7 @@ abstract class CC with AA { }
 }
 
 @reflectiveTest
-class PreferMixinTest_language300 extends BasePreferMixinTest
+class PreferMixinTestLanguage300 extends BasePreferMixinTest
     with LanguageVersion300Mixin {
   @override
   List<String> get experiments => ['class-modifiers'];
