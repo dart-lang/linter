@@ -8,12 +8,12 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(PreferMixin30Test);
-    defineReflectiveTests(PreferMixin219Test);
+    defineReflectiveTests(PreferMixinTest_language219);
+    defineReflectiveTests(PreferMixinTest_language300);
   });
 }
 
-abstract class BaseTest extends LintRuleTest {
+abstract class BasePreferMixinTest extends LintRuleTest {
   @override
   String get lintRule => 'prefer_mixin';
 
@@ -50,7 +50,8 @@ abstract class CCC with AAA { }
 }
 
 @reflectiveTest
-class PreferMixin219Test extends BaseTest with LanguageVersion219Mixin {
+class PreferMixinTest_language219 extends BasePreferMixinTest
+    with LanguageVersion219Mixin {
   test_mixedInClass() async {
     await assertDiagnostics(r'''
 class A {}
@@ -75,7 +76,8 @@ abstract class CC with AA { }
 }
 
 @reflectiveTest
-class PreferMixin30Test extends BaseTest with LanguageVersion30Mixin {
+class PreferMixinTest_language300 extends BasePreferMixinTest
+    with LanguageVersion300Mixin {
   @override
   List<String> get experiments => ['class-modifiers'];
 

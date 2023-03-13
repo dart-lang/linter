@@ -120,7 +120,7 @@ mixin LanguageVersion219Mixin on PubPackageResolutionTest {
   String? get testPackageLanguageVersion => '2.19';
 }
 
-mixin LanguageVersion30Mixin on PubPackageResolutionTest {
+mixin LanguageVersion300Mixin on PubPackageResolutionTest {
   @override
   String? get testPackageLanguageVersion => '3.0';
 }
