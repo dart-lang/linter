@@ -102,11 +102,10 @@ class _Visitor extends SimpleAstVisitor<void> {
   @override
   void visitSwitchPatternCase(SwitchPatternCase node) {
     var pattern = node.guardedPattern.pattern.unParenthesized;
-    if (pattern is ListPattern) {
-      for (var element in pattern.elements) {
-        if (element is ConstantPattern) {
-          check(element.expression.unParenthesized);
-        }
+    if (pattern is! ListPattern) return;
+    for (var element in pattern.elements) {
+      if (element is ConstantPattern) {
+        check(element.expression.unParenthesized);
       }
     }
   }
