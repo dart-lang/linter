@@ -20,7 +20,6 @@ enum ActualEnum { e, f }
 void ae(ActualEnum e) {
   switch (e) {
     case ActualEnum.e:
-      print('e');
   }
 }
 ''';
@@ -42,10 +41,8 @@ class E {
 void e(E e) {
   switch (e) {
     case E.e:
-      print('e');
       break;
     case E.f:
-      print('e');
   }
 }
 ''', [
@@ -67,10 +64,8 @@ class E {
 void okDefault(E e) {
   switch (e) {
     case E.e:
-      print('e');
       break;
     default:
-      print('default');
       break;
   }
 }
@@ -93,40 +88,32 @@ class DeprecatedFields {
 void dep(DeprecatedFields e) {
   switch (e) { 
     case DeprecatedFields.newFoo:
-      print('newFoo');
       break;
     case DeprecatedFields.bar:
-      print('bar');
       break;
     case DeprecatedFields.baz:
-      print('baz');
       break;
   }
 
   switch (e) { 
     case DeprecatedFields.newFoo:
-      print('newFoo');
       break;
     case DeprecatedFields.baz:
-      print('baz');
       break;
   }
 
   switch (e) { 
     case DeprecatedFields.oldFoo:
-      print('oldFoo');
       break;
     case DeprecatedFields.bar:
-      print('bar');
       break;
     case DeprecatedFields.baz:
-      print('baz');
       break;
   }
 }
 ''', [
-      lint(513, 10),
-      error(HintCode.DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE, 708, 6),
+      lint(450, 10),
+      error(HintCode.DEPRECATED_MEMBER_USE_FROM_SAME_PACKAGE, 602, 6),
     ]);
   }
 
@@ -144,13 +131,10 @@ class E {
 void ok(E e) {
   switch (e) {
     case E.e:
-      print('e');
       break;
     case E.f:
-      print('e');
       break;
     case E.g:
-      print('e');
       break;
   }
 }
@@ -171,13 +155,10 @@ class E {
 void okParenthesized(E e) {
   switch (e) {
     case (E.e):
-      print('e');
       break;
     case ((E.f)):
-      print('e');
       break;
     case (E.g):
-      print('e');
       break;
   }
 }
@@ -195,7 +176,6 @@ class TooFew {
 void t(TooFew e) {
   switch (e) { 
     case TooFew.e:
-      print('e');
   }
 }
 
@@ -208,7 +188,6 @@ class PublicCons {
 void p(PublicCons e) {
   switch (e) { 
     case PublicCons.e:
-      print('e');
   }
 }
 ''');
@@ -231,7 +210,6 @@ class Subclass extends Subclassed {
 void s(Subclassed e) {
   switch (e) { 
     case Subclassed.e:
-      print('e');
   }
 }
 ''');
