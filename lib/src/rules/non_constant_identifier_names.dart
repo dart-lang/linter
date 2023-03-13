@@ -54,10 +54,12 @@ class NonConstantIdentifierNames extends LintRule {
     var visitor = _Visitor(this);
     registry.addCatchClause(this, visitor);
     registry.addConstructorDeclaration(this, visitor);
+    registry.addDeclaredVariablePattern(this, visitor);
     registry.addForEachPartsWithDeclaration(this, visitor);
     registry.addFormalParameterList(this, visitor);
     registry.addFunctionDeclaration(this, visitor);
     registry.addMethodDeclaration(this, visitor);
+    registry.addPatternField(this, visitor);
     registry.addRecordLiteral(this, visitor);
     registry.addRecordTypeAnnotation(this, visitor);
     registry.addVariableDeclaration(this, visitor);
@@ -97,6 +99,11 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   @override
+  void visitDeclaredVariablePattern(DeclaredVariablePattern node) {
+    checkIdentifier(node.name, underscoresOk: true);
+  }
+
+  @override
   void visitForEachPartsWithDeclaration(ForEachPartsWithDeclaration node) {
     checkIdentifier(node.loopVariable.name);
   }
@@ -119,6 +126,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isOperator) {
       checkIdentifier(node.name);
+    }
+  }
+
+  @override
+  void visitPatternField(PatternField node) {
+    var pattern = node.pattern;
+    if (pattern is DeclaredVariablePattern) {
+      checkIdentifier(pattern.name);
     }
   }
 

@@ -1,3 +1,35 @@
+# 1.34.0
+
+- update `only_throw_errors` to not report on values of type `Never`
+- update `prefer_mixin` to handle class mixins
+- update `unnecessary_null_checks` to ignore `Future.value` and 
+  `Completer.complete`
+- fix `unnecessary_parenthesis` false positives on constant patterns
+- new lint: `invalid_case_patterns`
+- update `unnecessary_const` to handle case patterns
+- improve handling of null-aware cascades in `unnecessary_parenthesis`
+- update `unreachable_from_main` to report unreachable public static fields,
+  getters, setters, and methods, that are declared on public classes, mixins,
+  enums, and extensions
+
+# 1.33.0
+
+- fix `unnecessary_parenthesis` false-positive with null-aware expressions
+- fix `void_checks` to allow assignments of `Future<dynamic>?` to parameters 
+  typed `FutureOr<void>?`
+- removed support for:
+  - `enable_null_safety`
+  - `invariant_booleans`
+  - `prefer_bool_in_asserts`
+  - `prefer_equal_for_default_values`
+  - `super_goes_last`
+- update `unnecessary_parenthesis` to detect some doubled parens
+- update `void_checks` to allow returning `Never` as void
+- new lint: `unnecessary_breaks`
+- fix `use_build_context_synchronously` in if conditions
+- update `no_adjacent_strings_in_list` to support set literals and for- and 
+  if-elements
+
 # 1.32.0
 
 - update `avoid_types_as_parameter_names` to handle type variables

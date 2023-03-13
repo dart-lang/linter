@@ -9,6 +9,8 @@ import 'package:analyzer/src/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/src/dart/analysis/byte_store.dart';
 import 'package:analyzer/src/dart/analysis/driver_based_analysis_context.dart';
 import 'package:analyzer/src/dart/analysis/experiments.dart';
+import 'package:analyzer/src/lint/registry.dart';
+import 'package:analyzer/src/lint/util.dart';
 import 'package:analyzer/src/test_utilities/mock_packages.dart';
 import 'package:analyzer/src/test_utilities/mock_sdk.dart';
 import 'package:analyzer/src/test_utilities/package_config_file_builder.dart';
@@ -17,6 +19,8 @@ import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
+
+import 'mocks.dart';
 
 export 'package:analyzer/src/dart/analysis/experiments.dart';
 export 'package:analyzer/src/dart/error/syntactic_errors.dart';
@@ -111,11 +115,35 @@ class ExpectedLint extends ExpectedDiagnostic {
             messageContains: messageContains);
 }
 
+mixin LanguageVersion219Mixin on PubPackageResolutionTest {
+  @override
+  String? get testPackageLanguageVersion => '2.19';
+}
+
+mixin LanguageVersion300Mixin on PubPackageResolutionTest {
+  @override
+  List<String> get experiments => ['records', 'patterns'];
+
+  @override
+  String? get testPackageLanguageVersion => '3.0';
+}
+
 abstract class LintRuleTest extends PubPackageResolutionTest {
+  bool get dumpAstOnFailures => false;
+
   String? get lintRule;
 
   @override
-  List<String> get _lintRules => [if (lintRule != null) lintRule!];
+  List<String> get _lintRules {
+    var ruleName = lintRule;
+    if (ruleName != null) {
+      if (!Registry.ruleRegistry.any((r) => r.name == ruleName)) {
+        throw Exception("Unrecognized rule: '$ruleName'");
+      }
+      return [ruleName];
+    }
+    return [];
+  }
 
   /// Assert that the number of diagnostics that have been gathered matches the
   /// number of [expectedDiagnostics] and that they have the expected error
@@ -193,6 +221,17 @@ abstract class LintRuleTest extends PubPackageResolutionTest {
       }
     }
     if (buffer.isNotEmpty) {
+      if (dumpAstOnFailures) {
+        buffer.writeln();
+        buffer.writeln();
+        var astSink = CollectingSink();
+        StringSpelunker(result.unit.toSource(),
+                sink: astSink, featureSet: result.unit.featureSet)
+            .spelunk();
+        buffer.write(astSink.buffer);
+        buffer.writeln();
+      }
+
       errors.sort((first, second) => first.offset.compareTo(second.offset));
       buffer.writeln();
       buffer.writeln('To accept the current state, expect:');
@@ -280,7 +319,7 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
         lints: _lintRules,
       ),
     );
-    _writeTestPackageConfig(
+    writeTestPackageConfig(
       PackageConfigFileBuilder(),
     );
   }
@@ -301,11 +340,7 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
     );
   }
 
-  void writeTestPackagePubspecYamlFile(PubspecYamlFileConfig config) {
-    newPubspecYamlFile(testPackageRootPath, config.toContent());
-  }
-
-  void _writeTestPackageConfig(PackageConfigFileBuilder config) {
+  void writeTestPackageConfig(PackageConfigFileBuilder config) {
     var configCopy = config.copy();
 
     configCopy.add(
@@ -340,6 +375,10 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
 
     var path = '$testPackageRootPath/.dart_tool/package_config.json';
     writePackageConfig(path, configCopy);
+  }
+
+  void writeTestPackagePubspecYamlFile(PubspecYamlFileConfig config) {
+    newPubspecYamlFile(testPackageRootPath, config.toContent());
   }
 
   /// Create a fake 'flutter' package that can be used by tests.

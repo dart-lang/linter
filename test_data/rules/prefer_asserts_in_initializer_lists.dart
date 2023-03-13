@@ -86,7 +86,7 @@ class C extends B {
 }
 
 // no lint for mixin attributes
-class Mixin {
+mixin Mixin {
   var a;
 }
 
@@ -101,10 +101,9 @@ class F<T> {
 }
 
 class G<T> extends F<T> {
-  G()
-    {
-      assert(foo); // OK
-    }
+  G() {
+    assert(foo); // OK
+  }
 }
 
 abstract class H<T> {

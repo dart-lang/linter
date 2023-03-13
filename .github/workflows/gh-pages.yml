@@ -17,9 +17,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
       - name: Setup Dart
-        uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
+        uses: dart-lang/setup-dart@929ed5f8bae55086c6fac456ba5acb9763c9e3e2
         with:
           sdk: stable
       - name: Get dependencies
@@ -27,7 +27,7 @@ jobs:
       - name: Generate docs
         run: dart run tool/doc.dart --create-dirs --no-markdown --out lints --token ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy docs
-        uses: peaceiris/actions-gh-pages@de7ea6f8efb354206b205ef54722213d99067935
+        uses: peaceiris/actions-gh-pages@bd8c6b06eba6b3d25d72b7a1767993c0aeee42e7
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
