@@ -8,12 +8,13 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(OneMemberAbstractsTest);
+    defineReflectiveTests(OneMemberAbstractsTestLanguage300);
   });
 }
 
 @reflectiveTest
-class OneMemberAbstractsTest extends LintRuleTest {
+class OneMemberAbstractsTestLanguage300 extends LintRuleTest
+    with LanguageVersion300Mixin {
   @override
   List<String> get experiments => ['sealed-class'];
 
