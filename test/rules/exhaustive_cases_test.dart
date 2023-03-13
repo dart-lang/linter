@@ -229,7 +229,6 @@ class ExhaustiveCasesTestLanguage219 extends BaseExhaustiveCasesTest
 @reflectiveTest
 class ExhaustiveCasesTestLanguage300 extends BaseExhaustiveCasesTest
     with LanguageVersion300Mixin {
-
   test_enum_ok() async {
     await assertDiagnostics(actualEnumSource, [
       error(CompileTimeErrorCode.NON_EXHAUSTIVE_SWITCH, 52, 6),
