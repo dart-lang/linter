@@ -229,8 +229,6 @@ class ExhaustiveCasesTestLanguage219 extends BaseExhaustiveCasesTest
 @reflectiveTest
 class ExhaustiveCasesTestLanguage300 extends BaseExhaustiveCasesTest
     with LanguageVersion300Mixin {
-  @override
-  List<String> get experiments => ['records', 'patterns'];
 
   test_enum_ok() async {
     await assertDiagnostics(actualEnumSource, [
