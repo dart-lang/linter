@@ -50,6 +50,21 @@ String f(String char) {
     ]);
   }
 
+  test_switchExpression_notEq() async {
+    await assertDiagnostics(r'''    
+const space = 32;
+
+String f(int char) {
+  return switch (char) {
+    != 'space' => 'space',
+  };
+}
+''', [
+      error(CompileTimeErrorCode.NON_EXHAUSTIVE_SWITCH, 49, 6),
+      lint(69, 10),
+    ]);
+  }
+
   test_switchExpression_ok() async {
     await assertDiagnostics(r'''
 String f(String char) {
