@@ -13,7 +13,8 @@ main() {
 }
 
 @reflectiveTest
-class NullCheckOnNullableTypeParameterTestLanguage300 extends LintRuleTest with LanguageVersion300Mixin {
+class NullCheckOnNullableTypeParameterTestLanguage300 extends LintRuleTest
+    with LanguageVersion300Mixin {
   @override
   String get lintRule => 'null_check_on_nullable_type_parameter';
 
