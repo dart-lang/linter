@@ -100,13 +100,10 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (pattern is DeclaredVariablePattern) {
       checkIdentifier(pattern.name);
     } else if (pattern is LogicalAndPattern) {
-      // ?
-      // checkPattern(pattern.leftOperand);
+      checkPattern(pattern.leftOperand);
       checkPattern(pattern.rightOperand);
     } else if (pattern is LogicalOrPattern) {
-      // ?
-      // checkPattern(pattern.leftOperand);
-      checkPattern(pattern.rightOperand);
+      checkPattern(pattern.leftOperand);
     }
   }
 

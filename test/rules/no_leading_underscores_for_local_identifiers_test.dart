@@ -32,6 +32,18 @@ f() {
     ]);
   }
 
+  test_listPattern_switch_leftOperand() async {
+    await assertDiagnostics(r'''
+f() {
+  switch ([1,2]) {
+    case [var _a && 1, 2 && var b]: print('$_a$b');
+  }
+}
+''', [
+      lint(39, 2),
+    ]);
+  }
+
   test_mapPattern_destructured() async {
     await assertDiagnostics(r'''
 f() {
