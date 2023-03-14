@@ -41,6 +41,7 @@ import 'deprecated_consistency_test.dart' as deprecated_consistency;
 import 'directives_ordering_test.dart' as directives_ordering;
 import 'discarded_futures_test.dart' as discarded_futures;
 import 'eol_at_end_of_file_test.dart' as eol_at_end_of_file;
+import 'exhaustive_cases_test.dart' as exhaustive_cases;
 import 'file_names_test.dart' as file_names;
 import 'flutter_style_todos_test.dart' as flutter_style_todos;
 import 'hash_and_equals_test.dart' as hash_and_equals;
@@ -53,12 +54,13 @@ import 'literal_only_boolean_expressions_test.dart'
     as literal_only_boolean_expressions;
 import 'missing_whitespace_between_adjacent_strings_test.dart'
     as missing_whitespace_between_adjacent_strings;
-import 'no_leading_underscores_for_local_identifiers_test.dart'
-    as no_leading_underscores_for_local_identifiers;
+import 'no_duplicate_case_values_test.dart' as no_duplicate_case_values;
+import 'non_adjacent_strings_in_list_test.dart' as no_adjacent_strings_in_list;
 import 'non_constant_identifier_names_test.dart'
     as non_constant_identifier_names;
 import 'null_closures_test.dart' as null_closures;
 import 'omit_local_variable_types_test.dart' as omit_local_variable_types;
+import 'one_member_abstracts_test.dart' as one_member_abstracts;
 import 'only_throw_errors_test.dart' as only_throw_errors;
 import 'overridden_fields_test.dart' as overridden_fields;
 import 'parameter_assignments_test.dart' as parameter_assignments;
@@ -75,6 +77,7 @@ import 'prefer_constructors_over_static_methods_test.dart'
     as prefer_constructors_over_static_methods;
 import 'prefer_contains_test.dart' as prefer_contains;
 import 'prefer_final_fields_test.dart' as prefer_final_fields;
+import 'prefer_final_locals_test.dart' as prefer_final_locals;
 import 'prefer_final_parameters_test.dart' as prefer_final_parameters;
 import 'prefer_generic_function_type_aliases_test.dart'
     as prefer_generic_function_type_aliases;
@@ -139,6 +142,7 @@ void main() {
   directives_ordering.main();
   discarded_futures.main();
   eol_at_end_of_file.main();
+  exhaustive_cases.main();
   file_names.main();
   flutter_style_todos.main();
   hash_and_equals.main();
@@ -148,10 +152,12 @@ void main() {
   library_private_types_in_public_api.main();
   literal_only_boolean_expressions.main();
   missing_whitespace_between_adjacent_strings.main();
-  no_leading_underscores_for_local_identifiers.main();
+  no_adjacent_strings_in_list.main();
+  no_duplicate_case_values.main();
   non_constant_identifier_names.main();
   null_closures.main();
   omit_local_variable_types.main();
+  one_member_abstracts.main();
   only_throw_errors.main();
   overridden_fields.main();
   parameter_assignments.main();
@@ -164,6 +170,7 @@ void main() {
   prefer_constructors_over_static_methods.main();
   prefer_contains.main();
   prefer_final_fields.main();
+  prefer_final_locals.main();
   prefer_final_parameters.main();
   prefer_generic_function_type_aliases.main();
   prefer_relative_imports.main();
