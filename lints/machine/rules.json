@@ -216,6 +216,19 @@
     "sinceLinter": "0.1.16"
   },
   {
+    "name": "deprecated_member_use_from_same_package",
+    "description": "Avoid using deprecated elements from within the package in which they are declared.",
+    "group": "errors",
+    "maturity": "stable",
+    "state": "stable",
+    "incompatible": [],
+    "sets": [],
+    "fixStatus": "unregistered",
+    "details": "Elements which are annotated with `@deprecated` should not be referenced from\nwithin the package in which they are declared.\n\n**AVOID** using deprecated elements.\n\n...\n\n**BAD:**\n```dart\n// Declared in one library:\nclass Foo {\n  @Deprecated(\"Use 'm2' instead\")\n  void m1() {}\n\n  void m2({\n      @Deprecated('This is an old parameter') int? p,\n  })\n}\n\n@Deprecated('Do not use')\nint x = 0;\n\n// In the same or another library, but within the same package:\nvoid m(Foo foo) {\n  foo.m1();\n  foo.m2(p: 7);\n  x = 1;\n}\n```\n\nDeprecated elements can be used from within _other_ deprecated elements, in\norder to allow for the deprecation of a collection of APIs together as one unit.\n\n**GOOD:**\n```dart\n// Declared in one library:\nclass Foo {\n  @Deprecated(\"Use 'm2' instead\")\n  void m1() {}\n\n  void m2({\n      @Deprecated('This is an old parameter') int? p,\n  })\n}\n\n@Deprecated('Do not use')\nint x = 0;\n\n// In the same or another library, but within the same package:\n@Deprecated('Do not use')\nvoid m(Foo foo) {\n  foo.m1();\n  foo.m2(p: 7);\n  x = 1;\n}\n```\n",
+    "sinceDartSdk": "Unreleased",
+    "sinceLinter": "Unreleased"
+  },
+  {
     "name": "diagnostic_describe_all_properties",
     "description": "DO reference all public properties in debug methods.",
     "group": "errors",
