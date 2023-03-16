@@ -9,12 +9,13 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(PreferFinalFieldsTest);
+    defineReflectiveTests(JoinReturnWithAssignmentTest);
   });
 }
 
 @reflectiveTest
-class PreferFinalFieldsTest extends LintRuleTest with LanguageVersion300Mixin {
+class JoinReturnWithAssignmentTest extends LintRuleTest
+    with LanguageVersion300Mixin {
   @override
   String get lintRule => JoinReturnWithAssignment.code.name;
 
