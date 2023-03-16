@@ -38,7 +38,7 @@ it's preferable to do so.</p>
 }
 
 void accessA() {
-  A a = new A();
+  A a = A();
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
@@ -57,7 +57,7 @@ void accessA() {
   const A(this.x);
 }
 
-A foo(int x) =&gt; new A(x);
+A foo(int x) =&gt; A(x);
 </code></pre>
 
             
