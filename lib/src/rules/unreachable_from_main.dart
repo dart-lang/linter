@@ -68,15 +68,14 @@ class UnreachableFromMain extends LintRule {
   }
 }
 
-/// A visitor which gathers all of the top-level and static declarations which
-/// we may wish to report on.
-class _DeclarationGatherer extends SimpleAstVisitor<void> {
+/// This gathers all of the top-level and static declarations which we may wish
+/// to report on.
+class _DeclarationGatherer {
   // A complete set of the declaration of each public static class member, and
   // each public top-level declaration.
   final declarations = <Declaration>{};
 
-  @override
-  void visitCompilationUnit(CompilationUnit node) {
+  void addDeclarations(CompilationUnit node) {
     for (var declaration in node.declarations) {
       if (declaration is TopLevelVariableDeclaration) {
         declarations.addAll(declaration.variables.variables);
@@ -216,7 +215,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitCompilationUnit(CompilationUnit node) {
     var declarationGatherer = _DeclarationGatherer();
     for (var unit in context.allUnits) {
-      unit.unit.accept(declarationGatherer);
+      declarationGatherer.addDeclarations(unit.unit);
     }
     var declarations = declarationGatherer.declarations;
     var entryPoints = declarations.where(_isEntryPoint);
