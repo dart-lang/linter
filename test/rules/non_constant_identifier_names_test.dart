@@ -22,24 +22,25 @@ class NonConstantIdentifierNamesPatternsTest extends LintRuleTest {
   @override
   String get lintRule => 'non_constant_identifier_names';
 
-  @FailingTest(reason: 'Flow analysis fails w/ a Bad state exception')
   test_patternForStatement() async {
     await assertDiagnostics(r'''
 void f() {
-  for (var (AB, ) = (0, 1); AB <= 13; (AB, ) = ( , AB++)) { }
+  for (var (AB, c) = (0, 1); AB <= 13; (AB, c) = (c, AB + c)) { }
 }
 ''', [
-      lint(18, 2),
+      lint(23, 2),
     ]);
   }
 
   test_patternIfStatement() async {
     await assertDiagnostics(r'''
 void f() {
-  if ([1,2] case [int AB, int]) { }
+  if ([1,2] case [int AB, int c]) { }
 }
 ''', [
+      error(WarningCode.UNUSED_LOCAL_VARIABLE, 33, 2),
       lint(33, 2),
+      error(WarningCode.UNUSED_LOCAL_VARIABLE, 41, 1),
     ]);
   }
 
@@ -57,6 +58,7 @@ void f() {
   var (AB, ) = (1, );
 }
 ''', [
+      error(WarningCode.UNUSED_LOCAL_VARIABLE, 18, 2),
       lint(18, 2),
     ]);
   }
@@ -112,7 +114,7 @@ var a = (hashCode: 1);
   test_recordFields_fieldNamePositional() async {
     // This will produce a compile-time error and we don't want to over-report.
     await assertDiagnostics(r'''
-var r = (0, $0: 2);
+var r = (0, $1: 2);
 ''', [
       // No Lint.
       error(CompileTimeErrorCode.INVALID_FIELD_NAME_POSITIONAL, 12, 2),
