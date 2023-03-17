@@ -386,7 +386,7 @@
       "flutter"
     ],
     "fixStatus": "hasFix",
-    "details": "**DON'T** use more than one case with same value.\n\nThis is usually a typo or changed value of constant.\n\n**BAD:**\n```dart\nconst int A = 1;\nswitch (v) {\n  case 1:\n  case 2:\n  case A:\n  case 2:\n}\n```\n\n**GOOD:**\n```dart\nconst int A = 1;\nswitch (v) {\n  case A:\n  case 2:\n}\n```\n\n",
+    "details": "**DON'T** use more than one case with same value.\n\nThis is usually a typo or changed value of constant.\n\n**BAD:**\n```dart\nconst int A = 1;\nswitch (v) {\n  case 1:\n  case 2:\n  case A:\n  case 2:\n}\n```\n\n**GOOD:**\n```dart\nconst int A = 1;\nswitch (v) {\n  case A:\n  case 2:\n}\n```\n\nNOTE: this lint only reports duplicate cases in libraries opted in to Dart 2.19\nand below. In Dart 3.0 and after, duplicate cases are reported as dead code\nby the analyzer.\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.30"
   },
