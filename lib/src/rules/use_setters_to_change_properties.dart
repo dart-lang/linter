@@ -65,7 +65,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         node.isGetter ||
         node.isOverride ||
         node.parameters?.parameters.length != 1 ||
-        node.returnType?.type is VoidType) {
+        node.returnType?.type is! VoidType) {
       return;
     }
 

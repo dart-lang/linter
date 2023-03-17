@@ -4,6 +4,8 @@
 
 // test w/ `dart test -N iterable_contains_unrelated_type`
 
+// @dart=2.19
+
 void someFunction() {
   var list = <int>[];
   if (list.contains('1')) print('someFunction'); // LINT

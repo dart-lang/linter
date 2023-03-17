@@ -17,6 +17,7 @@ class InvalidCasePatternsTest extends LintRuleTest {
   @override
   String get lintRule => 'invalid_case_patterns';
 
+  @FailingTest(reason: 'error is produced with analyzer 5.8.0')
   test_binaryExpression_logicalAnd() async {
     await assertDiagnostics(r'''
 f(bool b) {
@@ -29,6 +30,7 @@ f(bool b) {
     ]);
   }
 
+  @FailingTest(reason: 'error produced with analyzer 5.8.0')
   test_binaryExpression_plus() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -41,6 +43,7 @@ void f(Object o) {
     ]);
   }
 
+  @FailingTest(reason: 'error produced with analyzer 5.8.0')
   test_conditionalExpression() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -54,6 +57,7 @@ void f(Object o) {
     ]);
   }
 
+  @FailingTest(reason: 'lint no longer produced with analyzer 5.8.0')
   test_constConstructorCall() async {
     await assertDiagnostics(r'''
 class C {
@@ -83,6 +87,7 @@ f(C c) {
 ''');
   }
 
+  @FailingTest(reason: 'error produced with analyzer 5.8.0')
   test_identicalCall() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -95,6 +100,7 @@ void f(Object o) {
     ]);
   }
 
+  @FailingTest(reason: 'error is produced with analyzer 5.8.0')
   test_isExpression() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -108,6 +114,7 @@ void f(Object o) {
     ]);
   }
 
+  @FailingTest(reason: 'error is produced with analyzer 5.8.0')
   test_isNotExpression() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -121,6 +128,7 @@ void f(Object o) {
     ]);
   }
 
+  @FailingTest(reason: 'error is produced with analyzer 5.8.0')
   test_lengthCall() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -133,6 +141,7 @@ void f(Object o) {
     ]);
   }
 
+  @FailingTest(reason: 'lint no longer produced with analyzer 5.8.0')
   test_listLiteral() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -155,6 +164,7 @@ void f(Object o) {
 ''');
   }
 
+  @FailingTest(reason: 'lint no longer produced with analyzer 5.8.0')
   test_listLiteral_typeArgs() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -167,6 +177,7 @@ void f(Object o) {
     ]);
   }
 
+  @FailingTest(reason: 'lint no longer produced with analyzer 5.8.0')
   test_mapLiteral() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -189,6 +200,7 @@ void f(Object o) {
 ''');
   }
 
+  @FailingTest(reason: 'lint no longer produced with analyzer 5.8.0')
   test_mapLiteral_parenthesized() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -201,6 +213,7 @@ void f(Object o) {
     ]);
   }
 
+  @FailingTest(reason: 'lint no longer produced with analyzer 5.8.0')
   test_mapLiteral_parenthesized_twice() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -213,6 +226,7 @@ void f(Object o) {
     ]);
   }
 
+  @FailingTest(reason: 'lint no longer is produced with analyzer 5.8.0')
   test_mapLiteral_typeArgs() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -245,6 +259,7 @@ void f(Object o) {
 ''');
   }
 
+  @FailingTest(reason: 'error is produced with analyzer 5.8.0')
   test_setLiteral() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -267,6 +282,7 @@ void f(Object o) {
 ''');
   }
 
+  @FailingTest(reason: 'error is produced with analyzer 5.8.0')
   test_setLiteral_typeArgs() async {
     await assertDiagnostics(r'''
 void f(Object o) {
@@ -279,6 +295,7 @@ void f(Object o) {
     ]);
   }
 
+  @FailingTest(reason: 'error is produced with analyzer 5.8.0')
   test_unaryOperator_minus() async {
     await assertDiagnostics(r'''
 void f() {
@@ -292,6 +309,7 @@ void f() {
     ]);
   }
 
+  @FailingTest(reason: 'error is produced with analyzer 5.8.0')
   test_unaryOperator_not() async {
     await assertDiagnostics(r'''
   void f() {
@@ -305,6 +323,7 @@ void f() {
     ]);
   }
 
+  @FailingTest(reason: 'error is produced with analyzer 5.8.0')
   test_wildcard() async {
     await assertDiagnostics(r'''
 f(int n) {
