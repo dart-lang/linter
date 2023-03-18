@@ -171,6 +171,11 @@ class _Visitor extends SimpleAstVisitor {
         if (!keepChecking) {
           return;
         }
+      } else if (parent is SwitchPatternCase) {
+        var keepChecking = checkStatements(child, parent.statements);
+        if (!keepChecking) {
+          return;
+        }
       } else if (parent is IfStatement) {
         // Only check the actual statement(s), not the IF condition
         if (child is Statement && parent.hasAsyncInCondition) {
