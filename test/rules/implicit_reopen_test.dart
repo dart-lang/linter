@@ -14,12 +14,10 @@ main() {
 }
 
 @reflectiveTest
-class ImplicitReopenClassTypeAliasTest extends LintRuleTest {
+class ImplicitReopenClassTypeAliasTest extends LintRuleTest
+    with LanguageVersion300Mixin {
   @override
   bool get addMetaPackageDep => true;
-
-  @override
-  List<String> get experiments => ['class-modifiers', 'sealed-class'];
 
   @override
   String get lintRule => 'implicit_reopen';
@@ -36,12 +34,9 @@ base class C = Object with M;
 }
 
 @reflectiveTest
-class ImplicitReopenTest extends LintRuleTest {
+class ImplicitReopenTest extends LintRuleTest with LanguageVersion300Mixin {
   @override
   bool get addMetaPackageDep => true;
-
-  @override
-  List<String> get experiments => ['class-modifiers', 'sealed-class'];
 
   @override
   String get lintRule => 'implicit_reopen';
@@ -52,11 +47,8 @@ final class F {}
 
 class C extends F {}
 ''', [
-      error(
-          CompileTimeErrorCode
-              .SUBTYPE_OF_BASE_OR_FINAL_IS_NOT_BASE_FINAL_OR_SEALED,
-          24,
-          1),
+      error(CompileTimeErrorCode.SUBTYPE_OF_FINAL_IS_NOT_BASE_FINAL_OR_SEALED,
+          24, 1),
     ]);
   }
 
@@ -190,11 +182,8 @@ final mixin M {}
 
 class C with M {}
 ''', [
-      error(
-          CompileTimeErrorCode
-              .SUBTYPE_OF_BASE_OR_FINAL_IS_NOT_BASE_FINAL_OR_SEALED,
-          24,
-          1),
+      error(CompileTimeErrorCode.SUBTYPE_OF_FINAL_IS_NOT_BASE_FINAL_OR_SEALED,
+          24, 1),
     ]);
   }
 
