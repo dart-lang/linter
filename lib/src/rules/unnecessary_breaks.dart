@@ -55,9 +55,9 @@ switch (1) {
 }
 ```
 
-NOTE: this lint only reports unnecessary breaks in libraries opted in to the 
-Dart 3.0 patterns language feature. Explicit breaks are still required in Dart
-2.19 and below.
+NOTE: This lint only reports unnecessary breaks in libraries with a
+[language version](https://dart.dev/guides/language/evolution#language-versioning)
+of 3.0 or greater. Explicit breaks are still required in Dart 2.19 and below.
 ''';
 
 class UnnecessaryBreaks extends LintRule {
