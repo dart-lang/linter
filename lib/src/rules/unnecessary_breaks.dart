@@ -54,6 +54,10 @@ switch (1) {
     print("just two");
 }
 ```
+
+NOTE: this lint only reports unnecessary breaks in libraries opted in to Dart
+3.0 patterns language feature. The same breaks are still required in Dart 2.19
+and below.
 ''';
 
 class UnnecessaryBreaks extends LintRule {
