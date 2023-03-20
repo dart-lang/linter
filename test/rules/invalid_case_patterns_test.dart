@@ -8,12 +8,12 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(InvalidCasePatternsTest);
+    defineReflectiveTests(InvalidCasePatternsTestLanguage219);
   });
 }
 
 @reflectiveTest
-class InvalidCasePatternsTest extends LintRuleTest
+class InvalidCasePatternsTestLanguage219 extends LintRuleTest
     with LanguageVersion219Mixin {
   @override
   String get lintRule => 'invalid_case_patterns';
