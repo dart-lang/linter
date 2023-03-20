@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
@@ -235,6 +236,8 @@ switch (n) {
 ```
 ''';
 
+// todo(pq): add a dart.dev doc link when a doc is final (https://github.com/dart-lang/linter/issues/4055)
+
 class InvalidCasePatterns extends LintRule {
   static const LintCode code = LintCode('invalid_case_patterns',
       "This expression is not valid in a 'case' clause in Dart 3.0.",
@@ -249,6 +252,7 @@ class InvalidCasePatterns extends LintRule {
             group: Group.errors);
 
   /// todo(pq): update to add specific messages w/ specific corrections
+  /// https://github.com/dart-lang/linter/issues/4172
   @override
   LintCode get lintCode => code;
 
@@ -267,6 +271,12 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitSwitchCase(SwitchCase node) {
+    var featureSet = node.thisOrAncestorOfType<CompilationUnit>()?.featureSet;
+    if (featureSet != null && featureSet.isEnabled(Feature.patterns)) {
+      // This lint rule is only meant for code which does not have 'patterns'
+      // enabled.
+      return;
+    }
     var expression = node.expression.unParenthesized;
     if (expression is SetOrMapLiteral) {
       if (expression.constKeyword == null) {

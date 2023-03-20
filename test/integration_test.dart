@@ -15,8 +15,6 @@ import 'package:yaml/yaml.dart';
 import '../test_data/rules/experiments/experiments.dart';
 import 'integration/always_require_non_null_named_parameters.dart'
     as always_require_non_null_named_parameters;
-import 'integration/avoid_relative_lib_imports.dart'
-    as avoid_relative_lib_imports;
 import 'integration/avoid_web_libraries_in_flutter.dart'
     as avoid_web_libraries_in_flutter;
 import 'integration/close_sinks.dart' as close_sinks;
@@ -28,7 +26,6 @@ import 'integration/lines_longer_than_80_chars.dart'
 import 'integration/prefer_const_constructors_in_immutables.dart'
     as prefer_const_constructors_in_immutables;
 import 'integration/prefer_mixin.dart' as prefer_mixin;
-import 'integration/prefer_relative_imports.dart' as prefer_relative_imports;
 import 'integration/public_member_api_docs.dart' as public_member_api_docs;
 import 'integration/secure_pubspec_urls.dart' as secure_pubspec_urls;
 import 'integration/sort_pub_dependencies.dart' as sort_pub_dependencies;
@@ -164,8 +161,6 @@ void ruleTests() {
     lines_longer_than_80_chars.main();
     always_require_non_null_named_parameters.main();
     prefer_const_constructors_in_immutables.main();
-    avoid_relative_lib_imports.main();
-    prefer_relative_imports.main();
     public_member_api_docs.main();
     secure_pubspec_urls.main();
     sort_pub_dependencies.main();
