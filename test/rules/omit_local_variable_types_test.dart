@@ -124,16 +124,6 @@ f(Object o) {
 ''');
   }
 
-  test_record_switchCase() async {
-    await assertNoDiagnostics(r'''
-f(Object o) {
-  switch (o) {
-    case (int x, String s): print('$x$s');
-  }
-}
-''');
-  }
-
   test_recordPattern_switch() async {
     await assertNoDiagnostics(r'''
 f() {
