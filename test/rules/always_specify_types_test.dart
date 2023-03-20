@@ -86,6 +86,21 @@ f() {
     ]);
   }
 
+  test_objectPattern_switch_ok() async {
+    await assertNoDiagnostics(r'''
+class A {
+  int a;
+  A(this.a);
+}
+
+f() {
+  switch (A(1)) {
+    case A(a: >0 && int b): print('$b');
+  }
+}
+''');
+  }
+
   test_objectPattern_switch_var() async {
     await assertDiagnostics(r'''
 class A {
@@ -114,5 +129,15 @@ f() {
       lint(36, 5),
       lint(45, 3),
     ]);
+  }
+
+  test_recordPattern_switch_ok() async {
+    await assertNoDiagnostics(r'''
+f() {
+  switch ((1, 2)) {
+    case (int a, int b): print('$a$b');
+  }
+}
+''');
   }
 }
