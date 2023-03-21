@@ -56,8 +56,7 @@ class PreferFinalParametersTestLanguage300 extends LintRuleTest
   test_listPattern_destructured() async {
     await assertNoDiagnostics('''
 void f(int p) {
-  var list = [1, 2, 3];
-  [_, p, _] = list;
+  [_, p, _] = [1, 2, 3];
   print(p);
 }
 ''');
