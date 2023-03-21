@@ -83,6 +83,7 @@ class _Visitor extends SimpleAstVisitor {
     if (element == null) return;
     if (element.hasReopen) return;
     if (element.isSealed) return;
+    if (element.isMixinClass) return;
 
     var library = element.library;
     var supertype = element.superElement;
@@ -143,21 +144,24 @@ extension on InterfaceElement? {
   bool get isFinal {
     var self = this;
     if (self is ClassElement) return self.isFinal;
-    if (self is MixinElement) return self.isFinal;
     return false;
   }
 
   bool get isInterface {
     var self = this;
     if (self is ClassElement) return self.isInterface;
-    if (self is MixinElement) return self.isInterface;
     return false;
   }
 
   bool get isSealed {
     var self = this;
     if (self is ClassElement) return self.isSealed;
-    if (self is MixinElement) return self.isSealed;
+    return false;
+  }
+
+  bool get isMixinClass {
+    var self = this;
+    if (self is ClassElement) return self.isMixinClass;
     return false;
   }
 

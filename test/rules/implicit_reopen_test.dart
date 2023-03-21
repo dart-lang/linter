@@ -213,4 +213,27 @@ interface class I {}
 final class C extends I {}
 ''');
   }
+
+  test_classMixin_classInterface_ok() async {
+    await assertDiagnostics(r'''
+interface class I {}
+
+mixin class M extends I {}
+''', [
+      // No lint.
+      error(CompileTimeErrorCode.MIXIN_CLASS_DECLARATION_EXTENDS_NOT_OBJECT, 44,
+          1),
+    ]);
+  }
+
+  test_mixin_classInterface_ok() async {
+    await assertDiagnostics(r'''
+interface class I {}
+
+mixin M extends I {}
+''', [
+      // No lint.
+      error(ParserErrorCode.EXPECTED_INSTEAD, 30, 7),
+    ]);
+  }
 }
