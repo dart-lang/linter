@@ -5,7 +5,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 
@@ -70,7 +69,6 @@ class ImplicitReopen extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addClassDeclaration(this, visitor);
-    registry.addClassTypeAlias(this, visitor);
   }
 }
 
@@ -79,55 +77,37 @@ class _Visitor extends SimpleAstVisitor {
 
   _Visitor(this.rule);
 
-  void checkElement(InterfaceElement element, NamedCompilationUnitMember node,
+  void checkElement(InterfaceElement? element, NamedCompilationUnitMember node,
       {required String type}) {
+    if (element == null) return;
+    if (element.hasReopen) return;
+    if (element.isSealed) return;
+
     var library = element.library;
-
-    // | subtype          |  supertype   | `extends`/`with` |
-    // | _none_ or `base` |  `interface` | lint             |
-    // | `base`           |  `final`     | lint             |
-    if (element.hasNoModifiers || element.isBase) {
-      var supertype = element.superElement;
-      if (supertype.library == library) {
-        if (supertype.isInterface || supertype.isInducedInterface) {
-          reportLint(node,
-              target: element,
-              other: supertype!,
-              reason: 'interface',
-              type: type);
-          return;
-        }
-      }
-
-      for (var m in element.mixins) {
-        var mixin = m.element;
-        if (mixin.library != library) continue;
-        if (mixin.isInterface || mixin.isInducedInterface) {
-          reportLint(node,
-              target: element, other: mixin, reason: 'interface', type: type);
-          return;
-        }
-      }
-    }
+    var supertype = element.superElement;
+    if (supertype.library != library) return;
 
     if (element.isBase) {
-      var supertype = element.superElement;
-      if (supertype.library == library) {
-        if (supertype.isFinal || supertype.isInducedFinal) {
-          reportLint(node,
-              target: element, other: supertype!, reason: 'final', type: type);
-          return;
-        }
+      if (supertype.isFinal) {
+        reportLint(node,
+            target: element, other: supertype!, reason: 'final', type: type);
+        return;
+      } else if (supertype.isInterface) {
+        reportLint(node,
+            target: element,
+            other: supertype!,
+            reason: 'interface',
+            type: type);
+        return;
       }
-
-      for (var m in element.mixins) {
-        var mixin = m.element;
-        if (mixin.library != library) continue;
-        if (mixin.isFinal || mixin.isInducedFinal) {
-          reportLint(node,
-              target: element, other: mixin, reason: 'final', type: type);
-          return;
-        }
+    } else if (element.hasNoModifiers) {
+      if (supertype.isInterface) {
+        reportLint(node,
+            target: element,
+            other: supertype!,
+            reason: 'interface',
+            type: type);
+        return;
       }
     }
   }
@@ -145,80 +125,11 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    var classElement = node.declaredElement;
-    if (classElement == null) return;
-    if (classElement.hasReopen) return;
-
-    checkElement(classElement, node, type: 'class');
-  }
-
-  @override
-  visitClassTypeAlias(ClassTypeAlias node) {
-    var classElement = node.declaredElement;
-    if (classElement == null) return;
-    if (classElement.hasReopen) return;
-
-    checkElement(classElement, node, type: 'class');
+    checkElement(node.declaredElement, node, type: 'class');
   }
 }
 
 extension on InterfaceElement? {
-  List<InterfaceType> get interfaces => this?.interfaces ?? <InterfaceType>[];
-
-  bool get isFinal {
-    var self = this;
-    return self != null && self.isFinal;
-  }
-
-  /// A sealed declaration `D` is considered final if it has a direct `extends` or
-  /// `with` superinterface which is `final`, or it has a direct superinterface
-  /// which is `base` as well as a direct `extends` or `with` superinterface
-  /// which is `interface`.
-  bool get isInducedFinal {
-    if (!isSealed) return false;
-
-    if (superElement.isFinal) return true;
-    if (!superElement.isInterface) return false;
-    if (mixins.any((m) => m.element.isFinal)) return true;
-
-    for (var i in interfaces) {
-      if (i.element.isBase) {
-        if (mixins.any((m) => m.element.isInterface)) return true;
-      }
-    }
-
-    return false;
-  }
-
-  /// A sealed declaration `D` is considered interface if it has a direct
-  /// `extends` or `with` superinterface which is `interface`.
-  bool get isInducedInterface {
-    if (!isSealed) return false;
-
-    if (superElement.isInterface) return true;
-    if (mixins.any((m) => m.element.isInterface)) return true;
-
-    return false;
-  }
-
-  bool get isInterface {
-    var self = this;
-    return self != null && self.isInterface;
-  }
-
-  bool get isSealed {
-    var self = this;
-    return self != null && self.isSealed;
-  }
-
-  LibraryElement? get library => this?.library;
-
-  List<InterfaceType> get mixins => this?.mixins ?? <InterfaceType>[];
-
-  InterfaceElement? get superElement => this?.supertype?.element;
-}
-
-extension on InterfaceElement {
   bool get hasNoModifiers => !isInterface && !isBase && !isSealed && !isFinal;
 
   bool get isBase {
@@ -248,4 +159,8 @@ extension on InterfaceElement {
     if (self is MixinElement) return self.isSealed;
     return false;
   }
+
+  LibraryElement? get library => this?.library;
+
+  InterfaceElement? get superElement => this?.supertype?.element;
 }
