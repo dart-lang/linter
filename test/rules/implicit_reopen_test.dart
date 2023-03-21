@@ -118,6 +118,17 @@ class C extends A {}
       lint(73, 1),
     ]);
   }
+
+  test_inducedInterface_twoLevels() async {
+    await assertDiagnostics(r'''
+interface class I {}
+sealed class S extends I {}
+sealed class S2 extends S {}
+class C extends S2 {} 
+''', [
+      lint(84, 1),
+    ]);
+  }
 }
 
 @reflectiveTest
