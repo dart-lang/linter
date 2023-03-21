@@ -158,6 +158,7 @@ final class F {}
 
 class C extends F {}
 ''', [
+      // No lint.
       error(CompileTimeErrorCode.SUBTYPE_OF_FINAL_IS_NOT_BASE_FINAL_OR_SEALED,
           24, 1),
     ]);
@@ -183,6 +184,7 @@ import 'a.dart';
 
 class C extends I {}
 ''', [
+      // No lint.
       error(CompileTimeErrorCode.INTERFACE_CLASS_EXTENDED_OUTSIDE_OF_LIBRARY,
           34, 1),
     ]);
