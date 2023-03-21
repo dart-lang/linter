@@ -43,7 +43,7 @@ base class C extends S {}
       lint(56, 1),
     ]);
   }
-  
+
   test_inducedFinal_base_interface() async {
     await assertDiagnostics(r'''
 base class C {}

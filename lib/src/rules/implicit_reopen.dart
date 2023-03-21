@@ -11,6 +11,7 @@ import '../analyzer.dart';
 const _desc = r"Don't implicitly reopen classes or mixins.";
 
 /// todo(pq): link out to (upcoming) dart.dev docs.
+/// https://github.com/dart-lang/site-www/issues/4497
 const _details = r'''
 Using the `interface`, `final`, `base`, `mixin`, and `sealed` class modifiers,
 authors can control whether classes and mixins allow being implemented,
