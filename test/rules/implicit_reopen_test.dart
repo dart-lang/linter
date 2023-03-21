@@ -66,6 +66,19 @@ base class B extends H {}
     ]);
   }
 
+  test_inducedFinal_interface_base_ok() async {
+    await assertDiagnostics(r'''
+interface class S {}
+base class I {}
+sealed class A extends S implements I {}
+class C extends A {}
+''', [
+      // No lint.
+      error(CompileTimeErrorCode.SUBTYPE_OF_BASE_IS_NOT_BASE_FINAL_OR_SEALED,
+          84, 1),
+    ]);
+  }
+
   test_inducedFinal_mixin_finalClass() async {
     await assertDiagnostics(r'''
 final class S {}
