@@ -65,7 +65,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LinterContext context;
   _Visitor(this.rule, this.context);
 
-  void check(AstNode? element) {
+  void check(AstNode element) {
     if (element is! DeclaredVariablePattern) return;
     var type = element.declaredElement?.type;
     if (type == null) return;
