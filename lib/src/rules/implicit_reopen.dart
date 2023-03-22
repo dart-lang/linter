@@ -16,7 +16,7 @@ const _details = r'''
 Using the `interface`, `final`, `base`, `mixin`, and `sealed` class modifiers,
 authors can control whether classes and mixins allow being implemented,
 extended, and/or mixed in from outside of the library where they're defined.
-In some cases, it's possible for an author to inadvertantly relax these controls
+In some cases, it's possible for an author to inadvertently relax these controls
 and implicitly "reopen" a class. 
 
 This lint guards against unintentionally reopening a type by requiring such
