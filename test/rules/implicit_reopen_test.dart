@@ -22,18 +22,6 @@ class ImplicitReopenInducedModifierTest extends LintRuleTest
   @override
   String get lintRule => 'implicit_reopen';
 
-  test_subtypingFinalError_ok() async {
-    await assertDiagnostics(r'''
-final class F {}
-sealed class S extends F {}
-class C extends S {}
-''', [
-      // No lint.
-      error(CompileTimeErrorCode.SUBTYPE_OF_FINAL_IS_NOT_BASE_FINAL_OR_SEALED,
-          51, 1),
-    ]);
-  }
-
   test_inducedFinal() async {
     await assertDiagnostics(r'''
 final class F {}
@@ -140,6 +128,18 @@ sealed class S2 extends S {}
 class C extends S2 {} 
 ''', [
       lint(84, 1),
+    ]);
+  }
+
+  test_subtypingFinalError_ok() async {
+    await assertDiagnostics(r'''
+final class F {}
+sealed class S extends F {}
+class C extends S {}
+''', [
+      // No lint.
+      error(CompileTimeErrorCode.SUBTYPE_OF_FINAL_IS_NOT_BASE_FINAL_OR_SEALED,
+          51, 1),
     ]);
   }
 }
