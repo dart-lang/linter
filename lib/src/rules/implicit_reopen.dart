@@ -29,7 +29,7 @@ annotation in `package:meta`.
 ```dart
 interface class I {}
 
-class C extends I {}
+class C extends I {} // LINT
 ```
 
 **GOOD:**
