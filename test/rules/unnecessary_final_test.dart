@@ -18,7 +18,6 @@ class UnnecessaryFinalTestLanguage300 extends LintRuleTest
   @override
   String get lintRule => 'unnecessary_final';
 
-
   test_listPattern_destructured() async {
     await assertDiagnostics(r'''
 f() {
@@ -50,7 +49,6 @@ f() {
       lint(8, 5),
     ]);
   }
-
 
   test_mapPattern_ifCase() async {
     await assertDiagnostics(r'''
