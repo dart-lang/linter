@@ -13,7 +13,8 @@ const _desc = r"Don't implicitly reopen classes or mixins.";
 /// todo(pq): link out to (upcoming) dart.dev docs.
 /// https://github.com/dart-lang/site-www/issues/4497
 const _details = r'''
-Using the `interface`, `final`, `base`, `mixin`, and `sealed` class modifiers,
+Using an `interface`, `base`, `final`, or `sealed` modifier on a class,
+or a `base` modifier on a mixin,
 authors can control whether classes and mixins allow being implemented,
 extended, and/or mixed in from outside of the library where they're defined.
 In some cases, it's possible for an author to inadvertently relax these controls
