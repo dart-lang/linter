@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <link rel="shortcut icon" href="../dart-192.png">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <title>implicit_reopen</title>
+      <link rel="stylesheet" href="../styles.css">
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>implicit_reopen</h1>
+            <p>Group: errors</p>
+            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
+            <div class="tooltip">
+               <p>Dart SDK: <strong>Unreleased</strong> • <small>(Linter <strong>Unreleased</strong>)</small></p>
+               <span class="tooltip-content">Since info is static, may be stale</span>
+            </div>
+            
+            <ul>
+               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
+               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
+            </ul>
+            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+         </header>
+         <section>
+            
+            <p>Using an <code>interface</code>, <code>base</code>, <code>final</code>, or <code>sealed</code> modifier on a class,
+or a <code>base</code> modifier on a mixin,
+authors can control whether classes and mixins allow being implemented,
+extended, and/or mixed in from outside of the library where they're defined.
+In some cases, it's possible for an author to inadvertently relax these controls
+and implicitly &quot;reopen&quot; a class. (A similar reopening cannot occur with a mixin.)</p>
+<p>This lint guards against unintentionally reopening a class by requiring such
+cases to be made explicit with the
+<a href="https://pub.dev/documentation/meta/latest/meta/reopen-constant.html"><code>@reopen</code></a>
+annotation in <code>package:meta</code>.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">interface class I {}
+
+class C extends I {} // LINT
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">interface class I {}
+
+final class C extends I {}
+</code></pre>
+<pre><code class="language-dart">interface class I {}
+
+final class C extends I {}
+</code></pre>
+<pre><code class="language-dart">import 'package:meta/meta.dart';
+
+interface class I {}
+
+@reopen
+class C extends I {}
+</code></pre>
+
+            
+         </section>
+      </div>
+      <footer>
+         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
+      </footer>
+   </body>
+</html>
