@@ -8,7 +8,7 @@ import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 
-const _desc = r"Don't implicitly reopen classes or mixins.";
+const _desc = r"Don't implicitly reopen classes.";
 
 /// todo(pq): link out to (upcoming) dart.dev docs.
 /// https://github.com/dart-lang/site-www/issues/4497
@@ -33,6 +33,12 @@ class C extends I {} // LINT
 ```
 
 **GOOD:**
+```dart
+interface class I {}
+
+final class C extends I {}
+```
+
 ```dart
 interface class I {}
 
