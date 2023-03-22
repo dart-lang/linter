@@ -188,8 +188,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitNullAssertPattern(NullAssertPattern node) {
-    if (node.operator.type != TokenType.BANG) return;
-
     var expectedType = node.matchedValueType;
     if (expectedType != null && context.typeSystem.isNullable(expectedType)) {
       rule.reportLintForToken(node.operator);
