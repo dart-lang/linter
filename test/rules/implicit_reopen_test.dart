@@ -22,7 +22,7 @@ class ImplicitReopenInducedModifierTest extends LintRuleTest
   @override
   String get lintRule => 'implicit_reopen';
 
-  test_class_classSealed_classFinal_ok() async {
+  test_subtypingFinalError_ok() async {
     await assertDiagnostics(r'''
 final class F {}
 sealed class S extends F {}
