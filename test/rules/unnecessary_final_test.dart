@@ -18,6 +18,7 @@ class UnnecessaryFinalTestLanguage300 extends LintRuleTest
   @override
   String get lintRule => 'unnecessary_final';
 
+
   test_listPattern_destructured() async {
     await assertDiagnostics(r'''
 f() {
@@ -29,6 +30,16 @@ f() {
     ]);
   }
 
+  test_listPattern_ifCase() async {
+    await assertDiagnostics(r'''
+f(Object o) {
+  if (o case [int x, final int y]) print('$x$y'); 
+}
+''', [
+      lint(35, 5),
+    ]);
+  }
+
   test_mapPattern_destructured() async {
     await assertDiagnostics(r'''
 f() {
@@ -37,6 +48,17 @@ f() {
 }
 ''', [
       lint(8, 5),
+    ]);
+  }
+
+
+  test_mapPattern_ifCase() async {
+    await assertDiagnostics(r'''
+f(Object o) {
+  if (o case {'x': final x, 'y' : var y}) print('$x$y');
+}
+''', [
+      lint(33, 5),
     ]);
   }
 
@@ -54,6 +76,16 @@ f() {
 }
 ''', [
       lint(79, 5),
+    ]);
+  }
+
+  test_recordPattern_ifCase() async {
+    await assertDiagnostics(r'''
+f(Object o) {
+  if (o case (final int x, int y)) print('$x$y');
+}
+''', [
+      lint(28, 5),
     ]);
   }
 
