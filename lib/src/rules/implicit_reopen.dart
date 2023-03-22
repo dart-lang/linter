@@ -19,7 +19,7 @@ extended, and/or mixed in from outside of the library where they're defined.
 In some cases, it's possible for an author to inadvertently relax these controls
 and implicitly "reopen" a class. (A similar reopening cannot occur with a mixin.)
 
-This lint guards against unintentionally reopening a type by requiring such
+This lint guards against unintentionally reopening a class by requiring such
 cases to be made explicit with the 
 [`@reopen`](https://pub.dev/documentation/meta/latest/meta/reopen-constant.html)
 annotation in `package:meta`.
