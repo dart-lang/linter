@@ -114,11 +114,8 @@ void switchString() {
 @reflectiveTest
 class NoDuplicateCaseValuesTestLanguage300 extends BaseNoDuplicateCaseValuesTest
     with LanguageVersion300Mixin {
-  @override
-  List<String> get experiments => ['records', 'patterns'];
-
   test_duplicateConstClassValue_ok() async {
-    await assertNoDiagnostics(r'''
+    await assertDiagnostics(r'''
 class ConstClass {
   final int v;
   const ConstClass(this.v);
@@ -135,11 +132,13 @@ void switchConstClass() {
     default:
   }
 }
-''');
+''', [
+      error(HintCode.UNREACHABLE_SWITCH_CASE, 239, 4),
+    ]);
   }
 
   test_duplicateEnumValue_ok() async {
-    await assertNoDiagnostics(r'''
+    await assertDiagnostics(r'''
 enum E {
   one,
   two,
@@ -157,11 +156,14 @@ void switchEnum() {
     default:
   }
 }
-''');
+''', [
+      // No lint.
+      error(HintCode.UNREACHABLE_SWITCH_CASE, 144, 4),
+    ]);
   }
 
   test_duplicateIntConstant_ok() async {
-    await assertNoDiagnostics(r'''
+    await assertDiagnostics(r'''
 void switchInt() {
   const int A = 1;
   int v = 5;
@@ -175,7 +177,11 @@ void switchInt() {
     default:
   }
 }
-''');
+''', [
+      // No lint.
+      error(HintCode.UNREACHABLE_SWITCH_CASE, 95, 4),
+      error(HintCode.UNREACHABLE_SWITCH_CASE, 107, 4),
+    ]);
   }
 
   test_duplicateStringConstant_ok() async {
@@ -195,7 +201,9 @@ void switchString() {
 }
 ''', [
       // No lint.
+      error(HintCode.UNREACHABLE_SWITCH_CASE, 115, 4),
       error(ParserErrorCode.INVALID_CONSTANT_PATTERN_BINARY, 122, 1),
+      error(HintCode.UNREACHABLE_SWITCH_CASE, 131, 4),
       error(ParserErrorCode.INVALID_CONSTANT_PATTERN_BINARY, 153, 1),
     ]);
   }

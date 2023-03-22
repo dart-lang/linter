@@ -348,7 +348,7 @@ void topLevel5(BuildContext context) async {
       if (!mounted) {
         break;
       }
-      Navigator.of(context).pushNamed('routeName2'); // OK
+      Navigator.of(context).pushNamed('routeName222'); // OK
       break;
     default: //nothing.
   }
@@ -423,7 +423,8 @@ void awaitInIf3(BuildContext context, Future<bool> condition) async {
   Navigator.of(context).pushNamed('routeName'); // LINT
 }
 
-void awaitInIf4(BuildContext context, Future<bool> Function(BuildContext) condition) async {
+void awaitInIf4(
+    BuildContext context, Future<bool> Function(BuildContext) condition) async {
   if (await condition(context)) { // OK
     Navigator.of(context).pushNamed('routeName'); // LINT
   }

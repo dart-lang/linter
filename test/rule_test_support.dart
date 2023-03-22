@@ -122,14 +122,11 @@ mixin LanguageVersion219Mixin on PubPackageResolutionTest {
 
 mixin LanguageVersion300Mixin on PubPackageResolutionTest {
   @override
-  List<String> get experiments => ['records', 'patterns'];
-
-  @override
   String? get testPackageLanguageVersion => '3.0';
 }
 
 abstract class LintRuleTest extends PubPackageResolutionTest {
-  bool get dumpAstOnFailures => false;
+  bool get dumpAstOnFailures => true;
 
   String? get lintRule;
 
@@ -224,12 +221,19 @@ abstract class LintRuleTest extends PubPackageResolutionTest {
       if (dumpAstOnFailures) {
         buffer.writeln();
         buffer.writeln();
-        var astSink = CollectingSink();
-        StringSpelunker(result.unit.toSource(),
-                sink: astSink, featureSet: result.unit.featureSet)
-            .spelunk();
-        buffer.write(astSink.buffer);
-        buffer.writeln();
+        try {
+          var astSink = CollectingSink();
+
+          StringSpelunker(result.unit.toSource(),
+                  sink: astSink, featureSet: result.unit.featureSet)
+              .spelunk();
+          buffer.write(astSink.buffer);
+          buffer.writeln();
+          // I hereby choose to catch this type.
+          // ignore: avoid_catching_errors
+        } on ArgumentError catch (_) {
+          // Perhaps we encountered a parsing error while spelunking.
+        }
       }
 
       errors.sort((first, second) => first.offset.compareTo(second.offset));

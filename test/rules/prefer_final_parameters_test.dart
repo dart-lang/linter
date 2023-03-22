@@ -8,12 +8,14 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(PreferFinalParametersTest);
+    defineReflectiveTests(PreferFinalParametersTestLanguage219);
+    defineReflectiveTests(PreferFinalParametersTestLanguage300);
   });
 }
 
 @reflectiveTest
-class PreferFinalParametersTest extends LintRuleTest {
+class PreferFinalParametersTestLanguage219 extends LintRuleTest
+    with LanguageVersion219Mixin {
   @override
   String get lintRule => 'prefer_final_parameters';
 
@@ -41,5 +43,28 @@ class B extends A {
   B({super.a}); // OK
 }
 ''', []);
+  }
+}
+
+@reflectiveTest
+class PreferFinalParametersTestLanguage300 extends LintRuleTest
+    with LanguageVersion300Mixin {
+  @override
+  String get lintRule => 'prefer_final_parameters';
+
+  test_listPattern_destructured() async {
+    await assertNoDiagnostics('''
+void f(int p) {
+  [_, p, _] = [1, 2, 3];
+}
+''');
+  }
+
+  test_recordPattern_destructured() async {
+    await assertNoDiagnostics(r'''
+void f(int a, int b) {
+  (a, b) = (1, 2);
+}
+''');
   }
 }
