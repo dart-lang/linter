@@ -19,6 +19,16 @@ class NonConstantIdentifierNamesPatternsTest extends LintRuleTest {
   @override
   String get lintRule => 'non_constant_identifier_names';
 
+  test_identifierPattern() async {
+    await assertNoDiagnostics(r'''
+f() {
+  var a = 0;
+  [_, a] = [1,2];
+  print(a);
+}
+''');
+  }
+
   test_patternForStatement() async {
     await assertDiagnostics(r'''
 void f() {
