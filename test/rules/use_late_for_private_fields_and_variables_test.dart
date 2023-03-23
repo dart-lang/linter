@@ -197,7 +197,23 @@ class UseLateForPrivateFieldsAndVariablesTestLanguage300 extends LintRuleTest
   String get lintRule => 'use_late_for_private_fields_and_variables';
 
   /// https://github.com/dart-lang/linter/issues/4180
-  test_recordAssignment() async {
+  test_patternAssignment_field() async {
+    await assertDiagnostics('''
+class C {
+  int? _i;
+  void m() {
+    _i?.abs();
+    (_i, ) = (null, );
+  }
+}
+''', [
+      // No lint.
+      error(CompileTimeErrorCode.PATTERN_ASSIGNMENT_NOT_LOCAL_VARIABLE, 54, 2),
+    ]);
+  }
+
+  /// https://github.com/dart-lang/linter/issues/4180
+  test_patternAssignment_topLevel() async {
     await assertDiagnostics('''
 int? _i;
 m() {
