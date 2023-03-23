@@ -140,7 +140,9 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
-    if (parent is VariableDeclarationList && node == parent.type) {
+    if (parent is VariableDeclarationList &&
+        node == parent.type &&
+        parent.parent is! FieldDeclaration) {
       // We should not recommend to use `void` for local or top-level variables.
       return;
     }
