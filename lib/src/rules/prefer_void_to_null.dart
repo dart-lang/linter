@@ -140,6 +140,11 @@ class _Visitor extends SimpleAstVisitor<void> {
       return;
     }
 
+    if (parent is VariableDeclarationList && node == parent.type) {
+      // We should not recommend to use `void` for local or top-level variables.
+      return;
+    }
+
     // <Null>[] or <Null, Null>{}
     if (parent is TypeArgumentList) {
       var literal = parent.parent;
