@@ -476,7 +476,7 @@ abstract class _ContextResolutionTest with ResourceProviderMixin {
       .toList();
 
   /// Error codes that by default should be ignored in test expectations.
-  List<HintCode> get ignoredErrorCodes => [HintCode.UNUSED_LOCAL_VARIABLE];
+  List<HintCode> get ignoredErrorCodes => [WarningCode.UNUSED_LOCAL_VARIABLE];
 
   Folder get sdkRoot => newFolder('/sdk');
 
