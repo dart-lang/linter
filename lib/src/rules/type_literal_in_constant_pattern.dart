@@ -53,17 +53,9 @@ void f(Object? x) {
 class TypeLiteralInConstantPattern extends LintRule {
   static const String lintName = 'type_literal_in_constant_pattern';
 
-  static const LintCode matchType = LintCode(
-    lintName,
-    "Use '== TypeName' instead of a type literal.",
-    uniqueName: '${lintName}_type',
-    correctionMessage: "Replace with '== TypeName'.",
-  );
-
-  static const LintCode matchNotType = LintCode(
+  static const LintCode code = LintCode(
     lintName,
     "Use 'TypeName _' instead of a type literal.",
-    uniqueName: '${lintName}_not_type',
     correctionMessage: "Replace with 'TypeName _'.",
   );
 
@@ -76,32 +68,33 @@ class TypeLiteralInConstantPattern extends LintRule {
         );
 
   @override
-  List<LintCode> get lintCodes => [matchType, matchNotType];
+  LintCode get lintCode => code;
 
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this);
+    var visitor = _Visitor(this, context);
     registry.addConstantPattern(this, visitor);
   }
 }
 
 class _Visitor extends SimpleAstVisitor {
   final LintRule rule;
+  final LinterContext context;
 
-  _Visitor(this.rule);
+  _Visitor(this.rule, this.context);
 
   @override
   visitConstantPattern(ConstantPattern node) {
-    var expression = node.expression;
-    var expressionType = expression.staticType;
+    var expressionType = node.expression.staticType;
     if (expressionType != null && expressionType.isDartCoreType) {
       var matchedValueType = node.matchedValueType;
-      if (matchedValueType != null) {
-        var errorCode = matchedValueType.isDartCoreType
-            ? TypeLiteralInConstantPattern.matchType
-            : TypeLiteralInConstantPattern.matchNotType;
-        rule.reportLint(node, errorCode: errorCode);
+      if (matchedValueType != null && !matchedValueType.isDartCoreType) {
+        var typeSystem = context.typeSystem;
+        matchedValueType = typeSystem.resolveToBound(matchedValueType);
+        if (typeSystem.isSubtypeOf(expressionType, matchedValueType)) {
+          rule.reportLint(node);
+        }
       }
     }
   }

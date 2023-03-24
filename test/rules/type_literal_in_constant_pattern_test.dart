@@ -18,7 +18,7 @@ class PreferPatternTypeLiteralEqualityTest extends LintRuleTest {
   @override
   String get lintRule => TypeLiteralInConstantPattern.lintName;
 
-  test_matchNotType_constNotType() async {
+  test_constNotType_matchObjectNullable() async {
     await assertNoDiagnostics(r'''
 void f(Object? x) {
   if (x case 0) {}
@@ -26,17 +26,7 @@ void f(Object? x) {
 ''');
   }
 
-  test_matchNotType_constType() async {
-    await assertDiagnostics(r'''
-void f(Object? x) {
-  if (x case int) {}
-}
-''', [
-      _lintNotType(33, 3),
-    ]);
-  }
-
-  test_matchType_constNotType() async {
+  test_constNotType_matchType() async {
     await assertDiagnostics(r'''
 void f(Type x) {
   if (x case 0) {}
@@ -46,28 +36,64 @@ void f(Type x) {
     ]);
   }
 
-  test_matchType_constType() async {
+  test_constType_matchDynamic() async {
     await assertDiagnostics(r'''
-void f(Type x) {
+void f(dynamic x) {
   if (x case int) {}
 }
 ''', [
-      _lintType(30, 3),
+      lint(33, 3),
     ]);
   }
 
-  test_matchType_constType_explicitConst() async {
+  test_constType_matchNum() async {
     await assertDiagnostics(r'''
+void f(num x) {
+  if (x case int) {}
+}
+''', [
+      error(WarningCode.CONSTANT_PATTERN_NEVER_MATCHES_VALUE_TYPE, 29, 3),
+    ]);
+  }
+
+  test_constType_matchObject() async {
+    await assertDiagnostics(r'''
+void f(Object x) {
+  if (x case int) {}
+}
+''', [
+      lint(32, 3),
+    ]);
+  }
+
+  test_constType_matchObjectNullable() async {
+    await assertDiagnostics(r'''
+void f(Object? x) {
+  if (x case int) {}
+}
+''', [
+      lint(33, 3),
+    ]);
+  }
+
+  test_constType_matchType() async {
+    await assertNoDiagnostics(r'''
+void f(Type x) {
+  if (x case int) {}
+}
+''');
+  }
+
+  test_constType_matchType_explicitConst() async {
+    await assertNoDiagnostics(r'''
 void f(Type x) {
   if (x case const (int)) {}
 }
-''', [
-      _lintType(30, 11),
-    ]);
+''');
   }
 
-  test_matchType_constType_nested() async {
-    await assertDiagnostics(r'''
+  test_constType_matchType_nested() async {
+    await assertNoDiagnostics(r'''
 void f(A x) {
   if (x case A(type: int)) {}
 }
@@ -76,53 +102,16 @@ class A {
   final Type type;
   A(this.type);
 }
-''', [
-      _lintType(35, 3),
-    ]);
+''');
   }
 
-  test_matchType_constType_switchExpression() async {
+  test_constType_matchTypeParameter_boundObjectNullable() async {
     await assertDiagnostics(r'''
-int f(Type x) {
-  return switch (x) {
-    int => 0,
-    _ => 0,
-  };
+void f<T extends Object?>(T x) {
+  if (x case int) {}
 }
 ''', [
-      _lintType(42, 3),
+      lint(46, 3),
     ]);
   }
-
-  test_matchType_constType_switchStatement() async {
-    await assertDiagnostics(r'''
-void f(Type x) {
-  switch (x) {
-    case int:
-      break;
-  }
-}
-''', [
-      _lintType(41, 3),
-    ]);
-  }
-
-  test_matchType_constType_withImportPrefix() async {
-    await assertDiagnostics(r'''
-import 'dart:math' as math;
-
-void f(Type x) {
-  if (x case math.Random) {}
-}
-''', [
-      _lintType(59, 11),
-    ]);
-  }
-
-  ExpectedLint _lintNotType(int offset, int length) =>
-      ExpectedLint.withLintCode(
-          TypeLiteralInConstantPattern.matchNotType, offset, length);
-
-  ExpectedLint _lintType(int offset, int length) => ExpectedLint.withLintCode(
-      TypeLiteralInConstantPattern.matchType, offset, length);
 }
