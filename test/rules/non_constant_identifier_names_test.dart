@@ -52,12 +52,12 @@ void f() {
   test_patternList_declaration() async {
     await assertDiagnostics(r'''
 f() {
-  var [__, Foo] = [1,2];
-  print('$__$Foo');
+  var [__, foo_bar] = [1,2];
+  print('$__$foo_bar');
 }
 ''', [
       lint(13, 2),
-      lint(17, 3),
+      lint(17, 7),
     ]);
   }
 
