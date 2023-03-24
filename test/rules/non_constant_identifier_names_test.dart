@@ -19,16 +19,6 @@ class NonConstantIdentifierNamesPatternsTest extends LintRuleTest {
   @override
   String get lintRule => 'non_constant_identifier_names';
 
-  test_identifierPattern() async {
-    await assertNoDiagnostics(r'''
-f() {
-  var a = 0;
-  [_, a] = [1,2];
-  print(a);
-}
-''');
-  }
-
   test_patternForStatement() async {
     await assertDiagnostics(r'''
 void f() {
@@ -54,7 +44,38 @@ void f() {
   test_patternIfStatement_underscores() async {
     await assertNoDiagnostics(r'''
 void f() {
-  if ([1,2] case [int _, int __]) { }
+  if ([1,2] case [int _, int _]) { }
+}
+''');
+  }
+
+  test_patternList_declaration() async {
+    await assertDiagnostics(r'''
+f() {
+  var [__, Foo] = [1,2];
+  print('$__$Foo');
+}
+''', [
+      lint(13, 2),
+      lint(17, 3),
+    ]);
+  }
+
+  test_patternList_declaration_underscore_ok() async {
+    await assertNoDiagnostics(r'''
+f() {
+  var [_, a] = [1,2];
+  print(a);
+}
+''');
+  }
+
+  test_patternList_wildCardPattern() async {
+    await assertNoDiagnostics(r'''
+f() {
+  var a = 0;
+  [_, a] = [1,2];
+  print(a);
 }
 ''');
   }
