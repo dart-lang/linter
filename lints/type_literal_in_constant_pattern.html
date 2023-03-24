@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <link rel="shortcut icon" href="../dart-192.png">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <title>type_literal_in_constant_pattern</title>
+      <link rel="stylesheet" href="../styles.css">
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>type_literal_in_constant_pattern</h1>
+            <p>Group: style</p>
+            <p>Maturity: stable</p>
+            <div class="tooltip">
+               <p>Dart SDK: <strong>Unreleased</strong> • <small>(Linter <strong>Unreleased</strong>)</small></p>
+               <span class="tooltip-content">Since info is static, may be stale</span>
+            </div>
+            
+            <ul>
+               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
+               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
+            </ul>
+            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+         </header>
+         <section>
+            
+            <p>Use <code>== TypeName</code> or <code>TypeName _</code> instead of type literals in patterns.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">void f(Type x) {
+  if (x case int) {
+    print('int');
+  }
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">void f(Type x) {
+  if (x case == int) {
+    print('int');
+  }
+}
+</code></pre>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">void f(Object? x) {
+  if (x case int) {
+    print('int');
+  }
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">void f(Object? x) {
+  if (x case int _) {
+    print('int');
+  }
+}
+</code></pre>
+
+            
+         </section>
+      </div>
+      <footer>
+         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
+      </footer>
+   </body>
+</html>

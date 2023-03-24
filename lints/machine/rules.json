@@ -223,7 +223,7 @@
     "state": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "unregistered",
+    "fixStatus": "needsFix",
     "details": "Elements which are annotated with `@deprecated` should not be referenced from\nwithin the package in which they are declared.\n\n**AVOID** using deprecated elements.\n\n...\n\n**BAD:**\n```dart\n// Declared in one library:\nclass Foo {\n  @Deprecated(\"Use 'm2' instead\")\n  void m1() {}\n\n  void m2({\n      @Deprecated('This is an old parameter') int? p,\n  })\n}\n\n@Deprecated('Do not use')\nint x = 0;\n\n// In the same or another library, but within the same package:\nvoid m(Foo foo) {\n  foo.m1();\n  foo.m2(p: 7);\n  x = 1;\n}\n```\n\nDeprecated elements can be used from within _other_ deprecated elements, in\norder to allow for the deprecation of a collection of APIs together as one unit.\n\n**GOOD:**\n```dart\n// Declared in one library:\nclass Foo {\n  @Deprecated(\"Use 'm2' instead\")\n  void m1() {}\n\n  void m2({\n      @Deprecated('This is an old parameter') int? p,\n  })\n}\n\n@Deprecated('Do not use')\nint x = 0;\n\n// In the same or another library, but within the same package:\n@Deprecated('Do not use')\nvoid m(Foo foo) {\n  foo.m1();\n  foo.m2(p: 7);\n  x = 1;\n}\n```\n",
     "sinceDartSdk": "Unreleased",
     "sinceLinter": "Unreleased"
@@ -2601,6 +2601,19 @@
     "details": "From the [style guide](https://dart.dev/guides/language/effective-dart/style/):\n\n**DON'T** type annotate initializing formals.\n\nIf a constructor parameter is using `this.x` to initialize a field, then the\ntype of the parameter is understood to be the same type as the field. If a \na constructor parameter is using `super.x` to forward to a super constructor,\nthen the type of the parameter is understood to be the same as the super\nconstructor parameter.\n\nType annotating an initializing formal with a different type than that of the\nfield is OK.\n\n**BAD:**\n```dart\nclass Point {\n  int x, y;\n  Point(int this.x, int this.y);\n}\n```\n\n**GOOD:**\n```dart\nclass Point {\n  int x, y;\n  Point(this.x, this.y);\n}\n```\n\n**BAD:**\n```dart\nclass A {\n  int a;\n  A(this.a);\n}\n\nclass B extends A {\n  B(int super.a);\n}\n```\n\n**GOOD:**\n```dart\nclass A {\n  int a;\n  A(this.a);\n}\n\nclass B extends A {\n  B(super.a);\n}\n```\n\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.1"
+  },
+  {
+    "name": "type_literal_in_constant_pattern",
+    "description": "Don't use constant patterns with type literals.",
+    "group": "style",
+    "maturity": "stable",
+    "state": "stable",
+    "incompatible": [],
+    "sets": [],
+    "fixStatus": "unregistered",
+    "details": "Use `== TypeName` or `TypeName _` instead of type literals in patterns.\n\n**BAD:**\n```dart\nvoid f(Type x) {\n  if (x case int) {\n    print('int');\n  }\n}\n```\n\n**GOOD:**\n```dart\nvoid f(Type x) {\n  if (x case == int) {\n    print('int');\n  }\n}\n```\n\n**BAD:**\n```dart\nvoid f(Object? x) {\n  if (x case int) {\n    print('int');\n  }\n}\n```\n\n**GOOD:**\n```dart\nvoid f(Object? x) {\n  if (x case int _) {\n    print('int');\n  }\n}\n```\n\n",
+    "sinceDartSdk": "Unreleased",
+    "sinceLinter": "Unreleased"
   },
   {
     "name": "unawaited_futures",
