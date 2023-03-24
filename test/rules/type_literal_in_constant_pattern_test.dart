@@ -114,4 +114,13 @@ void f<T extends Object?>(T x) {
       lint(46, 3),
     ]);
   }
+
+  /// Nobody will write such code, but just in case.
+  test_constType_matchTypeParameter_boundType() async {
+    await assertNoDiagnostics(r'''
+void f<T extends Type>(T x) {
+  if (x case int) {}
+}
+''');
+  }
 }

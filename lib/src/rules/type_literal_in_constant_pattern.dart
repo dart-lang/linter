@@ -89,11 +89,13 @@ class _Visitor extends SimpleAstVisitor {
     var expressionType = node.expression.staticType;
     if (expressionType != null && expressionType.isDartCoreType) {
       var matchedValueType = node.matchedValueType;
-      if (matchedValueType != null && !matchedValueType.isDartCoreType) {
+      if (matchedValueType != null) {
         var typeSystem = context.typeSystem;
         matchedValueType = typeSystem.resolveToBound(matchedValueType);
-        if (typeSystem.isSubtypeOf(expressionType, matchedValueType)) {
-          rule.reportLint(node);
+        if (!matchedValueType.isDartCoreType) {
+          if (typeSystem.isSubtypeOf(expressionType, matchedValueType)) {
+            rule.reportLint(node);
+          }
         }
       }
     }
