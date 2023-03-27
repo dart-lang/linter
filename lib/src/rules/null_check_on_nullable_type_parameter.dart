@@ -69,6 +69,9 @@ class NullCheckOnNullableTypeParameter extends LintRule {
     }
 
     var visitor = _Visitor(this, context);
+    registry.addListPattern(this, visitor);
+    registry.addMapPattern(this, visitor);
+    registry.addObjectPattern(this, visitor);
     registry.addPostfixExpression(this, visitor);
     registry.addRecordPattern(this, visitor);
   }
@@ -80,8 +83,54 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LinterContext context;
   _Visitor(this.rule, this.context);
 
+  void checkPatternElements(DartPattern node) {
+    NodeList<PatternField>? fields;
+    if (node is RecordPattern) fields = node.fields;
+    if (node is ObjectPattern) fields = node.fields;
+    if (fields != null) {
+      for (var field in fields) {
+        var pattern = field.pattern;
+        if (pattern is NullAssertPattern) {
+          if (isNullableTypeParameterType(pattern.matchedValueType)) {
+            rule.reportLintForToken(pattern.operator);
+          }
+        }
+      }
+    } else {
+      List<AstNode>? elements;
+      if (node is ListPattern) elements = node.elements;
+      if (node is MapPattern) elements = node.elements;
+      if (elements == null) return;
+      for (var element in elements) {
+        if (element is MapPatternEntry) {
+          element = element.value;
+        }
+        if (element is NullAssertPattern) {
+          if (isNullableTypeParameterType(element.matchedValueType)) {
+            rule.reportLintForToken(element.operator);
+          }
+        }
+      }
+    }
+  }
+
   bool isNullableTypeParameterType(DartType? type) =>
       type is TypeParameterType && context.typeSystem.isNullable(type);
+
+  @override
+  void visitListPattern(ListPattern node) {
+    checkPatternElements(node);
+  }
+
+  @override
+  void visitMapPattern(MapPattern node) {
+    checkPatternElements(node);
+  }
+
+  @override
+  void visitObjectPattern(ObjectPattern node) {
+    checkPatternElements(node);
+  }
 
   @override
   void visitPostfixExpression(PostfixExpression node) {
@@ -100,13 +149,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitRecordPattern(RecordPattern node) {
-    for (var field in node.fields) {
-      var pattern = field.pattern;
-      if (pattern is NullAssertPattern) {
-        if (isNullableTypeParameterType(pattern.matchedValueType)) {
-          rule.reportLintForToken(pattern.operator);
-        }
-      }
-    }
+    checkPatternElements(node);
   }
 }

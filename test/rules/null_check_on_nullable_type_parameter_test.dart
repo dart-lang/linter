@@ -18,13 +18,49 @@ class NullCheckOnNullableTypeParameterTestLanguage300 extends LintRuleTest
   @override
   String get lintRule => 'null_check_on_nullable_type_parameter';
 
-  test_nullAssertPattern() async {
+  test_nullAssertPattern_list() async {
     await assertDiagnostics(r'''
-void f<T>((T?, T?) p){
+f<T>(List<T?> l){
+  var [x!, y] = l;
+}
+''', [
+      lint(26, 1),
+    ]);
+  }
+
+  test_nullAssertPattern_map() async {
+    await assertDiagnostics(r'''
+f<T>(Map<String, T?> m){
+  var {'x': y!} = m;
+}
+''', [
+      lint(38, 1),
+    ]);
+  }
+
+  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/4218')
+  test_nullAssertPattern_object() async {
+    await assertDiagnostics(r'''
+class A {
+  Object? a;
+  A(this.a);
+}
+
+void f<T>(T? t, A u) {
+  var A(a: t!) = u;
+}
+''', [
+      lint(75, 1),
+    ]);
+  }
+
+  test_nullAssertPattern_record() async {
+    await assertDiagnostics(r'''
+f<T>((T?, T?) p){
   var (x!, y) = p;
 }
 ''', [
-      lint(31, 1),
+      lint(26, 1),
     ]);
   }
 }
