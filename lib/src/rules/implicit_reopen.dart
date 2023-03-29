@@ -129,12 +129,12 @@ class _Visitor extends SimpleAstVisitor {
   }
 
   @override
-  visitClassTypeAlias(ClassTypeAlias node) {
+  void visitClassDeclaration(ClassDeclaration node) {
     checkElement(node.declaredElement, node, type: 'class');
   }
 
   @override
-  void visitClassDeclaration(ClassDeclaration node) {
+  visitClassTypeAlias(ClassTypeAlias node) {
     checkElement(node.declaredElement, node, type: 'class');
   }
 }
