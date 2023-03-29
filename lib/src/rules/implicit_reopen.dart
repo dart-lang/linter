@@ -77,6 +77,7 @@ class ImplicitReopen extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addClassDeclaration(this, visitor);
+    registry.addClassTypeAlias(this, visitor);
   }
 }
 
@@ -125,6 +126,11 @@ class _Visitor extends SimpleAstVisitor {
   }) {
     rule.reportLintForToken(member.name,
         arguments: [type, target.name, other.name, reason]);
+  }
+
+  @override
+  visitClassTypeAlias(ClassTypeAlias node) {
+    checkElement(node.declaredElement, node, type: 'class');
   }
 
   @override
