@@ -2979,7 +2979,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "needsEvaluation",
-    "details": "Top-level members in an executable library should be used directly inside this\nlibrary.  An executable library is a library that contains a `main` top-level\nfunction or that contains a top-level function annotated with\n`@pragma('vm:entry-point')`).  Executable libraries are not usually imported\nand it's better to avoid defining unused members.\n\nThis rule assumes that an executable library isn't imported by other files\nexcept to execute its `main` function.\n\n**BAD:**\n\n```dart\nmain() {}\nvoid f() {}\n```\n\n**GOOD:**\n\n```dart\nmain() {\n  f();\n}\nvoid f() {}\n```\n\n",
+    "details": "Top-level members and static members in an executable library should be used\ndirectly inside this library.  An executable library is a library that contains\na `main` top-level function or that contains a top-level function annotated with\n`@pragma('vm:entry-point')`).  Executable libraries are not usually imported\nand it's better to avoid defining unused members.\n\nThis rule assumes that an executable library isn't imported by other files\nexcept to execute its `main` function.\n\n**BAD:**\n\n```dart\nmain() {}\nvoid f() {}\n```\n\n**GOOD:**\n\n```dart\nmain() {\n  f();\n}\nvoid f() {}\n```\n\n",
     "sinceDartSdk": "Unreleased",
     "sinceLinter": "1.28.0"
   },
