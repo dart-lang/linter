@@ -43,8 +43,8 @@ void f() {}
 ''';
 
 class UnreachableFromMain extends LintRule {
-  static const LintCode code = LintCode(
-      'unreachable_from_main', 'Unreachable member in an executable library.',
+  static const LintCode code = LintCode('unreachable_from_main',
+      "Unreachable member '{0}' in an executable library.",
       correctionMessage: 'Try referencing the member or removing it.');
 
   UnreachableFromMain()
@@ -373,19 +373,23 @@ class _Visitor extends SimpleAstVisitor<void> {
     for (var member in unusedMembers) {
       if (member is ConstructorDeclaration) {
         if (member.name == null) {
-          rule.reportLint(member.returnType);
+          rule.reportLint(member.returnType, arguments: [member.nameForError]);
         } else {
-          rule.reportLintForToken(member.name);
+          rule.reportLintForToken(member.name,
+              arguments: [member.nameForError]);
         }
       } else if (member is NamedCompilationUnitMember) {
-        rule.reportLintForToken(member.name);
+        rule.reportLintForToken(member.name, arguments: [member.nameForError]);
       } else if (member is VariableDeclaration) {
-        rule.reportLintForToken(member.name);
+        rule.reportLintForToken(member.name, arguments: [member.nameForError]);
       } else if (member is ExtensionDeclaration) {
+        var memberName = member.name;
         rule.reportLintForToken(
-            member.name ?? member.firstTokenAfterCommentAndMetadata);
+            memberName ?? member.firstTokenAfterCommentAndMetadata,
+            arguments: [member.nameForError]);
       } else {
-        rule.reportLintForToken(member.firstTokenAfterCommentAndMetadata);
+        rule.reportLintForToken(member.firstTokenAfterCommentAndMetadata,
+            arguments: [member.nameForError]);
       }
     }
   }
@@ -422,5 +426,30 @@ extension on Annotation {
       return false;
     }
     return type is InterfaceType && type.element.isPragma;
+  }
+}
+
+extension on Declaration {
+  String get nameForError {
+    // TODO(srawlins): Move this to analyzer when other uses are found.
+    // TODO(srawlins): Convert to switch-expression, hopefully.
+    var self = this;
+    if (self is ConstructorDeclaration) {
+      return self.name?.lexeme ?? self.returnType.name;
+    } else if (self is EnumConstantDeclaration) {
+      return self.name.lexeme;
+    } else if (self is ExtensionDeclaration) {
+      var name = self.name;
+      return name?.lexeme ?? 'the unnamed extension';
+    } else if (self is MethodDeclaration) {
+      return self.name.lexeme;
+    } else if (self is NamedCompilationUnitMember) {
+      return self.name.lexeme;
+    } else if (self is VariableDeclaration) {
+      return self.name.lexeme;
+    }
+
+    assert(false, 'Uncovered Declaration subtype: ${self.runtimeType}');
+    return '';
   }
 }
