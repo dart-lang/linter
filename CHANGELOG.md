@@ -29,7 +29,6 @@
 - update `use_build_context_synchronously` to check context properties
 - improve `unnecessary_parenthesis` support for property accesses and method
   invocations
-- improve `unreachable_from_main` to report unreachable constructors
 
 # 1.34.0
 
