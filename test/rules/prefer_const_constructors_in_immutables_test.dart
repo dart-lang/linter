@@ -15,10 +15,10 @@ main() {
 @reflectiveTest
 class PreferConstConstructorsInImmutablesTest extends LintRuleTest {
   @override
-  bool get addMetaPackageDep => true;
+  String get lintRule => 'prefer_const_constructors_in_immutables';
 
   @override
-  String get lintRule => 'prefer_const_constructors_in_immutables';
+  bool get addMetaPackageDep => true;
 
   test_assertInitializer_canBeConst() async {
     await assertDiagnostics(r'''
