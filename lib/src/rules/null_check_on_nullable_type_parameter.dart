@@ -83,34 +83,26 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LinterContext context;
   _Visitor(this.rule, this.context);
 
-  void checkPatternElements(DartPattern node) {
-    NodeList<PatternField>? fields;
-    if (node is RecordPattern) fields = node.fields;
-    if (node is ObjectPattern) fields = node.fields;
-    if (fields != null) {
-      for (var field in fields) {
-        var pattern = field.pattern;
-        if (pattern is NullAssertPattern) {
-          if (isNullableTypeParameterType(pattern.matchedValueType)) {
-            rule.reportLintForToken(pattern.operator);
-          }
-        }
+  void checkPattern(AstNode pattern) {
+    if (pattern is NullAssertPattern) {
+      if (isNullableTypeParameterType(pattern.matchedValueType)) {
+        rule.reportLintForToken(pattern.operator);
       }
-    } else {
-      List<AstNode>? elements;
-      if (node is ListPattern) elements = node.elements;
-      if (node is MapPattern) elements = node.elements;
-      if (elements == null) return;
-      for (var element in elements) {
-        if (element is MapPatternEntry) {
-          element = element.value;
-        }
-        if (element is NullAssertPattern) {
-          if (isNullableTypeParameterType(element.matchedValueType)) {
-            rule.reportLintForToken(element.operator);
-          }
-        }
+    }
+  }
+
+  void checkPatternElements(List<AstNode> elements) {
+    for (var pattern in elements) {
+      if (pattern is MapPatternEntry) {
+        pattern = pattern.value;
       }
+      checkPattern(pattern);
+    }
+  }
+
+  void checkPatternFields(NodeList<PatternField> fields) {
+    for (var field in fields) {
+      checkPattern(field.pattern);
     }
   }
 
@@ -119,17 +111,17 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitListPattern(ListPattern node) {
-    checkPatternElements(node);
+    checkPatternElements(node.elements);
   }
 
   @override
   void visitMapPattern(MapPattern node) {
-    checkPatternElements(node);
+    checkPatternElements(node.elements);
   }
 
   @override
   void visitObjectPattern(ObjectPattern node) {
-    checkPatternElements(node);
+    checkPatternFields(node.fields);
   }
 
   @override
@@ -149,6 +141,6 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitRecordPattern(RecordPattern node) {
-    checkPatternElements(node);
+    checkPatternFields(node.fields);
   }
 }

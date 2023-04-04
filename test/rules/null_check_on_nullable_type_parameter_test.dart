@@ -38,19 +38,18 @@ f<T>(Map<String, T?> m){
     ]);
   }
 
-  @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/4218')
   test_nullAssertPattern_object() async {
     await assertDiagnostics(r'''
-class A {
-  Object? a;
+class A<E> {
+  E? a;
   A(this.a);
 }
 
-void f<T>(T? t, A u) {
-  var A(a: t!) = u;
+f<T>(T? t, A<T> u) {
+  A(a: t!) = u;
 }
 ''', [
-      lint(75, 1),
+      lint(66, 1),
     ]);
   }
 
