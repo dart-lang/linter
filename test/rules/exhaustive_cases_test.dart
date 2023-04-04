@@ -230,7 +230,7 @@ class ExhaustiveCasesTestLanguage219 extends BaseExhaustiveCasesTest
 class ExhaustiveCasesTestLanguage300 extends BaseExhaustiveCasesTest
     with LanguageVersion300Mixin {
   @FailingTest(
-      reason: 'Parse error code refactoring',
+      reason: 'Error code refactoring',
       issue: 'https://github.com/dart-lang/linter/issues/4256')
   test_enum_ok() async {
     await assertDiagnostics(actualEnumSource, [

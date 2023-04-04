@@ -19,7 +19,7 @@ class UnrelatedTypeEqualityChecksTestLanguage300 extends LintRuleTest
   String get lintRule => 'unrelated_type_equality_checks';
 
   @FailingTest(
-      reason: 'Parse error code refactoring',
+      reason: 'Error code refactoring',
       issue: 'https://github.com/dart-lang/linter/issues/4256')
   test_switchExpression() async {
     await assertDiagnostics(r'''    
@@ -38,7 +38,7 @@ String f(int char) {
   }
 
   @FailingTest(
-      reason: 'Parse error code refactoring',
+      reason: 'Error code refactoring',
       issue: 'https://github.com/dart-lang/linter/issues/4256')
   test_switchExpression_lessEq_ok() async {
     await assertDiagnostics(r'''
@@ -56,7 +56,7 @@ String f(String char) {
   }
 
   @FailingTest(
-      reason: 'Parse error code refactoring',
+      reason: 'Error code refactoring',
       issue: 'https://github.com/dart-lang/linter/issues/4256')
   test_switchExpression_notEq() async {
     await assertDiagnostics(r'''    
@@ -75,7 +75,7 @@ String f(int char) {
   }
 
   @FailingTest(
-      reason: 'Parse error code refactoring',
+      reason: 'Error code refactoring',
       issue: 'https://github.com/dart-lang/linter/issues/4256')
   test_switchExpression_ok() async {
     await assertDiagnostics(r'''
