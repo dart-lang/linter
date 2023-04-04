@@ -226,7 +226,7 @@
     "fixStatus": "needsFix",
     "details": "Elements which are annotated with `@deprecated` should not be referenced from\nwithin the package in which they are declared.\n\n**AVOID** using deprecated elements.\n\n...\n\n**BAD:**\n```dart\n// Declared in one library:\nclass Foo {\n  @Deprecated(\"Use 'm2' instead\")\n  void m1() {}\n\n  void m2({\n      @Deprecated('This is an old parameter') int? p,\n  })\n}\n\n@Deprecated('Do not use')\nint x = 0;\n\n// In the same or another library, but within the same package:\nvoid m(Foo foo) {\n  foo.m1();\n  foo.m2(p: 7);\n  x = 1;\n}\n```\n\nDeprecated elements can be used from within _other_ deprecated elements, in\norder to allow for the deprecation of a collection of APIs together as one unit.\n\n**GOOD:**\n```dart\n// Declared in one library:\nclass Foo {\n  @Deprecated(\"Use 'm2' instead\")\n  void m1() {}\n\n  void m2({\n      @Deprecated('This is an old parameter') int? p,\n  })\n}\n\n@Deprecated('Do not use')\nint x = 0;\n\n// In the same or another library, but within the same package:\n@Deprecated('Do not use')\nvoid m(Foo foo) {\n  foo.m1();\n  foo.m2(p: 7);\n  x = 1;\n}\n```\n",
     "sinceDartSdk": "Unreleased",
-    "sinceLinter": "Unreleased"
+    "sinceLinter": "1.35.0"
   },
   {
     "name": "diagnostic_describe_all_properties",
@@ -298,7 +298,7 @@
     "fixStatus": "needsFix",
     "details": "Using an `interface`, `base`, `final`, or `sealed` modifier on a class,\nor a `base` modifier on a mixin,\nauthors can control whether classes and mixins allow being implemented,\nextended, and/or mixed in from outside of the library where they're defined.\nIn some cases, it's possible for an author to inadvertently relax these controls\nand implicitly \"reopen\" a class. (A similar reopening cannot occur with a mixin.)\n\nThis lint guards against unintentionally reopening a class by requiring such\ncases to be made explicit with the \n[`@reopen`](https://pub.dev/documentation/meta/latest/meta/reopen-constant.html)\nannotation in `package:meta`.\n\n**BAD:**\n```dart\ninterface class I {}\n\nclass C extends I {} // LINT\n```\n\n**GOOD:**\n```dart\ninterface class I {}\n\nfinal class C extends I {}\n```\n\n```dart\ninterface class I {}\n\nfinal class C extends I {}\n```\n\n```dart\nimport 'package:meta/meta.dart';\n\ninterface class I {}\n\n@reopen\nclass C extends I {}\n```\n",
     "sinceDartSdk": "Unreleased",
-    "sinceLinter": "Unreleased"
+    "sinceLinter": "1.35.0"
   },
   {
     "name": "invalid_case_patterns",
@@ -2613,7 +2613,7 @@
     "fixStatus": "hasFix",
     "details": "Use `== TypeName` or `TypeName _` instead of type literals in patterns.\n\n**BAD:**\n```dart\nvoid f(Type x) {\n  if (x case int) {\n    print('int');\n  }\n}\n```\n\n**GOOD:**\n```dart\nvoid f(Type x) {\n  if (x case == int) {\n    print('int');\n  }\n}\n```\n\n**BAD:**\n```dart\nvoid f(Object? x) {\n  if (x case int) {\n    print('int');\n  }\n}\n```\n\n**GOOD:**\n```dart\nvoid f(Object? x) {\n  if (x case int _) {\n    print('int');\n  }\n}\n```\n\n",
     "sinceDartSdk": "Unreleased",
-    "sinceLinter": "Unreleased"
+    "sinceLinter": "1.35.0"
   },
   {
     "name": "unawaited_futures",
