@@ -69,11 +69,8 @@ class NullCheckOnNullableTypeParameter extends LintRule {
     }
 
     var visitor = _Visitor(this, context);
-    registry.addListPattern(this, visitor);
-    registry.addMapPattern(this, visitor);
-    registry.addObjectPattern(this, visitor);
     registry.addPostfixExpression(this, visitor);
-    registry.addRecordPattern(this, visitor);
+    registry.addNullAssertPattern(this, visitor);
   }
 }
 
@@ -83,45 +80,14 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LinterContext context;
   _Visitor(this.rule, this.context);
 
-  void checkPattern(AstNode pattern) {
-    if (pattern is NullAssertPattern) {
-      if (isNullableTypeParameterType(pattern.matchedValueType)) {
-        rule.reportLintForToken(pattern.operator);
-      }
-    }
-  }
-
-  void checkPatternElements(List<AstNode> elements) {
-    for (var pattern in elements) {
-      if (pattern is MapPatternEntry) {
-        pattern = pattern.value;
-      }
-      checkPattern(pattern);
-    }
-  }
-
-  void checkPatternFields(NodeList<PatternField> fields) {
-    for (var field in fields) {
-      checkPattern(field.pattern);
-    }
-  }
-
   bool isNullableTypeParameterType(DartType? type) =>
       type is TypeParameterType && context.typeSystem.isNullable(type);
 
   @override
-  void visitListPattern(ListPattern node) {
-    checkPatternElements(node.elements);
-  }
-
-  @override
-  void visitMapPattern(MapPattern node) {
-    checkPatternElements(node.elements);
-  }
-
-  @override
-  void visitObjectPattern(ObjectPattern node) {
-    checkPatternFields(node.fields);
+  void visitNullAssertPattern(NullAssertPattern node) {
+    if (isNullableTypeParameterType(node.matchedValueType)) {
+      rule.reportLintForToken(node.operator);
+    }
   }
 
   @override
@@ -137,10 +103,5 @@ class _Visitor extends SimpleAstVisitor<void> {
             context.typeSystem.promoteToNonNull(expectedType)) {
       rule.reportLintForToken(node.operator);
     }
-  }
-
-  @override
-  void visitRecordPattern(RecordPattern node) {
-    checkPatternFields(node.fields);
   }
 }

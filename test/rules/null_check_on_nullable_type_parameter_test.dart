@@ -18,6 +18,16 @@ class NullCheckOnNullableTypeParameterTestLanguage300 extends LintRuleTest
   @override
   String get lintRule => 'null_check_on_nullable_type_parameter';
 
+  test_nullAssertPattern_ifCase() async {
+    await assertDiagnostics(r'''
+f<T>(T? x){
+  if (x case var y!) print(y);
+}
+''', [
+      lint(30, 1),
+    ]);
+  }
+
   test_nullAssertPattern_list() async {
     await assertDiagnostics(r'''
 f<T>(List<T?> l){
@@ -25,6 +35,21 @@ f<T>(List<T?> l){
 }
 ''', [
       lint(26, 1),
+    ]);
+  }
+
+  @FailingTest(
+      reason: 'Exception raised in resolver',
+      issue: 'https://github.com/dart-lang/linter/issues/4258')
+  test_nullAssertPattern_logicalOr() async {
+    await assertDiagnostics(r'''
+f<T>(T? x){
+  switch(x) {
+    case var y! || y == 2 : print(y);
+  }
+}
+''', [
+      lint(39, 1),
     ]);
   }
 
