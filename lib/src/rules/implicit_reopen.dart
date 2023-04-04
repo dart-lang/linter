@@ -77,6 +77,7 @@ class ImplicitReopen extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addClassDeclaration(this, visitor);
+    registry.addClassTypeAlias(this, visitor);
   }
 }
 
@@ -87,35 +88,30 @@ class _Visitor extends SimpleAstVisitor {
 
   void checkElement(InterfaceElement? element, NamedCompilationUnitMember node,
       {required String type}) {
-    if (element == null) return;
+    if (element is! ClassElement) return;
     if (element.hasReopen) return;
     if (element.isSealed) return;
     if (element.isMixinClass) return;
 
     var library = element.library;
-    var supertype = element.superElement;
+    var supertype = element.supertype?.element;
+    if (supertype is! ClassElement) return;
     if (supertype.library != library) return;
 
     if (element.isBase) {
       if (supertype.isFinal) {
         reportLint(node,
-            target: element, other: supertype!, reason: 'final', type: type);
+            target: element, other: supertype, reason: 'final', type: type);
         return;
       } else if (supertype.isInterface) {
         reportLint(node,
-            target: element,
-            other: supertype!,
-            reason: 'interface',
-            type: type);
+            target: element, other: supertype, reason: 'interface', type: type);
         return;
       }
     } else if (element.hasNoModifiers) {
       if (supertype.isInterface) {
         reportLint(node,
-            target: element,
-            other: supertype!,
-            reason: 'interface',
-            type: type);
+            target: element, other: supertype, reason: 'interface', type: type);
         return;
       }
     }
@@ -136,43 +132,13 @@ class _Visitor extends SimpleAstVisitor {
   void visitClassDeclaration(ClassDeclaration node) {
     checkElement(node.declaredElement, node, type: 'class');
   }
+
+  @override
+  visitClassTypeAlias(ClassTypeAlias node) {
+    checkElement(node.declaredElement, node, type: 'class');
+  }
 }
 
-extension on InterfaceElement? {
+extension on ClassElement {
   bool get hasNoModifiers => !isInterface && !isBase && !isSealed && !isFinal;
-
-  bool get isBase {
-    var self = this;
-    if (self is ClassElement) return self.isBase;
-    if (self is MixinElement) return self.isBase;
-    return false;
-  }
-
-  bool get isFinal {
-    var self = this;
-    if (self is ClassElement) return self.isFinal;
-    return false;
-  }
-
-  bool get isInterface {
-    var self = this;
-    if (self is ClassElement) return self.isInterface;
-    return false;
-  }
-
-  bool get isSealed {
-    var self = this;
-    if (self is ClassElement) return self.isSealed;
-    return false;
-  }
-
-  bool get isMixinClass {
-    var self = this;
-    if (self is ClassElement) return self.isMixinClass;
-    return false;
-  }
-
-  LibraryElement? get library => this?.library;
-
-  InterfaceElement? get superElement => this?.supertype?.element;
 }
