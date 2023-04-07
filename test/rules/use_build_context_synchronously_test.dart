@@ -39,6 +39,26 @@ void foo(BuildContext context, Future<bool> condition) async {
     ]);
   }
 
+  test_awaitBeforeSwitch_mountedExitGuardInCase_beforeReferenceToContext() async {
+    await assertNoDiagnostics(r'''
+import 'package:flutter/widgets.dart';
+
+void foo(BuildContext context, Future<void> future) async {
+  await future;
+
+  switch ('') {
+    case 'a':
+      if (!mounted) {
+        break;
+      }
+      Navigator.of(context);
+  }
+}
+
+bool mounted = false;
+''');
+  }
+
   test_awaitBeforeReferenceToContext_inClosure() async {
     // todo (pq): what about closures?
     await assertNoDiagnostics(r'''

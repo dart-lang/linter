@@ -338,18 +338,3 @@ void topLevel4(BuildContext context) async {
     Navigator.of(context).pushNamed('routeName'); // OK
   }
 }
-
-void topLevel5(BuildContext context) async {
-  Navigator.of(context).pushNamed('routeName');
-  await Future<void>.delayed(Duration());
-
-  switch ('') {
-    case 'a':
-      if (!mounted) {
-        break;
-      }
-      Navigator.of(context).pushNamed('routeName222'); // OK
-      break;
-    default: //nothing.
-  }
-}
