@@ -71,6 +71,7 @@ linter:
     - throw_in_finally
 #    - type_annotate_public_apis
     - unawaited_futures # pedantic
+    - unnecessary_breaks
     - unnecessary_final
     - unnecessary_lambdas
     - unnecessary_null_checks
