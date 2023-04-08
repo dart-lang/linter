@@ -18,6 +18,28 @@ class UnrelatedTypeEqualityChecksTestLanguage300 extends LintRuleTest
   @override
   String get lintRule => 'unrelated_type_equality_checks';
 
+  test_recordAndInterfaceType_unrelated() async {
+    await assertDiagnostics(r'''
+bool f((int, int) a, String b) => a == b;
+''', [
+      lint(34, 6),
+    ]);
+  }
+
+  test_records_related() async {
+    await assertNoDiagnostics(r'''
+bool f((int, int) a, (num, num) b) => a == b;
+''');
+  }
+
+  test_records_unrelated() async {
+    await assertDiagnostics(r'''
+bool f((int, int) a, (String, String) b) => a == b;
+''', [
+      lint(44, 6),
+    ]);
+  }
+
   @FailingTest(
       reason: 'Error code refactoring',
       issue: 'https://github.com/dart-lang/linter/issues/4256')
