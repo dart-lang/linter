@@ -167,7 +167,7 @@ bool typesAreUnrelated(
     return false;
   }
   if (promotedLeftType is InterfaceType && promotedRightType is InterfaceType) {
-    return typeSystem._interfaceTypesAreUnrelated(
+    return typeSystem.interfaceTypesAreUnrelated(
         promotedLeftType, promotedRightType);
   } else if (promotedLeftType is TypeParameterType &&
       promotedRightType is TypeParameterType) {
@@ -262,7 +262,7 @@ class InterfaceTypeDefinition {
 }
 
 extension on TypeSystem {
-  bool _interfaceTypesAreUnrelated(InterfaceType type1, InterfaceType type2) {
+  bool interfaceTypesAreUnrelated(InterfaceType type1, InterfaceType type2) {
     // In this case, [leftElement] and [rightElement] each represent
     // the same class, like `int`, or `Iterable<String>`.
     var element1 = type1.element;
