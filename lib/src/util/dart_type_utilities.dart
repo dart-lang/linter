@@ -262,34 +262,34 @@ class InterfaceTypeDefinition {
 }
 
 extension on TypeSystem {
-  bool interfaceTypesAreUnrelated(InterfaceType type1, InterfaceType type2) {
-    // In this case, [leftElement] and [rightElement] each represent
-    // the same class, like `int`, or `Iterable<String>`.
-    var element1 = type1.element;
-    var element2 = type2.element;
-    if (element1 == element2) {
+  bool interfaceTypesAreUnrelated(
+      InterfaceType leftType, InterfaceType rightType) {
+    var leftElement = leftType.element;
+    var rightElement = rightType.element;
+    if (leftElement == rightElement) {
       // In this case, [leftElement] and [rightElement] represent the same
       // class, modulo generics, e.g. `List<int>` and `List<dynamic>`. Now we
       // need to check type arguments.
-      var typeArguments1 = type1.typeArguments;
-      var typeArguments2 = type2.typeArguments;
-      if (typeArguments1.length != typeArguments2.length) {
+      var leftTypeArguments = leftType.typeArguments;
+      var rightTypeArguments = rightType.typeArguments;
+      if (leftTypeArguments.length != rightTypeArguments.length) {
         // I cannot think of how we would enter this block, but it guards
         // against RangeError below.
         return false;
       }
-      for (var i = 0; i < typeArguments1.length; i++) {
+      for (var i = 0; i < leftTypeArguments.length; i++) {
         // If any of the pair-wise type arguments are unrelated, then
         // [leftType] and [rightType] are unrelated.
-        if (typesAreUnrelated(this, typeArguments1[i], typeArguments2[i])) {
+        if (typesAreUnrelated(
+            this, leftTypeArguments[i], rightTypeArguments[i])) {
           return true;
         }
       }
       // Otherwise, they might be related.
       return false;
     } else {
-      return (element1.supertype?.isDartCoreObject ?? false) ||
-          element1.supertype != element2.supertype;
+      return (leftElement.supertype?.isDartCoreObject ?? false) ||
+          leftElement.supertype != rightElement.supertype;
     }
   }
 }
