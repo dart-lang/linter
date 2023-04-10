@@ -40,6 +40,34 @@ bool f((int, int) a, (String, String) b) => a == b;
     ]);
   }
 
+  test_recordsWithNamed_related() async {
+    await assertNoDiagnostics(r'''
+bool f(({int one, int two}) a, ({num two, num one}) b) => a == b;
+''');
+  }
+
+  test_recordsWithNamed_unrelated() async {
+    await assertDiagnostics(r'''
+bool f(({int one, int two}) a, ({String one, String two}) b) => a == b;
+''', [
+      lint(64, 6),
+    ]);
+  }
+
+  test_recordsWithNamedAndPositional_related() async {
+    await assertNoDiagnostics(r'''
+bool f((int, {int two}) a, (num one, {num two}) b) => a == b;
+''');
+  }
+
+  test_recordsWithNamedAndPositional_unrelated() async {
+    await assertDiagnostics(r'''
+bool f((int, {int two}) a, (String one, {String two}) b) => a == b;
+''', [
+      lint(60, 6),
+    ]);
+  }
+
   @FailingTest(
       reason: 'Error code refactoring',
       issue: 'https://github.com/dart-lang/linter/issues/4256')
