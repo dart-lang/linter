@@ -92,10 +92,12 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    var positionalSuperParameters = node.parameters.parameters
-        .whereType<SuperFormalParameter>()
-        .where((p) => p.isPositional)
-        .toList();
+    var positionalSuperParameters = <SuperFormalParameter>[];
+    for (var parameter in node.parameters.parameters) {
+      if (parameter is SuperFormalParameter && parameter.isPositional) {
+        positionalSuperParameters.add(parameter);
+      }
+    }
     if (positionalSuperParameters.isEmpty) {
       // We are only concerned with positional super-parameters.
       return;
