@@ -15,14 +15,16 @@ Before releasing there are a few boxes to tick off.
 * [ ] Spot check new lint rules for
       [naming consistency](https://github.com/dart-lang/linter/blob/main/doc/writing-lints.md).
       Rename as needed.
-* [ ] Are Flutter and Google internal ready for this release? Upload a Dart SDK
-      Gerrit CL with [DEPS](https://github.com/dart-lang/sdk/blob/main/DEPS)
-      pointing to the main branch's HEAD commit, and run the `flutter-analyze`,
-      `flutter-engine-linux`, and cbuild trybots (how do you trigger cbuild?).
-      These trybots will highlight code in various Flutter repositories, and
-      internal to Google, which needs to be cleaned up before the linter release
-      can land in the Dart SDK.
-      TODO(srawlins): Document how to run a global presubmit for Google internal.
+* [ ] Test your candidate release against the Dart SDK, Flutter, and google3
+      by creating a PR in gerrit:
+  * [ ] Upload a Dart SDK Gerrit CL with
+        [DEPS](https://github.com/dart-lang/sdk/blob/main/DEPS) pointing to the
+        main branch's HEAD commit.
+  * [ ] Run the `flutter-analyze` and `flutter-engine-linux`. These trybots will
+        highlight code in various Flutter repositories, and internal to Google,
+        which needs to be cleaned up before the linter release can land in the
+        Dart SDK.
+        TODO(srawlins): Document how to run a global presubmit for Google internal.
 
 ## Doing the Push
 
