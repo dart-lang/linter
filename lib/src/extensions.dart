@@ -3,12 +3,14 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/src/dart/element/member.dart'; // ignore: implementation_imports
 import 'package:collection/collection.dart';
 
+import 'analyzer.dart';
 import 'util/dart_type_utilities.dart';
 
 class EnumLikeClassDescription {
@@ -185,11 +187,14 @@ extension DartTypeExtension on DartType? {
     bool isAnyInterface(InterfaceType i) =>
         definitions.any((d) => i.isSameAs(d.name, d.library));
 
-    var self = this;
-    if (self is InterfaceType) {
-      return isAnyInterface(self) ||
-          !self.element.isSynthetic &&
-              self.element.allSupertypes.any(isAnyInterface);
+    var typeToCheck = this;
+    if (typeToCheck is TypeParameterType) {
+      typeToCheck = typeToCheck.typeForInterfaceCheck;
+    }
+    if (typeToCheck is InterfaceType) {
+      return isAnyInterface(typeToCheck) ||
+          !typeToCheck.element.isSynthetic &&
+              typeToCheck.element.allSupertypes.any(isAnyInterface);
     } else {
       return false;
     }
@@ -251,6 +256,28 @@ extension ElementExtension on Element {
 
 extension ExpressionExtension on Expression? {
   bool get isNullLiteral => this?.unParenthesized is NullLiteral;
+}
+
+extension InhertanceManager3Extension on InheritanceManager3 {
+  /// Returns the class member that is overridden by [member], if there is one,
+  /// as defined by [getInherited].
+  ExecutableElement? overriddenMember(Element? member) {
+    if (member == null) {
+      return null;
+    }
+
+    var interfaceElement = member.thisOrAncestorOfType<InterfaceElement>();
+    if (interfaceElement == null) {
+      return null;
+    }
+    var name = member.name;
+    if (name == null) {
+      return null;
+    }
+
+    var libraryUri = interfaceElement.library.source.uri;
+    return getInherited(interfaceElement.thisType, Name(libraryUri, name));
+  }
 }
 
 extension InterfaceElementExtension on InterfaceElement {
@@ -398,4 +425,14 @@ extension NullableAstNodeExtension on AstNode? {
     }
     return null;
   }
+}
+
+extension TokenTypeExtension on TokenType {
+  TokenType get inverted => switch (this) {
+        TokenType.LT_EQ => TokenType.GT_EQ,
+        TokenType.LT => TokenType.GT,
+        TokenType.GT => TokenType.LT,
+        TokenType.GT_EQ => TokenType.LT_EQ,
+        _ => this
+      };
 }

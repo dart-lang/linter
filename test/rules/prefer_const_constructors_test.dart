@@ -39,7 +39,6 @@ class B {
 
 main() {
   var b = B(a.aa);
-  print(b);
 }   
 ''');
   }
@@ -51,16 +50,13 @@ class A {
 }
 ''');
 
-    await assertDiagnostics(r'''
+    await assertNoDiagnostics(r'''
 import 'a.dart' deferred as a;
 
 void f() {
   var aa = a.A();
 }
-''', [
-      // No lint.
-      error(HintCode.UNUSED_LOCAL_VARIABLE, 49, 2),
-    ]);
+''');
   }
 
   test_extraPositionalArgument() async {
@@ -78,7 +74,7 @@ K k() {
 }
 ''', [
       // No lint
-      error(HintCode.NON_CONST_CALL_TO_LITERAL_CONSTRUCTOR, 90, 3),
+      error(WarningCode.NON_CONST_CALL_TO_LITERAL_CONSTRUCTOR, 90, 3),
     ]);
   }
 }

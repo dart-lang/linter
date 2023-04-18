@@ -4,19 +4,26 @@
 
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/error/error.dart';
+import 'package:analyzer/error/listener.dart';
 import 'package:analyzer/file_system/file_system.dart';
 import 'package:analyzer/src/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/src/dart/analysis/byte_store.dart';
 import 'package:analyzer/src/dart/analysis/driver_based_analysis_context.dart';
-import 'package:analyzer/src/dart/analysis/experiments.dart';
+import 'package:analyzer/src/error/analyzer_error_code.dart';
+import 'package:analyzer/src/lint/pub.dart';
+import 'package:analyzer/src/lint/registry.dart';
+import 'package:analyzer/src/lint/util.dart';
 import 'package:analyzer/src/test_utilities/mock_packages.dart';
 import 'package:analyzer/src/test_utilities/mock_sdk.dart';
-import 'package:analyzer/src/test_utilities/package_config_file_builder.dart';
 import 'package:analyzer/src/test_utilities/resource_provider_mixin.dart';
+import 'package:collection/collection.dart';
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
+
+import 'mocks.dart';
+import 'rule_test_support.dart';
 
 export 'package:analyzer/src/dart/analysis/experiments.dart';
 export 'package:analyzer/src/dart/error/syntactic_errors.dart';
@@ -32,20 +39,29 @@ typedef DiagnosticMatcher = bool Function(AnalysisError error);
 class AnalysisOptionsFileConfig {
   final List<String> experiments;
   final List<String> lints;
+  final bool propagateLinterExceptions;
 
   AnalysisOptionsFileConfig({
     this.experiments = const [],
     this.lints = const [],
+    this.propagateLinterExceptions = false,
   });
 
   String toContent() {
     var buffer = StringBuffer();
 
-    if (experiments.isNotEmpty) {
+    if (experiments.isNotEmpty || propagateLinterExceptions) {
       buffer.writeln('analyzer:');
       buffer.writeln('  enable-experiment:');
       for (var experiment in experiments) {
         buffer.writeln('    - $experiment');
+      }
+
+      if (propagateLinterExceptions) {
+        buffer.writeln('  strong-mode:');
+        buffer.writeln(
+          '    propagate-linter-exceptions: $propagateLinterExceptions',
+        );
       }
     }
 
@@ -109,13 +125,39 @@ class ExpectedLint extends ExpectedDiagnostic {
       : super((AnalysisError error) => error.errorCode.name == lintName, offset,
             length,
             messageContains: messageContains);
+
+  /// Initialize a newly created lint description.
+  ExpectedLint.withLintCode(LintCode lintCode, int offset, int length,
+      {Pattern? messageContains})
+      : lintName = lintCode.uniqueName,
+        super((AnalysisError error) => error.errorCode == lintCode, offset,
+            length,
+            messageContains: messageContains);
+}
+
+mixin LanguageVersion219Mixin on PubPackageResolutionTest {
+  @override
+  String? get testPackageLanguageVersion => '2.19';
+}
+
+mixin LanguageVersion300Mixin on PubPackageResolutionTest {
+  @override
+  String? get testPackageLanguageVersion => '3.0';
 }
 
 abstract class LintRuleTest extends PubPackageResolutionTest {
-  String? get lintRule;
+  bool get dumpAstOnFailures => true;
+
+  String get lintRule;
 
   @override
-  List<String> get _lintRules => [if (lintRule != null) lintRule!];
+  List<String> get _lintRules {
+    var ruleName = lintRule;
+    if (!Registry.ruleRegistry.any((r) => r.name == ruleName)) {
+      throw Exception("Unrecognized rule: '$ruleName'");
+    }
+    return [ruleName];
+  }
 
   /// Assert that the number of diagnostics that have been gathered matches the
   /// number of [expectedDiagnostics] and that they have the expected error
@@ -215,6 +257,25 @@ abstract class LintRuleTest extends PubPackageResolutionTest {
         buffer.write(actual.length);
         buffer.writeln('),');
       }
+
+      if (dumpAstOnFailures) {
+        buffer.writeln();
+        buffer.writeln();
+        try {
+          var astSink = CollectingSink();
+
+          StringSpelunker(result.unit.toSource(),
+                  sink: astSink, featureSet: result.unit.featureSet)
+              .spelunk();
+          buffer.write(astSink.buffer);
+          buffer.writeln();
+          // I hereby choose to catch this type.
+          // ignore: avoid_catching_errors
+        } on ArgumentError catch (_) {
+          // Perhaps we encountered a parsing error while spelunking.
+        }
+      }
+
       fail(buffer.toString());
     }
   }
@@ -227,8 +288,54 @@ abstract class LintRuleTest extends PubPackageResolutionTest {
   Future<void> assertNoDiagnosticsIn(List<AnalysisError> errors) =>
       assertDiagnosticsIn(errors, const []);
 
+  /// Assert that no diagnostics are reported when resolving [content].
+  Future<void> assertNoPubspecDiagnostics(String content) async {
+    newFile(testPackagePubspecPath, content);
+    var errors = await _resolvePubspecFile(content);
+    await assertDiagnosticsIn(errors, []);
+  }
+
+  /// Assert that [expectedDiagnostics] are reported when resolving [content].
+  Future<void> assertPubspecDiagnostics(
+      String content, List<ExpectedDiagnostic> expectedDiagnostics) async {
+    newFile(testPackagePubspecPath, content);
+    var errors = await _resolvePubspecFile(content);
+    await assertDiagnosticsIn(errors, expectedDiagnostics);
+  }
+
   ExpectedLint lint(int offset, int length, {Pattern? messageContains}) =>
-      ExpectedLint(lintRule!, offset, length, messageContains: messageContains);
+      ExpectedLint(lintRule, offset, length, messageContains: messageContains);
+
+  Future<List<AnalysisError>> _resolvePubspecFile(String content) async {
+    var path = convertPath(testPackagePubspecPath);
+    var pubspecRules = <LintRule, PubspecVisitor<Object?>>{};
+    for (var rule in Registry.ruleRegistry
+        .where((rule) => _lintRules.contains(rule.name))) {
+      var visitor = rule.getPubspecVisitor();
+      if (visitor != null) {
+        pubspecRules[rule] = visitor;
+      }
+    }
+
+    if (pubspecRules.isEmpty) {
+      throw UnsupportedError(
+          'Resolving pubspec files only supported with rules with '
+          'PubspecVisitors.');
+    }
+
+    var sourceUri = resourceProvider.pathContext.toUri(path);
+    var pubspecAst = Pubspec.parse(content,
+        sourceUrl: sourceUri, resourceProvider: resourceProvider);
+    var listener = RecordingErrorListener();
+    var reporter = ErrorReporter(
+        listener, resourceProvider.getFile(path).createSource(sourceUri),
+        isNonNullableByDefault: false);
+    for (var entry in pubspecRules.entries) {
+      entry.key.reporter = reporter;
+      pubspecAst.accept(entry.value);
+    }
+    return [...listener.errors];
+  }
 }
 
 class PubPackageResolutionTest extends _ContextResolutionTest {
@@ -257,6 +364,8 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
 
   String get testPackageLibPath => '$testPackageRootPath/lib';
 
+  String get testPackagePubspecPath => '$testPackageRootPath/pubspec.yaml';
+
   String get testPackageRootPath => '$workspaceRootPath/test';
 
   String get workspaceRootPath => '/home';
@@ -278,9 +387,10 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
       AnalysisOptionsFileConfig(
         experiments: experiments,
         lints: _lintRules,
+        propagateLinterExceptions: true,
       ),
     );
-    _writeTestPackageConfig(
+    writeTestPackageConfig(
       PackageConfigFileBuilder(),
     );
   }
@@ -301,11 +411,7 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
     );
   }
 
-  void writeTestPackagePubspecYamlFile(PubspecYamlFileConfig config) {
-    newPubspecYamlFile(testPackageRootPath, config.toContent());
-  }
-
-  void _writeTestPackageConfig(PackageConfigFileBuilder config) {
+  void writeTestPackageConfig(PackageConfigFileBuilder config) {
     var configCopy = config.copy();
 
     configCopy.add(
@@ -342,6 +448,10 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
     writePackageConfig(path, configCopy);
   }
 
+  void writeTestPackagePubspecYamlFile(PubspecYamlFileConfig config) {
+    newPubspecYamlFile(testPackageRootPath, config.toContent());
+  }
+
   /// Create a fake 'flutter' package that can be used by tests.
   static void addFlutterPackageFiles(Folder rootFolder) {
     var libFolder = rootFolder.getChildAssumingFolder('lib');
@@ -356,10 +466,17 @@ export 'src/widgets/framework.dart';
         .writeAsStringSync(r'''   
 abstract class BuildContext {
   Widget get widget;
+  bool get mounted;
 }
 
-class Widget {
+class Navigator {
+  static NavigatorState of(
+      BuildContext context, {bool rootNavigator = false}) => NavigatorState();
 }
+
+class NavigatorState {}
+
+class Widget {}
 ''');
   }
 }
@@ -420,7 +537,13 @@ abstract class _ContextResolutionTest with ResourceProviderMixin {
   List<String> get collectionIncludedPaths;
 
   /// The analysis errors that were computed during analysis.
-  List<AnalysisError> get errors => result.errors;
+  List<AnalysisError> get errors => result.errors
+      .whereNot((e) => ignoredErrorCodes.any((c) => e.errorCode == c))
+      .toList();
+
+  /// Error codes that by default should be ignored in test expectations.
+  List<AnalyzerErrorCode> get ignoredErrorCodes =>
+      [WarningCode.UNUSED_LOCAL_VARIABLE];
 
   Folder get sdkRoot => newFolder('/sdk');
 
@@ -439,6 +562,9 @@ abstract class _ContextResolutionTest with ResourceProviderMixin {
     return super.newFile(path, content);
   }
 
+  /// Resolves a Dart source file at [path].
+  ///
+  /// [path] must be converted for this file system.
   Future<ResolvedUnitResult> resolveFile(String path) async {
     var analysisContext = _contextFor(path);
     var session = analysisContext.currentSession;

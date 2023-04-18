@@ -8,12 +8,13 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(InvalidCasePatternsTest);
+    defineReflectiveTests(InvalidCasePatternsTestLanguage219);
   });
 }
 
 @reflectiveTest
-class InvalidCasePatternsTest extends LintRuleTest {
+class InvalidCasePatternsTestLanguage219 extends LintRuleTest
+    with LanguageVersion219Mixin {
   @override
   String get lintRule => 'invalid_case_patterns';
 
@@ -50,7 +51,7 @@ void f(Object o) {
 }
 ''', [
       lint(43, 12),
-      error(HintCode.DEAD_CODE, 54, 1),
+      error(WarningCode.DEAD_CODE, 54, 1),
     ]);
   }
 
@@ -103,7 +104,7 @@ void f(Object o) {
   }
 }
 ''', [
-      error(HintCode.UNNECESSARY_TYPE_CHECK_TRUE, 43, 8),
+      error(WarningCode.UNNECESSARY_TYPE_CHECK_TRUE, 43, 8),
       lint(43, 8),
     ]);
   }
@@ -116,7 +117,7 @@ void f(Object o) {
   }
 }
 ''', [
-      error(HintCode.UNNECESSARY_TYPE_CHECK_FALSE, 43, 9),
+      error(WarningCode.UNNECESSARY_TYPE_CHECK_FALSE, 43, 9),
       lint(43, 9),
     ]);
   }

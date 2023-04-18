@@ -72,6 +72,7 @@ void f<E>(E error) {
 
   test_exceptionMixedIn() async {
     await assertNoDiagnostics(r'''
+// @dart=2.19
 class Err extends Object with Exception {}
 
 void f() {
@@ -119,5 +120,15 @@ void f() {
 ''', [
       lint(19, 7),
     ]);
+  }
+
+  test_never() async {
+    await assertNoDiagnostics(r'''
+void f() {
+  throw e();
+}
+
+Never e() => throw Exception();
+''');
   }
 }

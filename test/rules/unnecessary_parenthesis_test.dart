@@ -9,7 +9,28 @@ import '../rule_test_support.dart';
 main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(UnnecessaryParenthesisTest);
+    defineReflectiveTests(UnnecessaryParenthesisPatternsTest);
   });
+}
+
+@reflectiveTest
+class UnnecessaryParenthesisPatternsTest extends LintRuleTest {
+  @override
+  String get lintRule => 'unnecessary_parenthesis';
+
+  /// https://github.com/dart-lang/linter/issues/4060
+  test_constantPattern() async {
+    await assertNoDiagnostics(r'''
+const a = 1;
+const b = 2;
+
+void f(int i) {
+  switch (i) {
+    case const (a + b):
+  }
+}
+''');
+  }
 }
 
 @reflectiveTest

@@ -129,6 +129,27 @@ DartType? getExpectedType(PostfixExpression node) {
     parent = parent.parent;
   }
   if (parent is ArgumentList && realNode is Expression) {
+    var grandParent = parent.parent;
+    if (grandParent is InstanceCreationExpression) {
+      var constructor = grandParent.constructorName.staticElement;
+      if (constructor != null) {
+        if (constructor.returnType.isDartAsyncFuture &&
+            constructor.name == 'value') {
+          return null;
+        }
+      }
+    } else if (grandParent is MethodInvocation) {
+      var targetType = grandParent.realTarget?.staticType;
+      if (targetType is InterfaceType) {
+        var targetClass = targetType.element;
+
+        if (targetClass.library.isDartAsync &&
+            targetClass.name == 'Completer' &&
+            grandParent.methodName.name == 'complete') {
+          return null;
+        }
+      }
+    }
     return realNode.staticParameterElement?.type;
   }
   return null;
@@ -154,6 +175,7 @@ class UnnecessaryNullChecks extends LintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this, context);
+    registry.addNullAssertPattern(this, visitor);
     registry.addPostfixExpression(this, visitor);
   }
 }
@@ -163,6 +185,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   final LinterContext context;
   _Visitor(this.rule, this.context);
+
+  @override
+  void visitNullAssertPattern(NullAssertPattern node) {
+    var expectedType = node.matchedValueType;
+    if (expectedType != null && context.typeSystem.isNullable(expectedType)) {
+      rule.reportLintForToken(node.operator);
+    }
+  }
 
   @override
   void visitPostfixExpression(PostfixExpression node) {

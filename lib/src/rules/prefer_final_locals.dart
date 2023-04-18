@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 
@@ -67,7 +69,21 @@ class PreferFinalLocals extends LintRule {
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
+    registry.addDeclaredVariablePattern(this, visitor);
+    registry.addPatternVariableDeclaration(this, visitor);
     registry.addVariableDeclarationList(this, visitor);
+  }
+}
+
+class _DeclaredVariableVisitor extends RecursiveAstVisitor<void> {
+  final List<BindPatternVariableElement> declaredElements = [];
+
+  @override
+  void visitDeclaredVariablePattern(DeclaredVariablePattern node) {
+    var element = node.declaredElement;
+    if (element != null) {
+      declaredElements.add(element);
+    }
   }
 }
 
@@ -75,6 +91,70 @@ class _Visitor extends SimpleAstVisitor<void> {
   final LintRule rule;
 
   _Visitor(this.rule);
+
+  bool isPotentiallyMutated(AstNode pattern, FunctionBody function) {
+    if (pattern is DeclaredVariablePattern) {
+      var element = pattern.declaredElement;
+      if (element == null || function.isPotentiallyMutatedInScope(element)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @override
+  void visitDeclaredVariablePattern(DeclaredVariablePattern node) {
+    // [DeclaredVariablePattern]s which are declared by a
+    // [PatternVariableDeclaration] are reported in
+    // [visitPatternVariableDeclaration].
+    if (node.thisOrAncestorOfType<PatternVariableDeclaration>() != null) return;
+    if (node.isDeclaredFinal) return;
+
+    var function = node.thisOrAncestorOfType<FunctionBody>();
+    if (function == null) return;
+
+    var inCaseClause = node.thisOrAncestorOfType<CaseClause>() != null;
+
+    if (inCaseClause) {
+      if (!isPotentiallyMutated(node, function)) {
+        rule.reportLint(node);
+      }
+    } else {
+      if (isPotentiallyMutated(node, function)) return;
+    }
+
+    if (!inCaseClause) {
+      rule.reportLint(node);
+    }
+  }
+
+  @override
+  void visitPatternVariableDeclaration(PatternVariableDeclaration node) {
+    if (node.isDeclaredFinal) return;
+    if (node.keyword.isFinal) return;
+
+    var function = node.thisOrAncestorOfType<FunctionBody>();
+    if (function == null) return;
+
+    var inCaseClause = node.thisOrAncestorOfType<CaseClause>() != null;
+
+    if (inCaseClause) {
+      if (!isPotentiallyMutated(node, function)) {
+        rule.reportLint(node);
+      }
+    } else {
+      var declaredVariableVisitor = _DeclaredVariableVisitor();
+      node.accept(declaredVariableVisitor);
+      var declaredElements = declaredVariableVisitor.declaredElements;
+      for (var element in declaredElements) {
+        if (function.isPotentiallyMutatedInScope(element)) {
+          return;
+        }
+      }
+
+      rule.reportLintForToken(node.keyword);
+    }
+  }
 
   @override
   void visitVariableDeclarationList(VariableDeclarationList node) {
@@ -98,5 +178,21 @@ class _Visitor extends SimpleAstVisitor<void> {
     } else if (node.type != null) {
       rule.reportLint(node.type);
     }
+  }
+}
+
+extension on AstNode {
+  bool get isDeclaredFinal {
+    var self = this;
+    if (self is DeclaredVariablePattern) return self.keyword.isFinal;
+    return false;
+  }
+}
+
+extension on Token? {
+  bool get isFinal {
+    var self = this;
+    if (self == null) return false;
+    return self.keyword == Keyword.FINAL;
   }
 }

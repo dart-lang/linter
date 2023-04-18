@@ -8,7 +8,6 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 import '../util/ascii_utils.dart';
-import '../utils.dart';
 
 const _desc = r'Avoid leading underscores for local identifiers.';
 
@@ -75,6 +74,7 @@ class NoLeadingUnderscoresForLocalIdentifiers extends LintRule {
     registry.addFormalParameterList(this, visitor);
     registry.addForPartsWithDeclarations(this, visitor);
     registry.addFunctionDeclarationStatement(this, visitor);
+    registry.addDeclaredVariablePattern(this, visitor);
     registry.addVariableDeclarationStatement(this, visitor);
   }
 }
@@ -86,7 +86,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   void checkIdentifier(Token? id) {
     if (id == null) return;
-    if (!hasLeadingUnderscore(id.lexeme)) return;
+    if (!id.lexeme.hasLeadingUnderscore) return;
     if (id.lexeme.isJustUnderscores) return;
 
     rule.reportLintForToken(id, arguments: [id.lexeme]);
@@ -100,6 +100,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitDeclaredIdentifier(DeclaredIdentifier node) {
+    checkIdentifier(node.name);
+  }
+
+  @override
+  void visitDeclaredVariablePattern(DeclaredVariablePattern node) {
     checkIdentifier(node.name);
   }
 

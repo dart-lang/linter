@@ -68,6 +68,7 @@ import 'rules/curly_braces_in_flow_control_structures.dart';
 import 'rules/dangling_library_doc_comments.dart';
 import 'rules/depend_on_referenced_packages.dart';
 import 'rules/deprecated_consistency.dart';
+import 'rules/deprecated_member_use_from_same_package.dart';
 import 'rules/diagnostic_describe_all_properties.dart';
 import 'rules/directives_ordering.dart';
 import 'rules/discarded_futures.dart';
@@ -83,6 +84,7 @@ import 'rules/flutter_style_todos.dart';
 import 'rules/hash_and_equals.dart';
 import 'rules/implementation_imports.dart';
 import 'rules/implicit_call_tearoffs.dart';
+import 'rules/implicit_reopen.dart';
 import 'rules/invalid_case_patterns.dart';
 import 'rules/invariant_booleans.dart';
 import 'rules/iterable_contains_unrelated_type.dart';
@@ -95,12 +97,14 @@ import 'rules/library_private_types_in_public_api.dart';
 import 'rules/lines_longer_than_80_chars.dart';
 import 'rules/list_remove_unrelated_type.dart';
 import 'rules/literal_only_boolean_expressions.dart';
+import 'rules/matching_super_parameters.dart';
 import 'rules/missing_whitespace_between_adjacent_strings.dart';
 import 'rules/no_adjacent_strings_in_list.dart';
 import 'rules/no_default_cases.dart';
 import 'rules/no_duplicate_case_values.dart';
 import 'rules/no_leading_underscores_for_library_prefixes.dart';
 import 'rules/no_leading_underscores_for_local_identifiers.dart';
+import 'rules/no_literal_bool_comparisons.dart';
 import 'rules/no_logic_in_create_state.dart';
 import 'rules/no_runtimeType_toString.dart';
 import 'rules/no_self_assignments.dart';
@@ -175,6 +179,7 @@ import 'rules/throw_in_finally.dart';
 import 'rules/tighten_type_of_initializing_formals.dart';
 import 'rules/type_annotate_public_apis.dart';
 import 'rules/type_init_formals.dart';
+import 'rules/type_literal_in_constant_pattern.dart';
 import 'rules/unawaited_futures.dart';
 import 'rules/unnecessary_await_in_return.dart';
 import 'rules/unnecessary_brace_in_string_interps.dart';
@@ -294,6 +299,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(DanglingLibraryDocComments())
     ..register(DependOnReferencedPackages())
     ..register(DeprecatedConsistency())
+    ..register(DeprecatedMemberUseFromSamePackage())
     ..register(DiagnosticsDescribeAllProperties())
     ..register(DirectivesOrdering())
     ..register(DiscardedFutures())
@@ -309,6 +315,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(HashAndEquals())
     ..register(ImplementationImports())
     ..register(ImplicitCallTearoffs())
+    ..register(ImplicitReopen())
     ..register(InvariantBooleans())
     ..register(InvalidCasePatterns())
     ..register(IterableContainsUnrelatedType())
@@ -321,10 +328,12 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(LinesLongerThan80Chars())
     ..register(ListRemoveUnrelatedType())
     ..register(LiteralOnlyBooleanExpressions())
+    ..register(MatchingSuperParameters())
     ..register(MissingWhitespaceBetweenAdjacentStrings())
     ..register(NoAdjacentStringsInList())
     ..register(NoDefaultCases())
     ..register(NoDuplicateCaseValues())
+    ..register(NoLiteralBoolComparisons())
     ..register(NonConstantIdentifierNames())
     ..register(NoLeadingUnderscoresForLibraryPrefixes())
     ..register(NoLeadingUnderscoresForLocalIdentifiers())
@@ -401,6 +410,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(ThrowInFinally())
     ..register(TypeAnnotatePublicApis())
     ..register(TypeInitFormals())
+    ..register(TypeLiteralInConstantPattern())
     ..register(UnawaitedFutures())
     ..register(UnnecessaryAwaitInReturn())
     ..register(UnnecessaryBraceInStringInterps())

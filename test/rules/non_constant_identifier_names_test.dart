@@ -17,26 +17,22 @@ main() {
 @reflectiveTest
 class NonConstantIdentifierNamesPatternsTest extends LintRuleTest {
   @override
-  List<String> get experiments => ['patterns', 'records'];
-
-  @override
   String get lintRule => 'non_constant_identifier_names';
 
-  @FailingTest(reason: 'Flow analysis fails w/ a Bad state exception')
   test_patternForStatement() async {
     await assertDiagnostics(r'''
 void f() {
-  for (var (AB, ) = (0, 1); AB <= 13; (AB, ) = ( , AB++)) { }
+  for (var (AB, c) = (0, 1); AB <= 13; (AB, c) = (c, AB + c)) { }
 }
 ''', [
-      lint(18, 2),
+      lint(23, 2),
     ]);
   }
 
   test_patternIfStatement() async {
     await assertDiagnostics(r'''
 void f() {
-  if ([1,2] case [int AB, int]) { }
+  if ([1,2] case [int AB, int c]) { }
 }
 ''', [
       lint(33, 2),
@@ -46,7 +42,35 @@ void f() {
   test_patternIfStatement_underscores() async {
     await assertNoDiagnostics(r'''
 void f() {
-  if ([1,2] case [int _, int __]) { }
+  if ([1,2] case [int _, int _]) { }
+}
+''');
+  }
+
+  test_patternList_declaration() async {
+    await assertDiagnostics(r'''
+f() {
+  var [__, foo_bar] = [1,2];
+}
+''', [
+      lint(13, 2),
+      lint(17, 7),
+    ]);
+  }
+
+  test_patternList_declaration_underscore_ok() async {
+    await assertNoDiagnostics(r'''
+f() {
+  var [_, a] = [1,2];
+}
+''');
+  }
+
+  test_patternList_wildCardPattern() async {
+    await assertNoDiagnostics(r'''
+f() {
+  var a = 0;
+  [_, a] = [1,2];
 }
 ''');
   }
@@ -74,9 +98,6 @@ void f() {
 
 @reflectiveTest
 class NonConstantIdentifierNamesRecordsTest extends LintRuleTest {
-  @override
-  List<String> get experiments => ['records'];
-
   @override
   String get lintRule => 'non_constant_identifier_names';
 
@@ -112,7 +133,7 @@ var a = (hashCode: 1);
   test_recordFields_fieldNamePositional() async {
     // This will produce a compile-time error and we don't want to over-report.
     await assertDiagnostics(r'''
-var r = (0, $0: 2);
+var r = (0, $1: 2);
 ''', [
       // No Lint.
       error(CompileTimeErrorCode.INVALID_FIELD_NAME_POSITIONAL, 12, 2),

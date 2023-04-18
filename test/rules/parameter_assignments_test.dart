@@ -9,6 +9,7 @@ import '../rule_test_support.dart';
 main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(ParameterAssignmentsTest);
+    defineReflectiveTests(ParameterAssignmentsTestLanguage300);
   });
 }
 
@@ -77,17 +78,14 @@ void f(String p) {
   }
 
   test_function_ok_shadow() async {
-    await assertDiagnostics(r'''
+    await assertNoDiagnostics(r'''
 void f(String? p) {
   if (p == null) {
     int p = 2;
     p = 3;
   }
 }
-''', [
-      // No lint.
-      error(HintCode.UNUSED_LOCAL_VARIABLE, 47, 1),
-    ]);
+''');
   }
 
   test_function_positional_optional_assignedTwice() async {
@@ -174,6 +172,62 @@ class A {
 }
 ''', [
       lint(31, 5),
+    ]);
+  }
+}
+
+@reflectiveTest
+class ParameterAssignmentsTestLanguage300 extends LintRuleTest
+    with LanguageVersion300Mixin {
+  @override
+  String get lintRule => 'parameter_assignments';
+
+  // If and switch cases don't need verification since params aren't valid
+  // constant pattern expressions.
+
+  test_listAssignment() async {
+    await assertDiagnostics(r'''
+f(var b) {
+  [b] = [1];
+}
+''', [
+      lint(13, 3),
+    ]);
+  }
+
+  test_mapAssignment() async {
+    await assertDiagnostics(r'''
+f(var a) {
+  {'a': a} = {'a': 1};
+}
+''', [
+      lint(13, 8),
+    ]);
+  }
+
+  test_objectAssignment() async {
+    await assertDiagnostics(r'''
+class A {
+  int a;
+  A(this.a);
+}
+
+f(var b) {
+  A(a: b) = A(1);
+}
+''', [
+      lint(48, 7),
+    ]);
+  }
+
+  test_recordAssignment() async {
+    await assertDiagnostics(r'''
+void f(var a) {
+  var b = 0;
+  (a, b) = (1, 2);
+}
+''', [
+      lint(31, 6),
     ]);
   }
 }
