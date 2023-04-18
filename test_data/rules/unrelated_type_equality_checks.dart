@@ -178,6 +178,13 @@ void function30() {
   if (c.determinant == callable2) print('someFunction30'); // OK
 }
 
+void function31() {
+  var x = EnumOpKind1.delete;
+  if (x == EnumOpKind1.delete) print('delete'); // OK
+  if (x == EnumOpKind2.delete) print('delete'); // LINT
+  if (x == 'delete') print('delete'); // LINT
+}
+
 class ClassBase {}
 
 class DerivedClass1 extends ClassBase {}
@@ -203,3 +210,6 @@ class ClassWCall {
 }
 
 class SubClassWCall extends ClassWCall {}
+
+enum EnumOpKind1 { insert, update, delete }
+enum EnumOpKind2 { upsert, delete }
