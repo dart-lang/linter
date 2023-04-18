@@ -196,18 +196,11 @@ void function32() {
   if (y == EnumImplements.a) print('a'); // LINT
 }
 
-void someFunction33(Mixin m1, Mixin2 m2) {
-  if (m1 == m1) print('someFunction32'); // OK
-  if (m1 == m2) print('someFunction32'); // LINT
-}
-
 class ClassBase {}
 
 class DerivedClass1 extends ClassBase {}
 
 mixin Mixin {}
-
-mixin Mixin2 {}
 
 class DerivedClass2 extends ClassBase with Mixin {}
 
