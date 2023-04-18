@@ -152,6 +152,7 @@ class _StateUsageVisitor extends RecursiveAstVisitor<void> {
     }
   }
 
+  /// Check if the method belongs to one of the supertypes and returns true in this case.
   bool _visit(Element? methodElement) {
     if (methodElement is ClassMemberElement &&
         _stateElement.allSupertypes
