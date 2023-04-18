@@ -289,7 +289,7 @@ extension on TypeSystem {
       return false;
     } else {
       var sameSupertypes = leftElement.supertype == rightElement.supertype;
-      
+
       // Unrelated enums have Object as supertype so they need to be checked separately .
       if (sameSupertypes && leftElement is EnumElement) {
         return true;
