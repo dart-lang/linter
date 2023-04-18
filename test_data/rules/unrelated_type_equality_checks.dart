@@ -186,6 +186,7 @@ void function31() {
 }
 
 void someFunction32(Mixin m1, Mixin2 m2) {
+  if (m1 == m1) print('someFunction32'); // OK
   if (m1 == m2) print('someFunction32'); // LINT
 }
 
