@@ -292,7 +292,7 @@ extension on TypeSystem {
 
       // Unrelated Enums or Mixins have the same supertype, but they are not the same element, so
       // they are unrelated.
-      if (true && (leftElement is EnumElement || leftElement is MixinElement)) {
+      if (sameSupertypes && (leftElement is EnumElement || leftElement is MixinElement)) {
         return true;
       }
 
