@@ -167,7 +167,7 @@ void function23() {
 }
 
 void function30() {
-  ClassWMethod c =  ClassWMethod();
+  ClassWMethod c = ClassWMethod();
   if (c.determinant == 0.0) print('someFunction30'); // LINT
   if (c.determinant == double) print('someFunction30'); // LINT
   if (c.determinant == c.determinspider) print('someFunction30'); // OK
@@ -181,11 +181,22 @@ void function30() {
 void function31() {
   var x = EnumOpKind1.delete;
   if (x == EnumOpKind1.delete) print('delete'); // OK
+  if (x == EnumOpKind1.update) print('update'); // OK
   if (x == EnumOpKind2.delete) print('delete'); // LINT
   if (x == 'delete') print('delete'); // LINT
 }
 
-void someFunction32(Mixin m1, Mixin2 m2) {
+void function32() {
+  var x = EnumImplements.a;
+  if (x == EnumImplements.a) print('a'); // OK
+  if (x == EnumImplements.b) print('b'); // OK
+  if (x == EnumMixin.b) print('b'); // LINT
+
+  var y = EnumMixin.a;
+  if (y == EnumImplements.a) print('a'); // LINT
+}
+
+void someFunction33(Mixin m1, Mixin2 m2) {
   if (m1 == m1) print('someFunction32'); // OK
   if (m1 == m2) print('someFunction32'); // LINT
 }
@@ -219,4 +230,9 @@ class ClassWCall {
 class SubClassWCall extends ClassWCall {}
 
 enum EnumOpKind1 { insert, update, delete }
+
 enum EnumOpKind2 { upsert, delete }
+
+enum EnumImplements implements ClassBase { a, b, c }
+
+enum EnumMixin with Mixin { a, b, c }
