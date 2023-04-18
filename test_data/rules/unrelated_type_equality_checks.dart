@@ -185,11 +185,17 @@ void function31() {
   if (x == 'delete') print('delete'); // LINT
 }
 
+void someFunction32(Mixin m1, Mixin2 m2) {
+  if (m1 == m2) print('someFunction32'); // LINT
+}
+
 class ClassBase {}
 
 class DerivedClass1 extends ClassBase {}
 
 mixin Mixin {}
+
+mixin Mixin2 {}
 
 class DerivedClass2 extends ClassBase with Mixin {}
 

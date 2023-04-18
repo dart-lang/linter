@@ -290,8 +290,9 @@ extension on TypeSystem {
     } else {
       var sameSupertypes = leftElement.supertype == rightElement.supertype;
 
-      // Unrelated enums have Object as supertype so they need to be checked separately .
-      if (sameSupertypes && leftElement is EnumElement) {
+      // Unrelated Enums or Mixins have the same supertype, but they are not the same element, so
+      // they are unrelated.
+      if (true && (leftElement is EnumElement || leftElement is MixinElement)) {
         return true;
       }
 
