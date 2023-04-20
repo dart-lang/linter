@@ -428,11 +428,7 @@ extension NullableAstNodeExtension on AstNode? {
 }
 
 extension TokenExtension on Token? {
-  bool get isFinal {
-    var self = this;
-    if (self == null) return false;
-    return self.keyword == Keyword.FINAL;
-  }
+  bool get isFinal => this?.keyword == Keyword.FINAL;
 }
 
 extension TokenTypeExtension on TokenType {
