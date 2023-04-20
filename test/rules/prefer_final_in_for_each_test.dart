@@ -68,8 +68,8 @@ f() {
   test_record_mutated_ok() async {
     await assertNoDiagnostics(r'''
 f() {
-  for (var (i, j) in [(1, 2)]) { 
-     i++;
+  for (var (int i, j) in [(1, 2)]) {
+    i++;
   }
 }  
 ''');
