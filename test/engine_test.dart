@@ -198,7 +198,7 @@ class MockLintRule extends LintRule {
 }
 
 class MockPubspecVisitor extends PubspecVisitor {
-  final Function(Object node)? nodeVisitor;
+  final NodeVisitor? nodeVisitor;
 
   MockPubspecVisitor(this.nodeVisitor);
 
@@ -209,7 +209,7 @@ class MockPubspecVisitor extends PubspecVisitor {
 }
 
 class MockVisitor extends GeneralizingAstVisitor {
-  final Function(Object node)? nodeVisitor;
+  final NodeVisitor? nodeVisitor;
 
   MockVisitor(this.nodeVisitor);
 
