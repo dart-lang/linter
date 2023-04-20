@@ -427,6 +427,14 @@ extension NullableAstNodeExtension on AstNode? {
   }
 }
 
+extension TokenExtension on Token? {
+  bool get isFinal {
+    var self = this;
+    if (self == null) return false;
+    return self.keyword == Keyword.FINAL;
+  }
+}
+
 extension TokenTypeExtension on TokenType {
   TokenType get inverted => switch (this) {
         TokenType.LT_EQ => TokenType.GT_EQ,
