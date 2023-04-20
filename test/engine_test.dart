@@ -183,7 +183,7 @@ class MockLinter extends LintRule {
             details: 'And so on...');
 
   @override
-  PubspecVisitor getPubspecVisitor() => MockVisitor(nodeVisitor);
+  PubspecVisitor getPubspecVisitor() => MockPubspecVisitor(nodeVisitor);
 
   @override
   AstVisitor getVisitor() => MockVisitor(nodeVisitor);
@@ -197,18 +197,24 @@ class MockLintRule extends LintRule {
   AstVisitor getVisitor() => MockVisitor(null);
 }
 
-class MockVisitor extends GeneralizingAstVisitor with PubspecVisitor {
+class MockPubspecVisitor extends PubspecVisitor {
+  final Function(Object node)? nodeVisitor;
+
+  MockPubspecVisitor(this.nodeVisitor);
+
+  @override
+  void visitPackageName(PSEntry node) {
+    nodeVisitor?.call(node);
+  }
+}
+
+class MockVisitor extends GeneralizingAstVisitor {
   final Function(Object node)? nodeVisitor;
 
   MockVisitor(this.nodeVisitor);
 
   @override
   void visitNode(AstNode node) {
-    nodeVisitor?.call(node);
-  }
-
-  @override
-  void visitPackageName(PSEntry node) {
     nodeVisitor?.call(node);
   }
 }
