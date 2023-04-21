@@ -18,64 +18,6 @@ class ConstantIdentifierNamesPatternsTest extends LintRuleTest {
   @override
   String get lintRule => 'constant_identifier_names';
 
-  test_destructured_object_field_switch() async {
-    await assertDiagnostics(r'''
-class A {
-  var a;
-}
-
-f(A a) {
-  switch (a) {
-    case A(a: int a_b):
-  }
-  switch (a) {
-    case A(a: int a_b?):
-    case A(a: int a_b!):
-  }
-}
-''', [
-      lint(64, 3),
-      lint(107, 3),
-      lint(132, 3),
-    ]);
-  }
-
-  test_destructured_object_field_switch_ok() async {
-    await assertNoDiagnostics(r'''
-class A {
-  var a_b;
-}
-
-f(A a) {
-  switch (a) {
-    case A(:var a_b):
-  }
-  switch (a) {
-    case A(:var a_b?):
-    case A(:var a_b!): 
-  }
-}
-''');
-  }
-
-  test_destructured_record_field() async {
-    await assertDiagnostics(r'''
-f(Object o) {
-  if (o case (x: int x_x, z: int z)) { }
-}
-''', [
-      lint(35, 3),
-    ]);
-  }
-
-  test_destructured_record_field_ok() async {
-    await assertNoDiagnostics(r'''
-f(Object o) {
-  if (o case (x_y: int x, z: int z)) { }
-}
-''');
-  }
-
   test_destructuredConstField() async {
     await assertDiagnostics(r'''
 class A {
@@ -103,12 +45,70 @@ void f() {
       lint(20, 2),
     ]);
   }
+
+  test_destructuredObjectField_switch() async {
+    await assertDiagnostics(r'''
+class A {
+  var a;
+}
+
+f(A a) {
+  switch (a) {
+    case A(a: int a_b):
+  }
+  switch (a) {
+    case A(a: int a_b?):
+    case A(a: int a_b!):
+  }
+}
+''', [
+      lint(64, 3),
+      lint(107, 3),
+      lint(132, 3),
+    ]);
+  }
+
+  test_destructuredObjectField_switch_ok() async {
+    await assertNoDiagnostics(r'''
+class A {
+  var a_b;
+}
+
+f(A a) {
+  switch (a) {
+    case A(:var a_b):
+  }
+  switch (a) {
+    case A(:var a_b?):
+    case A(:var a_b!): 
+  }
+}
+''');
+  }
 }
 
 @reflectiveTest
 class ConstantIdentifierNamesRecordsTest extends LintRuleTest {
   @override
   String get lintRule => 'constant_identifier_names';
+
+  test_recordFieldDestructured() async {
+    await assertDiagnostics(r'''
+f(Object o) {
+  if (o case (x: int x_x, z: int z)) { }
+}
+''', [
+      lint(35, 3),
+    ]);
+  }
+
+  test_recordFieldDestructured_ok() async {
+    await assertNoDiagnostics(r'''
+f(Object o) {
+  if (o case (x_y: int x, z: int z)) { }
+}
+''');
+  }
 
   test_recordTypeDeclarations() async {
     await assertDiagnostics(r'''
