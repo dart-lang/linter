@@ -151,6 +151,10 @@ f(A a) {
   switch (a) {
     case A(:var _a):
   }
+  switch (a) {
+    case A(:var _a?):
+    case A(:var _a!):
+  }
 }
 ''');
   }

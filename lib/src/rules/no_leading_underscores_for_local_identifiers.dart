@@ -105,7 +105,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitDeclaredVariablePattern(DeclaredVariablePattern node) {
-    if (node.parent.isShortcutCase) return;
+    if (node.parent.isFieldNameShortcut) return;
     checkIdentifier(node.name);
   }
 
@@ -148,8 +148,10 @@ class _Visitor extends SimpleAstVisitor<void> {
 }
 
 extension on AstNode? {
-  bool get isShortcutCase {
-    var self = this;
-    return self is PatternField && self.name != null && self.name?.name == null;
+  bool get isFieldNameShortcut {
+    var node = this;
+    if (node is NullCheckPattern) node = node.parent;
+    if (node is NullAssertPattern) node = node.parent;
+    return node is PatternField && node.name != null && node.name?.name == null;
   }
 }
