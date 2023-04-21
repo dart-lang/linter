@@ -110,6 +110,10 @@ f(Object o) {
   switch(o) {
     case (:int AB, var b):
   }
+  switch(o) {
+    case (:int AB?, var b):
+    case (:int AB!, var b):
+  }
 }
 ''');
   }
