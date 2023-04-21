@@ -29,12 +29,14 @@ void f() {
     ]);
   }
 
-  test_patternIfStatement_recordField_ok() async {
-    await assertNoDiagnostics(r'''
-void f(Object o) {
-  if (o case (:int AB, var b)) { }
+  test_patternIfStatement() async {
+    await assertDiagnostics(r'''
+void f() {
+  if ([1,2] case [int AB, int c]) { }
 }
-''');
+''', [
+      lint(33, 2),
+    ]);
   }
 
   test_patternIfStatement_recordField() async {
@@ -48,14 +50,12 @@ void f(Object o) {
     ]);
   }
 
-  test_patternIfStatement() async {
-    await assertDiagnostics(r'''
-void f() {
-  if ([1,2] case [int AB, int c]) { }
+  test_patternIfStatement_recordField_ok() async {
+    await assertNoDiagnostics(r'''
+void f(Object o) {
+  if (o case (:int AB, var b)) { }
 }
-''', [
-      lint(33, 2),
-    ]);
+''');
   }
 
   test_patternIfStatement_underscores() async {
