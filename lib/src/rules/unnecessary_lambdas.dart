@@ -9,8 +9,8 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
+import '../extensions.dart';
 import '../util/dart_type_utilities.dart';
-import '../util/nullability_utils.dart';
 
 const _desc = r"Don't create a lambda when a tear-off will do.";
 
@@ -247,7 +247,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       }
 
       var checker = _FinalExpressionChecker(parameters);
-      if (!containsNullAwareInvocationInChain(node) &&
+      if (!node.containsNullAwareInvocationInChain() &&
           checker.isFinalNode(node.target) &&
           checker.isFinalElement(node.methodName.staticElement) &&
           node.typeArguments == null) {

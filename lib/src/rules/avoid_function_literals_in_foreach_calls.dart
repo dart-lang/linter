@@ -9,7 +9,6 @@ import 'package:analyzer/dart/element/type.dart';
 
 import '../analyzer.dart';
 import '../extensions.dart';
-import '../util/nullability_utils.dart';
 
 const _desc = r'Avoid using `forEach` with a function literal.';
 
@@ -95,7 +94,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         node.argumentList.arguments.isNotEmpty &&
         node.argumentList.arguments.first is FunctionExpression &&
         _isNonNullableIterable(target.staticType) &&
-        !containsNullAwareInvocationInChain(node) &&
+        !node.containsNullAwareInvocationInChain() &&
         !_hasMethodChaining(node)) {
       rule.reportLint(node.function);
     }

@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
-import '../util/nullability_utils.dart';
+import '../extensions.dart';
 
 const _desc = r'Unnecessary parentheses can be removed.';
 
@@ -92,7 +92,7 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (parent is ConstantPattern) return;
     var expression = node.expression;
     if (expression is SimpleIdentifier ||
-        containsNullAwareInvocationInChain(expression)) {
+        expression.containsNullAwareInvocationInChain()) {
       if (parent is PropertyAccess) {
         var name = parent.propertyName.name;
         if (name == 'hashCode' || name == 'runtimeType') {
