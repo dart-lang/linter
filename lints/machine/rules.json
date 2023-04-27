@@ -670,10 +670,7 @@
     "maturity": "deprecated",
     "state": "deprecated",
     "incompatible": [],
-    "sets": [
-      "recommended",
-      "flutter"
-    ],
+    "sets": [],
     "fixStatus": "hasFix",
     "details": "**DO** specify `@required` on named parameters without a default value on which \nan `assert(param != null)` is done.\n\n**BAD:**\n```dart\nm1({a}) {\n  assert(a != null);\n}\n```\n\n**GOOD:**\n```dart\nm1({@required a}) {\n  assert(a != null);\n}\n\nm2({a: 1}) {\n  assert(a != null);\n}\n```\n\nNOTE: Only asserts at the start of the bodies will be taken into account.\n\n",
     "sinceDartSdk": "2.0.0",
