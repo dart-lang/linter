@@ -81,6 +81,20 @@ void f(C obj) {
 ''');
   }
 
+  test_functionExpression_targetInIrrelevantNestedCascade() async {
+    await assertDiagnostics(r'''
+void f(List<List<List<String>>> lists) {
+  final lists2 = lists..forEach((list) {
+    list.forEach((item) {
+      print(item);
+    });
+  });
+}
+''', [
+      lint(91, 7),
+    ]);
+  }
+
   test_functionExpressionWithBlockBody() async {
     await assertDiagnostics(r'''
 void f(List<String> people) {
