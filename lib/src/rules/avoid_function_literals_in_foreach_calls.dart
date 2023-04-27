@@ -94,7 +94,8 @@ class _Visitor extends SimpleAstVisitor<void> {
         node.argumentList.arguments.isNotEmpty &&
         node.argumentList.arguments.first is FunctionExpression &&
         _isNonNullableIterable(target.staticType) &&
-        !_hasMethodChaining(node)) {
+        !_hasMethodChaining(node) &&
+        node.thisOrAncestorOfType<CascadeExpression>() == null) {
       rule.reportLint(node.function);
     }
   }
