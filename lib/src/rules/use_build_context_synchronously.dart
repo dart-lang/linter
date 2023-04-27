@@ -94,14 +94,167 @@ class _AwaitVisitor extends RecursiveAstVisitor {
   }
 
   @override
-  visitBlockFunctionBody(BlockFunctionBody node) {
-    // Stop visiting if it's a function body block.
-    // Awaits inside it shouldn't matter.
+  void visitBlockFunctionBody(BlockFunctionBody node) {
+    // Stop visiting when we arrive at a function body.
+    // Awaits inside it don't matter.
   }
 
   @override
-  visitExpressionFunctionBody(ExpressionFunctionBody node) {
-    // Stopping following the same logic as function body blocks.
+  void visitExpressionFunctionBody(ExpressionFunctionBody node) {
+    // Stop visiting when we arrive at a function body.
+    // Awaits inside it don't matter.
+  }
+}
+
+enum _MountedCheck {
+  positive,
+  negative;
+
+  _MountedCheck get negate => switch (this) {
+        _MountedCheck.positive => _MountedCheck.negative,
+        _MountedCheck.negative => _MountedCheck.positive,
+      };
+}
+
+class _MountedCheckVisitor extends SimpleAstVisitor<_MountedCheck> {
+  static const mountedName = 'mounted';
+
+  final AstNode child;
+
+  _MountedCheckVisitor({required this.child});
+
+  @override
+  _MountedCheck? visitBinaryExpression(BinaryExpression node) {
+    if (node.isAnd) {
+      return node.leftOperand.accept(this) ?? node.rightOperand.accept(this);
+    } else if (node.isOr) {
+      return node.leftOperand.accept(this) ?? node.rightOperand.accept(this);
+    } else {
+      // TODO(srawlins): What about `??`?
+      return null;
+    }
+  }
+
+  @override
+  _MountedCheck? visitBlock(Block node) {
+    for (var statement in node.statements) {
+      var mountedCheck = statement.accept(this);
+      if (mountedCheck != null) {
+        return mountedCheck;
+      }
+    }
+    return null;
+  }
+
+  @override
+  _MountedCheck? visitConditionalExpression(ConditionalExpression node) {
+    if (child == node.condition) return null;
+
+    var conditionMountedCheck = node.condition.accept(this);
+    if (conditionMountedCheck == null) return null;
+
+    if (child == node.thenExpression) {
+      return conditionMountedCheck == _MountedCheck.positive
+          ? _MountedCheck.positive
+          : null;
+    } else if (child == node.elseExpression) {
+      return conditionMountedCheck == _MountedCheck.negative
+          ? _MountedCheck.positive
+          : null;
+    } else {
+      // `child` is (or is a child of) a statement that comes after `node`
+      // in a NodeList.
+
+      // TODO(srawlins): What if `thenExpression` has an `await`?
+      if (conditionMountedCheck == _MountedCheck.negative &&
+          node.thenExpression.terminatesControl) {
+        return _MountedCheck.positive;
+      } else if (conditionMountedCheck == _MountedCheck.positive &&
+          node.elseExpression.terminatesControl) {
+        return _MountedCheck.positive;
+      }
+      return null;
+    }
+  }
+
+  @override
+  _MountedCheck? visitIfStatement(IfStatement node) {
+    if (child == node.expression) {
+      // In this situation, any possible mounted check would be a _descendent_
+      // of `child`; it would not be a valid mounted check for `child`.
+      return null;
+    }
+    var conditionMountedCheck = node.expression.accept(this);
+
+    if (conditionMountedCheck == null) return null;
+    if (child == node.thenStatement) {
+      return conditionMountedCheck == _MountedCheck.positive
+          ? _MountedCheck.positive
+          : null;
+    } else if (child == node.elseStatement) {
+      return conditionMountedCheck == _MountedCheck.negative
+          ? _MountedCheck.positive
+          : null;
+    } else {
+      if (conditionMountedCheck == _MountedCheck.positive) {
+        // `child` is (or is a child of) a statement that comes after `node`
+        // in a NodeList.
+
+        var elseStatement = node.elseStatement;
+        if (elseStatement == null) {
+          // The mounted check in the if-condition does not guard `child`.
+          return null;
+        }
+
+        // TODO(srawlins): If `thenStatement` has an `await`, then we don't
+        // have a valid mounted check, unless the `await` is followed by
+        // another mounted check...
+        return elseStatement.terminatesControl ? _MountedCheck.positive : null;
+      } else {
+        // `child` is (or is a child of) a statement that comes after `node`
+        // in a NodeList.
+
+        // TODO(srawlins): If `elseStatement` has an `await`, then we don't
+        // have a valid mounted check, unless the `await` is followed by
+        // another mounted check...
+        return node.thenStatement.terminatesControl
+            ? _MountedCheck.negative
+            : null;
+      }
+    }
+  }
+
+  @override
+  _MountedCheck? visitPrefixedIdentifier(PrefixedIdentifier node) =>
+      node.identifier.name == mountedName ? _MountedCheck.positive : null;
+
+  @override
+  _MountedCheck? visitPrefixExpression(PrefixExpression node) {
+    if (node.isNot) {
+      var mountedCheck = node.operand.accept(this);
+      return mountedCheck?.negate;
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  _MountedCheck? visitSimpleIdentifier(SimpleIdentifier node) =>
+      node.name == mountedName ? _MountedCheck.positive : null;
+
+  @override
+  _MountedCheck? visitTryStatement(TryStatement node) {
+    // No statement in the `try` section of a try should be considered
+    // sufficient; only statements in the `finally` section.
+    var statements = node.finallyBlock?.statements;
+    if (statements == null) {
+      return null;
+    }
+    for (var statement in statements) {
+      var mountedCheck = statement.accept(this);
+      if (mountedCheck == _MountedCheck.negative) return _MountedCheck.negative;
+    }
+    return null;
   }
 }
 
@@ -146,12 +299,15 @@ class _Visitor extends SimpleAstVisitor {
 
   void check(AstNode node) {
     /// Checks each of the [statements] before [child] for a `mounted` check,
-    /// and returns whether it did not find one.
-    bool checkStatements(AstNode child, NodeList<Statement> statements) {
-      var index = statements.indexOf(child as Statement);
+    /// and returns whether it did not find one (and the caller should keep
+    /// looking).
+    bool checkStatements(Statement child, NodeList<Statement> statements) {
+      var index = statements.indexOf(child);
       for (var i = index - 1; i >= 0; i--) {
         var s = statements[i];
-        if (isMountedCheck(s)) {
+        // `s` is a sufficient mounted check if it causes control flow to exit
+        // the current function body, so we specify [ _MountedCheck.negative].
+        if (s.isMountedCheckFor(child, expected: _MountedCheck.negative)) {
           return false;
         } else if (s.isAsync) {
           rule.reportLint(node);
@@ -167,113 +323,50 @@ class _Visitor extends SimpleAstVisitor {
     while (child != null && child is! FunctionBody) {
       var parent = child.parent;
       if (parent is Block) {
-        var keepChecking = checkStatements(child, parent.statements);
+        var keepChecking =
+            checkStatements(child as Statement, parent.statements);
         if (!keepChecking) {
           return;
         }
       } else if (parent is SwitchCase) {
         // Necessary for Dart 2.19 code.
-        var keepChecking = checkStatements(child, parent.statements);
+        var keepChecking =
+            checkStatements(child as Statement, parent.statements);
         if (!keepChecking) {
           return;
         }
       } else if (parent is SwitchPatternCase) {
         // Necessary for Dart 3.0 code.
-        var keepChecking = checkStatements(child, parent.statements);
+        var keepChecking =
+            checkStatements(child as Statement, parent.statements);
         if (!keepChecking) {
           return;
         }
-      } else if (parent is IfStatement) {
-        // Only check the actual statement(s), not the IF condition
-        if (child is Statement && parent.expression.hasAwait) {
+      } else if (parent is ConditionalExpression) {
+        if (child != parent.condition && parent.condition.hasAwait) {
           rule.reportLint(node);
+          return;
         }
 
-        // if (mounted) { ... do ... }
-        if (isMountedCheck(parent, positiveCheck: true)) {
+        // mounted ? ... : ...
+        if (parent.isMountedCheckFor(child, expected: _MountedCheck.positive)) {
+          return;
+        }
+      } else if (parent is IfStatement) {
+        // Only check the actual statement(s), not the if condition.
+        if (child is Statement && parent.expression.hasAwait) {
+          rule.reportLint(node);
+          return;
+        }
+
+        // if (mounted) { ... }
+        if (parent.isMountedCheckFor(child, expected: _MountedCheck.positive)) {
           return;
         }
       }
 
       child = parent;
     }
-  }
-
-  bool isMountedCheck(Statement statement, {bool positiveCheck = false}) {
-    // This is intentionally naive.  Using a simple 'mounted' property check
-    // as a signal plays nicely w/ unanticipated framework classes that provide
-    // their own mounted checks.  The cost of this generality is the possibility
-    // of false negatives.
-    if (statement is IfStatement) {
-      var condition = statement.expression;
-
-      Expression check;
-      if (condition is PrefixExpression) {
-        if (positiveCheck && condition.isNot) {
-          return false;
-        }
-        check = condition.operand;
-      } else {
-        check = condition;
-      }
-
-      bool checksMounted(Expression check) {
-        if (check is BinaryExpression) {
-          // (condition && context.mounted)
-          if (positiveCheck) {
-            if (check.isAnd) {
-              return checksMounted(check.leftOperand) ||
-                  checksMounted(check.rightOperand);
-            }
-          } else {
-            // (condition || !mounted)
-            if (check.isOr) {
-              return checksMounted(check.leftOperand) ||
-                  checksMounted(check.rightOperand);
-            }
-          }
-        }
-
-        // stateContext.mounted => mounted
-        if (check is PrefixedIdentifier) {
-          // ignore: parameter_assignments
-          check = check.identifier;
-        }
-        if (check is SimpleIdentifier) {
-          return check.name == mountedName;
-        }
-        if (check is PrefixExpression) {
-          // (condition || !mounted)
-          if (!positiveCheck && check.isNot) {
-            return checksMounted(check.operand);
-          }
-        }
-
-        return false;
-      }
-
-      if (checksMounted(check)) {
-        // In the positive case it's sufficient to know we're in a positively
-        // guarded block.
-        if (positiveCheck) {
-          return true;
-        }
-        var then = statement.thenStatement;
-        return then.terminatesControl;
-      }
-    } else if (statement is TryStatement) {
-      var statements = statement.finallyBlock?.statements;
-      if (statements == null) {
-        return false;
-      }
-      for (var i = statements.length - 1; i >= 0; i--) {
-        var s = statements[i];
-        if (isMountedCheck(s)) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 
   @override
@@ -312,6 +405,42 @@ class _Visitor extends SimpleAstVisitor {
   }
 }
 
+extension on AstNode {
+  bool get terminatesControl {
+    var self = this;
+    if (self is Block) {
+      return self.statements.last.terminatesControl;
+    }
+    // TODO(srawlins): Make ExitDetector 100% functional for our needs. The
+    // basic (only?) difference is that it doesn't consider a `break` statement
+    // to be exiting.
+    if (self is ReturnStatement ||
+        self is BreakStatement ||
+        self is ContinueStatement) {
+      return true;
+    }
+    return accept(ExitDetector()) ?? false;
+  }
+
+  /// Returns whether `this` is a node which guards [child] with a **mounted
+  /// check**. [child] must be a direct child of `this`, or a sibling of `this`
+  /// in a List of [Statement]s.
+  ///
+  /// A mounted check is a check of whether a bool-typed identifier, 'mounted',
+  /// is checked to be `true` or `false`, in a position which affects control
+  /// flow.
+  ///
+  /// [expected] specifies the polarity of any mounted check in order for it
+  /// to be a sufficient, legitimate mounted check. The value given for
+  /// [expected] is derived from the relationship between `this` and [child];
+  /// see callers.
+  bool isMountedCheckFor(AstNode child, {required _MountedCheck expected}) {
+    var visitor = _MountedCheckVisitor(child: child);
+    var mountedCheck = accept(visitor);
+    return expected == mountedCheck;
+  }
+}
+
 extension on PrefixExpression {
   bool get isNot => operator.type == TokenType.BANG;
 }
@@ -336,6 +465,9 @@ extension on Statement {
     var self = this;
     if (self is IfStatement) {
       if (self.expression.hasAwait) return true;
+      // If the then-statement definitely exits, and if there is no
+      // else-statement or the else-statement also definitely exits, then any
+      // `await`s inside do not count.
       if (self.thenStatement.terminatesControl) {
         var elseStatement = self.elseStatement;
         if (elseStatement == null || elseStatement.terminatesControl) {
