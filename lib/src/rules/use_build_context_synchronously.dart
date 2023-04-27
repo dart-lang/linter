@@ -106,6 +106,8 @@ class _AwaitVisitor extends RecursiveAstVisitor {
 }
 
 class _Visitor extends SimpleAstVisitor {
+  static const mountedName = 'mounted';
+
   final LintRule rule;
 
   _Visitor(this.rule);
@@ -183,7 +185,7 @@ class _Visitor extends SimpleAstVisitor {
         }
       } else if (parent is IfStatement) {
         // Only check the actual statement(s), not the IF condition
-        if (child is Statement && parent.condition.hasAwait) {
+        if (child is Statement && parent.expression.hasAwait) {
           rule.reportLint(node);
         }
 
@@ -203,7 +205,7 @@ class _Visitor extends SimpleAstVisitor {
     // their own mounted checks.  The cost of this generality is the possibility
     // of false negatives.
     if (statement is IfStatement) {
-      var condition = statement.condition;
+      var condition = statement.expression;
 
       Expression check;
       if (condition is PrefixExpression) {
@@ -238,7 +240,7 @@ class _Visitor extends SimpleAstVisitor {
           check = check.identifier;
         }
         if (check is SimpleIdentifier) {
-          return check.name == 'mounted';
+          return check.name == mountedName;
         }
         if (check is PrefixExpression) {
           // (condition || !mounted)
@@ -298,6 +300,11 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   visitPrefixedIdentifier(PrefixedIdentifier node) {
+    if (node.identifier.name == mountedName) {
+      // Accessing `context.mounted` does not count as a "use" of a
+      // `BuildContext` which needs to be guarded by a mounted check.
+      return;
+    }
     // Getter access.
     if (isBuildContext(node.prefix.staticType, skipNullable: true)) {
       check(node);
@@ -328,7 +335,7 @@ extension on Statement {
   bool get isAsync {
     var self = this;
     if (self is IfStatement) {
-      if (self.condition.hasAwait) return true;
+      if (self.expression.hasAwait) return true;
       if (self.thenStatement.terminatesControl) {
         var elseStatement = self.elseStatement;
         if (elseStatement == null || elseStatement.terminatesControl) {

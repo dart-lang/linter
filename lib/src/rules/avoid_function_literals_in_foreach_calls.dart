@@ -98,6 +98,7 @@ class _Visitor extends SimpleAstVisitor<void> {
         node.argumentList.arguments.isNotEmpty &&
         node.argumentList.arguments.first is FunctionExpression &&
         _isNonNullableIterable(target.staticType) &&
+        !node.containsNullAwareInvocationInChain() &&
         !_hasMethodChaining(node) &&
         !_isInsideCascade(node)) {
       rule.reportLint(node.function);
