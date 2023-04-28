@@ -186,7 +186,6 @@ class _MountedCheckVisitor extends SimpleAstVisitor<_MountedCheck> {
     }
     var conditionMountedCheck = node.expression.accept(this);
 
-    if (conditionMountedCheck == null) return null;
     if (child == node.thenStatement) {
       return conditionMountedCheck == _MountedCheck.positive
           ? _MountedCheck.positive
@@ -196,6 +195,12 @@ class _MountedCheckVisitor extends SimpleAstVisitor<_MountedCheck> {
           ? _MountedCheck.positive
           : null;
     } else {
+      if (conditionMountedCheck == null) {
+        var thenMountedCheck = node.thenStatement.accept(this);
+        var elseMountedCheck = node.elseStatement?.accept(this);
+        return thenMountedCheck == elseMountedCheck ? thenMountedCheck : null;
+      }
+
       if (conditionMountedCheck == _MountedCheck.positive) {
         // `child` is (or is a child of) a statement that comes after `node`
         // in a NodeList.

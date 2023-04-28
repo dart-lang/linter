@@ -136,6 +136,28 @@ bool get c => true;
 ''');
   }
 
+  test_awaitBeforeIf_mountedExitGuardInIf_beforeReferenceToContext4() async {
+    // Await, then an unrelated if/else, with a proper "exit if not mounted"
+    // guard in the then-statement, and another in the else-statement, then use
+    // of BuildContext, is OK.
+    await assertNoDiagnostics(r'''
+import 'package:flutter/widgets.dart';
+
+void foo(BuildContext context) async {
+  await f();
+  if (1 == 2) {
+    if (!mounted) return;
+  } else {
+    if (!mounted) return;
+  }
+  Navigator.of(context);
+}
+
+bool mounted = false;
+Future<void> f() async {}
+''');
+  }
+
   test_awaitBeforeIf_mountedExitGuardInIf_beforeReferenceToContext2() async {
     // Await, then a proper "exit if not mounted" guard in an if-condition,
     // then use of BuildContext, is OK.
