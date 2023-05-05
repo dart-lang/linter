@@ -106,6 +106,11 @@ class _AwaitVisitor extends RecursiveAstVisitor {
   }
 }
 
+/// An enum of two values which describe the presence of a "mounted check."
+///
+/// A mounted check is a check of whether a bool-typed identifier, 'mounted',
+/// is checked to be `true` or `false`, in a position which affects control
+/// flow.
 enum _MountedCheck {
   positive,
   negative;
@@ -116,6 +121,34 @@ enum _MountedCheck {
       };
 }
 
+/// A visitor whose `visit*` methods return whether a "mounted check" is found
+/// which properly guards [child].
+///
+/// The entrypoint for this visitor is [AstNodeExtension.isMountedCheckFor].
+///
+/// A mounted check "guards" [child] if control flow can only reach [child] if
+/// 'mounted' is `true`. Such checks can take many forms:
+///
+/// * A mounted check in an if-condition can be a simple guard for nodes in the
+///   if's then-statement or the if's else-statement, depending on the polarity
+///   of the check. So `if (mounted) { child; }` has a proper mounted check and
+///   `if (!mounted) {} else { child; }` has a proper mounted check.
+/// * A statement in a series of statements containing a mounted check can guard
+///   the later statements if control flow definitely exits in the case of a
+///   `false` value for 'mounted'. So `if (mounted) { return; } child;` has a
+///   proper mounted check.
+/// * A mounted check in a try-statement can only guard later statements if it
+///   is found in the `finally` section, as no statements found in the `try`
+///   section or any `catch` sections are not guaranteed to have run before the
+///   later statements.
+/// * etc.
+///
+/// Each `visit*` method can return one of three values:
+/// * `null` means the node does not guard [child] with a mounted check.
+/// * [_MountedCheck.positive] means the node guards [child] with a positive
+///   mounted check.
+/// * [_MountedCheck.negative] means the node guards [child] with a negative
+///   mounted check.
 class _MountedCheckVisitor extends SimpleAstVisitor<_MountedCheck> {
   static const mountedName = 'mounted';
 
@@ -125,6 +158,14 @@ class _MountedCheckVisitor extends SimpleAstVisitor<_MountedCheck> {
 
   @override
   _MountedCheck? visitBinaryExpression(BinaryExpression node) {
+    // TODO(srawlins): Currently this method doesn't take `child` into account;
+    // it assumes `child` is part of a statement that follows this expression.
+    // We need to account for `child` being an actual descendent of `node` in
+    // order to properly handle code like
+    // * `if (mounted || child)`,
+    // * `if (!mounted && child)`,
+    // * `if (mounted || (condition && child))`,
+    // * `if ((mounted || condition) && child)`, etc.
     if (node.isAnd) {
       return node.leftOperand.accept(this) ?? node.rightOperand.accept(this);
     } else if (node.isOr) {
@@ -195,16 +236,18 @@ class _MountedCheckVisitor extends SimpleAstVisitor<_MountedCheck> {
           ? _MountedCheck.positive
           : null;
     } else {
+      // `child` is (or is a child of) a statement that comes after `node`
+      // in a NodeList.
       if (conditionMountedCheck == null) {
         var thenMountedCheck = node.thenStatement.accept(this);
         var elseMountedCheck = node.elseStatement?.accept(this);
+        // [node] is a positive mounted check if each of its branches is, is a
+        // negative mounted check if each of its branches is, and otherwise is
+        // not a mounted check.
         return thenMountedCheck == elseMountedCheck ? thenMountedCheck : null;
       }
 
       if (conditionMountedCheck == _MountedCheck.positive) {
-        // `child` is (or is a child of) a statement that comes after `node`
-        // in a NodeList.
-
         var elseStatement = node.elseStatement;
         if (elseStatement == null) {
           // The mounted check in the if-condition does not guard `child`.
@@ -249,8 +292,8 @@ class _MountedCheckVisitor extends SimpleAstVisitor<_MountedCheck> {
 
   @override
   _MountedCheck? visitTryStatement(TryStatement node) {
-    // No statement in the `try` section of a try should be considered
-    // sufficient; only statements in the `finally` section.
+    // Only statements in the `finally` section of a try-statement can
+    // sufficiently guard statements following the try-statement.
     var statements = node.finallyBlock?.statements;
     if (statements == null) {
       return null;
@@ -312,7 +355,7 @@ class _Visitor extends SimpleAstVisitor {
         var s = statements[i];
         // `s` is a sufficient mounted check if it causes control flow to exit
         // the current function body, so we specify [ _MountedCheck.negative].
-        if (s.isMountedCheckFor(child, expected: _MountedCheck.negative)) {
+        if (s.isMountedCheckFor(child)) {
           return false;
         } else if (s.isAsync) {
           rule.reportLint(node);
@@ -354,7 +397,7 @@ class _Visitor extends SimpleAstVisitor {
         }
 
         // mounted ? ... : ...
-        if (parent.isMountedCheckFor(child, expected: _MountedCheck.positive)) {
+        if (parent.isMountedCheckFor(child)) {
           return;
         }
       } else if (parent is IfStatement) {
@@ -365,7 +408,7 @@ class _Visitor extends SimpleAstVisitor {
         }
 
         // if (mounted) { ... }
-        if (parent.isMountedCheckFor(child, expected: _MountedCheck.positive)) {
+        if (parent.isMountedCheckFor(child)) {
           return;
         }
       }
@@ -410,7 +453,7 @@ class _Visitor extends SimpleAstVisitor {
   }
 }
 
-extension on AstNode {
+extension AstNodeExtension on AstNode {
   bool get terminatesControl {
     var self = this;
     if (self is Block) {
@@ -428,22 +471,12 @@ extension on AstNode {
   }
 
   /// Returns whether `this` is a node which guards [child] with a **mounted
-  /// check**. [child] must be a direct child of `this`, or a sibling of `this`
+  /// check**.
+  ///
+  /// [child] must be a direct child of `this`, or a sibling of `this`
   /// in a List of [Statement]s.
-  ///
-  /// A mounted check is a check of whether a bool-typed identifier, 'mounted',
-  /// is checked to be `true` or `false`, in a position which affects control
-  /// flow.
-  ///
-  /// [expected] specifies the polarity of any mounted check in order for it
-  /// to be a sufficient, legitimate mounted check. The value given for
-  /// [expected] is derived from the relationship between `this` and [child];
-  /// see callers.
-  bool isMountedCheckFor(AstNode child, {required _MountedCheck expected}) {
-    var visitor = _MountedCheckVisitor(child: child);
-    var mountedCheck = accept(visitor);
-    return expected == mountedCheck;
-  }
+  bool isMountedCheckFor(AstNode child) =>
+      accept(_MountedCheckVisitor(child: child)) != null;
 }
 
 extension on PrefixExpression {
