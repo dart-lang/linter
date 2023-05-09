@@ -349,12 +349,14 @@ class _Visitor extends SimpleAstVisitor {
     /// Checks each of the [statements] before [child] for a `mounted` check,
     /// and returns whether it did not find one (and the caller should keep
     /// looking).
-    bool checkStatements(Statement child, NodeList<Statement> statements) {
+    bool checkStatements(AstNode child, NodeList<Statement> statements) {
+      if (child is! Statement) {
+        assert(false, 'child must be a Statement, but is ${child.runtimeType}');
+        return true;
+      }
       var index = statements.indexOf(child);
       for (var i = index - 1; i >= 0; i--) {
         var s = statements[i];
-        // `s` is a sufficient mounted check if it causes control flow to exit
-        // the current function body, so we specify [ _MountedCheck.negative].
         if (s.isMountedCheckFor(child)) {
           return false;
         } else if (s.isAsync) {
@@ -371,22 +373,19 @@ class _Visitor extends SimpleAstVisitor {
     while (child != null && child is! FunctionBody) {
       var parent = child.parent;
       if (parent is Block) {
-        var keepChecking =
-            checkStatements(child as Statement, parent.statements);
+        var keepChecking = checkStatements(child, parent.statements);
         if (!keepChecking) {
           return;
         }
       } else if (parent is SwitchCase) {
         // Necessary for Dart 2.19 code.
-        var keepChecking =
-            checkStatements(child as Statement, parent.statements);
+        var keepChecking = checkStatements(child, parent.statements);
         if (!keepChecking) {
           return;
         }
       } else if (parent is SwitchPatternCase) {
         // Necessary for Dart 3.0 code.
-        var keepChecking =
-            checkStatements(child as Statement, parent.statements);
+        var keepChecking = checkStatements(child, parent.statements);
         if (!keepChecking) {
           return;
         }
