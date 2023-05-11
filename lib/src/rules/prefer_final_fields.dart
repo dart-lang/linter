@@ -209,15 +209,14 @@ class _Visitor extends SimpleAstVisitor<void> {
 
 extension on VariableElement {
   bool overridesField() {
-    var element = this;
-    var enclosingElement = element.enclosingElement;
+    var enclosingElement = this.enclosingElement;
     if (enclosingElement is! InterfaceElement) return false;
 
-    var library = element.library;
+    var library = this.library;
     if (library == null) return false;
 
     return enclosingElement.thisType
-            .lookUpSetter2(element.name, inherited: true, library) !=
+            .lookUpSetter2(name, inherited: true, library) !=
         null;
   }
 }
