@@ -81,7 +81,7 @@ class _Visitor extends SimpleAstVisitor<void> {
   }
 
   void _checkNode(NormalFormalParameter node, TypeAnnotation? type) {
-    if (type is NamedType && type.name.name == 'dynamic') {
+    if (type is NamedType && type.name2.lexeme == 'dynamic') {
       rule.reportLint(node);
     }
   }

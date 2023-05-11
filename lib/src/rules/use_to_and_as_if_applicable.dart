@@ -55,7 +55,7 @@ bool _beginsWithAsOrTo(String name) {
 }
 
 bool _isVoid(TypeAnnotation? returnType) =>
-    returnType is NamedType && returnType.name.name == 'void';
+    returnType is NamedType && returnType.name2.lexeme == 'void';
 
 class UseToAndAsIfApplicable extends LintRule {
   static const LintCode code = LintCode('use_to_and_as_if_applicable',
