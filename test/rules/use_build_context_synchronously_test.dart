@@ -308,7 +308,7 @@ Future<void> f() async {}
 ''');
   }
 
-  test_awaitExpressionContainsReferenceToContext() async {
+  test_await_expressionContainsReferenceToContext() async {
     // Await expression contains use of BuildContext, is OK.
     await assertNoDiagnostics(r'''
 import 'package:flutter/widgets.dart';
@@ -382,6 +382,20 @@ Future<bool> c() async => true;
 ''', [
       lint(113, 21),
     ]);
+  }
+
+  test_awaitInIfCondition_expressionContainsReferenceToContext() async {
+    // Await expression contains use of BuildContext, is OK.
+    await assertNoDiagnostics(r'''
+import 'package:flutter/widgets.dart';
+
+void foo(
+    BuildContext context, Future<bool> Function(BuildContext) condition) async {
+  if (await condition(context)) {
+    return;
+  }
+}
+''');
   }
 
   test_awaitInIfReferencesContext_beforeReferenceToContext() async {
