@@ -2852,7 +2852,7 @@
     "state": "experimental",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsFix",
+    "fixStatus": "hasFix",
     "details": "**DON'T** apply a null check when a nullable value is accepted.\n\n**BAD:**\n```dart\nf(int? i) {}\nm() {\n  int? j;\n  f(j!);\n}\n\n```\n\n**GOOD:**\n```dart\nf(int? i) {}\nm() {\n  int? j;\n  f(j);\n}\n```\n\n",
     "sinceDartSdk": "2.12.0",
     "sinceLinter": "0.1.119"
