@@ -50,9 +50,9 @@ void main(List<String> args) async {
   var token = options['token'];
   var auth = token is String ? Authentication.withToken(token) : null;
 
-  var sinceInfo = await getSinceMap(auth);
-
   if (printLinter) {
+    var sinceInfo = await getSinceMap(auth);
+
     for (var MapEntry(key: lintName, value: sinceInfo) in sinceInfo.entries) {
       var sinceLinter = sinceInfo.sinceLinter;
       if (sinceLinter != null) {
