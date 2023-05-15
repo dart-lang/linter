@@ -2634,7 +2634,7 @@
     "incompatible": [],
     "sets": [],
     "fixStatus": "hasFix",
-    "details": "Use `== TypeName` or `TypeName _` instead of type literals in patterns.\n\n**BAD:**\n```dart\nvoid f(Type x) {\n  if (x case int) {\n    print('int');\n  }\n}\n```\n\n**GOOD:**\n```dart\nvoid f(Type x) {\n  if (x case == int) {\n    print('int');\n  }\n}\n```\n\n**BAD:**\n```dart\nvoid f(Object? x) {\n  if (x case int) {\n    print('int');\n  }\n}\n```\n\n**GOOD:**\n```dart\nvoid f(Object? x) {\n  if (x case int _) {\n    print('int');\n  }\n}\n```\n\n",
+    "details": "If you meant to test if the object has type `Foo`, instead write `Foo _`.\n\n**BAD:**\n```dart\nvoid f(Object? x) {\n  if (x case num) {\n    print('int or double');\n  }\n}\n```\n\n**GOOD:**\n```dart\nvoid f(Object? x) {\n  if (x case num _) {\n    print('int or double');\n  }\n}\n```\n\nIf you do mean to test that the matched value (which you expect to have the\ntype `Type`) is equal to the type literal `Foo`, then this lint can be\nsilenced using `const (Foo)`.\n\n**BAD:**\n```dart\nvoid f(Object? x) {\n  if (x case int) {\n    print('int');\n  }\n}\n```\n\n**GOOD:**\n```dart\nvoid f(Object? x) {\n  if (x case const (int)) {\n    print('int');\n  }\n}\n```\n",
     "sinceDartSdk": "Unreleased",
     "sinceLinter": "1.35.0"
   },

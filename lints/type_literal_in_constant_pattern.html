@@ -29,21 +29,24 @@
          </header>
          <section>
             
-            <p>Use <code>== TypeName</code> or <code>TypeName _</code> instead of type literals in patterns.</p>
+            <p>If you meant to test if the object has type <code>Foo</code>, instead write <code>Foo _</code>.</p>
 <p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void f(Type x) {
-  if (x case int) {
-    print('int');
+<pre><code class="language-dart">void f(Object? x) {
+  if (x case num) {
+    print('int or double');
   }
 }
 </code></pre>
 <p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void f(Type x) {
-  if (x case == int) {
-    print('int');
+<pre><code class="language-dart">void f(Object? x) {
+  if (x case num _) {
+    print('int or double');
   }
 }
 </code></pre>
+<p>If you do mean to test that the matched value (which you expect to have the
+type <code>Type</code>) is equal to the type literal <code>Foo</code>, then this lint can be
+silenced using <code>const (Foo)</code>.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">void f(Object? x) {
   if (x case int) {
@@ -53,7 +56,7 @@
 </code></pre>
 <p><strong>GOOD:</strong></p>
 <pre><code class="language-dart">void f(Object? x) {
-  if (x case int _) {
+  if (x case const (int)) {
     print('int');
   }
 }
