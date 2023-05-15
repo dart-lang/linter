@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:github/github.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
@@ -12,24 +13,21 @@ import 'package:yaml/yaml.dart';
 import 'crawl.dart';
 
 void main() async {
-  // ignore: unused_local_variable
   var sinceInfo = await getSinceMap();
 
-  // Uncomment to (re)generate since/linter.yaml contents.
-  // for (var info in sinceInfo.entries) {
-  //   var sinceLinter = info.value.sinceLinter;
-  //   if (sinceLinter != null) {
-  //     print('${info.key}: $sinceLinter');
-  //   }
-  // }
+  for (var MapEntry(key: lintName, value: sinceInfo) in sinceInfo.entries) {
+    var sinceLinter = sinceInfo.sinceLinter;
+    if (sinceLinter != null) {
+      print('$lintName: $sinceLinter');
+    }
+  }
 
-  // Uncomment to (re)generate since/dart_sdk.yaml contents.
-  // for (var info in sinceInfo.entries) {
-  //   var sinceSdk = info.value.sinceDartSdk;
-  //   if (sinceSdk != null) {
-  //     print('${info.key}: $sinceSdk}');
-  //   }
-  // }
+  var sinceSdk = await getDartSdkMap();
+
+  for (var MapEntry(key: sdkVersion, value: linterVersion) in sinceSdk.entries
+      .sorted((a, b) => Version.parse(b.key).compareTo(Version.parse(a.key)))) {
+    print('$sdkVersion: $linterVersion');
+  }
 }
 
 final Version earliestLinterInDart2 = Version.parse('0.1.58');
@@ -38,7 +36,7 @@ Map<String, String>? _dartSdkMap;
 
 Map<String, SinceInfo>? _sinceMap;
 
-Future<Map<String, String>> getDartSdkMap(Authentication? auth) async {
+Future<Map<String, String>> getDartSdkMap([Authentication? auth]) async {
   var dartSdkMap = _dartSdkMap;
   if (dartSdkMap == null) {
     var dartSdkCache = File('tool/since/dart_sdk.yaml').readAsStringSync();
