@@ -129,7 +129,7 @@ Future<String?> _commitReferenceToVersion(String version) async {
   var output = result.stdout;
   if (output is String) {
     var tags = _linterReleasePattern.allMatches(output);
-    // If commit does not have linter tag
+    // If commit is contained by a linter tag
     if (tags.isNotEmpty) {
       // Take the earliest (first) release which includes this commit
       var latestTag = tags.first.group(0);
