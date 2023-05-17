@@ -31,6 +31,19 @@ void f(int? i) => Future<int>.value(i!);
 ''');
   }
 
+  test_reassignLocalVariable() async {
+    await assertNoDiagnostics(r'''
+void f() {
+  String? s;
+  if (0 == 0) {
+    s = getS()!;
+    s.substring(0);
+  }
+}
+String? getS() => "";
+''');
+  }
+
   test_undefinedFunction() async {
     await assertDiagnostics(r'''
 f6(int? p) {

@@ -41,7 +41,7 @@ int? f2(int? i) { return i!; } // LINT
 
 f3(int? i) {
   int? v;
-  v = i!; // LINT
+  v = i!; // OK
 }
 
 f4(int? p) {
@@ -79,11 +79,6 @@ Iterable<int?> f12(int? p) sync* {yield p!;} // LINT
 Iterable<int> f12ok(int? p) sync* {yield p!;} // OK
 Stream<int?> f13(int? p) async* {yield p!;} // LINT
 Stream<int> f13ok(int? p) async* {yield p!;} // OK
-Future<void> f14(int? p) async {
-  var f = Future(() => p);
-  int? i;
-  i = await f!; // LINT
-}
 Future<int?> f15(int? p) async => p!; // LINT
 Future<int> f15ok(int? p) async => p!; // OK
 dynamic f16(int? p) async => p!; // OK

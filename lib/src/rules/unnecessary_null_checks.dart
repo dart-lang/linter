@@ -5,7 +5,9 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/src/dart/ast/ast.dart'; // ignore: implementation_imports
 
 import '../analyzer.dart';
 
@@ -79,12 +81,18 @@ DartType? getExpectedType(PostfixExpression node) {
         : null;
   }
   // assignment
-  if (parent is AssignmentExpression &&
-      parent.operator.type == TokenType.EQ &&
-      (parent.leftHandSide is! Identifier ||
-          node.operand is! Identifier ||
-          (parent.leftHandSide as Identifier).name !=
-              (node.operand as Identifier).name)) {
+  if (parent is AssignmentExpression && parent.operator.type == TokenType.EQ) {
+    var lhs = parent.leftHandSide;
+    var rhs = node.operand;
+    if (lhs is Identifier && rhs is Identifier && lhs.name == rhs.name) {
+      return null;
+    }
+    if (lhs is SimpleIdentifierImpl) {
+      var scope = lhs.scopeLookupResult?.getter;
+      if (scope is LocalVariableElement || scope is ParameterElement) {
+        return null;
+      }
+    }
     return parent.writeType;
   }
   // in variable declaration

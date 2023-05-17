@@ -18,7 +18,7 @@ T m10<T>(T? p) { return p!; } // LINT
 T? m20<T>(T? p) { T t = p!; } // LINT
 T m30<T>(T? p) {
   T t;
-  t = p!; // LINT
+  t = p!; // OK
   return t;
 }
 Future<T> m40<T extends Object?>(T? p) async => await p!; // LINT
