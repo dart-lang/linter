@@ -1227,7 +1227,7 @@
     "state": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsFix",
+    "fixStatus": "hasFix",
     "details": "**DON'T** cast a nullable value to a non nullable type. This hides a null check\nand most of the time it is not what is expected.\n\n**BAD:**\n```dart\nclass A {}\nclass B extends A {}\n\nA? a;\nvar v = a as B;\nvar v = a as A;\n```\n\n**GOOD:**\n```dart\nclass A {}\nclass B extends A {}\n\nA? a;\nvar v = a! as B;\nvar v = a!;\n```\n\n",
     "sinceDartSdk": "2.12.0",
     "sinceLinter": "0.1.120"
@@ -2988,7 +2988,7 @@
     "state": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsFix",
+    "fixStatus": "hasFix",
     "details": "Unnecessary `toList()` in spreads.\n\n**BAD:**\n```dart\nchildren: <Widget>[\n  ...['foo', 'bar', 'baz'].map((String s) => Text(s)).toList(),\n]\n```\n\n**GOOD:**\n```dart\nchildren: <Widget>[\n  ...['foo', 'bar', 'baz'].map((String s) => Text(s)),\n]\n```\n\n",
     "sinceDartSdk": "2.18.0",
     "sinceLinter": "1.24.0"
