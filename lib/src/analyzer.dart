@@ -51,6 +51,9 @@ const loggedAnalyzerErrorExitCode = 63;
 // todo(pq): remove when analyzer 5.5.0 is published.
 final Version dart2_12 = Version(2, 12, 0);
 
+/// A version describing Dart language version 3.1.0.
+final Version dart3_1 = Version(3, 1, 0);
+
 Future<Iterable<AnalysisErrorInfo>> lintFiles(
     DartLinter linter, List<File> filesToLint) async {
   // Setup an error watcher to track whether an error was logged to stderr so

@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import '../analyzer.dart';
-import '../util/unrelated_types_visitor.dart';
 
 const _desc = r'Invocation of `remove` with references of unrelated types.';
 
@@ -123,31 +122,13 @@ class ListRemoveUnrelatedType extends LintRule {
 
   ListRemoveUnrelatedType()
       : super(
-            name: 'list_remove_unrelated_type',
-            description: _desc,
-            details: _details,
-            group: Group.errors);
+          name: 'list_remove_unrelated_type',
+          description: _desc,
+          details: _details,
+          group: Group.errors,
+          state: State.removed(since: dart3_1),
+        );
 
   @override
   LintCode get lintCode => code;
-
-  @override
-  void registerNodeProcessors(
-      NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(this, context.typeSystem, context.typeProvider);
-    registry.addMethodInvocation(this, visitor);
-  }
-}
-
-class _Visitor extends UnrelatedTypesProcessors {
-  _Visitor(super.rule, super.typeSystem, super.typeProvider);
-
-  @override
-  List<MethodDefinition> get methods => [
-        MethodDefinitionForElement(
-          typeProvider.listElement,
-          'remove',
-          ExpectedArgumentKind.assignableToCollectionTypeArgument,
-        ),
-      ];
 }
