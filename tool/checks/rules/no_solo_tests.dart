@@ -51,6 +51,11 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
+    if (node.name.lexeme.startsWith('solo_test_')) {
+      rule.reportLintForToken(node.name);
+      return;
+    }
+
     for (var annotation in node.metadata) {
       if (annotation.name.name == 'soloTest') {
         rule.reportLint(annotation);
