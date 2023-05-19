@@ -26,7 +26,6 @@ var a = s as String;
     ]);
   }
 
-  @soloTest
   test_castNullable_unresolvedType() async {
     await assertDiagnostics(r'''
 Undefined? s;
