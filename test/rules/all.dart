@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'await_only_futures_test.dart' as await_only_futures;
 import 'always_specify_types_test.dart' as always_specify_types;
 import 'always_use_package_imports_test.dart' as always_use_package_imports;
 import 'annotate_overrides_test.dart' as annotate_overrides;
@@ -168,6 +169,7 @@ void main() {
   avoid_types_as_parameter_names.main();
   avoid_unused_constructor_parameters.main();
   avoid_void_async.main();
+  await_only_futures.main();
   cancel_subscriptions.main();
   cast_nullable_to_non_nullable.main();
   collection_methods_unrelated_type.main();
