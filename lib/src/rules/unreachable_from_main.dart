@@ -181,22 +181,6 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
   }
 
   @override
-  void visitConstantPattern(ConstantPattern node) {
-    var expression = node.expression;
-    if (expression is InstanceCreationExpression) {
-      expression.argumentList.accept(this);
-      // Intentionally do not visit `expression.constructorName`, as a reference
-      // in a constant pattern is not good enough to count as "reachable".
-      // Marking a type as reachable only because it was seen in a constant
-      // pattern would be a miscategorization if the type is never instantiated
-      // or subtyped.
-    } else {
-      // This is invalid, but we'll move forward with it.
-      node.expression.accept(this);
-    }
-  }
-
-  @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
     // If a constructor does not have an explicit super-initializer (or redirection?)
     // then it has an implicit super-initializer to the super-type's unnamed constructor.

@@ -492,24 +492,6 @@ class C {
 ''');
   }
 
-  test_constructor_unnamed_referencedInConstantPattern() async {
-    await assertDiagnostics(r'''
-class C {
-  const C();
-}
-
-void main() {
-  f();
-}
-
-void f([C? c]) {
-  if (c case const C()) {}
-}
-''', [
-      lint(18, 1),
-    ]);
-  }
-
   test_constructor_unnamed_referencedInConstantPattern_generic() async {
     await assertDiagnostics(r'''
 class C<T> {
