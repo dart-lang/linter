@@ -419,6 +419,19 @@
     "sinceLinter": "0.1.106"
   },
   {
+    "name": "no_self_assignments",
+    "description": "Don't assign a variable to itself.",
+    "group": "errors",
+    "maturity": "stable",
+    "state": "stable",
+    "incompatible": [],
+    "sets": [],
+    "fixStatus": "unregistered",
+    "details": "**DON'T** assign a variable to itself. Usually this is a mistake.\n\n**BAD:**\n```dart\nclass C {\n  int x;\n\n  C(int x) {\n    x = x;\n  }\n}\n```\n\n**GOOD:**\n```dart\nclass C {\n  int x;\n\n  C(int x) : x = x;\n}\n```\n\n**GOOD:**\n```dart\nclass C {\n  int x;\n\n  C(int x) {\n    this.x = x;\n  }\n}\n```\n\n**BAD:**\n```dart\nclass C {\n  int _x = 5;\n\n  int get x => _x;\n\n  set x(int x) {\n    _x = x;\n    _customUpdateLogic();\n  }\n\n  void _customUpdateLogic() {\n    print('updated');\n  }\n\n  void example() {\n    x = x;\n  }\n}\n```\n\n**GOOD:**\n```dart\nclass C {\n  int _x = 5;\n\n  int get x => _x;\n\n  set x(int x) {\n    _x = x;\n    _customUpdateLogic();\n  }\n\n  void _customUpdateLogic() {\n    print('updated');\n  }\n\n  void example() {\n    _customUpdateLogic();\n  }\n}\n```\n\n**BAD:**\n```dart\nclass C {\n  int x = 5;\n\n  void update(C other) {\n    this.x = this.x;\n  }\n}\n```\n\n**GOOD:**\n```dart\nclass C {\n  int x = 5;\n\n  void update(C other) {\n    this.x = other.x;\n  }\n}\n```\n\n",
+    "sinceDartSdk": "Unreleased",
+    "sinceLinter": "Unreleased"
+  },
+  {
     "name": "prefer_relative_imports",
     "description": "Prefer relative imports for files in `lib/`.",
     "group": "errors",
