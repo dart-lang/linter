@@ -594,8 +594,10 @@ abstract class RuleGenerator {
   String get usageMarkdown => '''
 ## Usage
 
-Add `$name` under **linter > rules** in your
-[`analysis_options.yaml`](https://dart.dev/guides/language/analysis-options):
+To enable the `$name` lint,
+add `$name` under **linter > rules** in your
+[`analysis_options.yaml`](https://dart.dev/guides/language/analysis-options)
+file:
 
 ```yaml
 linter:
