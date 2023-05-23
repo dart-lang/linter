@@ -178,7 +178,8 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
       }
 
       var metadata = element.metadata;
-      // This for-loop style is copied from analyzer's `hasX` getters on Element.
+      // This for-loop style is copied from analyzer's `hasX` getters on
+      // [Element].
       for (var i = 0; i < metadata.length; i++) {
         var annotation = metadata[i].element;
         if (annotation is PropertyAccessorElement &&
@@ -220,6 +221,19 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
       _addDeclaration(e);
     }
     super.visitConstructorName(node);
+  }
+
+  @override
+  void visitFormalParameterList(FormalParameterList node) {
+    for (var parameter in node.parameters) {
+      if (parameter is DefaultFormalParameter) {
+        parameter.defaultValue?.accept(this);
+      }
+      // Intentionally do not visit `node.type`, as a reference in a type
+      // annotation is not good enough to count as "reachable". Marking a type
+      // as reachable only because it was seen in a type annotation would be a
+      // miscategorization if the type is never instantiated or subtyped.
+    }
   }
 
   @override
@@ -281,6 +295,15 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
       _addDeclaration(e);
     }
     super.visitSuperConstructorInvocation(node);
+  }
+
+  @override
+  void visitVariableDeclarationList(VariableDeclarationList node) {
+    node.variables.accept(this);
+    // Intentionally do not visit `node.type`, as a reference in a type
+    // annotation is not good enough to count as "reachable". Marking a type as
+    // reachable only because it was seen in a type annotation would be a
+    // miscategorization if the type is never instantiated or subtyped.
   }
 
   /// Adds the declaration of the top-level element which contains [element] to
@@ -486,7 +509,6 @@ extension on Annotation {
 extension on Declaration {
   String get nameForError {
     // TODO(srawlins): Move this to analyzer when other uses are found.
-    // TODO(srawlins): Convert to switch-expression, hopefully.
     var self = this;
     if (self is ConstructorDeclaration) {
       var name = self.name?.lexeme ?? 'new';

@@ -83,18 +83,6 @@ void f<T extends C>() {}
 ''');
   }
 
-  test_class_reachableViaTypeInFunction() async {
-    await assertNoDiagnostics(r'''
-void main() {
-  f();
-}
-
-class C {}
-
-void Function(C)? f() => null;
-''');
-  }
-
   test_class_unreachable() async {
     await assertDiagnostics(r'''
 void main() {}
@@ -163,8 +151,8 @@ class C {
 }
 ''', [
       lint(22, 1),
-      // TODO(srawlins): See if we can skip reporting a declaration if it's
-      //enclosing declaration is being reported.
+      // TODO(srawlins): See if we can skip reporting a declaration if its
+      // enclosing declaration is being reported.
       lint(28, 1),
       lint(37, 5),
     ]);
@@ -182,6 +170,62 @@ part 'part.dart';
 class A {}
 ''', [
       lint(25, 1),
+    ]);
+  }
+
+  test_class_unreachable_referencedInTypeAnnotation_fieldDeclaration() async {
+    await assertDiagnostics(r'''
+void main() {
+  D();
+}
+
+class C {}
+
+class D {
+  C? c;
+}
+''', [
+      lint(30, 1),
+    ]);
+  }
+
+  test_class_unreachable_referencedInTypeAnnotation_parameter() async {
+    await assertDiagnostics(r'''
+void main() {
+  f();
+}
+
+void f([C? c]) {}
+
+class C {}
+''', [
+      lint(49, 1),
+    ]);
+  }
+
+  test_class_unreachable_referencedInTypeAnnotation_topLevelVariable() async {
+    await assertDiagnostics(r'''
+void main() {
+  print(c);
+}
+
+C? c;
+
+class C {}
+''', [
+      lint(42, 1),
+    ]);
+  }
+
+  test_class_unreachable_referencedInTypeAnnotation_variableDeclaration() async {
+    await assertDiagnostics(r'''
+void main() {
+  C? c;
+}
+
+class C {}
+''', [
+      lint(31, 1),
     ]);
   }
 
@@ -258,37 +302,6 @@ enum E {
       // No lint.
       error(WarningCode.UNUSED_ELEMENT, 84, 5),
     ]);
-  }
-
-  test_constructor_reachableViaTestReflectiveLoader() async {
-    var testReflectiveLoaderPath = '$workspaceRootPath/test_reflective_loader';
-    var packageConfigBuilder = PackageConfigFileBuilder();
-    packageConfigBuilder.add(
-      name: 'test_reflective_loader',
-      rootPath: testReflectiveLoaderPath,
-    );
-    writeTestPackageConfig(packageConfigBuilder);
-    newFile('$testReflectiveLoaderPath/lib/test_reflective_loader.dart', r'''
-library test_reflective_loader;
-
-const Object reflectiveTest = _ReflectiveTest();
-class _ReflectiveTest {
-  const _ReflectiveTest();
-}
-''');
-    await assertNoDiagnostics(r'''
-import 'package:test_reflective_loader/test_reflective_loader.dart';
-
-void main() {
-  // Usually some reference via `defineReflectiveTests`.
-  A;
-}
-
-@reflectiveTest
-class A {
-  A() {}
-}
-''');
   }
 
   test_constructor_named_reachableViaDirectCall() async {
@@ -386,6 +399,37 @@ class C {
 ''', [
       lint(42, 5),
     ]);
+  }
+
+  test_constructor_reachableViaTestReflectiveLoader() async {
+    var testReflectiveLoaderPath = '$workspaceRootPath/test_reflective_loader';
+    var packageConfigBuilder = PackageConfigFileBuilder();
+    packageConfigBuilder.add(
+      name: 'test_reflective_loader',
+      rootPath: testReflectiveLoaderPath,
+    );
+    writeTestPackageConfig(packageConfigBuilder);
+    newFile('$testReflectiveLoaderPath/lib/test_reflective_loader.dart', r'''
+library test_reflective_loader;
+
+const Object reflectiveTest = _ReflectiveTest();
+class _ReflectiveTest {
+  const _ReflectiveTest();
+}
+''');
+    await assertNoDiagnostics(r'''
+import 'package:test_reflective_loader/test_reflective_loader.dart';
+
+void main() {
+  // Usually some reference via `defineReflectiveTests`.
+  A;
+}
+
+@reflectiveTest
+class A {
+  A() {}
+}
+''');
   }
 
   test_constructor_unnamed_reachableViaDefaultImplicitSuperCall() async {
