@@ -56,6 +56,14 @@ List<int> f() => [
     ]);
   }
 
+  test_listLiteral_forEach_mutated() async {
+    await assertNoDiagnostics(r'''
+List<int> f() => [
+      for (var i in [1, 2]) i += 3
+    ];
+''');
+  }
+
   test_outOfLoopDeclaration_ok() async {
     await assertNoDiagnostics(r'''
 f() {    
