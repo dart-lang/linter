@@ -67,6 +67,16 @@ main() {
 Incompatible with: <!--suppress HtmlUnknownTarget --><a href = "avoid_types_on_closure_parameters.html" >avoid_types_on_closure_parameters</a>, <a href = "omit_local_variable_types.html" >omit_local_variable_types</a>.
 </p>
 
+            <h2>Usage</h2>
+<p>To enable the <code>always_specify_types</code> lint,
+add <code>always_specify_types</code> under <strong>linter &gt; rules</strong> in your
+<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
+file:</p>
+<pre><code class="language-yaml">linter:
+  rules:
+    - always_specify_types
+</code></pre>
+
          </section>
       </div>
       <footer>

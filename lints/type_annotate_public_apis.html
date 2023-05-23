@@ -54,6 +54,16 @@ or a <code>File</code> object? Is this method synchronous or asynchronous?</p>
 <p>With types, all of this is clarified.</p>
 
             
+            <h2>Usage</h2>
+<p>To enable the <code>type_annotate_public_apis</code> lint,
+add <code>type_annotate_public_apis</code> under <strong>linter &gt; rules</strong> in your
+<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
+file:</p>
+<pre><code class="language-yaml">linter:
+  rules:
+    - type_annotate_public_apis
+</code></pre>
+
          </section>
       </div>
       <footer>

@@ -52,6 +52,16 @@ if <code>T</code> is a nullable type, <code>x</code> may validly hold <code>null
 </code></pre>
 
             
+            <h2>Usage</h2>
+<p>To enable the <code>null_check_on_nullable_type_parameter</code> lint,
+add <code>null_check_on_nullable_type_parameter</code> under <strong>linter &gt; rules</strong> in your
+<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
+file:</p>
+<pre><code class="language-yaml">linter:
+  rules:
+    - null_check_on_nullable_type_parameter
+</code></pre>
+
          </section>
       </div>
       <footer>
