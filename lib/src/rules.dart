@@ -97,14 +97,17 @@ import 'rules/library_private_types_in_public_api.dart';
 import 'rules/lines_longer_than_80_chars.dart';
 import 'rules/list_remove_unrelated_type.dart';
 import 'rules/literal_only_boolean_expressions.dart';
+import 'rules/matching_super_parameters.dart';
 import 'rules/missing_whitespace_between_adjacent_strings.dart';
 import 'rules/no_adjacent_strings_in_list.dart';
 import 'rules/no_default_cases.dart';
 import 'rules/no_duplicate_case_values.dart';
 import 'rules/no_leading_underscores_for_library_prefixes.dart';
 import 'rules/no_leading_underscores_for_local_identifiers.dart';
+import 'rules/no_literal_bool_comparisons.dart';
 import 'rules/no_logic_in_create_state.dart';
 import 'rules/no_runtimeType_toString.dart';
+import 'rules/no_self_assignments.dart';
 import 'rules/non_constant_identifier_names.dart';
 import 'rules/noop_primitive_operations.dart';
 import 'rules/null_check_on_nullable_type_parameter.dart';
@@ -325,16 +328,19 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(LinesLongerThan80Chars())
     ..register(ListRemoveUnrelatedType())
     ..register(LiteralOnlyBooleanExpressions())
+    ..register(MatchingSuperParameters())
     ..register(MissingWhitespaceBetweenAdjacentStrings())
     ..register(NoAdjacentStringsInList())
     ..register(NoDefaultCases())
     ..register(NoDuplicateCaseValues())
+    ..register(NoLiteralBoolComparisons())
     ..register(NonConstantIdentifierNames())
     ..register(NoLeadingUnderscoresForLibraryPrefixes())
     ..register(NoLeadingUnderscoresForLocalIdentifiers())
     ..register(NoLogicInCreateState())
     ..register(NoopPrimitiveOperations())
     ..register(NoRuntimeTypeToString())
+    ..register(NoSelfAssignments())
     ..register(NullCheckOnNullableTypeParameter())
     ..register(NullClosures())
     ..register(OmitLocalVariableTypes())

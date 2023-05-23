@@ -31,7 +31,10 @@ import 'avoid_types_as_parameter_names_test.dart'
 import 'avoid_unused_constructor_parameters_test.dart'
     as avoid_unused_constructor_parameters;
 import 'avoid_void_async_test.dart' as avoid_void_async;
+import 'await_only_futures_test.dart' as await_only_futures;
 import 'cancel_subscriptions_test.dart' as cancel_subscriptions;
+import 'cast_nullable_to_non_nullable_test.dart'
+    as cast_nullable_to_non_nullable;
 import 'collection_methods_unrelated_type_test.dart'
     as collection_methods_unrelated_type;
 import 'conditional_uri_does_not_exist_test.dart'
@@ -39,6 +42,8 @@ import 'conditional_uri_does_not_exist_test.dart'
 import 'constant_identifier_names_test.dart' as constant_identifier_names;
 import 'dangling_library_doc_comments_test.dart'
     as dangling_library_doc_comments;
+import 'depend_on_referenced_packages_test.dart'
+    as depend_on_referenced_packages;
 import 'deprecated_consistency_test.dart' as deprecated_consistency;
 import 'deprecated_member_use_from_same_package_test.dart'
     as deprecated_member_use_from_same_package;
@@ -59,11 +64,13 @@ import 'library_private_types_in_public_api_test.dart'
 import 'lines_longer_than_80_chars_test.dart' as lines_longer_than_80_chars;
 import 'literal_only_boolean_expressions_test.dart'
     as literal_only_boolean_expressions;
+import 'matching_super_parameters_test.dart' as matching_super_parameters;
 import 'missing_whitespace_between_adjacent_strings_test.dart'
     as missing_whitespace_between_adjacent_strings;
 import 'no_duplicate_case_values_test.dart' as no_duplicate_case_values;
 import 'no_leading_underscores_for_local_identifiers_test.dart'
     as no_leading_underscores_for_local_identifiers;
+import 'no_self_assignments_test.dart' as no_self_assignments;
 import 'non_adjacent_strings_in_list_test.dart' as no_adjacent_strings_in_list;
 import 'non_constant_identifier_names_test.dart'
     as non_constant_identifier_names;
@@ -87,7 +94,10 @@ import 'prefer_const_literals_to_create_immutables_test.dart'
 import 'prefer_constructors_over_static_methods_test.dart'
     as prefer_constructors_over_static_methods;
 import 'prefer_contains_test.dart' as prefer_contains;
+import 'prefer_expression_function_bodies_test.dart'
+    as prefer_expression_function_bodies;
 import 'prefer_final_fields_test.dart' as prefer_final_fields;
+import 'prefer_final_in_for_each_test.dart' as prefer_final_in_for_each;
 import 'prefer_final_locals_test.dart' as prefer_final_locals;
 import 'prefer_final_parameters_test.dart' as prefer_final_parameters;
 import 'prefer_generic_function_type_aliases_test.dart'
@@ -100,6 +110,7 @@ import 'public_member_api_docs_test.dart' as public_member_api_docs;
 import 'recursive_getters_test.dart' as recursive_getters;
 import 'secure_pubspec_urls_test.dart' as secure_pubspec_urls;
 import 'sort_constructors_first_test.dart' as sort_constructors_first;
+import 'sort_pub_dependencies_test.dart' as sort_pub_dependencies;
 import 'sort_unnamed_constructors_first_test.dart'
     as sort_unnamed_constructors_first;
 import 'tighten_type_of_initializing_formals_test.dart'
@@ -121,7 +132,9 @@ import 'unnecessary_nullable_for_final_variable_declarations_test.dart'
     as unnecessary_nullable_for_final_variable_declarations;
 import 'unnecessary_overrides_test.dart' as unnecessary_overrides;
 import 'unnecessary_parenthesis_test.dart' as unnecessary_parenthesis;
+import 'unnecessary_statements_test.dart' as unnecessary_statements;
 import 'unnecessary_string_escapes_test.dart' as unnecessary_string_escapes;
+import 'unnecessary_this_test.dart' as unnecessary_this;
 import 'unreachable_from_main_test.dart' as unreachable_from_main;
 import 'unrelated_type_equality_checks_test.dart'
     as unrelated_type_equality_checks;
@@ -130,6 +143,8 @@ import 'use_build_context_synchronously_test.dart'
 import 'use_enums_test.dart' as use_enums;
 import 'use_is_even_rather_than_modulo_test.dart'
     as use_is_even_rather_than_modulo;
+import 'use_key_in_widget_constructors_test.dart'
+    as use_key_in_widget_constructors;
 import 'use_late_for_private_fields_and_variables_test.dart'
     as use_late_for_private_fields_and_variables;
 import 'use_named_constants_test.dart' as use_named_constants;
@@ -156,11 +171,14 @@ void main() {
   avoid_types_as_parameter_names.main();
   avoid_unused_constructor_parameters.main();
   avoid_void_async.main();
+  await_only_futures.main();
   cancel_subscriptions.main();
+  cast_nullable_to_non_nullable.main();
   collection_methods_unrelated_type.main();
   conditional_uri_does_not_exist.main();
   constant_identifier_names.main();
   dangling_library_doc_comments.main();
+  depend_on_referenced_packages.main();
   deprecated_consistency.main();
   deprecated_member_use_from_same_package.main();
   directives_ordering.main();
@@ -178,10 +196,12 @@ void main() {
   library_private_types_in_public_api.main();
   lines_longer_than_80_chars.main();
   literal_only_boolean_expressions.main();
+  matching_super_parameters.main();
   missing_whitespace_between_adjacent_strings.main();
   no_adjacent_strings_in_list.main();
   no_duplicate_case_values.main();
   no_leading_underscores_for_local_identifiers.main();
+  no_self_assignments.main();
   non_constant_identifier_names.main();
   null_check_on_nullable_type_parameter.main();
   null_closures.main();
@@ -198,7 +218,9 @@ void main() {
   prefer_const_literals_to_create_immutables.main();
   prefer_constructors_over_static_methods.main();
   prefer_contains.main();
+  prefer_expression_function_bodies.main();
   prefer_final_fields.main();
+  prefer_final_in_for_each.main();
   prefer_final_locals.main();
   prefer_final_parameters.main();
   prefer_generic_function_type_aliases.main();
@@ -210,6 +232,7 @@ void main() {
   recursive_getters.main();
   secure_pubspec_urls.main();
   sort_constructors_first.main();
+  sort_pub_dependencies.main();
   sort_unnamed_constructors_first.main();
   tighten_type_of_initializing_formals.main();
   type_init_formals.main();
@@ -225,12 +248,15 @@ void main() {
   unnecessary_null_checks.main();
   unnecessary_overrides.main();
   unnecessary_parenthesis.main();
+  unnecessary_statements.main();
   unnecessary_string_escapes.main();
+  unnecessary_this.main();
   unreachable_from_main.main();
   unrelated_type_equality_checks.main();
   use_build_context_synchronously.main();
   use_enums.main();
   use_is_even_rather_than_modulo.main();
+  use_key_in_widget_constructors.main();
   use_late_for_private_fields_and_variables.main();
   use_named_constants.main();
   use_super_parameters.main();

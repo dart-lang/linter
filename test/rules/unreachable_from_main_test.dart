@@ -256,8 +256,39 @@ enum E {
 }
 ''', [
       // No lint.
-      error(HintCode.UNUSED_ELEMENT, 84, 5),
+      error(WarningCode.UNUSED_ELEMENT, 84, 5),
     ]);
+  }
+
+  test_constructor_reachableViaTestReflectiveLoader() async {
+    var testReflectiveLoaderPath = '$workspaceRootPath/test_reflective_loader';
+    var packageConfigBuilder = PackageConfigFileBuilder();
+    packageConfigBuilder.add(
+      name: 'test_reflective_loader',
+      rootPath: testReflectiveLoaderPath,
+    );
+    writeTestPackageConfig(packageConfigBuilder);
+    newFile('$testReflectiveLoaderPath/lib/test_reflective_loader.dart', r'''
+library test_reflective_loader;
+
+const Object reflectiveTest = _ReflectiveTest();
+class _ReflectiveTest {
+  const _ReflectiveTest();
+}
+''');
+    await assertNoDiagnostics(r'''
+import 'package:test_reflective_loader/test_reflective_loader.dart';
+
+void main() {
+  // Usually some reference via `defineReflectiveTests`.
+  A;
+}
+
+@reflectiveTest
+class A {
+  A() {}
+}
+''');
   }
 
   test_constructor_named_reachableViaDirectCall() async {

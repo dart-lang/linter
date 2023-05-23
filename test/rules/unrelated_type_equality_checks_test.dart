@@ -18,6 +18,56 @@ class UnrelatedTypeEqualityChecksTestLanguage300 extends LintRuleTest
   @override
   String get lintRule => 'unrelated_type_equality_checks';
 
+  test_recordAndInterfaceType_unrelated() async {
+    await assertDiagnostics(r'''
+bool f((int, int) a, String b) => a == b;
+''', [
+      lint(34, 6),
+    ]);
+  }
+
+  test_records_related() async {
+    await assertNoDiagnostics(r'''
+bool f((int, int) a, (num, num) b) => a == b;
+''');
+  }
+
+  test_records_unrelated() async {
+    await assertDiagnostics(r'''
+bool f((int, int) a, (String, String) b) => a == b;
+''', [
+      lint(44, 6),
+    ]);
+  }
+
+  test_recordsWithNamed_related() async {
+    await assertNoDiagnostics(r'''
+bool f(({int one, int two}) a, ({num two, num one}) b) => a == b;
+''');
+  }
+
+  test_recordsWithNamed_unrelated() async {
+    await assertDiagnostics(r'''
+bool f(({int one, int two}) a, ({String one, String two}) b) => a == b;
+''', [
+      lint(64, 6),
+    ]);
+  }
+
+  test_recordsWithNamedAndPositional_related() async {
+    await assertNoDiagnostics(r'''
+bool f((int, {int two}) a, (num one, {num two}) b) => a == b;
+''');
+  }
+
+  test_recordsWithNamedAndPositional_unrelated() async {
+    await assertDiagnostics(r'''
+bool f((int, {int two}) a, (String one, {String two}) b) => a == b;
+''', [
+      lint(60, 6),
+    ]);
+  }
+
   test_switchExpression() async {
     await assertDiagnostics(r'''    
 const space = 32;
@@ -28,22 +78,21 @@ String f(int char) {
   };
 }
 ''', [
-      error(CompileTimeErrorCode.NON_EXHAUSTIVE_SWITCH, 49, 6),
+      error(CompileTimeErrorCode.NON_EXHAUSTIVE_SWITCH_EXPRESSION, 49, 6),
       lint(69, 10),
     ]);
   }
 
   test_switchExpression_lessEq_ok() async {
     await assertDiagnostics(r'''
-String f(String char) {
-  return switch (char) {
-    <= 1 => 'space',
+String f(int i) {
+  return switch (i) {
+    <= 1 => 'one',
   };
 }
 ''', [
       // No lint.
-      error(CompileTimeErrorCode.NON_EXHAUSTIVE_SWITCH, 33, 6),
-      error(CompileTimeErrorCode.UNDEFINED_OPERATOR, 53, 2),
+      error(CompileTimeErrorCode.NON_EXHAUSTIVE_SWITCH_EXPRESSION, 27, 6)
     ]);
   }
 
@@ -57,7 +106,7 @@ String f(int char) {
   };
 }
 ''', [
-      error(CompileTimeErrorCode.NON_EXHAUSTIVE_SWITCH, 49, 6),
+      error(CompileTimeErrorCode.NON_EXHAUSTIVE_SWITCH_EXPRESSION, 49, 6),
       lint(69, 10),
     ]);
   }
@@ -71,7 +120,7 @@ String f(String char) {
 }
 ''', [
       // No lint.
-      error(CompileTimeErrorCode.NON_EXHAUSTIVE_SWITCH, 33, 6),
+      error(CompileTimeErrorCode.NON_EXHAUSTIVE_SWITCH_EXPRESSION, 33, 6),
     ]);
   }
 }

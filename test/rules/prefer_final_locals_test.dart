@@ -148,6 +148,15 @@ f() {
 ''');
   }
 
+  /// https://github.com/dart-lang/linter/issues/4286
+  test_destructured_recordPattern_forLoop_final() async {
+    await assertNoDiagnostics(r'''
+f() {
+  for (final (a, b) in [(1, 2), (3, 4), (5, 6)]) { }
+}
+''');
+  }
+
   test_destructured_recordPattern_mutated() async {
     await assertNoDiagnostics(r'''
 f() {
@@ -191,7 +200,7 @@ f(Object o) {
   if (o case {'x': var x}) print('$x');
 }
 ''', [
-      lint(37, 1),
+      lint(33, 5),
     ]);
   }
 
@@ -214,7 +223,7 @@ f(Object o) {
   if (o case C(c: var x)) x;
 }
 ''', [
-      lint(71, 1),
+      lint(67, 5),
     ]);
   }
 
@@ -271,7 +280,7 @@ f() {
   }
 }
 ''', [
-      lint(83, 1),
+      lint(79, 5),
     ]);
   }
 
@@ -313,7 +322,7 @@ f() {
   }
 }
 ''', [
-      lint(40, 1),
+      lint(36, 5),
       lint(43, 5),
     ]);
   }

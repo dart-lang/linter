@@ -93,7 +93,7 @@ class _Visitor extends SimpleAstVisitor<void> {
       value = getIntValue(node.leftOperand, context);
       if (value is int) {
         if (value <= 0 && _isUnassignedIndexOf(node.rightOperand)) {
-          _checkConstant(node, value, _invertedTokenType(node.operator.type));
+          _checkConstant(node, value, node.operator.type.inverted);
         }
       }
     }
@@ -137,25 +137,6 @@ class _Visitor extends SimpleAstVisitor<void> {
         rule.reportLint(expression,
             errorCode: PreferContainsOverIndexOf.alwaysTrue);
       }
-    }
-  }
-
-  TokenType _invertedTokenType(TokenType type) {
-    switch (type) {
-      case TokenType.LT_EQ:
-        return TokenType.GT_EQ;
-
-      case TokenType.LT:
-        return TokenType.GT;
-
-      case TokenType.GT:
-        return TokenType.LT;
-
-      case TokenType.GT_EQ:
-        return TokenType.LT_EQ;
-
-      default:
-        return type;
     }
   }
 

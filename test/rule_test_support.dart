@@ -39,20 +39,29 @@ typedef DiagnosticMatcher = bool Function(AnalysisError error);
 class AnalysisOptionsFileConfig {
   final List<String> experiments;
   final List<String> lints;
+  final bool propagateLinterExceptions;
 
   AnalysisOptionsFileConfig({
     this.experiments = const [],
     this.lints = const [],
+    this.propagateLinterExceptions = false,
   });
 
   String toContent() {
     var buffer = StringBuffer();
 
-    if (experiments.isNotEmpty) {
+    if (experiments.isNotEmpty || propagateLinterExceptions) {
       buffer.writeln('analyzer:');
       buffer.writeln('  enable-experiment:');
       for (var experiment in experiments) {
         buffer.writeln('    - $experiment');
+      }
+
+      if (propagateLinterExceptions) {
+        buffer.writeln('  strong-mode:');
+        buffer.writeln(
+          '    propagate-linter-exceptions: $propagateLinterExceptions',
+        );
       }
     }
 
@@ -378,6 +387,7 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
       AnalysisOptionsFileConfig(
         experiments: experiments,
         lints: _lintRules,
+        propagateLinterExceptions: true,
       ),
     );
     writeTestPackageConfig(
@@ -456,9 +466,45 @@ export 'src/widgets/framework.dart';
         .writeAsStringSync(r'''   
 abstract class BuildContext {
   Widget get widget;
+  bool get mounted;
 }
 
-class Widget {
+class Container extends StatelessWidget {
+  const Container({super.key});
+}
+
+class Key {
+  Key(String value);
+}
+
+class Navigator {
+  static NavigatorState of(
+      BuildContext context, {bool rootNavigator = false}) => NavigatorState();
+}
+
+class NavigatorState {}
+
+abstract class StatefulWidget extends Widget {
+  const StatefulWidget({super.key});
+}
+
+abstract class Widget {
+  final Key? key;
+
+  const Widget({thi.key});
+}
+
+abstract class StatelessWidget extends Widget {
+  const StatelessWidget({super.key});
+
+  @protected
+  Widget build(BuildContext context);
+}
+
+abstract class Widget {
+  final Key? key;
+
+  const Widget({thi.key});
 }
 ''');
   }

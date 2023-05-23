@@ -176,14 +176,32 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
         // the super-type's unnamed constructor.
         _addDefaultSuperConstructorDeclaration(node);
       }
+
+      var metadata = element.metadata;
+      // This for-loop style is copied from analyzer's `hasX` getters on Element.
+      for (var i = 0; i < metadata.length; i++) {
+        var annotation = metadata[i].element;
+        if (annotation is PropertyAccessorElement &&
+            annotation.name == 'reflectiveTest' &&
+            annotation.library.name == 'test_reflective_loader') {
+          // The class is instantiated through the use of mirrors in
+          // 'test_reflective_loader'.
+          var unnamedConstructor = element.constructors
+              .firstWhereOrNull((constructor) => constructor.name == '');
+          if (unnamedConstructor != null) {
+            _addDeclaration(unnamedConstructor);
+          }
+        }
+      }
     }
     super.visitClassDeclaration(node);
   }
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    // If a constructor does not have an explicit super-initializer (or redirection?)
-    // then it has an implicit super-initializer to the super-type's unnamed constructor.
+    // If a constructor does not have an explicit super-initializer (or
+    // redirection?) then it has an implicit super-initializer to the
+    // super-type's unnamed constructor.
     var hasSuperInitializer =
         node.initializers.any((e) => e is SuperConstructorInvocation);
     if (!hasSuperInitializer) {
@@ -471,7 +489,8 @@ extension on Declaration {
     // TODO(srawlins): Convert to switch-expression, hopefully.
     var self = this;
     if (self is ConstructorDeclaration) {
-      return self.name?.lexeme ?? self.returnType.name;
+      var name = self.name?.lexeme ?? 'new';
+      return '${self.returnType.name}.$name';
     } else if (self is EnumConstantDeclaration) {
       return self.name.lexeme;
     } else if (self is ExtensionDeclaration) {

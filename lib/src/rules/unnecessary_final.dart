@@ -7,6 +7,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
+import '../extensions.dart';
 
 const _desc = "Don't use `final` for local variables.";
 
@@ -99,10 +100,9 @@ class _Visitor extends SimpleAstVisitor<void> {
   void visitFormalParameterList(FormalParameterList parameterList) {
     for (var node in parameterList.parameters) {
       if (node.isFinal) {
-        var keyword = _getFinal(node);
+        var (keyword, type) = getParameterDetails(node);
         if (keyword == null) continue;
 
-        var type = _getType(node);
         var errorCode = getErrorCode(type);
         rule.reportLintForToken(keyword, errorCode: errorCode);
       }
@@ -122,6 +122,12 @@ class _Visitor extends SimpleAstVisitor<void> {
         var errorCode = getErrorCode(loopVariable.type);
         rule.reportLintForToken(loopVariable.keyword, errorCode: errorCode);
       }
+    } else if (forLoopParts is ForEachPartsWithPattern) {
+      var keyword = forLoopParts.keyword;
+      if (keyword.isFinal) {
+        rule.reportLintForToken(keyword,
+            errorCode: UnnecessaryFinal.withoutType);
+      }
     }
   }
 
@@ -133,32 +139,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     }
   }
 
-  /// Return the `final` token for the parameter [node].
-  Token? _getFinal(FormalParameter node) {
-    // TODO(brianwilkerson) Combine with `_getType` by using a record to hold
-    //  the token and type.
+  (Token?, AstNode?) getParameterDetails(FormalParameter node) {
     var parameter = node is DefaultFormalParameter ? node.parameter : node;
-    if (parameter is FieldFormalParameter) {
-      return parameter.keyword;
-    } else if (parameter is SimpleFormalParameter) {
-      return parameter.keyword;
-    } else if (parameter is SuperFormalParameter) {
-      return parameter.keyword;
-    }
-    return null;
-  }
-
-  /// Return the type of the formal parameter [node], or `null` if there is no
-  /// explicit type.
-  AstNode? _getType(FormalParameter node) {
-    var parameter = node is DefaultFormalParameter ? node.parameter : node;
-    if (parameter is FieldFormalParameter) {
-      return parameter.type;
-    } else if (parameter is SimpleFormalParameter) {
-      return parameter.type;
-    } else if (parameter is SuperFormalParameter) {
-      return parameter.type;
-    }
-    return null;
+    return switch (parameter) {
+      FieldFormalParameter() => (parameter.keyword, parameter.type),
+      SimpleFormalParameter() => (parameter.keyword, parameter.type),
+      SuperFormalParameter() => (parameter.keyword, parameter.type),
+      _ => (null, null),
+    };
   }
 }

@@ -7,6 +7,7 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
+import '../extensions.dart';
 
 const _desc = r'Unnecessary parentheses can be removed.';
 
@@ -90,7 +91,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     // case const (a + b):
     if (parent is ConstantPattern) return;
     var expression = node.expression;
-    if (expression is SimpleIdentifier || _isNullAware(expression)) {
+    if (expression is SimpleIdentifier ||
+        expression.containsNullAwareInvocationInChain()) {
       if (parent is PropertyAccess) {
         var name = parent.propertyName.name;
         if (name == 'hashCode' || name == 'runtimeType') {
@@ -133,8 +135,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (parent is ParenthesizedExpression ||
         parent is InterpolationExpression ||
         (parent is ArgumentList && parent.arguments.length == 1) ||
-        (parent is IfStatement && node == parent.condition) ||
-        (parent is IfElement && node == parent.condition) ||
+        (parent is IfStatement && node == parent.expression) ||
+        (parent is IfElement && node == parent.expression) ||
         (parent is WhileStatement && node == parent.condition) ||
         (parent is DoStatement && node == parent.condition) ||
         (parent is SwitchStatement && node == parent.expression) ||
@@ -235,22 +237,6 @@ class _Visitor extends SimpleAstVisitor<void> {
         _ContainsFunctionExpressionVisitor();
     node.accept(containsFunctionExpressionVisitor);
     return containsFunctionExpressionVisitor.hasFunctionExpression;
-  }
-
-  /// Return `true` if the expression is null aware, or if one of its recursive
-  /// targets is null aware.
-  bool _isNullAware(Expression? expression) {
-    if (expression is PropertyAccess) {
-      if (expression.isNullAware) return true;
-      return _isNullAware(expression.target);
-    } else if (expression is MethodInvocation) {
-      if (expression.isNullAware) return true;
-      return _isNullAware(expression.target);
-    } else if (expression is IndexExpression) {
-      if (expression.isNullAware) return true;
-      return _isNullAware(expression.target);
-    }
-    return false;
   }
 }
 

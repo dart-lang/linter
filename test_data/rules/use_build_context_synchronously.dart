@@ -7,19 +7,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-void mountedBinOpAnd(BuildContext context, bool condition) async {
-  await Future<void>.delayed(Duration());
-  if (condition && context.mounted) {
-    await Navigator.of(context).pushNamed('routeName'); // OK
-  }
-}
-
-void mountedBinOpAOr(BuildContext context, bool condition) async {
-  await Future<void>.delayed(Duration());
-  if (condition || !mounted) return;
-  await Navigator.of(context).pushNamed('routeName'); // OK
-}
-
 void awaitInSwitchCase(BuildContext context) async {
   await Future<void>.delayed(Duration());
   switch (1) {
@@ -295,6 +282,12 @@ class _MyState extends State<MyWidget> {
     Navigator.of(context).pushNamed('routeName'); // OK
   }
 
+  void methodWithBuildContextParameter4(BuildContext context) async {
+    await Future<void>.delayed(Duration());
+    if (!context.mounted) return;
+    await Navigator.of(context).pushNamed('routeName'); // OK
+  }
+
   void methodWithMountedFieldCheck(
       BuildContext context, WidgetStateContext stateContext) async {
     await Future<void>.delayed(Duration());
@@ -306,126 +299,12 @@ class _MyState extends State<MyWidget> {
   Widget build(BuildContext context) => Placeholder();
 }
 
-void topLevel(BuildContext context) async {
-  Navigator.of(context).pushNamed('routeName'); // OK
-
-  await Future<void>.delayed(Duration());
-  Navigator.of(context).pushNamed('routeName'); // LINT
-}
-
 void topLevel2(BuildContext context) async {
   Navigator.of(context).pushNamed('routeName'); // OK
 
   await Future<void>.delayed(Duration());
   // todo (pq): consider other conditionals (for, while, do, ...)
   if (true) {
-    Navigator.of(context).pushNamed('routeName'); // LINT
-  }
-}
-
-void topLevel3(BuildContext context) async {
-  while (true) {
-    // OK the first time only!
-    Navigator.of(context).pushNamed('routeName'); // TODO: LINT
-    await Future<void>.delayed(Duration());
-  }
-}
-
-void topLevel4(BuildContext context) async {
-  Navigator.of(context).pushNamed('routeName');
-  await Future<void>.delayed(Duration());
-  if (mounted) {
-    Navigator.of(context).pushNamed('routeName'); // OK
-  }
-}
-
-void topLevel5(BuildContext context) async {
-  Navigator.of(context).pushNamed('routeName');
-  await Future<void>.delayed(Duration());
-
-  switch ('') {
-    case 'a':
-      if (!mounted) {
-        break;
-      }
-      Navigator.of(context).pushNamed('routeName222'); // OK
-      break;
-    default: //nothing.
-  }
-}
-
-void topLevel6(BuildContext context) async {
-  Navigator.of(context).pushNamed('route1'); // OK
-  if (true) {
-    await Future<void>.delayed(Duration());
-    return;
-  }
-  Navigator.of(context).pushNamed('route2'); // OK
-}
-
-void topLevel7(BuildContext context) async {
-  Navigator.of(context).pushNamed('route1'); // OK
-  if (true) {
-    await Future<void>.delayed(Duration());
-    return;
-  } else {
-    await Future<void>.delayed(Duration());
-    return;
-  }
-  Navigator.of(context).pushNamed('route2'); // OK
-}
-
-void topLevel8(BuildContext context) async {
-  Navigator.of(context).pushNamed('route1'); // OK
-  if (true) {
-    await Future<void>.delayed(Duration());
-  } else {
-    await Future<void>.delayed(Duration());
-    return;
-  }
-  Navigator.of(context).pushNamed('route2'); // LINT
-}
-
-void topLevel9(BuildContext context) async {
-  Navigator.of(context).pushNamed('route1'); // OK
-  while (true) {
-    await Future<void>.delayed(Duration());
-    break;
-  }
-  Navigator.of(context).pushNamed('route2'); // LINT
-}
-
-void closure(BuildContext context) async {
-  await Future<void>.delayed(Duration());
-
-  // todo (pq): what about closures?
-  func(() {
-    f(context); // TODO: LINT
-  });
-}
-
-// https://github.com/dart-lang/linter/issues/3457
-void awaitInIf1(BuildContext context, Future<bool> condition) async {
-  if (await condition) {
-    Navigator.of(context).pushNamed('routeName'); // LINT
-  }
-}
-
-void awaitInIf2(BuildContext context, Future<bool> condition) async {
-  var b = await condition;
-  if (b) {
-    Navigator.of(context).pushNamed('routeName'); // LINT
-  }
-}
-
-void awaitInIf3(BuildContext context, Future<bool> condition) async {
-  if (await condition) return;
-  Navigator.of(context).pushNamed('routeName'); // LINT
-}
-
-void awaitInIf4(
-    BuildContext context, Future<bool> Function(BuildContext) condition) async {
-  if (await condition(context)) { // OK
     Navigator.of(context).pushNamed('routeName'); // LINT
   }
 }

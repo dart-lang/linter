@@ -27,11 +27,10 @@ jobs:
           - main
           - coverage
           - release
-          - pana_baseline
           - benchmark
 
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
       - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
         with:
           sdk: dev
@@ -44,7 +43,7 @@ jobs:
         run: ./tool/bot.sh
       - name: upload coverage
         if: matrix.linter-bot == 'coverage'
-        uses: coverallsapp/github-action@65affa9d85c09884b6051d6c1c7138d469d62b23
+        uses: coverallsapp/github-action@f350da2c033043742f89e8c0b7b5145a1616da6d
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: var/lcov.info
