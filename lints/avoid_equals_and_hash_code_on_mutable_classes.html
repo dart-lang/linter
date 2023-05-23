@@ -29,11 +29,10 @@
          </header>
          <section>
             
-            <p><strong>AVOID</strong> overloading operator == and hashCode on classes not marked <code>@immutable</code>.</p>
-<p>If a class is not immutable, overloading operator == and hashCode can lead to
-unpredictable and undesirable behavior when used in collections. See
-https://dart.dev/guides/language/effective-dart/design#avoid-defining-custom-equality-for-mutable-classes
-for more information.</p>
+            <p>From <a href="https://dart.dev/effective-dart/design#avoid-defining-custom-equality-for-mutable-classes">Effective Dart</a>:</p>
+<p><strong>AVOID</strong> overloading operator == and hashCode on classes not marked <code>@immutable</code>.</p>
+<p>If a class is not immutable, overloading <code>operator ==</code> and <code>hashCode</code> can
+lead to unpredictable and undesirable behavior when used in collections.</p>
 <p><strong>BAD:</strong></p>
 <pre><code class="language-dart">class B {
   String key;
