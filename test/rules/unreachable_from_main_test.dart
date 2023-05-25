@@ -1009,7 +1009,7 @@ int x = 1;
     ]);
   }
 
-  test_typedef_reachable_eferencedInObjectPattern() async {
+  test_typedef_reachable_referencedInObjectPattern() async {
     await assertNoDiagnostics(r'''
 typedef T = int;
 
@@ -1033,6 +1033,17 @@ typedef T = int;
 ''');
   }
 
+  test_typedef_reachable_referencedInTypeAnnotation_castPattern() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  var r = (1.5, );
+  var (s as T, ) = r;
+}
+
+typedef T = int;
+''');
+  }
+
   test_typedef_reachable_referencedInTypeAnnotation_genericFunctionType() async {
     await assertNoDiagnostics(r'''
 void main() {
@@ -1049,17 +1060,6 @@ typedef T = int;
     await assertNoDiagnostics(r'''
 void main() {
   1.5 is T;
-}
-
-typedef T = int;
-''');
-  }
-
-  test_typedef_reachable_referencedInTypeAnnotation_castPattern() async {
-    await assertNoDiagnostics(r'''
-void main() {
-  var r = (1.5, );
-  var (s as T, ) = r;
 }
 
 typedef T = int;
