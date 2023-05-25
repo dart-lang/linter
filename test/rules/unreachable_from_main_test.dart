@@ -71,16 +71,20 @@ void f([Object? p = const C()]) {}
 ''');
   }
 
-  test_class_reachableViaTypedefBound() async {
-    await assertNoDiagnostics(r'''
+  test_class_referencedInObjectPattern() async {
+    await assertDiagnostics(r'''
+class C {}
+
 void main() {
   f();
 }
 
-class C {}
-
-void f<T extends C>() {}
-''');
+void f([Object? c]) {
+  if (c case C()) {}
+}
+''', [
+      lint(6, 1),
+    ]);
   }
 
   test_class_unreachable() async {
@@ -226,6 +230,20 @@ void main() {
 class C {}
 ''', [
       lint(31, 1),
+    ]);
+  }
+
+  test_class_unreachable_typedefBound() async {
+    await assertDiagnostics(r'''
+void main() {
+  f();
+}
+
+class C {}
+
+void f<T extends C>() {}
+''', [
+      lint(30, 1),
     ]);
   }
 
@@ -582,22 +600,6 @@ void f([C? c]) {
 }
 ''', [
       lint(21, 1),
-    ]);
-  }
-
-  test_constructor_unnamed_referencedInObjectPattern() async {
-    await assertDiagnostics(r'''
-class C {}
-
-void main() {
-  f();
-}
-
-void f([Object? c]) {
-  if (c case C()) {}
-}
-''', [
-      lint(6, 1),
     ]);
   }
 
@@ -1005,6 +1007,109 @@ int x = 1;
 ''', [
       lint(20, 1),
     ]);
+  }
+
+  test_typedef_reachable_eferencedInObjectPattern() async {
+    await assertNoDiagnostics(r'''
+typedef T = int;
+
+void main() {
+  f();
+}
+
+void f([Object? c]) {
+  if (c case T()) {}
+}
+''');
+  }
+
+  test_typedef_reachable_referencedInTypeAnnotation_asExpression() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  1.5 as T;
+}
+
+typedef T = int;
+''');
+  }
+
+  test_typedef_reachable_referencedInTypeAnnotation_genericFunctionType() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  t = () => 7;
+}
+
+T? Function()? t;
+
+typedef T = int;
+''');
+  }
+
+  test_typedef_reachable_referencedInTypeAnnotation_isExpression() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  1.5 is T;
+}
+
+typedef T = int;
+''');
+  }
+
+  test_typedef_reachable_referencedInTypeAnnotation_castPattern() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  var r = (1.5, );
+  var (s as T, ) = r;
+}
+
+typedef T = int;
+''');
+  }
+
+  test_typedef_reachable_referencedInTypeAnnotation_parameter() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  f(() {});
+}
+
+void f([Cb? c]) {}
+
+typedef Cb = void Function();
+''');
+  }
+
+  test_typedef_reachable_referencedInTypeAnnotation_recordType() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  t = (1, );
+}
+
+(T, )? t;
+
+typedef T = int;
+''');
+  }
+
+  test_typedef_reachable_referencedInTypeAnnotation_topLevelVariable() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  c = () {};
+}
+
+Cb? c;
+
+typedef Cb = void Function();
+''');
+  }
+
+  test_typedef_reachable_referencedInTypeAnnotation_variableDeclaration() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  Cb c = () {};
+}
+
+typedef Cb = void Function();
+''');
   }
 
   test_typedef_unreachable() async {

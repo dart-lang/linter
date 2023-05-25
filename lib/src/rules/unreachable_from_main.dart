@@ -142,27 +142,9 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
   }
 
   @override
-  void visitAsExpression(AsExpression node) {
-    node.expression.accept(this);
-    // Intentionally do not visit `node.type`, as a reference in the type of an
-    // as-expression is not good enough to count as "reachable". Marking a type
-    // as reachable only because it was seen in an as-expression would be a
-    // miscategorization if the type is never instantiated or subtyped.
-  }
-
-  @override
   void visitAssignmentExpression(AssignmentExpression node) {
     _visitCompoundAssignmentExpression(node);
     super.visitAssignmentExpression(node);
-  }
-
-  @override
-  void visitCastPattern(CastPattern node) {
-    node.pattern.accept(this);
-    // Intentionally do not visit `node.type`, as a reference in the type in a
-    // cast pattern is not good enough to count as "reachable". Marking a type
-    // as reachable only because it was seen in a cast pattern would be a
-    // miscategorization if the type is never instantiated or subtyped.
   }
 
   @override
@@ -224,35 +206,25 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
   }
 
   @override
-  void visitFormalParameterList(FormalParameterList node) {
-    for (var parameter in node.parameters) {
-      if (parameter is DefaultFormalParameter) {
-        parameter.defaultValue?.accept(this);
-      }
-      // Intentionally do not visit `node.type`, as a reference in a type
-      // annotation is not good enough to count as "reachable". Marking a type
-      // as reachable only because it was seen in a type annotation would be a
-      // miscategorization if the type is never instantiated or subtyped.
+  void visitNamedType(NamedType node) {
+    if (node.type?.alias != null) {
+      // Any reference to a typedef counts as "reachable", since structural
+      // typing is used to match against objects.
+      _addDeclaration(node.element!);
     }
-  }
 
-  @override
-  void visitIsExpression(IsExpression node) {
-    node.expression.accept(this);
-    // Intentionally do not visit `node.type`, as a reference in an
-    // is-expression is not good enough to count as "reachable".
-    // Marking a type as reachable only because it was seen in an is-expression
-    // would be a miscategorization if the type is never instantiated or
-    // subtyped.
-  }
+    // Intentionally do not add the declaration of non-alias named types, as a
+    // reference to such a type in a [TypeAnnnotation] is not good enough to
+    // count as "reachable". Marking a type as reachable only because it was
+    // seen in a type annotation would be a miscategorization if the type is
+    // never instantiated or subtyped.
 
-  @override
-  void visitObjectPattern(ObjectPattern node) {
-    node.fields.accept(this);
-    // Intentionally do not visit `node.type`, as a reference as the type in an
-    // object pattern is not good enough to count as "reachable". Marking a type
-    // as reachable only because it was seen in an object pattern would be a
-    // miscategorization if the type is never instantiated or subtyped.
+    var typeArguments = node.typeArguments;
+    if (typeArguments != null) {
+      for (var typeArgument in typeArguments.arguments) {
+        typeArgument.accept(this);
+      }
+    }
   }
 
   @override
@@ -298,12 +270,15 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
   }
 
   @override
-  void visitVariableDeclarationList(VariableDeclarationList node) {
-    node.variables.accept(this);
-    // Intentionally do not visit `node.type`, as a reference in a type
-    // annotation is not good enough to count as "reachable". Marking a type as
-    // reachable only because it was seen in a type annotation would be a
-    // miscategorization if the type is never instantiated or subtyped.
+  void visitVariableDeclaration(VariableDeclaration node) {
+    var parent = node.parent;
+    if (parent is VariableDeclarationList) {
+      var type = parent.type;
+      if (type != null) {
+        type.accept(this);
+      }
+    }
+    super.visitVariableDeclaration(node);
   }
 
   /// Adds the declaration of the top-level element which contains [element] to
