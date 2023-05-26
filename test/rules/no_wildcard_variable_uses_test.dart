@@ -23,6 +23,7 @@ class C {
   C._();
   m() {
     print(C._);
+    print(C._());   
   }
 }
 ''');
