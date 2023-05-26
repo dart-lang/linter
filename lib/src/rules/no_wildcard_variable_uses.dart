@@ -73,7 +73,10 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitSimpleIdentifier(SimpleIdentifier node) {
-    if (node.staticElement is ExecutableElement) return;
+    var element = node.staticElement;
+    if (element is! LocalVariableElement && element is! ParameterElement) {
+      return;
+    }
 
     if (node.name.isJustUnderscores) {
       rule.reportLint(node);
