@@ -100,6 +100,7 @@ linter:
     - no_runtimeType_toString
     - no_self_assignments
     - non_constant_identifier_names
+    - no_wildcard_variable_uses
     - noop_primitive_operations
     - null_check_on_nullable_type_parameter
     - null_closures
