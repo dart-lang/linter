@@ -4,6 +4,7 @@
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 import '../util/ascii_utils.dart';
@@ -72,6 +73,8 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitSimpleIdentifier(SimpleIdentifier node) {
+    if (node.staticElement is ExecutableElement) return;
+
     if (node.name.isJustUnderscores) {
       rule.reportLint(node);
     }

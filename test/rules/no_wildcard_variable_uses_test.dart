@@ -17,11 +17,44 @@ class NoWildcardVariableUsesTest extends LintRuleTest {
   @override
   String get lintRule => 'no_wildcard_variable_uses';
 
+  test_constructor() async {
+    await assertNoDiagnostics(r'''
+class C {
+  C._();
+  m() {
+    print(C._);
+  }
+}
+''');
+  }
+
   test_declaredIdentifier() async {
     await assertNoDiagnostics(r'''
 f() {
   for (var _ in [1, 2, 3]) ;
 }  
+''');
+  }
+
+  test_field() async {
+    await assertNoDiagnostics(r'''
+class C {
+  int _ = 0;
+  m() {
+    print(_);
+  }
+} 
+''');
+  }
+
+  test_getter() async {
+    await assertNoDiagnostics(r'''
+class C {
+  int get _ => 0;
+  m() {
+    print(_);
+  }
+}
 ''');
   }
 
@@ -36,6 +69,18 @@ f() {
     ]);
   }
 
+  test_method() async {
+    await assertNoDiagnostics(r'''
+class C {
+  String _() => '';
+  m() {
+    print(_);
+    print(_());
+  }
+}
+''');
+  }
+
   test_param() async {
     await assertDiagnostics(r'''
 f(int __) {
@@ -44,5 +89,26 @@ f(int __) {
 ''', [
       lint(20, 2),
     ]);
+  }
+
+  test_topLevelFunction() async {
+    await assertNoDiagnostics(r'''
+String _() => '';
+
+f() {
+  print(_);
+  print(_());
+}
+''');
+  }
+
+  test_topLevelGetter() async {
+    await assertNoDiagnostics(r'''
+int get _ => 0;
+
+f() {
+  print(_);
+}
+''');
   }
 }
