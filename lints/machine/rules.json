@@ -932,7 +932,7 @@
     "state": "stable",
     "incompatible": [],
     "sets": [],
-    "fixStatus": "needsFix",
+    "fixStatus": "hasFix",
     "details": "**DON'T** declare multiple variables on a single line.\n\n**BAD:**\n```dart\nString? foo, bar, baz;\n```\n\n**GOOD:**\n```dart\nString? foo;\nString? bar;\nString? baz;\n```\n\n",
     "sinceDartSdk": "2.13.0",
     "sinceLinter": "1.1.0"
