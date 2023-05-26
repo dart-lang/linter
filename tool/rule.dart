@@ -176,7 +176,7 @@ import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../rule_test_support.dart';
 
-//todo: add to all.dart
+// TODO: add to all.dart
 
 main() {
   defineReflectiveSuite(() {
