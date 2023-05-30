@@ -10,10 +10,11 @@ import 'package:test/test.dart';
 import '../test_data/rules/experiments/experiments.dart';
 import 'rule_test.dart';
 import 'test_constants.dart';
+import 'util/test_utils.dart';
 
 void main() {
   group('experiments', () {
-    registerLintRuleExperiments();
+    setUp(setUpSharedTestEnvironment);
 
     for (var entry
         in Directory(p.join(ruleTestDataDir, 'experiments')).listSync()) {
