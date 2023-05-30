@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <link rel="shortcut icon" href="../dart-192.png">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <title>no_wildcard_variable_uses</title>
+      <link rel="stylesheet" href="../styles.css">
+   </head>
+   <body>
+      <div class="wrapper">
+         <header>
+            <h1>no_wildcard_variable_uses</h1>
+            <p>Group: errors</p>
+            <p>Maturity: stable</p>
+            <div class="tooltip">
+               <p>Dart SDK: <strong>Unreleased</strong> • <small>(Linter <strong>Unreleased</strong>)</small></p>
+               <span class="tooltip-content">Since info is static, may be stale</span>
+            </div>
+            
+            <ul>
+               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
+               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
+            </ul>
+            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
+            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+         </header>
+         <section>
+            
+            <p><strong>DON'T</strong> use wildcard parameters or variables.</p>
+<p>Wildcard parameters and local variables
+(e.g. underscore-only names like <code>_</code>, <code>__</code>, <code>___</code>, etc.) will
+become non-binding in a future version of the Dart language.
+Any existing code that uses wildcard parameters or variables will
+break. In anticipation of this change, and to make adoption easier,
+this lint disallows wildcard and variable parameter uses.</p>
+<p><strong>BAD:</strong></p>
+<pre><code class="language-dart">var _ = 1;
+print(_); // LINT
+</code></pre>
+<pre><code class="language-dart">void f(int __) {
+  print(__); // LINT multiple underscores too
+}
+</code></pre>
+<p><strong>GOOD:</strong></p>
+<pre><code class="language-dart">for (var _ in [1, 2, 3]) count++;
+</code></pre>
+<pre><code class="language-dart">var [a, _, b, _] = [1, 2, 3, 4];
+</code></pre>
+
+            
+            <h2>Usage</h2>
+<p>To enable the <code>no_wildcard_variable_uses</code> lint,
+add <code>no_wildcard_variable_uses</code> under <strong>linter &gt; rules</strong> in your
+<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
+file:</p>
+<pre><code class="language-yaml">linter:
+  rules:
+    - no_wildcard_variable_uses
+</code></pre>
+
+         </section>
+      </div>
+      <footer>
+         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
+         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
+      </footer>
+   </body>
+</html>
