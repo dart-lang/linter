@@ -14,11 +14,12 @@ const _desc = r"Don't use wildcard parameters or variables.";
 const _details = r'''
 **DON'T** use wildcard parameters or variables.
 
-In a future version of the Dart langauge, wildcard parameters and local
-variables (e.g., named with just underscores like `_`, `__`, `___`, etc.) will
-become non-binding. When that happens, existing code that uses wildcard
-parameters or variables will break. In anticipation and to make adoption
-easier, this lint disallows wildcard and variable parameter uses.
+Wildcard parameters and local variables
+(e.g. underscore-only names like `_`, `__`, `___`, etc.) will
+become non-binding in a future version of the Dart language.
+Any existing code that uses wildcard parameters or variables will
+break. In anticipation of this change, and to make adoption easier,
+this lint disallows wildcard and variable parameter uses.
 
 
 **BAD:**
