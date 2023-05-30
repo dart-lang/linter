@@ -134,15 +134,15 @@ class UnrelatedTypeEqualityChecks extends LintRule {
   static const LintCode expressionCode = LintCode(
       'unrelated_type_equality_checks',
       uniqueName: 'LintCode.unrelated_type_equality_checks_expression',
-      "The right operand type, '{0}', of the equality comparison is not a "
-          "subtype nor a supertype of the left operand type, '{1}'.",
+      "The type of the right operand ('{0}') isn't a subtype or a supertype of "
+          "the left operand ('{1}').",
       correctionMessage: 'Try changing one or both of the operands.');
 
   static const LintCode patternCode = LintCode(
       'unrelated_type_equality_checks',
       uniqueName: 'LintCode.unrelated_type_equality_checks_pattern',
-      "The operand type, '{0}', is not a subtype nor a supertype of the value "
-          "type, '{1}'.",
+      "The type of the operand ('{0}') isn't a subtype or a supertype of the "
+          "value being matched ('{1}').",
       correctionMessage: 'Try changing one or both of the operands.');
 
   UnrelatedTypeEqualityChecks()
@@ -187,8 +187,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (rightType == null) return;
 
     if (_nonComparable(leftType, rightType)) {
-      rule.reportLint(
-        node,
+      rule.reportLintForToken(
+        node.operator,
         errorCode: UnrelatedTypeEqualityChecks.expressionCode,
         arguments: [
           rightType.getDisplayString(withNullability: true),
