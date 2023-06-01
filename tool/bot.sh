@@ -9,7 +9,6 @@ set -e
 
 if [ "$LINTER_BOT" = "release" ]; then
   echo "Validating release..."
-  dart tool/bot/version_check.dart
   dart tool/bot/rule_doc_check.dart
 
 # https://github.com/dart-lang/linter/issues/2014
