@@ -1295,7 +1295,7 @@
       "recommended",
       "flutter"
     ],
-    "fixStatus": "noFix",
+    "fixStatus": "hasFix",
     "details": "**PREFER** using lowerCamelCase for constant names.\n\nIn new code, use `lowerCamelCase` for constant variables, including enum values.\n\nIn existing code that uses `ALL_CAPS_WITH_UNDERSCORES` for constants, you may\ncontinue to use all caps to stay consistent.\n\n**BAD:**\n```dart\nconst PI = 3.14;\nconst kDefaultTimeout = 1000;\nfinal URL_SCHEME = RegExp('^([a-z]+):');\n\nclass Dice {\n  static final NUMBER_GENERATOR = Random();\n}\n```\n\n**GOOD:**\n```dart\nconst pi = 3.14;\nconst defaultTimeout = 1000;\nfinal urlScheme = RegExp('^([a-z]+):');\n\nclass Dice {\n  static final numberGenerator = Random();\n}\n```\n\n",
     "sinceDartSdk": "2.0.0",
     "sinceLinter": "0.1.1"
