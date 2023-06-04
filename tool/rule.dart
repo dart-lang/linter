@@ -257,7 +257,6 @@ import 'analyzer.dart';
     imports.add("import '$pathPrefix/$name.dart';");
   }
 
-
   //ignore: prefer_foreach
   for (var import in imports..sort()) {
     sb.writeln(import);

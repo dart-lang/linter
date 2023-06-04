@@ -105,23 +105,19 @@ class _Visitor extends SimpleAstVisitor<void> {
           type == TokenType.BANG_EQ ||
           type == TokenType.LT_EQ ||
           type == TokenType.GT) {
-        rule.reportLint(expression,
-            errorCode: PreferContains.useContains);
+        rule.reportLint(expression, errorCode: PreferContains.useContains);
       } else if (type == TokenType.LT) {
         // indexOf < -1 is always false
-        rule.reportLint(expression,
-            errorCode: PreferContains.alwaysFalse);
+        rule.reportLint(expression, errorCode: PreferContains.alwaysFalse);
       } else if (type == TokenType.GT_EQ) {
         // indexOf >= -1 is always true
-        rule.reportLint(expression,
-            errorCode: PreferContains.alwaysTrue);
+        rule.reportLint(expression, errorCode: PreferContains.alwaysTrue);
       }
     } else if (value == 0) {
       // 'indexOf >= 0' is same as 'contains',
       // and 'indexOf < 0' is same as '!contains'
       if (type == TokenType.GT_EQ || type == TokenType.LT) {
-        rule.reportLint(expression,
-            errorCode: PreferContains.useContains);
+        rule.reportLint(expression, errorCode: PreferContains.useContains);
       }
     } else if (value < -1) {
       // 'indexOf' is always >= -1, so comparing with lesser values makes
@@ -129,13 +125,11 @@ class _Visitor extends SimpleAstVisitor<void> {
       if (type == TokenType.EQ_EQ ||
           type == TokenType.LT_EQ ||
           type == TokenType.LT) {
-        rule.reportLint(expression,
-            errorCode: PreferContains.alwaysFalse);
+        rule.reportLint(expression, errorCode: PreferContains.alwaysFalse);
       } else if (type == TokenType.BANG_EQ ||
           type == TokenType.GT_EQ ||
           type == TokenType.GT) {
-        rule.reportLint(expression,
-            errorCode: PreferContains.alwaysTrue);
+        rule.reportLint(expression, errorCode: PreferContains.alwaysTrue);
       }
     }
   }
