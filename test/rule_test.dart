@@ -12,7 +12,6 @@ import 'package:analyzer/src/analysis_options/analysis_options_provider.dart';
 import 'package:analyzer/src/generated/engine.dart';
 import 'package:analyzer/src/lint/io.dart';
 import 'package:analyzer/src/lint/registry.dart';
-import 'package:analyzer/src/services/lint.dart' as lint_service;
 import 'package:analyzer/src/task/options.dart';
 import 'package:analyzer/src/utilities/legacy.dart';
 import 'package:linter/src/analyzer.dart';
@@ -23,7 +22,7 @@ import 'package:linter/src/rules/implementation_imports.dart';
 import 'package:linter/src/rules/package_prefixed_library_names.dart';
 import 'package:linter/src/test_utilities/annotation.dart';
 import 'package:linter/src/test_utilities/test_resource_provider.dart';
-import 'package:linter/src/version.dart';
+import 'package:linter/src/utils.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
@@ -33,10 +32,12 @@ import 'util/annotation_matcher.dart';
 import 'util/test_utils.dart';
 
 void main() {
-  defineSanityTests();
-  defineRuleTests();
-  experiment_tests.main();
-  defineRuleUnitTests();
+  group('rule tests', () {
+    setUp(setUpSharedTestEnvironment);
+    defineRuleTests();
+    experiment_tests.main();
+    defineRuleUnitTests();
+  });
 }
 
 /// Rule tests
@@ -44,7 +45,7 @@ void defineRuleTests() {
   group('rule', () {
     group('dart', () {
       // Rule tests run with default analysis options.
-      testRules(ruleTestDir);
+      testRules(ruleTestDataDir);
 
       // Rule tests run against specific configurations.
       for (var entry in Directory(testConfigDir).listSync()) {
@@ -53,12 +54,12 @@ void defineRuleTests() {
           var analysisOptionsFile =
               File(p.join(entry.path, 'analysis_options.yaml'));
           var analysisOptions = analysisOptionsFile.readAsStringSync();
-          testRules(ruleTestDir, analysisOptions: analysisOptions);
+          testRules(ruleTestDataDir, analysisOptions: analysisOptions);
         });
       }
     });
     group('pub', () {
-      for (var entry in Directory(p.join(ruleTestDir, 'pub')).listSync()) {
+      for (var entry in Directory(p.join(ruleTestDataDir, 'pub')).listSync()) {
         if (entry is Directory) {
           for (var child in entry.listSync()) {
             if (child is File && isPubspecFile(child)) {
@@ -178,16 +179,9 @@ void defineRuleUnitTests() {
   });
 }
 
-/// Test framework sanity.
-void defineSanityTests() {
-  test('linter version caching', () {
-    expect(lint_service.linterVersion, version);
-  });
-}
-
 /// Handy for debugging.
 void defineSoloRuleTest(String ruleToTest) {
-  for (var entry in Directory(ruleTestDir).listSync()) {
+  for (var entry in Directory(ruleTestDataDir).listSync()) {
     if (entry is! File || !isDartFile(entry)) continue;
     var ruleName = p.basenameWithoutExtension(entry.path);
     if (ruleName == ruleToTest) {
@@ -322,7 +316,7 @@ void _validateExpectedLints(File file, Iterable<AnalysisErrorInfo> errorInfos,
       var features = optionsImpl.contextFeatures;
 
       FileSpelunker(file.absolute.path, featureSet: features).spelunk();
-      print('');
+      printToConsole('');
       // Lints.
       ResultReporter(errorInfos).write();
     }

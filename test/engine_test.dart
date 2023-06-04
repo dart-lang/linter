@@ -19,6 +19,7 @@ import 'package:test/test.dart';
 
 import 'mocks.dart';
 import 'test_constants.dart';
+import 'util/test_utils.dart';
 
 void main() {
   defineLinterEngineTests();
@@ -27,6 +28,7 @@ void main() {
 /// Linter engine tests
 void defineLinterEngineTests() {
   group('engine', () {
+    setUp(setUpSharedTestEnvironment);
     group('reporter', () {
       void doTest(
           String label, String expected, Function(PrintingReporter r) report) {
@@ -110,7 +112,7 @@ void defineLinterEngineTests() {
       });
       test('smoke', () async {
         var firstRuleTest =
-            Directory(ruleTestDir).listSync().firstWhere(isDartFile);
+            Directory(ruleTestDataDir).listSync().firstWhere(isDartFile);
         await cli.run([firstRuleTest.path]);
         expect(cli.isLinterErrorCode(exitCode), isFalse);
       });
@@ -130,7 +132,7 @@ void defineLinterEngineTests() {
       test('custom sdk path', () async {
         // Smoke test to ensure a custom sdk path doesn't sink the ship
         var firstRuleTest =
-            Directory(ruleTestDir).listSync().firstWhere(isDartFile);
+            Directory(ruleTestDataDir).listSync().firstWhere(isDartFile);
         var sdk = getSdkPath();
         await cli.run(['--dart-sdk', sdk, firstRuleTest.path]);
         expect(cli.isLinterErrorCode(exitCode), isFalse);
@@ -177,8 +179,8 @@ void defineLinterEngineTests() {
 typedef NodeVisitor = void Function(Object node);
 
 class MockLinter extends LintRule {
-  final NodeVisitor? nodeVisitor;
-  MockLinter([this.nodeVisitor])
+  final NodeVisitor nodeVisitor;
+  MockLinter(this.nodeVisitor)
       : super(
             name: 'MockLint',
             group: Group.style,

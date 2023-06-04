@@ -15,6 +15,7 @@ import 'package:github/github.dart';
 import 'package:http/http.dart' as http;
 import 'package:linter/src/analyzer.dart';
 import 'package:linter/src/rules.dart';
+import 'package:linter/src/utils.dart';
 
 import '../parse.dart';
 
@@ -33,7 +34,7 @@ void main() async {
     return s1.name.compareTo(s2.name) + base;
   }
 
-  print(scorecard.asMarkdown(details, sorter: sorter));
+  printToConsole(scorecard.asMarkdown(details, sorter: sorter));
 
   // var footer = buildFooter(scorecard, details);
   // print(footer);
@@ -127,21 +128,9 @@ int _compareRuleSets(List<String> s1, List<String> s2) {
   return 0;
 }
 
-List<String?> _getUnfixableLints() {
-  // todo(pq): consider moving this data elsewhere
-  var excludes = File('tool/canonical/fix_excludes.json');
-  var contents = excludes.readAsStringSync();
-  var json = jsonDecode(contents) as Iterable;
-  var skipped = <String?>[];
-  for (var entry in json) {
-    var name = entry['lint'];
-    var notes = entry['notes'];
-    if (notes != 'TODO') {
-      skipped.add(name as String?);
-    }
-  }
-  return skipped;
-}
+List<String?> _getUnfixableLints() =>
+    // todo(pq): update with data extracted from error_fix_status.yaml
+    [];
 
 //bool _isBug(Issue issue) => issue.labels.map((l) => l.name).contains('bug');
 
@@ -458,7 +447,7 @@ class _LintNameCollector extends GeneralizingAstVisitor<void> {
   void addLint(String name) {
     lintNames.add(name);
     if (!registeredLintNames.contains(name)) {
-      print('WARNING: unrecognized lint in fixes: $name');
+      printToConsole('WARNING: unrecognized lint in fixes: $name');
     }
   }
 }
