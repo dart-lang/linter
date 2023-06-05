@@ -74,6 +74,6 @@ Experimental lints should aspire to be stable. An experimental lint is a candida
 
 ### Removal
 
-Implemented lints can be removed.
+Deprecated or experimental lints can be removed. A stable lint should be deprecated before removal.
 
 (**NOTE**: A change that removes an existing lint should have a corresponding `CHANGELOG` entry.)
