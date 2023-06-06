@@ -249,6 +249,7 @@ class _AsyncStateVisitor extends SimpleAstVisitor<_AsyncState> {
       if (index >= 0) {
         var precedingAsyncState = _inOrderAsyncStateGuardable(node.statements);
         if (precedingAsyncState != null) return precedingAsyncState;
+        // TODO(srawlins): Also DoStatement and ForStatement.
         if (node.parent is WhileStatement) {
           // Check for asynchrony in the statements that _follow_ [reference],
           // as they may lead to an async gap before we loop back to
