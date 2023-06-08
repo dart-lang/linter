@@ -14,11 +14,10 @@ void main() {
     var sinceFile = File('tool/since/sdk.yaml').readAsStringSync();
     var versionMap = loadYamlNode(sinceFile) as YamlMap;
     registerLintRules();
-    for (var rule in Analyzer.facade.registeredRules) {
-      var name = rule.name;
-      test(name, () async {
-        expect(versionMap.keys, contains(name),
-            reason: 'To fix, add an entry for $name to `tool/since/sdk.yaml`.');
+    for (var rule in Analyzer.facade.registeredRules.map((r) => r.name)) {
+      test(rule, () async {
+        expect(versionMap.keys, contains(rule),
+            reason: "'$rule' should have and entry in `tool/since/sdk.yaml`.");
       });
     }
   });
