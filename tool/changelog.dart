@@ -11,7 +11,7 @@ class Changelog {
   void addEntry(RuleStateChange change, String rule) {
     var logFile = File(fileName);
     var lines = LineSplitter().convert(logFile.readAsStringSync());
-    lines.insert(2, '- ${change.descriptionPrefix} lint: $rule');
+    lines.insert(2, '- ${change.descriptionPrefix} lint: `$rule`');
 
     var output = StringBuffer();
     // ignore: prefer_foreach
