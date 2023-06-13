@@ -17,6 +17,7 @@ class UnnecessaryNullChecksTest extends LintRuleTest {
   @override
   String get lintRule => 'unnecessary_this';
 
+  /// https://github.com/dart-lang/linter/issues/4457
   @FailingTest(issue: 'https://github.com/dart-lang/linter/issues/4457')
   test_shadowSwitchPatternCase() async {
     await assertNoDiagnostics(r'''
