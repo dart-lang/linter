@@ -71,6 +71,7 @@ class _Visitor extends SimpleAstVisitor<void> {
 
   @override
   void visitEmptyStatement(EmptyStatement node) {
+    if (node.parent is SwitchPatternCase) return;
     rule.reportLint(node);
   }
 }
