@@ -74,17 +74,13 @@ class _Visitor extends SimpleAstVisitor<void> {
     if (parent is! SwitchPatternCase) return false;
 
     var statements = parent.statements;
-    var justEmpties = true;
+    if (statements.last != node) return false;
 
-    var index = 0;
-    for (var (i, statement) in statements.indexed) {
-      if (statement == node) index = i;
-      if (statement is! EmptyStatement) justEmpties = false;
+    for (var statement in statements) {
+      if (statement is! EmptyStatement) return false;
     }
 
-    var isLast = index == statements.length - 1;
-    if (isLast) return justEmpties;
-    return false;
+    return true;
   }
 
   @override
