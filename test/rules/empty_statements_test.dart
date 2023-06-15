@@ -18,7 +18,60 @@ class EmptyStatementsTest extends LintRuleTest {
   String get lintRule => 'empty_statements';
 
   /// https://github.com/dart-lang/linter/issues/4410
-  test_switchPatternCase() async {
+  test_switchPatternCase_justEmpties() async {
+    await assertDiagnostics(r'''
+f() {    
+  switch(true) {
+    case true :
+      ;
+      ;
+      ;
+    case false :
+      print('');
+    }
+}    
+''', [
+      lint(49, 1),
+      lint(57, 1),
+    ]);
+  }
+
+  /// https://github.com/dart-lang/linter/issues/4410
+  test_switchPatternCase_leading() async {
+    await assertDiagnostics(r'''
+f() {    
+  switch(true) {
+    case true :
+      ;
+      print('');
+    case false :
+      print('');
+    }
+}    
+''', [
+      lint(49, 1),
+    ]);
+  }
+
+  /// https://github.com/dart-lang/linter/issues/4410
+  test_switchPatternCase_leading_trailing() async {
+    await assertDiagnostics(r'''
+f() {    
+  switch(true) {
+    case true :
+      ;
+      ;
+    case false :
+      print('');
+    }
+}    
+''', [
+      lint(49, 1),
+    ]);
+  }
+
+  /// https://github.com/dart-lang/linter/issues/4410
+  test_switchPatternCase_only() async {
     await assertNoDiagnostics(r'''
 f() {    
   switch(true) {
@@ -29,5 +82,22 @@ f() {
     }
 }    
 ''');
+  }
+
+  /// https://github.com/dart-lang/linter/issues/4410
+  test_switchPatternCase_trailing() async {
+    await assertDiagnostics(r'''
+f() {    
+  switch(true) {
+    case true :
+      print('');
+      ;
+    case false :
+      print('');
+    }
+}    
+''', [
+      lint(66, 1),
+    ]);
   }
 }
