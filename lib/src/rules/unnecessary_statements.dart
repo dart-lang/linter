@@ -106,19 +106,20 @@ class _ReportNoClearEffectVisitor extends UnifyingAstVisitor {
           (c) => c.declaredElement!.extendedType == node.leftOperand.staticType,
         );
 
-    // if the operator in the class definition is overloaded, it has a clear effect
+    // if the operator in the class definition is overloaded, it has a possible effect
     if (clazz != null) {
       // look for the operator in the members of the class
       var op = clazz.members
           .whereType<MethodDeclaration>()
           .firstWhereOrNull((m) => m.name.lexeme == node.operator.lexeme);
       if (op != null) {
-        // Has a clear effect
+        // Has a possible effect. For simplicity sake, we don't check
+        // if the method body has side effects.
         return;
       }
     }
 
-    // if the operator is overloaded in one of the extensions, it has a clear effect
+    // if the operator is overloaded in one of the extensions, it has a possible effect
     if (extensions.isNotEmpty) {
       // look for the operator in the members of the extensions
       var op = extensions
@@ -129,7 +130,8 @@ class _ReportNoClearEffectVisitor extends UnifyingAstVisitor {
           )
           .firstOrNull;
       if (op != null) {
-        // Has a clear effect
+        // Has a possible effect. For simplicity sake, we don't check
+        // if the method body has side effects.
         return;
       }
     }
