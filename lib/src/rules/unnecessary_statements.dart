@@ -6,6 +6,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:collection/collection.dart';
 
 import '../analyzer.dart';
 
@@ -63,7 +64,7 @@ class UnnecessaryStatements extends LintRule {
   @override
   void registerNodeProcessors(
       NodeLintRegistry registry, LinterContext context) {
-    var visitor = _Visitor(_ReportNoClearEffectVisitor(this));
+    var visitor = _Visitor(_ReportNoClearEffectVisitor(this, context));
     registry.addExpressionStatement(this, visitor);
     registry.addForStatement(this, visitor);
     registry.addCascadeExpression(this, visitor);
@@ -72,8 +73,9 @@ class UnnecessaryStatements extends LintRule {
 
 class _ReportNoClearEffectVisitor extends UnifyingAstVisitor {
   final LintRule rule;
+  final LinterContext context;
 
-  _ReportNoClearEffectVisitor(this.rule);
+  _ReportNoClearEffectVisitor(this.rule, this.context);
 
   @override
   void visitAsExpression(AsExpression node) {
@@ -92,6 +94,46 @@ class _ReportNoClearEffectVisitor extends UnifyingAstVisitor {
 
   @override
   void visitBinaryExpression(BinaryExpression node) {
+    // look for the class of the left operand and its extensions
+    var clazz = context.currentUnit.unit.declarations
+        .whereType<ClassDeclaration>()
+        .firstWhereOrNull(
+          (c) => c.declaredElement!.thisType == node.leftOperand.staticType,
+        );
+    var extensions = context.currentUnit.unit.declarations
+        .whereType<ExtensionDeclaration>()
+        .where(
+          (c) => c.declaredElement!.extendedType == node.leftOperand.staticType,
+        );
+
+    // if the operator in the class definition is overloaded, it has a clear effect
+    if (clazz != null) {
+      // look for the operator in the members of the class
+      var op = clazz.members
+          .whereType<MethodDeclaration>()
+          .firstWhereOrNull((m) => m.name.lexeme == node.operator.lexeme);
+      if (op != null) {
+        // Has a clear effect
+        return;
+      }
+    }
+
+    // if the operator is overloaded in one of the extensions, it has a clear effect
+    if (extensions.isNotEmpty) {
+      // look for the operator in the members of the extensions
+      var op = extensions
+          .expand(
+            (e) => e.members
+                .whereType<MethodDeclaration>()
+                .where((m) => m.name.lexeme == node.operator.lexeme),
+          )
+          .firstOrNull;
+      if (op != null) {
+        // Has a clear effect
+        return;
+      }
+    }
+
     switch (node.operator.lexeme) {
       case '??':
       case '||':

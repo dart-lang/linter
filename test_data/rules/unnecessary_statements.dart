@@ -80,8 +80,7 @@ asConditionAndReturnOk() {
   do {} while ("blah".isEmpty); // OK
   for (var i in []) {} // OK
   switch (~1) // OK
-      {
-  }
+  {}
 
   () => new MyClass().foo; // LINT
   myfun() => new MyClass().foo; // OK
@@ -188,4 +187,30 @@ class MyClass {
 
   MyClass();
   MyClass.named();
+}
+
+class Logger {
+  void operator <<(String message) {}
+}
+
+extension LoggerX on Logger {
+  void operator <(String message) {}
+}
+
+loggingMethod() {
+  final l = Logger();
+
+  l << "Hello world (づ｡◕‿‿◕｡)づ"; // OK
+
+  l < "How are you ?"; // OK
+}
+
+extension StringX on String {
+  void operator <<(String message) {}
+}
+
+loggingMethod2() {
+  "hello" << "world"; // OK
+
+  "Hello" + "world"; // LINT
 }
