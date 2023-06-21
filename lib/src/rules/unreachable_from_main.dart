@@ -175,10 +175,6 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
   /// References from patterns should not be counted.
   int _patternLevel = 0;
 
-  /// Whether the visitor is currently in a declaration of an `external`
-  /// declaration.
-  bool _inExternalDeclaration = false;
-
   _ReferenceVisitor(this.declarationMap);
 
   @override
@@ -269,25 +265,19 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
   }
 
   @override
-  void visitFieldDeclaration(FieldDeclaration node) {
-    try {
-      _inExternalDeclaration = node.externalKeyword != null;
-      super.visitFieldDeclaration(node);
-    } finally {
-      _inExternalDeclaration = false;
-    }
-  }
-
-  @override
   void visitNamedType(NamedType node) {
     var element = node.element;
     if (element == null) {
       return;
     }
 
-    if (node.type?.alias != null || _inExternalDeclaration) {
-      // Any reference to a typedef counts as "reachable", since structural
-      // typing is used to match against objects.
+    // Any reference to a typedef is reachable, since structural typing is used
+    // to match against objects.
+    //
+    // The return type of an external variable declaration is reachable, since
+    // the external implementation can instantiate it.
+    if (node.type?.alias != null ||
+        node.isInExternalVariableTypeOrFunctionReturnType) {
       _addDeclaration(element);
     }
 
@@ -345,16 +335,6 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
       _addDeclaration(e);
     }
     super.visitSuperConstructorInvocation(node);
-  }
-
-  @override
-  void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
-    try {
-      _inExternalDeclaration = node.externalKeyword != null;
-      super.visitTopLevelVariableDeclaration(node);
-    } finally {
-      _inExternalDeclaration = false;
-    }
   }
 
   @override
@@ -607,5 +587,24 @@ extension on Declaration {
 
     assert(false, 'Uncovered Declaration subtype: ${self.runtimeType}');
     return '';
+  }
+}
+
+extension on AstNode {
+  bool get isInExternalVariableTypeOrFunctionReturnType {
+    var ancestorTypeAnnotation = thisOrAncestorOfType<TypeAnnotation>();
+    if (ancestorTypeAnnotation == null) return false;
+    switch (parent) {
+      case MethodDeclaration(:var externalKeyword, :var returnType):
+        return externalKeyword != null && returnType == ancestorTypeAnnotation;
+      case VariableDeclarationList(
+          parent: FieldDeclaration(:var externalKeyword),
+        ):
+      case VariableDeclarationList(
+          parent: TopLevelVariableDeclaration(:var externalKeyword),
+        ):
+        return externalKeyword != null;
+    }
+    return false;
   }
 }
