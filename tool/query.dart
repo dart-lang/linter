@@ -35,7 +35,7 @@ Future<void> main(List<String> args) async {
   var token = options['token'];
   var auth = token is String
       ? Authentication.withToken(token)
-      : Authentication.anonymous();
+      : const Authentication.anonymous();
 
   var machine = json.decode(req.body) as Iterable;
 

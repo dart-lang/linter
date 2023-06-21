@@ -39,7 +39,7 @@ Future<void> main(List<String> args) async {
   var token = options['token'];
   var auth = token is String
       ? Authentication.withToken(token)
-      : Authentication.anonymous();
+      : const Authentication.anonymous();
   var labels = await getLabels(owner: owner, name: name, auth: auth);
   for (var label in labels) {
     printToConsole(label.name);

@@ -211,7 +211,7 @@ class ScoreCard {
     var flutterRuleset = await flutterRules;
     var flutterRepoRuleset = await flutterRepoRules;
 
-    var issues = await getLinterIssues(auth: Authentication.anonymous());
+    var issues = await getLinterIssues(auth: const Authentication.anonymous());
     var bugs = issues.where(isBug).toList();
 
     var scorecard = ScoreCard();
