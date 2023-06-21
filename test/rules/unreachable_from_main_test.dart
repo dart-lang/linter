@@ -413,6 +413,20 @@ class D {
     ]);
   }
 
+  test_class_reachable_referencedInTypeAnnotation_externalFieldDeclaration() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  D().c;
+}
+
+class C {}
+
+class D {
+  external C? c;
+}
+''');
+  }
+
   test_class_unreachable_referencedInTypeAnnotation_parameter() async {
     await assertDiagnostics(r'''
 void main() {

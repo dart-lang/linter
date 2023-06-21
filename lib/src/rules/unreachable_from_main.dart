@@ -175,6 +175,10 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
   /// References from patterns should not be counted.
   int _patternLevel = 0;
 
+  /// Whether the visitor is currently in a declaration of an `external`
+  /// declaration.
+  bool _inExternalDeclaration = false;
+
   _ReferenceVisitor(this.declarationMap);
 
   @override
@@ -265,13 +269,23 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
   }
 
   @override
+  void visitFieldDeclaration(FieldDeclaration node) {
+    try {
+      _inExternalDeclaration = node.externalKeyword != null;
+      super.visitFieldDeclaration(node);
+    } finally {
+      _inExternalDeclaration = false;
+    }
+  }
+
+  @override
   void visitNamedType(NamedType node) {
     var element = node.element;
     if (element == null) {
       return;
     }
 
-    if (node.type?.alias != null) {
+    if (node.type?.alias != null || _inExternalDeclaration) {
       // Any reference to a typedef counts as "reachable", since structural
       // typing is used to match against objects.
       _addDeclaration(element);
@@ -331,6 +345,16 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
       _addDeclaration(e);
     }
     super.visitSuperConstructorInvocation(node);
+  }
+
+  @override
+  void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
+    try {
+      _inExternalDeclaration = node.externalKeyword != null;
+      super.visitTopLevelVariableDeclaration(node);
+    } finally {
+      _inExternalDeclaration = false;
+    }
   }
 
   @override
