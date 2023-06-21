@@ -26,7 +26,9 @@ dependencies:
 dev_dependencies:
   benchmark_harness: ^2.0.0
   cli_util: ^0.4.0
-  github: ^9.0.0
+  # 9.15.0 makes a parameter in GitHub constructor non-nullable.
+  # TODO(https://github.com/dart-lang/linter/issues/4475): Support this version.
+  github: ">=9.0.0 <9.15.0"
   lints: ^2.0.0
   markdown: ^7.0.0
   matcher: ^0.12.10
