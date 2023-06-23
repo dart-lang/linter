@@ -215,9 +215,9 @@ extension E on int {
   void f() {}
 }
 ''');
-    var switchExpression = findNode.expressionStatement('await');
+    var extensionOverride = findNode.expressionStatement('await');
     var reference = findNode.expressionStatement('context /* ref */');
-    expect(switchExpression.asyncStateFor(reference), AsyncState.asynchronous);
+    expect(extensionOverride.asyncStateFor(reference), AsyncState.asynchronous);
   }
 
   test_forElementWithDeclaration_referenceAfter_awaitInPartCondition() async {
