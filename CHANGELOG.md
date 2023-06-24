@@ -1,5 +1,6 @@
 # 3.1.0-wip
 
+- new lint: `type_test_on_generic_type_variable`
 - new lint: `no_wildcard_variable_uses`
 
 ---

@@ -122,6 +122,7 @@ import 'tighten_type_of_initializing_formals_test.dart'
 import 'type_init_formals_test.dart' as type_init_formals;
 import 'type_literal_in_constant_pattern_test.dart'
     as type_literal_in_constant_pattern;
+import 'type_test_on_generic_type_variable_test.dart' as type;
 import 'unawaited_futures_test.dart' as unawaited_futures;
 import 'unnecessary_brace_in_string_interps_test.dart'
     as unnecessary_brace_in_string_interps;
@@ -244,6 +245,7 @@ void main() {
   tighten_type_of_initializing_formals.main();
   type_init_formals.main();
   type_literal_in_constant_pattern.main();
+  type.main();
   unawaited_futures.main();
   unnecessary_brace_in_string_interps.main();
   unnecessary_breaks.main();

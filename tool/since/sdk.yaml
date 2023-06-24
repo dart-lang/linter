@@ -176,6 +176,7 @@ tighten_type_of_initializing_formals: 2.12.0
 type_annotate_public_apis: 2.0.0
 type_init_formals: 2.0.0
 type_literal_in_constant_pattern: 3.0.0
+type_test_on_generic_type_variable: 3.1.0-wip
 unawaited_futures: 2.0.0
 unnecessary_await_in_return: 2.1.1
 unnecessary_brace_in_string_interps: 2.0.0
