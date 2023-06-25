@@ -271,12 +271,16 @@ class _ReferenceVisitor extends RecursiveAstVisitor {
       return;
     }
 
+    var nodeIsInTypeArgument =
+        node.thisOrAncestorOfType<TypeArgumentList>() != null;
+
     // Any reference to a typedef is reachable, since structural typing is used
     // to match against objects.
     //
     // The return type of an external variable declaration is reachable, since
     // the external implementation can instantiate it.
     if (node.type?.alias != null ||
+        nodeIsInTypeArgument ||
         node.isInExternalVariableTypeOrFunctionReturnType) {
       _addDeclaration(element);
     }

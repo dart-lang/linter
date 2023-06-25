@@ -281,6 +281,18 @@ class D {
 ''');
   }
 
+  test_class_reachable_referencedInTypeArgument() async {
+    await assertNoDiagnostics(r'''
+void main() {
+  C<D>();
+}
+
+class C<T> {}
+
+class D {}
+''');
+  }
+
   test_class_reachableViaAnnotation() async {
     await assertNoDiagnostics(r'''
 void main() {
