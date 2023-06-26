@@ -594,7 +594,7 @@ extension on Declaration {
   }
 }
 
-extension on AstNode {
+extension on NamedType {
   bool get isInExternalVariableTypeOrFunctionReturnType {
     AstNode topTypeAnnotation = this;
     var parent = this.parent;
@@ -602,7 +602,6 @@ extension on AstNode {
       topTypeAnnotation = parent;
       parent = topTypeAnnotation.parent;
     }
-    if (parent == null) return false;
     switch (parent) {
       case MethodDeclaration(:var externalKeyword, :var returnType):
         return externalKeyword != null && returnType == topTypeAnnotation;
