@@ -16,12 +16,14 @@ main() {
 class EmptyCatchesTest extends LintRuleTest {
   @override
   String get lintRule => 'empty_catches';
-  test_underscore() async {
+  test_comment() async {
     await assertNoDiagnostics(r'''
 void foo() {
   try {
-    throw Exception();
-  } catch (_) {}
+    throw new Exception();
+  } catch (e) {
+    // Nothing.
+  }
 }
 ''');
   }
@@ -38,26 +40,24 @@ void foo() {
     ]);
   }
 
-  test_2() async {
-    await assertNoDiagnostics(r'''
-void foo() {
-  try {
-    throw new Exception();
-  } catch (e) {
-    // Nothing.
-  } //OK!
-}
-''');
-  }
-
-  test_3() async {
+  test_statement() async {
     await assertNoDiagnostics(r'''
 void foo() {
   try {
     throw new Exception();
   } catch (e) {
     print(e);
-  } //OK
+  }
+}
+''');
+  }
+
+  test_underscore() async {
+    await assertNoDiagnostics(r'''
+void foo() {
+  try {
+    throw Exception();
+  } catch (_) {}
 }
 ''');
   }
