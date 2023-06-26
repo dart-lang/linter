@@ -595,14 +595,20 @@ extension on Declaration {
 }
 
 extension on NamedType {
-  bool get isInExternalVariableTypeOrFunctionReturnType {
-    AstNode topTypeAnnotation = this;
+  TypeAnnotation get topmostTypeAnnotation {
+    TypeAnnotation topTypeAnnotation = this;
     var parent = this.parent;
     while (parent is TypeAnnotation) {
       topTypeAnnotation = parent;
       parent = topTypeAnnotation.parent;
     }
-    switch (parent) {
+    return topTypeAnnotation;
+  }
+
+  bool get isInExternalVariableTypeOrFunctionReturnType {
+    var topTypeAnnotation = topmostTypeAnnotation;
+
+    switch (topTypeAnnotation.parent) {
       case MethodDeclaration(:var externalKeyword, :var returnType):
         return externalKeyword != null && returnType == topTypeAnnotation;
       case VariableDeclarationList(
