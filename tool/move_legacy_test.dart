@@ -1,9 +1,19 @@
+// Copyright (c) 2023, the Dart project authors. Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:io';
 import 'dart:math' as math;
 
 // ignore_for_file: avoid_print
 
+/// This is an interactive script that automates parts of the process to move
+/// a legacy test to a reflective test.
 void main(List<String> args) {
+  if (args.isEmpty) {
+    print('Usage: move_legacy_test.dart <rule_name>');
+    exit(1);
+  }
   var ruleName = args.first;
   LegacyTestMover(ruleName).move();
 }
@@ -75,6 +85,7 @@ class LegacyTestMover {
   List<Range> getRanges() {
     List<String> lineRanges;
     while (true) {
+      stdout.write('Comma-separated lines and ranges (e.g. 1,3,5-7,9-11): ');
       var input = stdin.readLineSync();
       if (input == null) {
         print('Received empty and EOF?');
