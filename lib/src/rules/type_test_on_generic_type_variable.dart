@@ -15,8 +15,8 @@ const _details = r'''
 **DON'T** perform type tests on generic type variables.
 
 A type variable for a generic class or method will always be a `Type`. A type
-test with `is` or `as` does not check any aspect of the _values_ of that type
-variable.
+test with `is` or `as` does not check what the type variable is bound to, and
+does not relate to the values which have a type specified by the type variable.
 
 **BAD:**
 ```dart
