@@ -16,6 +16,7 @@ main() {
 class DoNotUseEnvironmentTest extends LintRuleTest {
   @override
   String get lintRule => 'do_not_use_environment';
+
   test_bool() async {
     await assertDiagnostics(r'''
 void f() {
