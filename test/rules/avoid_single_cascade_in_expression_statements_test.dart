@@ -35,7 +35,7 @@ void f(int p) {
     ]);
   }
 
-  test_singleCascade_asParameter() async {
+  test_singleCascade_asArgument() async {
     await assertNoDiagnostics(r'''
 void f(int p) {
   g(p..toString());
