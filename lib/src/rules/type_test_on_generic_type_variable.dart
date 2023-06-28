@@ -14,9 +14,12 @@ const _desc = r' ';
 const _details = r'''
 **DON'T** perform type tests on generic type variables.
 
-A type variable for a generic class or method will always be a `Type`. A type
-test with `is` or `as` does not check what the type variable is bound to, and
-does not relate to the values which have a type specified by the type variable.
+A type variable, the type parameter of a generic class or method,
+used as an expression always evalautes to a `Type` object.
+The first operand of `is` or `as` type tests is an expression,
+so a type test of a type variable is always type test on a `Type` instance.
+Such a test does not relate to the values which have a type specified by the
+type variable.
 
 **BAD:**
 ```dart
