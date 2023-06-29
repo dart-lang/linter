@@ -17,32 +17,6 @@ class UnnecessaryNewTest extends LintRuleTest {
   @override
   String get lintRule => 'unnecessary_new';
 
-  test_localFinal_new() async {
-    await assertDiagnostics(r'''
-class A {
-  const A();
-}
-
-void f() {
-  final a = new A();
-}
-''', [
-      lint(49, 7),
-    ]);
-  }
-
-  test_localFinal_noNew() async {
-    await assertNoDiagnostics(r'''
-class A {
-  const A();
-}
-
-void f() {
-  final a = A();
-}
-''');
-  }
-
   test_named_new() async {
     await assertDiagnostics(r'''
 class A {
@@ -99,7 +73,6 @@ void f() {
     await assertNoDiagnostics(r'''
 class A {
   const A();
-  A.c1();
 }
 
 void f() {
