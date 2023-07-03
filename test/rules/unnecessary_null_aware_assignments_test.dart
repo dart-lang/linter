@@ -17,6 +17,17 @@ class UnnecessaryNullAwareAssignmentsTest extends LintRuleTest {
   @override
   String get lintRule => 'unnecessary_null_aware_assignments';
 
+  test_explicitSetter() async {
+    await assertNoDiagnostics(r'''
+int? get x => null;
+set x(int? x) {}
+
+void f() {
+  x ??= null;
+}
+''');
+  }
+
   test_localVariable_nullAssignment() async {
     await assertDiagnostics(r'''
   void f() {
@@ -34,17 +45,6 @@ class UnnecessaryNullAwareAssignmentsTest extends LintRuleTest {
     var x;
     x ??= 1;
   }
-''');
-  }
-
-  test_explicitSetter() async {
-    await assertNoDiagnostics(r'''
-int? get x => null;
-set x(int? x) {}
-
-void f() {
-  x ??= null;
-}
 ''');
   }
 }
