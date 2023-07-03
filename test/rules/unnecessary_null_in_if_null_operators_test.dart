@@ -8,12 +8,12 @@ import '../rule_test_support.dart';
 
 main() {
   defineReflectiveSuite(() {
-    defineReflectiveTests(UnnecessaryNullInIfNullOperators_Language29Test);
+    defineReflectiveTests(UnnecessaryNullInIfNullOperatorsLanguage29Test);
   });
 }
 
 @reflectiveTest
-class UnnecessaryNullInIfNullOperators_Language29Test extends LintRuleTest {
+class UnnecessaryNullInIfNullOperatorsLanguage29Test extends LintRuleTest {
   @override
   String get lintRule => 'unnecessary_null_in_if_null_operators';
 
