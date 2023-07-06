@@ -121,7 +121,8 @@ class _Visitor extends SimpleAstVisitor<void> {
     } else {
       var forEachPattern = node.thisOrAncestorOfType<ForEachPartsWithPattern>();
       if (forEachPattern != null) {
-        if (forEachPattern.hasPotentiallyMutatedDeclaredVariableInScope(function)) {
+        if (forEachPattern
+            .hasPotentiallyMutatedDeclaredVariableInScope(function)) {
           return;
         }
       } else {
@@ -181,6 +182,16 @@ class _Visitor extends SimpleAstVisitor<void> {
 }
 
 extension on AstNode {
+  bool get isDeclaredFinal {
+    var self = this;
+    if (self is DeclaredVariablePattern) {
+      if (self.keyword.isFinal) return true;
+      var pattern = self.thisOrAncestorOfType<ForEachPartsWithPattern>();
+      if (pattern != null && pattern.keyword.isFinal) return true;
+    }
+    return false;
+  }
+
   bool hasPotentiallyMutatedDeclaredVariableInScope(FunctionBody function) {
     var declaredVariableVisitor = _DeclaredVariableVisitor();
     accept(declaredVariableVisitor);
@@ -189,16 +200,6 @@ extension on AstNode {
       if (function.isPotentiallyMutatedInScope(element)) {
         return true;
       }
-    }
-    return false;
-  }
-
-  bool get isDeclaredFinal {
-    var self = this;
-    if (self is DeclaredVariablePattern) {
-      if (self.keyword.isFinal) return true;
-      var pattern = self.thisOrAncestorOfType<ForEachPartsWithPattern>();
-      if (pattern != null && pattern.keyword.isFinal) return true;
     }
     return false;
   }
