@@ -119,7 +119,14 @@ class _Visitor extends SimpleAstVisitor<void> {
         rule.reportLint(node);
       }
     } else {
-      if (isPotentiallyMutated(node, function)) return;
+      var forEachPattern = node.thisOrAncestorOfType<ForEachPartsWithPattern>();
+      if (forEachPattern != null) {
+        if (forEachPattern.hasPotentiallyMutatedDeclaredVariableInScope(function)) {
+          return;
+        }
+      } else {
+        if (isPotentiallyMutated(node, function)) return;
+      }
     }
 
     if (!inCaseClause) {
@@ -142,16 +149,9 @@ class _Visitor extends SimpleAstVisitor<void> {
         rule.reportLint(node);
       }
     } else {
-      var declaredVariableVisitor = _DeclaredVariableVisitor();
-      node.accept(declaredVariableVisitor);
-      var declaredElements = declaredVariableVisitor.declaredElements;
-      for (var element in declaredElements) {
-        if (function.isPotentiallyMutatedInScope(element)) {
-          return;
-        }
+      if (!node.hasPotentiallyMutatedDeclaredVariableInScope(function)) {
+        rule.reportLintForToken(node.keyword);
       }
-
-      rule.reportLintForToken(node.keyword);
     }
   }
 
@@ -181,6 +181,18 @@ class _Visitor extends SimpleAstVisitor<void> {
 }
 
 extension on AstNode {
+  bool hasPotentiallyMutatedDeclaredVariableInScope(FunctionBody function) {
+    var declaredVariableVisitor = _DeclaredVariableVisitor();
+    accept(declaredVariableVisitor);
+    var declaredElements = declaredVariableVisitor.declaredElements;
+    for (var element in declaredElements) {
+      if (function.isPotentiallyMutatedInScope(element)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   bool get isDeclaredFinal {
     var self = this;
     if (self is DeclaredVariablePattern) {
