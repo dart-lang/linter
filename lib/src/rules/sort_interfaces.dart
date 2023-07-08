@@ -7,7 +7,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Sort constructor declarations before other members.';
+const _desc = r'Sort interfaces alphabetically.';
 
 const _details = r'''
 Sort interfaces alphabetically.
