@@ -173,6 +173,7 @@ import 'rules/sized_box_shrink_expand.dart';
 import 'rules/slash_for_doc_comments.dart';
 import 'rules/sort_child_properties_last.dart';
 import 'rules/sort_constructors_first.dart';
+import 'rules/sort_interfaces.dart';
 import 'rules/sort_unnamed_constructors_first.dart';
 import 'rules/super_goes_last.dart';
 import 'rules/test_types_in_equals.dart';
@@ -403,6 +404,7 @@ void registerLintRules({bool inTestMode = false}) {
     ..register(SlashForDocComments())
     ..register(SortChildPropertiesLast())
     ..register(SortConstructorsFirst())
+    ..register(SortInterfaces())
     ..register(SortPubDependencies())
     ..register(SortUnnamedConstructorsFirst())
     ..register(SuperGoesLast())
