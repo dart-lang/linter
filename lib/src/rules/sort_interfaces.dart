@@ -63,11 +63,30 @@ class _Visitor extends SimpleAstVisitor<void> {
     String? lastName;
     for (var namedType in node.interfaces) {
       var name = namedType.name2.lexeme;
-      if (lastName != null && lastName.compareTo(name) > 0) {
+      if (lastName != null && lastName.compareToWithAccess(name) > 0) {
         rule.reportLintForToken(namedType.name2);
         return;
       }
       lastName = name;
+    }
+  }
+}
+
+extension on String {
+  bool get isPrivate => startsWith('_');
+
+  /// The `_` is after `A-Z`, so this ensures that private names are
+  /// automatically sorted after public. However there might be very weird
+  /// code that uses lowercase class names.
+  int compareToWithAccess(String other) {
+    switch ((isPrivate, other.isPrivate)) {
+      case (false, false):
+      case (true, true):
+        return compareTo(other);
+      case (false, true):
+        return -1;
+      case (true, false):
+        return 1;
     }
   }
 }

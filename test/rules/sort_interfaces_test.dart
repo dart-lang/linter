@@ -18,7 +18,38 @@ class SortInterfacesTest extends LintRuleTest {
   @override
   String get lintRule => SortInterfaces.code.name;
 
-  test_notSorted1() async {
+  test_notSorted_private2() async {
+    await assertDiagnostics(r'''
+class _I1 {}
+class _I2 {}
+class A implements _I2, _I1 {}
+''', [
+      lint(50, 3),
+    ]);
+  }
+
+  test_notSorted_private_public() async {
+    await assertDiagnostics(r'''
+class I1 {}
+class _I1 {}
+class A implements _I1, I1 {}
+''', [
+      lint(49, 2),
+    ]);
+  }
+
+  /// This should not happen in good code - lower case class names.
+  test_notSorted_private_public_lowerCase() async {
+    await assertDiagnostics(r'''
+class i1 {}
+class _i1 {}
+class A implements _i1, i1 {}
+''', [
+      lint(49, 2),
+    ]);
+  }
+
+  test_notSorted_public2() async {
     await assertDiagnostics(r'''
 class I1 {}
 class I2 {}
@@ -28,7 +59,7 @@ class A implements I2, I1 {}
     ]);
   }
 
-  test_notSorted2() async {
+  test_notSorted_public4_reportOnlyOne() async {
     await assertDiagnostics(r'''
 class I1 {}
 class I2 {}
@@ -44,7 +75,9 @@ class A implements I2, I1, I4, I3 {}
     await assertNoDiagnostics(r'''
 class I1 {}
 class I2 {}
-class A implements I1, I2 {}
+class _I1 {}
+class _I2 {}
+class A implements I1, I2, _I1, _I2 {}
 ''');
   }
 }
