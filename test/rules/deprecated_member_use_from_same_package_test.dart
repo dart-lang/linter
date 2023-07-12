@@ -338,6 +338,19 @@ late E e = E.two;
     ]);
   }
 
+  test_deprecatedExtension_usedInExtensionOverride_getter() async {
+    await assertDiagnostics(r'''
+@deprecated
+extension E on int {
+  int get foo => 1;
+}
+
+var x = E(0).foo;
+''', [
+      lint(64, 1),
+    ]);
+  }
+
   test_deprecatedExtension_usedInExtensionOverride_methodInvocation() async {
     await assertDiagnostics(r'''
 @deprecated
@@ -348,19 +361,6 @@ extension E on int {
 var x = E(0).f();
 ''', [
       lint(58, 1),
-    ]);
-  }
-
-  test_deprecatedExtension_usedInOverride_getter() async {
-    await assertDiagnostics(r'''
-@deprecated
-extension E on int {
-  int get foo => 1;
-}
-
-var x = E(0).foo;
-''', [
-      lint(64, 1),
     ]);
   }
 
