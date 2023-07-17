@@ -125,13 +125,13 @@ class _DeclarationsCollector extends RecursiveAstVisitor<void> {
   }
 }
 
-class _MutatedFieldsCollector extends RecursiveAstVisitor<void> {
+class _FieldMutationFinder extends RecursiveAstVisitor<void> {
   /// The collection of fields declared in this library.
   ///
   /// This visitor removes a field when it finds that it is assigned anywhere.
   final Map<FieldElement, VariableDeclaration> _fields;
 
-  _MutatedFieldsCollector(this._fields);
+  _FieldMutationFinder(this._fields);
 
   @override
   void visitAssignmentExpression(AssignmentExpression node) {
@@ -176,9 +176,9 @@ class _Visitor extends SimpleAstVisitor<void> {
     node.accept(declarationsCollector);
     var fields = declarationsCollector.fields;
 
-    var mutatedFieldsCollector = _MutatedFieldsCollector(fields);
+    var fieldMutationFinder = _FieldMutationFinder(fields);
     for (var unit in context.allUnits) {
-      unit.unit.accept(mutatedFieldsCollector);
+      unit.unit.accept(fieldMutationFinder);
     }
 
     for (var MapEntry(key: field, value: variable) in fields.entries) {
