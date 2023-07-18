@@ -39,7 +39,7 @@ var s = r"a b c$d";
 
   test_singleQuote() async {
     await assertNoDiagnostics(r'''
-var s = r'a b c d';
+var s = 'a b c d';
 ''');
   }
 
