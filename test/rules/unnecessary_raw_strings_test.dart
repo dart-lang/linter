@@ -37,6 +37,12 @@ var s = r"a b c$d";
 ''');
   }
 
+  test_singleQuote() async {
+    await assertNoDiagnostics(r'''
+var s = r'a b c d';
+''');
+  }
+
   test_singleQuote_raw() async {
     await assertDiagnostics(r'''
 var s = r'a b c d';
