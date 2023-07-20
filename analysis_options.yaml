@@ -85,4 +85,3 @@ linter:
     - use_string_buffers
     - use_super_parameters
     - use_to_and_as_if_applicable
-    - unreachable_from_main
