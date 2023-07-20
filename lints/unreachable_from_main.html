@@ -14,57 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>unreachable_from_main</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.19.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/unreachable_from_main"><h1>unreachable_from_main</h1></a>
          </header>
          <section>
-            
-            <p>Top-level members and static members in an executable library should be used
-directly inside this library.  An executable library is a library that contains
-a <code>main</code> top-level function or that contains a top-level function annotated with
-<code>@pragma('vm:entry-point')</code>).  Executable libraries are not usually imported
-and it's better to avoid defining unused members.</p>
-<p>This rule assumes that an executable library isn't imported by other files
-except to execute its <code>main</code> function.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">main() {}
-void f() {}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">main() {
-  f();
-}
-void f() {}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>unreachable_from_main</code> lint,
-add <code>unreachable_from_main</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - unreachable_from_main
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>unreachable_from_main</code> linter rule at 
+              <a href="https://dart.dev/lints/unreachable_from_main">https://dart.dev/lints/unreachable_from_main</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

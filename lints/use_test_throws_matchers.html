@@ -14,71 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>use_test_throws_matchers</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.14.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/use_test_throws_matchers"><h1>use_test_throws_matchers</h1></a>
          </header>
          <section>
-            
-            <p>Use the <code>throwsA</code> matcher instead of try-catch with <code>fail()</code>.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">// sync code
-try {
-  someSyncFunctionThatThrows();
-  fail('expected Error');
-} on Error catch (error) {
-  expect(error.message, contains('some message'));
-}
-
-// async code
-try {
-  await someAsyncFunctionThatThrows();
-  fail('expected Error');
-} on Error catch (error) {
-  expect(error.message, contains('some message'));
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">// sync code
-expect(
-  () =&gt; someSyncFunctionThatThrows(),
-  throwsA(isA&lt;Error&gt;().having((Error error) =&gt; error.message, 'message', contains('some message'))),
-);
-
-// async code
-await expectLater(
-  () =&gt; someAsyncFunctionThatThrows(),
-  throwsA(isA&lt;Error&gt;().having((Error error) =&gt; error.message, 'message', contains('some message'))),
-);
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>use_test_throws_matchers</code> lint,
-add <code>use_test_throws_matchers</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - use_test_throws_matchers
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>use_test_throws_matchers</code> linter rule at 
+              <a href="https://dart.dev/lints/use_test_throws_matchers">https://dart.dev/lints/use_test_throws_matchers</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

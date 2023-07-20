@@ -14,64 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>discarded_futures</h1>
-            <p>Group: errors</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.18.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/discarded_futures"><h1>discarded_futures</h1></a>
          </header>
          <section>
-            
-            <p>Making asynchronous calls in non-<code>async</code> functions is usually the sign of a
-programming error.  In general these functions should be marked <code>async</code> and such
-futures should likely be awaited (as enforced by <code>unawaited_futures</code>).</p>
-<p><strong>DON'T</strong> invoke asynchronous functions in non-<code>async</code> blocks.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void recreateDir(String path) {
-  deleteDir(path);
-  createDir(path);
-}
-
-Future&lt;void&gt; deleteDir(String path) async {}
-
-Future&lt;void&gt; createDir(String path) async {}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">Future&lt;void&gt; recreateDir(String path) async {
-  await deleteDir(path);
-  await createDir(path);
-}
-
-Future&lt;void&gt; deleteDir(String path) async {}
-
-Future&lt;void&gt; createDir(String path) async {}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>discarded_futures</code> lint,
-add <code>discarded_futures</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - discarded_futures
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>discarded_futures</code> linter rule at 
+              <a href="https://dart.dev/lints/discarded_futures">https://dart.dev/lints/discarded_futures</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

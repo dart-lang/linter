@@ -14,101 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>sort_child_properties_last</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.4.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/sort_child_properties_last"><h1>sort_child_properties_last</h1></a>
          </header>
          <section>
-            
-            <p>Sort child properties last in widget instance creations.  This improves
-readability and plays nicest with UI as Code visualization in IDEs with UI as
-Code Guides in editors (such as IntelliJ) where Properties in the correct order
-appear clearly associated with the constructor call and separated from the
-children.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">return Scaffold(
-  appBar: AppBar(
-    title: Text(widget.title),
-  ),
-  body: Center(
-    child: Column(
-      children: &lt;Widget&gt;[
-        Text(
-          'You have pushed the button this many times:',
-         ),
-        Text(
-          '$_counter',
-          style: Theme.of(context).textTheme.display1,
-         ),
-      ],
-      mainAxisAlignment: MainAxisAlignment.center,
-    ),
-    widthFactor: 0.5,
-  ),
-  floatingActionButton: FloatingActionButton(
-    child: Icon(Icons.add),
-    onPressed: _incrementCounter,
-    tooltip: 'Increment',
-  ),
-);
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">return Scaffold(
-  appBar: AppBar(
-    title: Text(widget.title),
-  ),
-  body: Center(
-    widthFactor: 0.5,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: &lt;Widget&gt;[
-        Text(
-          'You have pushed the button this many times:',
-         ),
-        Text(
-          '$_counter',
-          style: Theme.of(context).textTheme.display1,
-         ),
-      ],
-    ),
-  ),
-  floatingActionButton: FloatingActionButton(
-    onPressed: _incrementCounter,
-    tooltip: 'Increment',
-    child: Icon(Icons.add),
-  ),
-);
-</code></pre>
-<p>Exception: It's allowed to have parameter with a function expression after the
-<code>child</code> property.</p>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>sort_child_properties_last</code> lint,
-add <code>sort_child_properties_last</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - sort_child_properties_last
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>sort_child_properties_last</code> linter rule at 
+              <a href="https://dart.dev/lints/sort_child_properties_last">https://dart.dev/lints/sort_child_properties_last</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

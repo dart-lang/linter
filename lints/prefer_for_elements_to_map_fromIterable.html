@@ -14,71 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_for_elements_to_map_fromIterable</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.3.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/prefer_for_elements_to_map_fromIterable"><h1>prefer_for_elements_to_map_fromIterable</h1></a>
          </header>
          <section>
-            
-            <p>When building maps from iterables, it is preferable to use 'for' elements.</p>
-<p>Using 'for' elements brings several benefits including:</p>
-<ul>
-<li>Performance</li>
-<li>Flexibility</li>
-<li>Readability</li>
-<li>Improved type inference</li>
-<li>Improved interaction with null safety</li>
-</ul>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">Map&lt;String, WidgetBuilder&gt;.fromIterable(
-  kAllGalleryDemos,
-  key: (demo) =&gt; '${demo.routeName}',
-  value: (demo) =&gt; demo.buildRoute,
-);
-
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">return {
-  for (var demo in kAllGalleryDemos)
-    '${demo.routeName}': demo.buildRoute,
-};
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">// Map&lt;int, Student&gt; is not required, type is inferred automatically.
-final pizzaRecipients = {
-  ...studentLeaders,
-  for (var student in classG)
-    if (student.isPassing) student.id: student,
-};
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>prefer_for_elements_to_map_fromIterable</code> lint,
-add <code>prefer_for_elements_to_map_fromIterable</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - prefer_for_elements_to_map_fromIterable
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>prefer_for_elements_to_map_fromIterable</code> linter rule at 
+              <a href="https://dart.dev/lints/prefer_for_elements_to_map_fromIterable">https://dart.dev/lints/prefer_for_elements_to_map_fromIterable</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

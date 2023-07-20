@@ -14,95 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>exhaustive_cases</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.9.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/exhaustive_cases"><h1>exhaustive_cases</h1></a>
          </header>
          <section>
-            
-            <p>Switching on instances of enum-like classes should be exhaustive.</p>
-<p>Enum-like classes are defined as concrete (non-abstract) classes that have:</p>
-<ul>
-<li>only private non-factory constructors</li>
-<li>two or more static const fields whose type is the enclosing class and</li>
-<li>no subclasses of the class in the defining library</li>
-</ul>
-<p><strong>DO</strong> define case clauses for all constants in enum-like classes.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class EnumLike {
-  final int i;
-  const EnumLike._(this.i);
-
-  static const e = EnumLike._(1);
-  static const f = EnumLike._(2);
-  static const g = EnumLike._(3);
-}
-
-void bad(EnumLike e) {
-  // Missing case.
-  switch(e) { // LINT
-    case EnumLike.e :
-      print('e');
-      break;
-    case EnumLike.f :
-      print('f');
-      break;
-  }
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class EnumLike {
-  final int i;
-  const EnumLike._(this.i);
-
-  static const e = EnumLike._(1);
-  static const f = EnumLike._(2);
-  static const g = EnumLike._(3);
-}
-
-void ok(EnumLike e) {
-  // All cases covered.
-  switch(e) { // OK
-    case EnumLike.e :
-      print('e');
-      break;
-    case EnumLike.f :
-      print('f');
-      break;
-    case EnumLike.g :
-      print('g');
-      break;
-  }
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>exhaustive_cases</code> lint,
-add <code>exhaustive_cases</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - exhaustive_cases
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>exhaustive_cases</code> linter rule at 
+              <a href="https://dart.dev/lints/exhaustive_cases">https://dart.dev/lints/exhaustive_cases</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

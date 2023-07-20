@@ -14,71 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>implicit_reopen</h1>
-            <p>Group: errors</p>
-            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 3.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/implicit_reopen"><h1>implicit_reopen</h1></a>
          </header>
          <section>
-            
-            <p>Using an <code>interface</code>, <code>base</code>, <code>final</code>, or <code>sealed</code> modifier on a class,
-or a <code>base</code> modifier on a mixin,
-authors can control whether classes and mixins allow being implemented,
-extended, and/or mixed in from outside of the library where they're defined.
-In some cases, it's possible for an author to inadvertently relax these controls
-and implicitly &quot;reopen&quot; a class. (A similar reopening cannot occur with a mixin.)</p>
-<p>This lint guards against unintentionally reopening a class by requiring such
-cases to be made explicit with the
-<a href="https://pub.dev/documentation/meta/latest/meta/reopen-constant.html"><code>@reopen</code></a>
-annotation in <code>package:meta</code>.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">interface class I {}
-
-class C extends I {} // LINT
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">interface class I {}
-
-final class C extends I {}
-</code></pre>
-<pre><code class="language-dart">interface class I {}
-
-final class C extends I {}
-</code></pre>
-<pre><code class="language-dart">import 'package:meta/meta.dart';
-
-interface class I {}
-
-@reopen
-class C extends I {}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>implicit_reopen</code> lint,
-add <code>implicit_reopen</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - implicit_reopen
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>implicit_reopen</code> linter rule at 
+              <a href="https://dart.dev/lints/implicit_reopen">https://dart.dev/lints/implicit_reopen</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

@@ -14,76 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_final_parameters</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.14.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/prefer_final_parameters"><h1>prefer_final_parameters</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> prefer declaring parameters as final if they are not reassigned in
-the function body.</p>
-<p>Declaring parameters as final when possible is a good practice because it helps
-avoid accidental reassignments.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void badParameter(String label) { // LINT
-  print(label);
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void goodParameter(final String label) { // OK
-  print(label);
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void badExpression(int value) =&gt; print(value); // LINT
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void goodExpression(final int value) =&gt; print(value); // OK
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">[1, 4, 6, 8].forEach((value) =&gt; print(value + 2)); // LINT
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">[1, 4, 6, 8].forEach((final value) =&gt; print(value + 2)); // OK
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void mutableParameter(String label) { // OK
-  print(label);
-  label = 'Hello Linter!';
-  print(label);
-}
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
             <p>
-Incompatible with: <!--suppress HtmlUnknownTarget --><a href = "unnecessary_final.html" >unnecessary_final</a>, <a href = "avoid_final_parameters.html" >avoid_final_parameters</a>.
-</p>
-
-            <h2>Usage</h2>
-<p>To enable the <code>prefer_final_parameters</code> lint,
-add <code>prefer_final_parameters</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - prefer_final_parameters
-</code></pre>
-
+              Find up-to-date documentation for the
+              <code>prefer_final_parameters</code> linter rule at 
+              <a href="https://dart.dev/lints/prefer_final_parameters">https://dart.dev/lints/prefer_final_parameters</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

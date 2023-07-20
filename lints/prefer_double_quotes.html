@@ -14,66 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_double_quotes</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.4.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/prefer_double_quotes"><h1>prefer_double_quotes</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> use double quotes where they wouldn't require additional escapes.</p>
-<p>That means strings with a double quote may use apostrophes so that the double
-quote isn't escaped (note: we don't lint the other way around, ie, a double
-quoted string with an escaped double quote is not flagged).</p>
-<p>It's also rare, but possible, to have strings within string interpolations.  In
-this case, its much more readable to use a single quote somewhere.  So single
-quotes are allowed either within, or containing, an interpolated string literal.
-Arguably strings within string interpolations should be its own type of lint.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">useStrings(
-    'should be double quote',
-    r'should be double quote',
-    r'''should be double quotes''')
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">useStrings(
-    &quot;should be double quote&quot;,
-    r&quot;should be double quote&quot;,
-    r&quot;&quot;&quot;should be double quotes&quot;&quot;&quot;,
-    'ok with &quot; inside',
-    'nested ${a ? &quot;strings&quot; : &quot;can&quot;} be wrapped by a double quote',
-    &quot;and nested ${a ? 'strings' : 'can be double quoted themselves'}&quot;);
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
             <p>
-Incompatible with: <!--suppress HtmlUnknownTarget --><a href = "prefer_single_quotes.html" >prefer_single_quotes</a>.
-</p>
-
-            <h2>Usage</h2>
-<p>To enable the <code>prefer_double_quotes</code> lint,
-add <code>prefer_double_quotes</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - prefer_double_quotes
-</code></pre>
-
+              Find up-to-date documentation for the
+              <code>prefer_double_quotes</code> linter rule at 
+              <a href="https://dart.dev/lints/prefer_double_quotes">https://dart.dev/lints/prefer_double_quotes</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

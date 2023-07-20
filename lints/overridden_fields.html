@@ -14,83 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>overridden_fields</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/overridden_fields"><h1>overridden_fields</h1></a>
          </header>
          <section>
-            
-            <p><strong>DON'T</strong> override fields.</p>
-<p>Overriding fields is almost always done unintentionally.  Regardless, it is a
-bad practice to do so.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class Base {
-  Object field = 'lorem';
-
-  Object something = 'change';
-}
-
-class Bad1 extends Base {
-  @override
-  final field = 'ipsum'; // LINT
-}
-
-class Bad2 extends Base {
-  @override
-  Object something = 'done'; // LINT
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class Base {
-  Object field = 'lorem';
-
-  Object something = 'change';
-}
-
-class Ok extends Base {
-  Object newField; // OK
-
-  final Object newFinal = 'ignore'; // OK
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">abstract class BaseLoggingHandler {
-  Base transformer;
-}
-
-class LogPrintHandler implements BaseLoggingHandler {
-  @override
-  Derived transformer; // OK
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>overridden_fields</code> lint,
-add <code>overridden_fields</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - overridden_fields
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>overridden_fields</code> linter rule at 
+              <a href="https://dart.dev/lints/overridden_fields">https://dart.dev/lints/overridden_fields</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

@@ -14,83 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>omit_local_variable_types</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/omit_local_variable_types"><h1>omit_local_variable_types</h1></a>
          </header>
          <section>
-            
-            <p><strong>DON'T</strong> redundantly type annotate initialized local variables.</p>
-<p>Local variables, especially in modern code where functions tend to be small,
-have very little scope. Omitting the type focuses the reader's attention on the
-more important <em>name</em> of the variable and its initialized value.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">List&lt;List&lt;Ingredient&gt;&gt; possibleDesserts(Set&lt;Ingredient&gt; pantry) {
-  List&lt;List&lt;Ingredient&gt;&gt; desserts = &lt;List&lt;Ingredient&gt;&gt;[];
-  for (final List&lt;Ingredient&gt; recipe in cookbook) {
-    if (pantry.containsAll(recipe)) {
-      desserts.add(recipe);
-    }
-  }
-
-  return desserts;
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">List&lt;List&lt;Ingredient&gt;&gt; possibleDesserts(Set&lt;Ingredient&gt; pantry) {
-  var desserts = &lt;List&lt;Ingredient&gt;&gt;[];
-  for (final recipe in cookbook) {
-    if (pantry.containsAll(recipe)) {
-      desserts.add(recipe);
-    }
-  }
-
-  return desserts;
-}
-</code></pre>
-<p>Sometimes the inferred type is not the type you want the variable to have. For
-example, you may intend to assign values of other types later. In that case,
-annotate the variable with the type you want.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">Widget build(BuildContext context) {
-  Widget result = Text('You won!');
-  if (applyPadding) {
-    result = Padding(padding: EdgeInsets.all(8.0), child: result);
-  }
-  return result;
-}
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
             <p>
-Incompatible with: <!--suppress HtmlUnknownTarget --><a href = "always_specify_types.html" >always_specify_types</a>.
-</p>
-
-            <h2>Usage</h2>
-<p>To enable the <code>omit_local_variable_types</code> lint,
-add <code>omit_local_variable_types</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - omit_local_variable_types
-</code></pre>
-
+              Find up-to-date documentation for the
+              <code>omit_local_variable_types</code> linter rule at 
+              <a href="https://dart.dev/lints/omit_local_variable_types">https://dart.dev/lints/omit_local_variable_types</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

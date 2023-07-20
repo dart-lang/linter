@@ -14,71 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_slow_async_io</h1>
-            <p>Group: errors</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/avoid_slow_async_io"><h1>avoid_slow_async_io</h1></a>
          </header>
          <section>
-            
-            <p><strong>AVOID</strong> using the following asynchronous file I/O methods because they are
-much slower than their synchronous counterparts.</p>
-<ul>
-<li><code>Directory.exists</code></li>
-<li><code>Directory.stat</code></li>
-<li><code>File.lastModified</code></li>
-<li><code>File.exists</code></li>
-<li><code>File.stat</code></li>
-<li><code>FileSystemEntity.isDirectory</code></li>
-<li><code>FileSystemEntity.isFile</code></li>
-<li><code>FileSystemEntity.isLink</code></li>
-<li><code>FileSystemEntity.type</code></li>
-</ul>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">import 'dart:io';
-
-Future&lt;Null&gt; someFunction() async {
-  var file = File('/path/to/my/file');
-  var now = DateTime.now();
-  if ((await file.lastModified()).isBefore(now)) print('before'); // LINT
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">import 'dart:io';
-
-Future&lt;Null&gt; someFunction() async {
-  var file = File('/path/to/my/file');
-  var now = DateTime.now();
-  if (file.lastModifiedSync().isBefore(now)) print('before'); // OK
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>avoid_slow_async_io</code> lint,
-add <code>avoid_slow_async_io</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - avoid_slow_async_io
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>avoid_slow_async_io</code> linter rule at 
+              <a href="https://dart.dev/lints/avoid_slow_async_io">https://dart.dev/lints/avoid_slow_async_io</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

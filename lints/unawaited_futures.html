@@ -14,60 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>unawaited_futures</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/unawaited_futures"><h1>unawaited_futures</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> await functions that return a <code>Future</code> inside of an async function body.</p>
-<p>It's easy to forget await in async methods as naming conventions usually don't
-tell us if a method is sync or async (except for some in <code>dart:io</code>).</p>
-<p>When you really <em>do</em> want to start a fire-and-forget <code>Future</code>, the recommended
-way is to use <code>unawaited</code> from <code>dart:async</code>. The <code>// ignore</code> and
-<code>// ignore_for_file</code> comments also work.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void main() async {
-  doSomething(); // Likely a bug.
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">Future doSomething() =&gt; ...;
-
-void main() async {
-  await doSomething();
-
-  unawaited(doSomething()); // Explicitly-ignored fire-and-forget.
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>unawaited_futures</code> lint,
-add <code>unawaited_futures</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - unawaited_futures
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>unawaited_futures</code> linter rule at 
+              <a href="https://dart.dev/lints/unawaited_futures">https://dart.dev/lints/unawaited_futures</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

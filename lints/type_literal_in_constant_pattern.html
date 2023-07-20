@@ -14,72 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>type_literal_in_constant_pattern</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 3.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/type_literal_in_constant_pattern"><h1>type_literal_in_constant_pattern</h1></a>
          </header>
          <section>
-            
-            <p>If you meant to test if the object has type <code>Foo</code>, instead write <code>Foo _</code>.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void f(Object? x) {
-  if (x case num) {
-    print('int or double');
-  }
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void f(Object? x) {
-  if (x case num _) {
-    print('int or double');
-  }
-}
-</code></pre>
-<p>If you do mean to test that the matched value (which you expect to have the
-type <code>Type</code>) is equal to the type literal <code>Foo</code>, then this lint can be
-silenced using <code>const (Foo)</code>.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void f(Object? x) {
-  if (x case int) {
-    print('int');
-  }
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void f(Object? x) {
-  if (x case const (int)) {
-    print('int');
-  }
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>type_literal_in_constant_pattern</code> lint,
-add <code>type_literal_in_constant_pattern</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - type_literal_in_constant_pattern
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>type_literal_in_constant_pattern</code> linter rule at 
+              <a href="https://dart.dev/lints/type_literal_in_constant_pattern">https://dart.dev/lints/type_literal_in_constant_pattern</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

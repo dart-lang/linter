@@ -14,89 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>deprecated_member_use_from_same_package</h1>
-            <p>Group: errors</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 3.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/deprecated_member_use_from_same_package"><h1>deprecated_member_use_from_same_package</h1></a>
          </header>
          <section>
-            
-            <p>Elements that are annotated with <code>@Deprecated</code> should not be referenced from
-within the package in which they are declared.</p>
-<p><strong>AVOID</strong> using deprecated elements.</p>
-<p>...</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">// Declared in one library:
-class Foo {
-  @Deprecated(&quot;Use 'm2' instead&quot;)
-  void m1() {}
-
-  void m2({
-      @Deprecated('This is an old parameter') int? p,
-  })
-}
-
-@Deprecated('Do not use')
-int x = 0;
-
-// In the same or another library, but within the same package:
-void m(Foo foo) {
-  foo.m1();
-  foo.m2(p: 7);
-  x = 1;
-}
-</code></pre>
-<p>Deprecated elements can be used from within <em>other</em> deprecated elements, in
-order to allow for the deprecation of a collection of APIs together as one unit.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">// Declared in one library:
-class Foo {
-  @Deprecated(&quot;Use 'm2' instead&quot;)
-  void m1() {}
-
-  void m2({
-      @Deprecated('This is an old parameter') int? p,
-  })
-}
-
-@Deprecated('Do not use')
-int x = 0;
-
-// In the same or another library, but within the same package:
-@Deprecated('Do not use')
-void m(Foo foo) {
-  foo.m1();
-  foo.m2(p: 7);
-  x = 1;
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>deprecated_member_use_from_same_package</code> lint,
-add <code>deprecated_member_use_from_same_package</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - deprecated_member_use_from_same_package
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>deprecated_member_use_from_same_package</code> linter rule at 
+              <a href="https://dart.dev/lints/deprecated_member_use_from_same_package">https://dart.dev/lints/deprecated_member_use_from_same_package</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

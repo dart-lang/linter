@@ -14,81 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>collection_methods_unrelated_type</h1>
-            <p>Group: errors</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.19.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/core.yaml"><!--suppress HtmlUnknownTarget --><img alt="core" src="style-core.svg"></a><a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/collection_methods_unrelated_type"><h1>collection_methods_unrelated_type</h1></a>
          </header>
          <section>
-            
-            <p><strong>DON'T</strong> invoke certain collection method with an argument with an unrelated
-type.</p>
-<p>Doing this will invoke <code>==</code> on the collection's elements and most likely will
-return <code>false</code>.</p>
-<p>An argument passed to a collection method should relate to the collection type
-as follows:</p>
-<ul>
-<li>an argument to <code>Iterable&lt;E&gt;.contains</code> should be related to <code>E</code></li>
-<li>an argument to <code>List&lt;E&gt;.remove</code> should be related to <code>E</code></li>
-<li>an argument to <code>Map&lt;K, V&gt;.containsKey</code> should be related to <code>K</code></li>
-<li>an argument to <code>Map&lt;K, V&gt;.containsValue</code> should be related to <code>V</code></li>
-<li>an argument to <code>Map&lt;K, V&gt;.remove</code> should be related to <code>K</code></li>
-<li>an argument to <code>Map&lt;K, V&gt;.[]</code> should be related to <code>K</code></li>
-<li>an argument to <code>Queue&lt;E&gt;.remove</code> should be related to <code>E</code></li>
-<li>an argument to <code>Set&lt;E&gt;.lookup</code> should be related to <code>E</code></li>
-<li>an argument to <code>Set&lt;E&gt;.remove</code> should be related to <code>E</code></li>
-</ul>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void someFunction() {
-  var list = &lt;int&gt;[];
-  if (list.contains('1')) print('someFunction'); // LINT
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void someFunction() {
-  var set = &lt;int&gt;{};
-  set.remove('1'); // LINT
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction() {
-  var list = &lt;int&gt;[];
-  if (list.contains(1)) print('someFunction'); // OK
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction() {
-  var set = &lt;int&gt;{};
-  set.remove(1); // OK
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>collection_methods_unrelated_type</code> lint,
-add <code>collection_methods_unrelated_type</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - collection_methods_unrelated_type
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>collection_methods_unrelated_type</code> linter rule at 
+              <a href="https://dart.dev/lints/collection_methods_unrelated_type">https://dart.dev/lints/collection_methods_unrelated_type</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

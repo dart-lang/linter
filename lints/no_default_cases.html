@@ -14,68 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>no_default_cases</h1>
-            <p>Group: style</p>
-            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.9.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/no_default_cases"><h1>no_default_cases</h1></a>
          </header>
          <section>
-            
-            <p>Switches on enums and enum-like classes should not use a <code>default</code> clause.</p>
-<p>Enum-like classes are defined as concrete (non-abstract) classes that have:</p>
-<ul>
-<li>only private non-factory constructors</li>
-<li>two or more static const fields whose type is the enclosing class and</li>
-<li>no subclasses of the class in the defining library</li>
-</ul>
-<p><strong>DO</strong> define default behavior outside switch statements.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">  switch (testEnum) {
-    case TestEnum.A:
-      return '123';
-    case TestEnum.B:
-      return 'abc';
-    default:
-      return null;
-  }
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">  switch (testEnum) {
-    case TestEnum.A:
-      return '123';
-    case TestEnum.B:
-      return 'abc';
-  }
-  // Default here.
-  return null;
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>no_default_cases</code> lint,
-add <code>no_default_cases</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - no_default_cases
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>no_default_cases</code> linter rule at 
+              <a href="https://dart.dev/lints/no_default_cases">https://dart.dev/lints/no_default_cases</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

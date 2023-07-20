@@ -14,128 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>list_remove_unrelated_type</h1>
-            <p>Group: errors</p>
-            <p>Maturity: <span style="color:orangered;font-weight:bold;" >deprecated</span></p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/list_remove_unrelated_type"><h1>list_remove_unrelated_type</h1></a>
          </header>
          <section>
-            
-            <p><strong>DON'T</strong> invoke <code>remove</code> on <code>List</code> with an instance of different type than
-the parameter type.</p>
-<p>Doing this will invoke <code>==</code> on its elements and most likely will
-return <code>false</code>.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void someFunction() {
-  var list = &lt;int&gt;[];
-  if (list.remove('1')) print('someFunction'); // LINT
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void someFunction3() {
-  List&lt;int&gt; list = &lt;int&gt;[];
-  if (list.remove('1')) print('someFunction3'); // LINT
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void someFunction8() {
-  List&lt;DerivedClass2&gt; list = &lt;DerivedClass2&gt;[];
-  DerivedClass3 instance;
-  if (list.remove(instance)) print('someFunction8'); // LINT
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">abstract class SomeList&lt;E&gt; implements List&lt;E&gt; {}
-
-abstract class MyClass implements SomeList&lt;int&gt; {
-  bool badMethod(String thing) =&gt; this.remove(thing); // LINT
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction10() {
-  var list = [];
-  if (list.remove(1)) print('someFunction10'); // OK
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction1() {
-  var list = &lt;int&gt;[];
-  if (list.remove(1)) print('someFunction1'); // OK
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction4() {
-  List&lt;int&gt; list = &lt;int&gt;[];
-  if (list.remove(1)) print('someFunction4'); // OK
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction5() {
-  List&lt;ClassBase&gt; list = &lt;ClassBase&gt;[];
-  DerivedClass1 instance;
-  if (list.remove(instance)) print('someFunction5'); // OK
-}
-
-abstract class ClassBase {}
-
-class DerivedClass1 extends ClassBase {}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction6() {
-  List&lt;Mixin&gt; list = &lt;Mixin&gt;[];
-  DerivedClass2 instance;
-  if (list.remove(instance)) print('someFunction6'); // OK
-}
-
-abstract class ClassBase {}
-
-abstract class Mixin {}
-
-class DerivedClass2 extends ClassBase with Mixin {}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction7() {
-  List&lt;Mixin&gt; list = &lt;Mixin&gt;[];
-  DerivedClass3 instance;
-  if (list.remove(instance)) print('someFunction7'); // OK
-}
-
-abstract class ClassBase {}
-
-abstract class Mixin {}
-
-class DerivedClass3 extends ClassBase implements Mixin {}
-</code></pre>
-<p><strong>DEPRECATED:</strong> This rule is deprecated in favor of
-<code>collection_methods_unrelated_type</code>.
-The rule will be removed in a future Dart release.</p>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>list_remove_unrelated_type</code> lint,
-add <code>list_remove_unrelated_type</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - list_remove_unrelated_type
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>list_remove_unrelated_type</code> linter rule at 
+              <a href="https://dart.dev/lints/list_remove_unrelated_type">https://dart.dev/lints/list_remove_unrelated_type</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

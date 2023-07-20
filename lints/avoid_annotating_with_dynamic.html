@@ -14,57 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_annotating_with_dynamic</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/avoid_annotating_with_dynamic"><h1>avoid_annotating_with_dynamic</h1></a>
          </header>
          <section>
-            
-            <p><strong>AVOID</strong> annotating with dynamic when not required.</p>
-<p>As <code>dynamic</code> is the assumed return value of a function or method, it is usually
-not necessary to annotate it.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">dynamic lookUpOrDefault(String name, Map map, dynamic defaultValue) {
-  var value = map[name];
-  if (value != null) return value;
-  return defaultValue;
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">lookUpOrDefault(String name, Map map, defaultValue) {
-  var value = map[name];
-  if (value != null) return value;
-  return defaultValue;
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>avoid_annotating_with_dynamic</code> lint,
-add <code>avoid_annotating_with_dynamic</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - avoid_annotating_with_dynamic
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>avoid_annotating_with_dynamic</code> linter rule at 
+              <a href="https://dart.dev/lints/avoid_annotating_with_dynamic">https://dart.dev/lints/avoid_annotating_with_dynamic</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

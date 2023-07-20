@@ -14,76 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_init_to_null</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/avoid_init_to_null"><h1>avoid_init_to_null</h1></a>
          </header>
          <section>
-            
-            <p>From <a href="https://dart.dev/effective-dart/usage#dont-explicitly-initialize-variables-to-null">Effective Dart</a>:</p>
-<p><strong>DON'T</strong> explicitly initialize variables to <code>null</code>.</p>
-<p>If a variable has a non-nullable type or is <code>final</code>,
-Dart reports a compile error if you try to use it
-before it has been definitely initialized.
-If the variable is nullable and not <code>const</code> or <code>final</code>,
-then it is implicitly initialized to <code>null</code> for you.
-There's no concept of &quot;uninitialized memory&quot; in Dart
-and no need to explicitly initialize a variable to <code>null</code> to be &quot;safe&quot;.
-Adding <code>= null</code> is redundant and unneeded.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">Item? bestDeal(List&lt;Item&gt; cart) {
-  Item? bestItem = null;
-
-  for (final item in cart) {
-    if (bestItem == null || item.price &lt; bestItem.price) {
-      bestItem = item;
-    }
-  }
-
-  return bestItem;
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">Item? bestDeal(List&lt;Item&gt; cart) {
-  Item? bestItem;
-
-  for (final item in cart) {
-    if (bestItem == null || item.price &lt; bestItem.price) {
-      bestItem = item;
-    }
-  }
-
-  return bestItem;
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>avoid_init_to_null</code> lint,
-add <code>avoid_init_to_null</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - avoid_init_to_null
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>avoid_init_to_null</code> linter rule at 
+              <a href="https://dart.dev/lints/avoid_init_to_null">https://dart.dev/lints/avoid_init_to_null</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

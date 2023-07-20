@@ -14,56 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>implementation_imports</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/implementation_imports"><h1>implementation_imports</h1></a>
          </header>
          <section>
-            
-            <p>From the the <a href="https://dart.dev/tools/pub/package-layout#implementation-files">pub package layout doc</a>:</p>
-<p><strong>DON'T</strong> import implementation files from another package.</p>
-<p>The libraries inside <code>lib</code> are publicly visible: other packages are free to
-import them.  But much of a package's code is internal implementation libraries
-that should only be imported and used by the package itself.  Those go inside a
-subdirectory of <code>lib</code> called <code>src</code>.  You can create subdirectories in there if
-it helps you organize things.</p>
-<p>You are free to import libraries that live in <code>lib/src</code> from within other Dart
-code in the same package (like other libraries in <code>lib</code>, scripts in <code>bin</code>,
-and tests) but you should never import from another package's <code>lib/src</code>
-directory.  Those files are not part of the package's public API, and they
-might change in ways that could break your code.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">// In 'road_runner'
-import 'package:acme/src/internals.dart';
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>implementation_imports</code> lint,
-add <code>implementation_imports</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - implementation_imports
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>implementation_imports</code> linter rule at 
+              <a href="https://dart.dev/lints/implementation_imports">https://dart.dev/lints/implementation_imports</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

@@ -14,79 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_spread_collections</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.3.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/prefer_spread_collections"><h1>prefer_spread_collections</h1></a>
          </header>
          <section>
-            
-            <p>Use spread collections when possible.</p>
-<p>Collection literals are excellent when you want to create a new collection out
-of individual items. But, when existing items are already stored in another
-collection, spread collection syntax leads to simpler code.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">Widget build(BuildContext context) {
-  return CupertinoPageScaffold(
-    child: ListView(
-      children: [
-        Tab2Header(),
-      ]..addAll(buildTab2Conversation()),
-    ),
-  );
-}
-</code></pre>
-<pre><code class="language-dart">var ints = [1, 2, 3];
-print(['a']..addAll(ints.map((i) =&gt; i.toString()))..addAll(['c']));
-</code></pre>
-<pre><code class="language-dart">var things;
-var l = ['a']..addAll(things ?? const []);
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">Widget build(BuildContext context) {
-  return CupertinoPageScaffold(
-    child: ListView(
-      children: [
-        Tab2Header(),
-        ...buildTab2Conversation(),
-      ],
-    ),
-  );
-}
-</code></pre>
-<pre><code class="language-dart">var ints = [1, 2, 3];
-print(['a', ...ints.map((i) =&gt; i.toString()), 'c');
-</code></pre>
-<pre><code class="language-dart">var things;
-var l = ['a', ...?things];
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>prefer_spread_collections</code> lint,
-add <code>prefer_spread_collections</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - prefer_spread_collections
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>prefer_spread_collections</code> linter rule at 
+              <a href="https://dart.dev/lints/prefer_spread_collections">https://dart.dev/lints/prefer_spread_collections</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

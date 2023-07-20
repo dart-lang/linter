@@ -14,61 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>null_check_on_nullable_type_parameter</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.12.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/core.yaml"><!--suppress HtmlUnknownTarget --><img alt="core" src="style-core.svg"></a><a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/null_check_on_nullable_type_parameter"><h1>null_check_on_nullable_type_parameter</h1></a>
          </header>
          <section>
-            
-            <p><strong>DON'T</strong> use null check on a potentially nullable type parameter.</p>
-<p>Given a generic type parameter <code>T</code> which has a nullable bound (e.g. the default
-bound of <code>Object?</code>), it is very easy to introduce erroneous null checks when
-working with a variable of type <code>T?</code>. Specifically, it is not uncommon to have
-<code>T? x;</code> and want to assert that <code>x</code> has been set to a valid value of type <code>T</code>.
-A common mistake is to do so using <code>x!</code>. This is almost always incorrect, since
-if <code>T</code> is a nullable type, <code>x</code> may validly hold <code>null</code> as a value of type <code>T</code>.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">T run&lt;T&gt;(T callback()) {
-  T? result;
-   (() { result = callback(); })();
-  return result!;
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">T run&lt;T&gt;(T callback()) {
-  T? result;
-   (() { result = callback(); })();
-  return result as T;
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>null_check_on_nullable_type_parameter</code> lint,
-add <code>null_check_on_nullable_type_parameter</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - null_check_on_nullable_type_parameter
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>null_check_on_nullable_type_parameter</code> linter rule at 
+              <a href="https://dart.dev/lints/null_check_on_nullable_type_parameter">https://dart.dev/lints/null_check_on_nullable_type_parameter</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

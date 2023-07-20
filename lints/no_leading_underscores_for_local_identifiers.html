@@ -14,66 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>no_leading_underscores_for_local_identifiers</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.16.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/no_leading_underscores_for_local_identifiers"><h1>no_leading_underscores_for_local_identifiers</h1></a>
          </header>
          <section>
-            
-            <p><strong>DON'T</strong> use a leading underscore for identifiers that aren't private. Dart
-uses a leading underscore in an identifier to mark members and top-level
-declarations as private. This trains users to associate a leading underscore
-with one of those kinds of declarations. They see <code>_</code> and  think &quot;private&quot;.
-There is no concept of &quot;private&quot; for local variables or parameters.  When one of
-those has a name that starts with an underscore, it sends a confusing signal to
-the reader. To avoid that, don't use leading underscores in those names.</p>
-<p><strong>EXCEPTION:</strong>: An unused parameter can be named <code>_</code>, <code>__</code>, <code>___</code>, etc.  This is
-common practice in callbacks where you are passed a value but you don't need
-to use it. Giving it a name that consists solely of underscores is the idiomatic
-way to indicate that the value isn't used.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void print(String _name) {
-  var _size = _name.length;
-  ...
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void print(String name) {
-  var size = name.length;
-  ...
-}
-</code></pre>
-<p><strong>OK:</strong></p>
-<pre><code class="language-dart">[1,2,3].map((_) =&gt; print('Hello'));
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>no_leading_underscores_for_local_identifiers</code> lint,
-add <code>no_leading_underscores_for_local_identifiers</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - no_leading_underscores_for_local_identifiers
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>no_leading_underscores_for_local_identifiers</code> linter rule at 
+              <a href="https://dart.dev/lints/no_leading_underscores_for_local_identifiers">https://dart.dev/lints/no_leading_underscores_for_local_identifiers</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

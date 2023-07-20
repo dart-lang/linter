@@ -14,59 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>depend_on_referenced_packages</h1>
-            <p>Group: pub</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.14.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/core.yaml"><!--suppress HtmlUnknownTarget --><img alt="core" src="style-core.svg"></a><a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/depend_on_referenced_packages"><h1>depend_on_referenced_packages</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> depend on referenced packages.</p>
-<p>When importing a package, add a dependency on it to your pubspec.</p>
-<p>Depending explicitly on packages that you reference ensures they will always
-exist and allows you to put a dependency constraint on them to guard you
-against breaking changes.</p>
-<p>Whether this should be a regular dependency or dev_dependency depends on if it
-is referenced from a public file (one under either <code>lib</code> or <code>bin</code>), or some
-other private file.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">import 'package:a/a.dart';
-</code></pre>
-<pre><code class="language-yaml">dependencies:
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">import 'package:a/a.dart';
-</code></pre>
-<pre><code class="language-yaml">dependencies:
-  a: ^1.0.0
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>depend_on_referenced_packages</code> lint,
-add <code>depend_on_referenced_packages</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - depend_on_referenced_packages
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>depend_on_referenced_packages</code> linter rule at 
+              <a href="https://dart.dev/lints/depend_on_referenced_packages">https://dart.dev/lints/depend_on_referenced_packages</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

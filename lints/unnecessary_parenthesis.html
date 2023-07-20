@@ -14,63 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>unnecessary_parenthesis</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/unnecessary_parenthesis"><h1>unnecessary_parenthesis</h1></a>
          </header>
          <section>
-            
-            <p><strong>AVOID</strong> using parentheses when not needed.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">a = (b);
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">a = b;
-</code></pre>
-<p>Parentheses are considered unnecessary if they do not change the meaning of the
-code and they do not improve the readability of the code. The goal is not to
-force all developers to maintain the expression precedence table in their heads,
-which is why the second condition is included. Examples of this condition
-include:</p>
-<ul>
-<li>cascade expressions - it is sometimes not clear what the target of a cascade
-expression is, especially with assignments, or nested cascades. For example,
-the expression <code>a.b = (c..d)</code>.</li>
-<li>expressions with whitespace between tokens - it can look very strange to see
-an expression like <code>!await foo</code> which is valid and equivalent to
-<code>!(await foo)</code>.</li>
-<li>logical expressions - parentheses can improve the readability of the implicit
-grouping defined by precedence. For example, the expression
-<code>(a &amp;&amp; b) || c &amp;&amp; d</code>.</li>
-</ul>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>unnecessary_parenthesis</code> lint,
-add <code>unnecessary_parenthesis</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - unnecessary_parenthesis
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>unnecessary_parenthesis</code> linter rule at 
+              <a href="https://dart.dev/lints/unnecessary_parenthesis">https://dart.dev/lints/unnecessary_parenthesis</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

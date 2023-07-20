@@ -14,65 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>always_declare_return_types</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/always_declare_return_types"><h1>always_declare_return_types</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> declare method return types.</p>
-<p>When declaring a method or function <em>always</em> specify a return type.
-Declaring return types for functions helps improve your codebase by allowing the
-analyzer to more adequately check your code for errors that could occur during
-runtime.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">main() { }
-
-_bar() =&gt; _Foo();
-
-class _Foo {
-  _foo() =&gt; 42;
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void main() { }
-
-_Foo _bar() =&gt; _Foo();
-
-class _Foo {
-  int _foo() =&gt; 42;
-}
-
-typedef predicate = bool Function(Object o);
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>always_declare_return_types</code> lint,
-add <code>always_declare_return_types</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - always_declare_return_types
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>always_declare_return_types</code> linter rule at 
+              <a href="https://dart.dev/lints/always_declare_return_types">https://dart.dev/lints/always_declare_return_types</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

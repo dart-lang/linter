@@ -14,61 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_foreach</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/prefer_foreach"><h1>prefer_foreach</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> use <code>forEach</code> if you are only going to apply a function or a method
-to all the elements of an iterable.</p>
-<p>Using <code>forEach</code> when you are only going to apply a function or method to all
-elements of an iterable is a good practice because it makes your code more
-terse.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">for (final key in map.keys.toList()) {
-  map.remove(key);
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">map.keys.toList().forEach(map.remove);
-</code></pre>
-<p><strong>NOTE:</strong> Replacing a for each statement with a forEach call may change the
-behavior in the case where there are side-effects on the iterable itself.</p>
-<pre><code class="language-dart">for (final v in myList) {
-  foo().f(v); // This code invokes foo() many times.
-}
-
-myList.forEach(foo().f); // But this one invokes foo() just once.
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>prefer_foreach</code> lint,
-add <code>prefer_foreach</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - prefer_foreach
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>prefer_foreach</code> linter rule at 
+              <a href="https://dart.dev/lints/prefer_foreach">https://dart.dev/lints/prefer_foreach</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

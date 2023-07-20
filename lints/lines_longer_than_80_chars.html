@@ -14,56 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>lines_longer_than_80_chars</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/lines_longer_than_80_chars"><h1>lines_longer_than_80_chars</h1></a>
          </header>
          <section>
-            
-            <p><strong>AVOID</strong> lines longer than 80 characters</p>
-<p>Readability studies show that long lines of text are harder to read because your
-eye has to travel farther when moving to the beginning of the next line. This is
-why newspapers and magazines use multiple columns of text.</p>
-<p>If you really find yourself wanting lines longer than 80 characters, our
-experience is that your code is likely too verbose and could be a little more
-compact. The main offender is usually <code>VeryLongCamelCaseClassNames</code>. Ask
-yourself, “Does each word in that type name tell me something critical or
-prevent a name collision?” If not, consider omitting it.</p>
-<p>Note that <code>dart format</code> does 99% of this for you, but the last 1% is you. It
-does not split long string literals to fit in 80 columns, so you have to do
-that manually.</p>
-<p>We make an exception for URIs and file paths. When those occur in comments or
-strings (usually in imports and exports), they may remain on a single line even
-if they go over the line limit. This makes it easier to search source files for
-a given path.</p>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>lines_longer_than_80_chars</code> lint,
-add <code>lines_longer_than_80_chars</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - lines_longer_than_80_chars
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>lines_longer_than_80_chars</code> linter rule at 
+              <a href="https://dart.dev/lints/lines_longer_than_80_chars">https://dart.dev/lints/lines_longer_than_80_chars</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

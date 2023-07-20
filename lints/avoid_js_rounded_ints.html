@@ -14,53 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_js_rounded_ints</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/avoid_js_rounded_ints"><h1>avoid_js_rounded_ints</h1></a>
          </header>
          <section>
-            
-            <p><strong>AVOID</strong> integer literals that cannot be represented exactly when compiled to
-JavaScript.</p>
-<p>When a program is compiled to JavaScript <code>int</code> and <code>double</code> become JavaScript
-Numbers. Too large integers (<code>value &lt; Number.MIN_SAFE_INTEGER</code> or
-<code>value &gt; Number.MAX_SAFE_INTEGER</code>) may be rounded to the closest Number value.</p>
-<p>For instance <code>1000000000000000001</code> cannot be represented exactly as a JavaScript
-Number, so <code>1000000000000000000</code> will be used instead.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">int value = 9007199254740995;
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">BigInt value = BigInt.parse('9007199254740995');
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>avoid_js_rounded_ints</code> lint,
-add <code>avoid_js_rounded_ints</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - avoid_js_rounded_ints
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>avoid_js_rounded_ints</code> linter rule at 
+              <a href="https://dart.dev/lints/avoid_js_rounded_ints">https://dart.dev/lints/avoid_js_rounded_ints</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

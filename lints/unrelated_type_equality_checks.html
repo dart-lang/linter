@@ -14,130 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>unrelated_type_equality_checks</h1>
-            <p>Group: errors</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/core.yaml"><!--suppress HtmlUnknownTarget --><img alt="core" src="style-core.svg"></a><a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/unrelated_type_equality_checks"><h1>unrelated_type_equality_checks</h1></a>
          </header>
          <section>
-            
-            <p><strong>DON'T</strong> Compare references of unrelated types for equality.</p>
-<p>Comparing references of a type where neither is a subtype of the other most
-likely will return <code>false</code> and might not reflect programmer's intent.</p>
-<p><code>Int64</code> and <code>Int32</code> from <code>package:fixnum</code> allow comparing to <code>int</code> provided
-the <code>int</code> is on the right hand side. The lint allows this as a special case.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void someFunction() {
-  var x = '1';
-  if (x == 1) print('someFunction'); // LINT
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void someFunction1() {
-  String x = '1';
-  if (x == 1) print('someFunction1'); // LINT
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void someFunction13(DerivedClass2 instance) {
-  var other = DerivedClass3();
-
-  if (other == instance) print('someFunction13'); // LINT
-}
-
-class ClassBase {}
-
-class DerivedClass1 extends ClassBase {}
-
-abstract class Mixin {}
-
-class DerivedClass2 extends ClassBase with Mixin {}
-
-class DerivedClass3 extends ClassBase implements Mixin {}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction2() {
-  var x = '1';
-  var y = '2';
-  if (x == y) print(someFunction2); // OK
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction3() {
-  for (var i = 0; i &lt; 10; i++) {
-    if (i == 0) print(someFunction3); // OK
-  }
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction4() {
-  var x = '1';
-  if (x == null) print(someFunction4); // OK
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction7() {
-  List someList;
-
-  if (someList.length == 0) print('someFunction7'); // OK
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction8(ClassBase instance) {
-  DerivedClass1 other;
-
-  if (other == instance) print('someFunction8'); // OK
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction10(unknown) {
-  var what = unknown - 1;
-  for (var index = 0; index &lt; unknown; index++) {
-    if (what == index) print('someFunction10'); // OK
-  }
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void someFunction11(Mixin instance) {
-  var other = DerivedClass2();
-
-  if (other == instance) print('someFunction11'); // OK
-  if (other != instance) print('!someFunction11'); // OK
-}
-
-class ClassBase {}
-
-abstract class Mixin {}
-
-class DerivedClass2 extends ClassBase with Mixin {}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>unrelated_type_equality_checks</code> lint,
-add <code>unrelated_type_equality_checks</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - unrelated_type_equality_checks
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>unrelated_type_equality_checks</code> linter rule at 
+              <a href="https://dart.dev/lints/unrelated_type_equality_checks">https://dart.dev/lints/unrelated_type_equality_checks</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

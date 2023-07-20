@@ -14,102 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_implementing_value_types</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.1.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/avoid_implementing_value_types"><h1>avoid_implementing_value_types</h1></a>
          </header>
          <section>
-            
-            <p><strong>DON'T</strong> implement classes that override <code>==</code>.</p>
-<p>The <code>==</code> operator is contractually required to be an equivalence relation;
-that is, symmetrically for all objects <code>o1</code> and <code>o2</code>, <code>o1 == o2</code> and <code>o2 == o1</code>
-must either both be true, or both be false.</p>
-<blockquote>
-<p><em>NOTE</em>: Dart does not have true <em>value types</em>, so instead we consider a class
-that implements <code>==</code>  as a <em>proxy</em> for identifying value types.</p>
-</blockquote>
-<p>When using <code>implements</code>, you do not inherit the method body of <code>==</code>, making it
-nearly impossible to follow the contract of <code>==</code>. Classes that override <code>==</code>
-typically are usable directly in tests <em>without</em> creating mocks or fakes as
-well. For example, for a given class <code>Size</code>:</p>
-<pre><code class="language-dart">class Size {
-  final int inBytes;
-  const Size(this.inBytes);
-
-  @override
-  bool operator ==(Object other) =&gt; other is Size &amp;&amp; other.inBytes == inBytes;
-
-  @override
-  int get hashCode =&gt; inBytes.hashCode;
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class CustomSize implements Size {
-  final int inBytes;
-  const CustomSize(this.inBytes);
-
-  int get inKilobytes =&gt; inBytes ~/ 1000;
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">import 'package:test/test.dart';
-import 'size.dart';
-
-class FakeSize implements Size {
-  int inBytes = 0;
-}
-
-void main() {
-  test('should not throw on a size &gt;1Kb', () {
-    expect(() =&gt; someFunction(FakeSize()..inBytes = 1001), returnsNormally);
-  });
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class ExtendedSize extends Size {
-  ExtendedSize(int inBytes) : super(inBytes);
-
-  int get inKilobytes =&gt; inBytes ~/ 1000;
-}
-</code></pre>
-<p><strong>GOOD:</strong>:</p>
-<pre><code class="language-dart">import 'package:test/test.dart';
-import 'size.dart';
-
-void main() {
-  test('should not throw on a size &gt;1Kb', () {
-    expect(() =&gt; someFunction(Size(1001)), returnsNormally);
-  });
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>avoid_implementing_value_types</code> lint,
-add <code>avoid_implementing_value_types</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - avoid_implementing_value_types
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>avoid_implementing_value_types</code> linter rule at 
+              <a href="https://dart.dev/lints/avoid_implementing_value_types">https://dart.dev/lints/avoid_implementing_value_types</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

@@ -14,76 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>package_api_docs</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/package_api_docs"><h1>package_api_docs</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> provide doc comments for all public APIs.</p>
-<p>As described in the <a href="https://dart.dev/tools/pub/package-layout#implementation-files">pub package layout doc</a>,
-public APIs consist in everything in your package's <code>lib</code> folder, minus
-implementation files in <code>lib/src</code>, adding elements explicitly exported with an
-<code>export</code> directive.</p>
-<p>For example, given <code>lib/foo.dart</code>:</p>
-<pre><code class="language-dart">export 'src/bar.dart' show Bar;
-export 'src/baz.dart';
-
-class Foo { }
-
-class _Foo { }
-</code></pre>
-<p>its API includes:</p>
-<ul>
-<li><code>Foo</code> (but not <code>_Foo</code>)</li>
-<li><code>Bar</code> (exported) and</li>
-<li>all <em>public</em> elements in <code>src/baz.dart</code></li>
-</ul>
-<p>All public API members should be documented with <code>///</code> doc-style comments.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class Bar {
-  void bar();
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">/// A Foo.
-abstract class Foo {
-  /// Start foo-ing.
-  void start() =&gt; _start();
-
-  _start();
-}
-</code></pre>
-<p>Advice for writing good doc comments can be found in the
-<a href="https://dart.dev/effective-dart/documentation">Doc Writing Guidelines</a>.</p>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>package_api_docs</code> lint,
-add <code>package_api_docs</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - package_api_docs
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>package_api_docs</code> linter rule at 
+              <a href="https://dart.dev/lints/package_api_docs">https://dart.dev/lints/package_api_docs</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

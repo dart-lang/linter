@@ -14,62 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>use_late_for_private_fields_and_variables</h1>
-            <p>Group: style</p>
-            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.10.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/use_late_for_private_fields_and_variables"><h1>use_late_for_private_fields_and_variables</h1></a>
          </header>
          <section>
-            
-            <p>Use <code>late</code> for private members with non-nullable types that are always expected
-to be non-null. Thus it's clear that the field is not expected to be <code>null</code>
-and it avoids null checks.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">int? _i;
-m() {
-  _i!.abs();
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">late int _i;
-m() {
-  _i.abs();
-}
-</code></pre>
-<p><strong>OK:</strong></p>
-<pre><code class="language-dart">int? _i;
-m() {
-  _i?.abs();
-  _i = null;
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>use_late_for_private_fields_and_variables</code> lint,
-add <code>use_late_for_private_fields_and_variables</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - use_late_for_private_fields_and_variables
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>use_late_for_private_fields_and_variables</code> linter rule at 
+              <a href="https://dart.dev/lints/use_late_for_private_fields_and_variables">https://dart.dev/lints/use_late_for_private_fields_and_variables</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

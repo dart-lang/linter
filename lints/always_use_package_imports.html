@@ -14,68 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>always_use_package_imports</h1>
-            <p>Group: errors</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.10.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/always_use_package_imports"><h1>always_use_package_imports</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> avoid relative imports for files in <code>lib/</code>.</p>
-<p>When mixing relative and absolute imports it's possible to create confusion
-where the same member gets imported in two different ways. One way to avoid
-that is to ensure you consistently use absolute imports for files within the
-<code>lib/</code> directory.</p>
-<p>This is the opposite of 'prefer_relative_imports'.</p>
-<p>You can also use 'avoid_relative_lib_imports' to disallow relative imports of
-files within <code>lib/</code> directory outside of it (for example <code>test/</code>).</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">import 'baz.dart';
-
-import 'src/bag.dart'
-
-import '../lib/baz.dart';
-
-...
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">import 'package:foo/bar.dart';
-
-import 'package:foo/baz.dart';
-
-import 'package:foo/src/baz.dart';
-...
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
             <p>
-Incompatible with: <!--suppress HtmlUnknownTarget --><a href = "prefer_relative_imports.html" >prefer_relative_imports</a>.
-</p>
-
-            <h2>Usage</h2>
-<p>To enable the <code>always_use_package_imports</code> lint,
-add <code>always_use_package_imports</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - always_use_package_imports
-</code></pre>
-
+              Find up-to-date documentation for the
+              <code>always_use_package_imports</code> linter rule at 
+              <a href="https://dart.dev/lints/always_use_package_imports">https://dart.dev/lints/always_use_package_imports</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

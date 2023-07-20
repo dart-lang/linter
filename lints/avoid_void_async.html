@@ -14,61 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>avoid_void_async</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.1.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/avoid_void_async"><h1>avoid_void_async</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> mark async functions as returning Future<void>.</p>
-<p>When declaring an async method or function which does not return a value,
-declare that it returns <code>Future&lt;void&gt;</code> and not just <code>void</code>.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void f() async {}
-void f2() async =&gt; null;
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">Future&lt;void&gt; f() async {}
-Future&lt;void&gt; f2() async =&gt; null;
-</code></pre>
-<p><strong>EXCEPTION:</strong></p>
-<p>An exception is made for top-level <code>main</code> functions, where the <code>Future</code>
-annotation <em>can</em> (and generally should) be dropped in favor of <code>void</code>.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">Future&lt;void&gt; f() async {}
-
-void main() async {
-  await f();
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>avoid_void_async</code> lint,
-add <code>avoid_void_async</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - avoid_void_async
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>avoid_void_async</code> linter rule at 
+              <a href="https://dart.dev/lints/avoid_void_async">https://dart.dev/lints/avoid_void_async</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

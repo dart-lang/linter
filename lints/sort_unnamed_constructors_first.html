@@ -14,55 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>sort_unnamed_constructors_first</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/sort_unnamed_constructors_first"><h1>sort_unnamed_constructors_first</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> sort unnamed constructor declarations first, before named ones.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class _PriorityItem {
-  factory _PriorityItem.forName(bool isStatic, String name, _MemberKind kind) =&gt; ...
-  _PriorityItem(this.isStatic, this.kind, this.isPrivate);
-  ...
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">abstract class CancelableFuture&lt;T&gt; implements Future&lt;T&gt;  {
-  factory CancelableFuture(computation()) =&gt; ...
-  factory CancelableFuture.delayed(Duration duration, [computation()]) =&gt; ...
-  ...
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>sort_unnamed_constructors_first</code> lint,
-add <code>sort_unnamed_constructors_first</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - sort_unnamed_constructors_first
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>sort_unnamed_constructors_first</code> linter rule at 
+              <a href="https://dart.dev/lints/sort_unnamed_constructors_first">https://dart.dev/lints/sort_unnamed_constructors_first</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

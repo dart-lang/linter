@@ -14,51 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>conditional_uri_does_not_exist</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.16.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/conditional_uri_does_not_exist"><h1>conditional_uri_does_not_exist</h1></a>
          </header>
          <section>
-            
-            <p><strong>DON'T</strong> reference files that do not exist in conditional imports.</p>
-<p>Code may fail at runtime if the condition evaluates such that the missing file
-needs to be imported.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">import 'file_that_does_exist.dart'
-  if (condition) 'file_that_does_not_exist.dart';
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">import 'file_that_does_exist.dart'
-  if (condition) 'file_that_also_does_exist.dart';
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>conditional_uri_does_not_exist</code> lint,
-add <code>conditional_uri_does_not_exist</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - conditional_uri_does_not_exist
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>conditional_uri_does_not_exist</code> linter rule at 
+              <a href="https://dart.dev/lints/conditional_uri_does_not_exist">https://dart.dev/lints/conditional_uri_does_not_exist</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

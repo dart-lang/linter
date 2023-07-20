@@ -14,56 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>await_only_futures</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/core.yaml"><!--suppress HtmlUnknownTarget --><img alt="core" src="style-core.svg"></a><a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/await_only_futures"><h1>await_only_futures</h1></a>
          </header>
          <section>
-            
-            <p><strong>AVOID</strong> using await on anything which is not a future.</p>
-<p>Await is allowed on the types: <code>Future&lt;X&gt;</code>, <code>FutureOr&lt;X&gt;</code>, <code>Future&lt;X&gt;?</code>,
-<code>FutureOr&lt;X&gt;?</code> and <code>dynamic</code>.</p>
-<p>Further, using <code>await null</code> is specifically allowed as a way to introduce a
-microtask delay.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">main() async {
-  print(await 23);
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">main() async {
-  await null; // If a delay is really intended.
-  print(23);
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>await_only_futures</code> lint,
-add <code>await_only_futures</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - await_only_futures
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>await_only_futures</code> linter rule at 
+              <a href="https://dart.dev/lints/await_only_futures">https://dart.dev/lints/await_only_futures</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

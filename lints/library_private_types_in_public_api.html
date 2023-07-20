@@ -14,61 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>library_private_types_in_public_api</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.14.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/library_private_types_in_public_api"><h1>library_private_types_in_public_api</h1></a>
          </header>
          <section>
-            
-            <p><strong>AVOID</strong> using library private types in public APIs.</p>
-<p>For the purposes of this lint, a public API is considered to be any top-level or
-member declaration unless the declaration is library private or contained in a
-declaration that's library private. The following uses of types are checked:</p>
-<ul>
-<li>the return type of a function or method,</li>
-<li>the type of any parameter of a function or method,</li>
-<li>the bound of a type parameter to any function, method, class, mixin,
-extension's extended type, or type alias,</li>
-<li>the type of any top level variable or field,</li>
-<li>any type used in the declaration of a type alias (for example
-<code>typedef F = _Private Function();</code>), or</li>
-<li>any type used in the <code>on</code> clause of an extension or a mixin</li>
-</ul>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">f(_Private p) { ... }
-class _Private {}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">f(String s) { ... }
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>library_private_types_in_public_api</code> lint,
-add <code>library_private_types_in_public_api</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - library_private_types_in_public_api
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>library_private_types_in_public_api</code> linter rule at 
+              <a href="https://dart.dev/lints/library_private_types_in_public_api">https://dart.dev/lints/library_private_types_in_public_api</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

@@ -14,56 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>only_throw_errors</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/only_throw_errors"><h1>only_throw_errors</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> throw only instances of classes that extend <code>dart.core.Error</code> or
-<code>dart.core.Exception</code>.</p>
-<p>Throwing instances that do not extend <code>Error</code> or <code>Exception</code> is a bad practice;
-doing this is usually a hack for something that should be implemented more
-thoroughly.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void throwString() {
-  throw 'hello world!'; // LINT
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void throwArgumentError() {
-  Error error = ArgumentError('oh!');
-  throw error; // OK
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>only_throw_errors</code> lint,
-add <code>only_throw_errors</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - only_throw_errors
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>only_throw_errors</code> linter rule at 
+              <a href="https://dart.dev/lints/only_throw_errors">https://dart.dev/lints/only_throw_errors</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

@@ -14,68 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>package_prefixed_library_names</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/core.yaml"><!--suppress HtmlUnknownTarget --><img alt="core" src="style-core.svg"></a><a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/package_prefixed_library_names"><h1>package_prefixed_library_names</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> prefix library names with the package name and a dot-separated path.</p>
-<p>This guideline helps avoid the warnings you get when two libraries have the same
-name.  Here are the rules we recommend:</p>
-<ul>
-<li>Prefix all library names with the package name.</li>
-<li>Make the entry library have the same name as the package.</li>
-<li>For all other libraries in a package, after the package name add the
-dot-separated path to the library's Dart file.</li>
-<li>For libraries under <code>lib</code>, omit the top directory name.</li>
-</ul>
-<p>For example, say the package name is <code>my_package</code>.  Here are the library names
-for various files in the package:</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">// In lib/my_package.dart
-library my_package;
-
-// In lib/other.dart
-library my_package.other;
-
-// In lib/foo/bar.dart
-library my_package.foo.bar;
-
-// In example/foo/bar.dart
-library my_package.example.foo.bar;
-
-// In lib/src/private.dart
-library my_package.src.private;
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>package_prefixed_library_names</code> lint,
-add <code>package_prefixed_library_names</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - package_prefixed_library_names
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>package_prefixed_library_names</code> linter rule at 
+              <a href="https://dart.dev/lints/package_prefixed_library_names">https://dart.dev/lints/package_prefixed_library_names</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

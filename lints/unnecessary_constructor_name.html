@@ -14,61 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>unnecessary_constructor_name</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.15.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/unnecessary_constructor_name"><h1>unnecessary_constructor_name</h1></a>
          </header>
          <section>
-            
-            <p><strong>PREFER</strong> using the default unnamed Constructor over <code>.new</code>.</p>
-<p>Given a class <code>C</code>, the named unnamed constructor <code>C.new</code> refers to the same
-constructor as the unnamed <code>C</code>. As such it adds nothing but visual noise to
-invocations and should be avoided (unless being used to identify a constructor
-tear-off).</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class A {
-  A.new(); // LINT
-}
-
-var a = A.new(); // LINT
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class A {
-  A.ok();
-}
-
-var a = A();
-var aa = A.ok();
-var makeA = A.new;
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>unnecessary_constructor_name</code> lint,
-add <code>unnecessary_constructor_name</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - unnecessary_constructor_name
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>unnecessary_constructor_name</code> linter rule at 
+              <a href="https://dart.dev/lints/unnecessary_constructor_name">https://dart.dev/lints/unnecessary_constructor_name</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

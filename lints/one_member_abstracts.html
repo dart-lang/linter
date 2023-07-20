@@ -14,55 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>one_member_abstracts</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/one_member_abstracts"><h1>one_member_abstracts</h1></a>
          </header>
          <section>
-            
-            <p>From <a href="https://dart.dev/effective-dart/design#avoid-defining-a-one-member-abstract-class-when-a-simple-function-will-do">Effective Dart</a>:</p>
-<p><strong>AVOID</strong> defining a one-member abstract class when a simple function will do.</p>
-<p>Unlike Java, Dart has first-class functions, closures, and a nice light syntax
-for using them.  If all you need is something like a callback, just use a
-function.  If you're defining a class and it only has a single abstract member
-with a meaningless name like <code>call</code> or <code>invoke</code>, there is a good chance
-you just want a function.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">abstract class Predicate {
-  bool test(item);
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">typedef Predicate = bool Function(item);
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>one_member_abstracts</code> lint,
-add <code>one_member_abstracts</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - one_member_abstracts
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>one_member_abstracts</code> linter rule at 
+              <a href="https://dart.dev/lints/one_member_abstracts">https://dart.dev/lints/one_member_abstracts</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

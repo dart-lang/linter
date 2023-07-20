@@ -14,65 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>unnecessary_final</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.7.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/unnecessary_final"><h1>unnecessary_final</h1></a>
          </header>
          <section>
-            
-            <p>Use <code>var</code>, not <code>final</code>, when declaring local variables.</p>
-<p>Per <a href="https://dart.dev/effective-dart/usage#do-follow-a-consistent-rule-for-var-and-final-on-local-variables">Effective Dart</a>,
-there are two styles in wide use. This rule enforces the <code>var</code> style.
-For the alternative style that prefers <code>final</code>, enable <code>prefer_final_locals</code>
-and <code>prefer_final_in_for_each</code> instead.</p>
-<p>For fields, <code>final</code> is always recommended; see the rule <code>prefer_final_fields</code>.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void badMethod() {
-  final label = 'Final or var?';
-  for (final char in ['v', 'a', 'r']) {
-    print(char);
-  }
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void goodMethod() {
-  var label = 'Final or var?';
-  for (var char in ['v', 'a', 'r']) {
-    print(char);
-  }
-}
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
             <p>
-Incompatible with: <!--suppress HtmlUnknownTarget --><a href = "prefer_final_locals.html" >prefer_final_locals</a>, <a href = "prefer_final_parameters.html" >prefer_final_parameters</a>.
-</p>
-
-            <h2>Usage</h2>
-<p>To enable the <code>unnecessary_final</code> lint,
-add <code>unnecessary_final</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - unnecessary_final
-</code></pre>
-
+              Find up-to-date documentation for the
+              <code>unnecessary_final</code> linter rule at 
+              <a href="https://dart.dev/lints/unnecessary_final">https://dart.dev/lints/unnecessary_final</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

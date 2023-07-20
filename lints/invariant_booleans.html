@@ -14,105 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>invariant_booleans</h1>
-            <p>Group: errors</p>
-            <p>Maturity: <span style="color:darkgray;font-weight:bold;" >removed</span></p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/invariant_booleans"><h1>invariant_booleans</h1></a>
          </header>
          <section>
-            <p style="font-size:30px"><strong>Unsupported since Dart language version 3.0.0.</strong></p>
-            <p><strong>DON'T</strong> test for conditions that can be inferred at compile time or test the
-same condition twice.</p>
-<p>Conditional statements using a condition which cannot be anything but <code>false</code>
-have the effect of making blocks of code non-functional.  If the condition
-cannot evaluate to anything but <code>true</code>, the conditional statement is completely
-redundant, and makes the code less readable.
-It is quite likely that the code does not match the programmer's intent.
-Either the condition should be removed or it should be updated so that it does
-not always evaluate to <code>true</code> or <code>false</code> and does not perform redundant tests.
-This rule will hint to the test conflicting with the linted one.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">// foo can't be both equal and not equal to bar in the same expression
-if(foo == bar &amp;&amp; something &amp;&amp; foo != bar) {...}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void compute(int foo) {
-  if (foo == 4) {
-    doSomething();
-    // we know foo is equal to 4 at this point, so the next condition is always false
-    if (foo &gt; 4) {...}
-    ...
-  }
-  ...
-}
-</code></pre>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">void compute(bool foo) {
-  if (foo) {
-    return;
-  }
-  doSomething();
-  // foo is always false here
-  if (foo){...}
-  ...
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void nestedOK() {
-  if (foo == bar) {
-    foo = baz;
-    if (foo != bar) {...}
-  }
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void nestedOk2() {
-  if (foo == bar) {
-    return;
-  }
-
-  foo = baz;
-  if (foo == bar) {...} // OK
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">void nestedOk5() {
-  if (foo != null) {
-    if (bar != null) {
-      return;
-    }
-  }
-
-  if (bar != null) {...} // OK
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>invariant_booleans</code> lint,
-add <code>invariant_booleans</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - invariant_booleans
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>invariant_booleans</code> linter rule at 
+              <a href="https://dart.dev/lints/invariant_booleans">https://dart.dev/lints/invariant_booleans</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

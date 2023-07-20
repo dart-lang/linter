@@ -14,71 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>hash_and_equals</h1>
-            <p>Group: errors</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            <a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/core.yaml"><!--suppress HtmlUnknownTarget --><img alt="core" src="style-core.svg"></a><a class="style-type" href="https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml"><!--suppress HtmlUnknownTarget --><img alt="recommended" src="style-recommended.svg"></a><a class="style-type" href="https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml"><!--suppress HtmlUnknownTarget --><img alt="flutter" src="style-flutter.svg"></a><a class="style-type" href="https://medium.com/dartlang/quick-fixes-for-analysis-issues-c10df084971a"><!--suppress HtmlUnknownTarget --><img alt="has-fix" src="has-fix.svg"></a>
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/hash_and_equals"><h1>hash_and_equals</h1></a>
          </header>
          <section>
-            
-            <p><strong>DO</strong> override <code>hashCode</code> if overriding <code>==</code> and prefer overriding <code>==</code> if
-overriding <code>hashCode</code>.</p>
-<p>Every object in Dart has a <code>hashCode</code>.  Both the <code>==</code> operator and the
-<code>hashCode</code> property of objects must be consistent in order for a common hash
-map implementation to function properly.  Thus, when overriding <code>==</code>, the
-<code>hashCode</code> should also be overridden to maintain consistency. Similarly, if
-<code>hashCode</code> is overridden, <code>==</code> should be also.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class Bad {
-  final int value;
-  Bad(this.value);
-
-  @override
-  bool operator ==(Object other) =&gt; other is Bad &amp;&amp; other.value == value;
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class Better {
-  final int value;
-  Better(this.value);
-
-  @override
-  bool operator ==(Object other) =&gt;
-      other is Better &amp;&amp;
-      other.runtimeType == runtimeType &amp;&amp;
-      other.value == value;
-
-  @override
-  int get hashCode =&gt; value.hashCode;
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>hash_and_equals</code> lint,
-add <code>hash_and_equals</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - hash_and_equals
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>hash_and_equals</code> linter rule at 
+              <a href="https://dart.dev/lints/hash_and_equals">https://dart.dev/lints/hash_and_equals</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

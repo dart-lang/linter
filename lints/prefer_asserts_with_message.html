@@ -14,60 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>prefer_asserts_with_message</h1>
-            <p>Group: style</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.3.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/prefer_asserts_with_message"><h1>prefer_asserts_with_message</h1></a>
          </header>
          <section>
-            
-            <p>When assertions fail it's not always simple to understand why. Adding a message
-to the <code>assert</code> helps the developer to understand why the AssertionError occurs.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">f(a) {
-  assert(a != null);
-}
-
-class A {
-  A(a) : assert(a != null);
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">f(a) {
-  assert(a != null, 'a must not be null');
-}
-
-class A {
-  A(a) : assert(a != null, 'a must not be null');
-}
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>prefer_asserts_with_message</code> lint,
-add <code>prefer_asserts_with_message</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - prefer_asserts_with_message
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>prefer_asserts_with_message</code> linter rule at 
+              <a href="https://dart.dev/lints/prefer_asserts_with_message">https://dart.dev/lints/prefer_asserts_with_message</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>

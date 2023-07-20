@@ -14,62 +14,16 @@
    <body>
       <div class="wrapper">
          <header>
-            <h1>unnecessary_statements</h1>
-            <p>Group: errors</p>
-            <p>Maturity: stable</p>
-            <div class="tooltip">
-               <p>Dart SDK: >= 2.0.0</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
+            <a href="https://dart.dev/lints/unnecessary_statements"><h1>unnecessary_statements</h1></a>
          </header>
          <section>
-            
-            <p><strong>AVOID</strong> using unnecessary statements.</p>
-<p>Statements which have no clear effect are usually unnecessary, or should be
-broken up.</p>
-<p>For example,</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">myvar;
-list.clear;
-1 + 2;
-methodOne() + methodTwo();
-foo ? bar : baz;
-</code></pre>
-<p>Though the added methods have a clear effect, the addition itself does not
-unless there is some magical overload of the + operator.</p>
-<p>Usually code like this indicates an incomplete thought, and is a bug.</p>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">some.method();
-const SomeClass();
-methodOne();
-methodTwo();
-foo ? bar() : baz();
-return myvar;
-</code></pre>
-
-            
-            <h2>Usage</h2>
-<p>To enable the <code>unnecessary_statements</code> lint,
-add <code>unnecessary_statements</code> under <strong>linter &gt; rules</strong> in your
-<a href="https://dart.dev/guides/language/analysis-options"><code>analysis_options.yaml</code></a>
-file:</p>
-<pre><code class="language-yaml">linter:
-  rules:
-    - unnecessary_statements
-</code></pre>
-
+            <h2>Lint documentation has moved!</h2>
+            <p>
+              Find up-to-date documentation for the
+              <code>unnecessary_statements</code> linter rule at 
+              <a href="https://dart.dev/lints/unnecessary_statements">https://dart.dev/lints/unnecessary_statements</a>.
+            </p>
          </section>
       </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
    </body>
 </html>
