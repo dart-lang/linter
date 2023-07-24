@@ -1654,6 +1654,7 @@ class UseBuildContextSynchronouslyMixedModeTest extends LintRuleTest {
     noSoundNullSafety = true;
   }
 
+  /// https://github.com/dart-lang/linter/issues/2572
   test_mixedMode() async {
     newFile('$testPackageLibPath/migrated.dart', '''
 import 'package:flutter/widgets.dart';
