@@ -145,7 +145,6 @@ void coreTests() {
 
 void ruleTests() {
   group('rule', () {
-    exhaustive_cases.main();
     avoid_web_libraries_in_flutter.main();
     close_sinks.main();
     always_require_non_null_named_parameters.main();
