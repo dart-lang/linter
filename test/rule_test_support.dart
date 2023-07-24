@@ -189,6 +189,7 @@ class PubPackageResolutionTest extends _ContextResolutionTest {
   String get testPackageRootPath => '$workspaceRootPath/test';
 
   String get workspaceRootPath => '/home';
+
   /// Assert that the number of diagnostics that have been gathered matches the
   /// number of [expectedDiagnostics] and that they have the expected error
   /// descriptions and locations. The order in which the diagnostics were
