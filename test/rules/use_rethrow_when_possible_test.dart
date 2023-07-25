@@ -21,7 +21,7 @@ class UseRethrowWhenPossibleTest extends LintRuleTest {
     await assertDiagnostics(r'''
 void f() {
   try {} catch (e) {
-    throw e; // LINT
+    throw e;
   }
 }
 ''', [
