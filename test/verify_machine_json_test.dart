@@ -15,7 +15,7 @@ void main() {
     var onDisk = File(rulesFilePath).readAsStringSync();
     var generated = await generateRulesJson();
     expect(generated, onDisk, reason: '''`rules.json` is out of date.
-  Regenerate by running `dart tool/machine.dart -w`
+  Regenerate by running `dart run tool/machine.dart -w`
 ''');
   });
 }
