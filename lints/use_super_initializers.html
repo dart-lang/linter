@@ -1,63 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="utf-8">
-      <link rel="shortcut icon" href="../dart-192.png">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-      <meta name="mobile-web-app-capable" content="yes">
-      <meta name="apple-mobile-web-app-capable" content="yes">
-      <title>use_super_initializers</title>
-      <link rel="stylesheet" href="../styles.css">
-   </head>
-   <body>
-      <div class="wrapper">
-         <header>
-            <h1>use_super_initializers</h1>
-            <p>Group: style</p>
-            <p>Maturity: <span style="color:hotpink;font-weight:bold;" >experimental</span></p>
-            <div class="tooltip">
-               <p>Linter v1.19</p>
-               <span class="tooltip-content">Since info is static, may be stale</span>
-            </div>
-            
-            <ul>
-               <li><a href="index.html">View all <strong>Lint Rules</strong></a></li>
-               <li><a href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></li>
-            </ul>
-            <p><a class="overflow-link" href="index.html">View all <strong>Lint Rules</strong></a></p>
-            <p><a class="overflow-link" href="https://dart.dev/guides/language/analysis-options#enabling-linter-rules">Using the <strong>Linter</strong></a></p>
-         </header>
-         <section>
-
-            <p>"Forwarding constructor"s, that do nothing except forward parameters to their 
-superclass constructors should take advantage of super-initializer parameters 
-rather than repeating the names of parameters when passing them to the 
-superclass constructors.  This makes the code more concise and easier to read
-and maintain.</p>
-<p><strong>DO</strong> use super-initializer parameters where possible.</p>
-<p><strong>BAD:</strong></p>
-<pre><code class="language-dart">class A {
-  A({int? x, int? y});
-}
-class B extends A {
-  B({int? x, int? y}) : super(x: x, y: y);
-}
-</code></pre>
-<p><strong>GOOD:</strong></p>
-<pre><code class="language-dart">class A {
-  A({int? x, int? y});
-}
-class B extends A {
-  B({super.x, super.y});
-}
-</code></pre>
-
-            
-         </section>
-      </div>
-      <footer>
-         <p>Maintained by the <a href="https://dart.dev/">Dart Team</a></p>
-         <p>Visit us on <a href="https://github.com/dart-lang/linter">GitHub</a></p>
-      </footer>
-   </body>
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="../dart-192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="refresh" content="0; url=https://dart.dev/lints/use_super_parameters">
+  <link rel="canonical" href="https://dart.dev/lints/use_super_parameters">
+  <title>use_super_initializers</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <a href="https://dart.dev/lints/use_super_parameters"><h1>use_super_initializers/use_super_parameters</h1></a>
+  </header>
+  <section>
+    <h2>Lint documentation has moved!</h2>
+    <p>
+      Find up-to-date documentation for the 
+      <code>use_super_initializers</code> linter rule 
+      (now named <code>use_super_parameters</code>) at
+      <a href="https://dart.dev/lints/use_super_parameters">https://dart.dev/lints/use_super_parameters</a>.
+    </p>
+  </section>
+</div>
+</body>
 </html>
