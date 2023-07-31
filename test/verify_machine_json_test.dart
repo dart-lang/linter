@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
@@ -13,8 +12,8 @@ import '../tool/machine.dart';
 void main() {
   test("ensure 'rules.json' is up to date", () async {
     var rulesFilePath = path.join('tool', 'machine', 'rules.json');
-    var onDisk = jsonDecode(File(rulesFilePath).readAsStringSync());
-    var generated = jsonDecode(await generateRulesJson());
+    var onDisk = File(rulesFilePath).readAsStringSync();
+    var generated = await generateRulesJson();
     expect(
       generated,
       onDisk,
