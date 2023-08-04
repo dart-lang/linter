@@ -142,7 +142,7 @@ class LintScore {
       switch (detail) {
         case Detail.rule:
           sb.write(
-              ' [$name](https://dart.dev/tools/linter-rules/$name.html) |');
+              ' [$name](https://dart.dev/lints/$name) |');
         case Detail.sdk:
           sb.write(' ${since!.sinceDartSdk} |');
         case Detail.fix:
