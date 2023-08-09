@@ -10,7 +10,7 @@ import 'package:linter/src/utils.dart';
 import '../machine.dart';
 
 /// Generate PR labeler workflow config data.
-main(List<String> args) async {
+void main(List<String> args) async {
   var rulesFile = machineJsonFile();
   var req = rulesFile.readAsStringSync();
 
