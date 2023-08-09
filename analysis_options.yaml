@@ -28,7 +28,6 @@ linter:
     - collection_methods_unrelated_type
     - comment_references
     - dangling_library_doc_comments
-    - depend_on_referenced_packages
     - directives_ordering
     - discarded_futures
     - implicit_call_tearoffs
