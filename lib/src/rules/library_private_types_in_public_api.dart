@@ -81,14 +81,6 @@ class Validator extends SimpleAstVisitor<void> {
   }
 
   @override
-  void visitExtensionTypeDeclaration(ExtensionTypeDeclaration node) {
-    if (Identifier.isPrivateName(node.name.lexeme)) return;
-    node.typeParameters?.accept(this);
-    node.representation.fieldType.accept(this);
-    node.members.accept(this);
-  }
-
-  @override
   void visitClassTypeAlias(ClassTypeAlias node) {
     if (Identifier.isPrivateName(node.name.lexeme)) {
       return;
@@ -137,6 +129,17 @@ class Validator extends SimpleAstVisitor<void> {
     }
     node.extendedType.accept(this);
     node.typeParameters?.accept(this);
+    node.members.accept(this);
+  }
+
+  @override
+  void visitExtensionTypeDeclaration(ExtensionTypeDeclaration node) {
+    if (Identifier.isPrivateName(node.name.lexeme)) return;
+    node.typeParameters?.accept(this);
+    var representation = node.representation;
+    if (!Identifier.isPrivateName(representation.fieldName.lexeme)) {
+      representation.fieldType.accept(this);
+    }
     node.members.accept(this);
   }
 
