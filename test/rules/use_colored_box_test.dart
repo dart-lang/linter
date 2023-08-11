@@ -15,52 +15,13 @@ main() {
 @reflectiveTest
 class UseColoredBoxTest extends LintRuleTest {
   @override
-  String get lintRule => 'use_colored_box';
-
-  @override
   bool get addFlutterPackageDep => true;
 
-  test_noArgument() async {
+  @override
+  String get lintRule => 'use_colored_box';
+
+  test_childArgument() async {
     await assertNoDiagnostics(r'''
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-
-Widget f() {
-  return Container();
-}
-''');
-  }
-
-  test_keyArgument() async {
-    await assertNoDiagnostics(r'''
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-
-Widget f() {
-  return Container(key: Key('abc'));
-}
-''');
-  }
-
-  test_2() async {
-    await assertNoDiagnostics(r'''
-Widget containerWithColor() {
-  return Container(
-    color: Color(0xffffffff),
-  );
-}
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-
-class Color {
-  Color(int value);
-}
-''');
-  }
-
-  test_3() async {
-    await assertNoDiagnostics(r'''
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 Widget containerWithChild() {
@@ -68,16 +29,23 @@ Widget containerWithChild() {
     child: SizedBox(),
   );
 }
+''');
+  }
 
-class Color {
-  Color(int value);
+  test_colorArgument() async {
+    await assertNoDiagnostics(r'''
+import 'package:flutter/widgets.dart';
+
+Widget f() {
+  return Container(
+    color: Color(0xffffffff),
+  );
 }
 ''');
   }
 
   test_colorArgument_andChild() async {
     await assertDiagnostics(r'''
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 Widget containerWithColorAndChild() {
@@ -86,18 +54,13 @@ Widget containerWithColorAndChild() {
     child: SizedBox(),
   );
 }
-
-class Color {
-  Color(int value);
-}
 ''', [
-      // TODO
+      lint(87, 9),
     ]);
   }
 
   test_colorArgument_named_moreArguments() async {
     await assertNoDiagnostics(r'''
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 Widget f() {
@@ -106,24 +69,35 @@ Widget f() {
     width: 20,
   );
 }
-
-class Color {
-  Color(int value);
-}
 ''');
   }
 
   test_colorArgument_nullableExpression() async {
     await assertNoDiagnostics(r'''
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 Widget f(Color? myColor) {
   return Container(color: myColor);
 }
+''');
+  }
 
-class Color {
-  Color(int value);
+  test_keyArgument() async {
+    await assertNoDiagnostics(r'''
+import 'package:flutter/widgets.dart';
+
+Widget f() {
+  return Container(key: Key('abc'));
+}
+''');
+  }
+
+  test_noArgument() async {
+    await assertNoDiagnostics(r'''
+import 'package:flutter/widgets.dart';
+
+Widget f() {
+  return Container();
 }
 ''');
   }
