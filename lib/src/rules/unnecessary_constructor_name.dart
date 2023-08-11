@@ -70,6 +70,7 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
+    if (node.parent is ExtensionTypeDeclaration) return;
     _check(node.name);
   }
 

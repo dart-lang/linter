@@ -15,6 +15,9 @@ main() {
 @reflectiveTest
 class UnnecessaryConstructorNameTest extends LintRuleTest {
   @override
+  List<String> get experiments => ['inline-class'];
+
+  @override
   String get lintRule => 'unnecessary_constructor_name';
 
   test_constructorDeclaration_named() async {
@@ -41,6 +44,17 @@ class A {
 }
 var makeA = A.new;
 ''');
+  }
+
+  test_extensionTypeDeclaration() async {
+    await assertDiagnostics(r'''
+extension type E(int i) {
+  E.new(this.i);
+}
+''', [
+      // No lint.
+      // Specify `duplicate_constructor` diagnostic once reported.
+    ]);
   }
 
   test_instanceCreation_named() async {
