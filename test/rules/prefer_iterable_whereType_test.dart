@@ -6,6 +6,8 @@ import 'package:test_reflective_loader/test_reflective_loader.dart';
 
 import '../rule_test_support.dart';
 
+// ignore_for_file: file_names
+
 main() {
   defineReflectiveSuite(() {
     defineReflectiveTests(PreferIterableWhereTypeTest);
