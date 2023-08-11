@@ -68,6 +68,18 @@ enum A {
 
   test_extensionType() async {
     await assertDiagnostics(r'''
+extension type E.a(Object o) {
+  void m() { }
+  E.b(this.o);
+  E(this.o);
+}
+''', [
+      lint(63, 1),
+    ]);
+  }
+
+  test_extensionType_invalidConstructor() async {
+    await assertDiagnostics(r'''
 extension type E(Object o) {
   void m() { }
   E(this.o);
