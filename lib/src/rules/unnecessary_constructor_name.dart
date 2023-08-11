@@ -70,7 +70,12 @@ class _Visitor extends SimpleAstVisitor {
 
   @override
   void visitConstructorDeclaration(ConstructorDeclaration node) {
-    if (node.parent is ExtensionTypeDeclaration) return;
+    var parent = node.parent;
+    if (parent is ExtensionTypeDeclaration &&
+        parent.representation.constructorName == null) {
+      return;
+    }
+
     _check(node.name);
   }
 
