@@ -67,6 +67,14 @@ extension type E.a(int i) {
     ]);
   }
 
+  test_extensionTypeDeclaration_primaryNamedNew() async {
+    await assertDiagnostics(r'''
+extension type E.new(int i) { }
+''', [
+      lint(17, 3),
+    ]);
+  }
+
   test_instanceCreation_named() async {
     await assertNoDiagnostics(r'''
 class A {

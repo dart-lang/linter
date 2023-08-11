@@ -59,6 +59,7 @@ class UnnecessaryConstructorName extends LintRule {
       NodeLintRegistry registry, LinterContext context) {
     var visitor = _Visitor(this);
     registry.addConstructorDeclaration(this, visitor);
+    registry.addExtensionTypeDeclaration(this, visitor);
     registry.addInstanceCreationExpression(this, visitor);
   }
 }
@@ -77,6 +78,11 @@ class _Visitor extends SimpleAstVisitor {
     }
 
     _check(node.name);
+  }
+
+  @override
+  void visitExtensionTypeDeclaration(ExtensionTypeDeclaration node) {
+    _check(node.representation.constructorName?.name);
   }
 
   @override
