@@ -32,7 +32,6 @@ extension type E(int i) {
     ]);
   }
 
-  @soloTest
   test_extensionType_staticField() async {
     await assertDiagnostics('''
 extension type E(int i) {
