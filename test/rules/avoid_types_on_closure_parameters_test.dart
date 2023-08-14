@@ -36,30 +36,50 @@ void f(List<int> list) {
   }
 
   test_initializerInDeclaration_namedOptional() async {
+    // TODO(srawlins): Any test which just assigns a function literal to a
+    // variable should be converted to something like an argument, or let
+    // downwards inference work in some other way.
+    // See https://github.com/dart-lang/linter/issues/1099.
     await assertNoDiagnostics(r'''
 var f = ({e}) => e.isEven;
 ''');
   }
 
   test_initializerInDeclaration_optionalNullable() async {
+    // TODO(srawlins): Any test which just assigns a function literal to a
+    // variable should be converted to something like an argument, or let
+    // downwards inference work in some other way.
+    // See https://github.com/dart-lang/linter/issues/1099.
     await assertNoDiagnostics(r'''
 var f = ([e]) => e.name;
 ''');
   }
 
   test_initializerInDeclaration_optionalWithDefault() async {
+    // TODO(srawlins): Any test which just assigns a function literal to a
+    // variable should be converted to something like an argument, or let
+    // downwards inference work in some other way.
+    // See https://github.com/dart-lang/linter/issues/1099.
     await assertNoDiagnostics(r'''
 var f = ({e = ''}) => e;
 ''');
   }
 
   test_initializerInDeclaration_parameterIsTyped_dynamic() async {
+    // TODO(srawlins): Any test which just assigns a function literal to a
+    // variable should be converted to something like an argument, or let
+    // downwards inference work in some other way.
+    // See https://github.com/dart-lang/linter/issues/1099.
     await assertNoDiagnostics(r'''
 var goodName5 = (dynamic person) => person.name;
 ''');
   }
 
   test_initializerInDeclaration_parameterIsTyped_functionType() async {
+    // TODO(srawlins): Any test which just assigns a function literal to a
+    // variable should be converted to something like an argument, or let
+    // downwards inference work in some other way.
+    // See https://github.com/dart-lang/linter/issues/1099.
     await assertDiagnostics(r'''
 var functionWithFunction = (int f(int x)) => f(0);
 ''', [
@@ -68,6 +88,10 @@ var functionWithFunction = (int f(int x)) => f(0);
   }
 
   test_initializerInDeclaration_parameterIsTyped_namedRequired() async {
+    // TODO(srawlins): Any test which just assigns a function literal to a
+    // variable should be converted to something like an argument, or let
+    // downwards inference work in some other way.
+    // See https://github.com/dart-lang/linter/issues/1099.
     await assertDiagnostics(r'''
 var f = ({required int e}) => e.isEven;
 ''', [
@@ -76,6 +100,10 @@ var f = ({required int e}) => e.isEven;
   }
 
   test_initializerInDeclaration_parameterIsTyped_optionalNullable() async {
+    // TODO(srawlins): Any test which just assigns a function literal to a
+    // variable should be converted to something like an argument, or let
+    // downwards inference work in some other way.
+    // See https://github.com/dart-lang/linter/issues/1099.
     await assertDiagnostics(r'''
 var f = ([int? e]) => e?.isEven;
 ''', [
@@ -84,6 +112,10 @@ var f = ([int? e]) => e?.isEven;
   }
 
   test_initializerInDeclaration_parameterIsTyped_optionalWithDefault() async {
+    // TODO(srawlins): Any test which just assigns a function literal to a
+    // variable should be converted to something like an argument, or let
+    // downwards inference work in some other way.
+    // See https://github.com/dart-lang/linter/issues/1099.
     await assertDiagnostics(r'''
 var f = ([String e = '']) => e;
 ''', [
