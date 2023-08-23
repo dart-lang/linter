@@ -5,12 +5,12 @@
 The Dart linter is now developed within the [Dart SDK][] repository,
 and can be found at https://github.com/dart-lang/sdk/tree/main/pkg/linter.
 
-Please open new linter issues on the [dart-lang/sdk repo][issues].
-To contribute, check out the [SDK contribution guide][].
+For now, please continue to file new linter issues on
+this repository. 
+To contribute changes, check out the [SDK contribution guide][].
 
 [Repository has moved]: https://github.com/dart-lang/sdk/tree/main/pkg/linter
 [Dart SDK]: https://github.com/dart-lang/sdk
-[issues]: https://github.com/dart-lang/sdk/issues/new/choose
 [SDK contribution guide]: https://github.com/dart-lang/sdk/blob/main/CONTRIBUTING.md
 
 ---
