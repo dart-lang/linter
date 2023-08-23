@@ -1,5 +1,21 @@
 # Linter for Dart
 
+## [Repository has moved][]
+
+The Dart linter is now developed within the [Dart SDK][] repository,
+and can be found at https://github.com/dart-lang/sdk/tree/main/pkg/linter.
+
+For now, please continue to file new linter issues on
+[this repository][]. 
+To contribute changes, check out the [SDK contribution guide][].
+
+[Repository has moved]: https://github.com/dart-lang/sdk/tree/main/pkg/linter
+[Dart SDK]: https://github.com/dart-lang/sdk
+[this repository]: https://github.com/dart-lang/linter/issues
+[SDK contribution guide]: https://github.com/dart-lang/sdk/blob/main/CONTRIBUTING.md
+
+---
+
 The Dart Linter package defines lint rules that identify and report on "lints" found in Dart code.  Linting is performed by the Dart
 analysis server and the `dart analyze` command in the [Dart command-line tool][dart_cli].
 
