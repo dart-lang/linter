@@ -1,7 +1,7 @@
 Contributing to the Linter
 ==========================
 
-## [Repository has moved][]
+## Repository has moved
 
 The Dart linter is now developed within the [Dart SDK][] repository,
 and can be found at https://github.com/dart-lang/sdk/tree/main/pkg/linter.
