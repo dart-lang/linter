@@ -2,7 +2,7 @@
 name: Lint proposal
 about: Propose a new lint rule or a modification to an existing one.
 title: 'proposal: `<rule_name>`'
-labels: 'lint proposal, status: pending'
+labels: 'lint-proposal, status-pending'
 assignees: ''
 
 ---
