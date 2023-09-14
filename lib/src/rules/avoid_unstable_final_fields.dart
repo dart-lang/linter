@@ -105,7 +105,7 @@ bool _isLocallyStable(Element element) {
       for (var elementAnnotation in metadata) {
         var metadataElement = elementAnnotation.element;
         if (metadataElement is ConstructorElement) {
-          var metadataOwner = metadataElement.declaration.enclosingElement3;
+          var metadataOwner = metadataElement.declaration.enclosingElement;
           if (metadataOwner is ClassElement && metadataOwner.isDartCoreObject) {
             // A declaration with `@Object()` is not considered stable.
             return false;
@@ -166,7 +166,7 @@ abstract class _AbstractVisitor extends ThrowingAstVisitor<void> {
 
   bool _isStable(Element? element) {
     if (element == null) return false; // This would be an error in the program.
-    var enclosingElement = element.enclosingElement3;
+    var enclosingElement = element.enclosingElement;
     if (_isLocallyStable(element)) return true;
     if (element is PropertyAccessorElement) {
       if (element.isStatic) return false;
@@ -630,18 +630,18 @@ class _FieldVisitor extends _AbstractVisitor {
     Name? name;
     InterfaceElement? interfaceElement;
     for (var variable in node.fields.variables) {
-      var declaredElement = variable.declaredElement2;
+      var declaredElement = variable.declaredElement;
       if (declaredElement is FieldElement) {
         // A final instance variable can never violate stability.
         if (declaredElement.isFinal) continue;
         // A non-final instance variable is always a violation of stability.
         // Check if stability is required.
         interfaceElement ??=
-            declaredElement.enclosingElement3 as InterfaceElement;
+            declaredElement.enclosingElement as InterfaceElement;
         libraryUri ??= declaredElement.library.source.uri;
         name ??= Name(libraryUri, declaredElement.name);
         if (_inheritsStability(interfaceElement, name)) {
-          doReportLint(variable.name2);
+          doReportLint(variable.name);
         }
       }
     }
@@ -655,15 +655,15 @@ class _MethodVisitor extends _AbstractVisitor {
   void visitMethodDeclaration(MethodDeclaration node) {
     if (!node.isGetter) return;
     declaration = node;
-    var declaredElement = node.declaredElement2;
+    var declaredElement = node.declaredElement;
     if (declaredElement != null) {
-      var enclosingElement = declaredElement.enclosingElement3;
+      var enclosingElement = declaredElement.enclosingElement;
       if (enclosingElement is InterfaceElement) {
         var libraryUri = declaredElement.library.source.uri;
         var name = Name(libraryUri, declaredElement.name);
         if (!_inheritsStability(enclosingElement, name)) return;
         node.body.accept(this);
-        if (!isStable) doReportLint(node.name2);
+        if (!isStable) doReportLint(node.name);
       } else {
         // Extensions cannot override anything.
       }
