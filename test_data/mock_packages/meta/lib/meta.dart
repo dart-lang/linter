@@ -244,7 +244,7 @@ const _VisibleForOverriding visibleForOverriding = _VisibleForOverriding();
 /// * the annotation is associated with a declaration not in the `lib` folder
 ///   of a package, or a private declaration, or a declaration in an unnamed
 ///   static extension, or
-/// * the declaration is referenced outside of its the defining library or a
+/// * the declaration is referenced outside of the defining library or a
 ///   library which is in the `test` folder of the defining package.
 const _VisibleForTesting visibleForTesting = _VisibleForTesting();
 
