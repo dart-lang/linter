@@ -8,7 +8,7 @@ import 'package:analyzer/dart/element/element.dart';
 
 import '../analyzer.dart';
 
-const _desc = r'Prefer const with constant constructors.';
+const _desc = r'Prefer `const` with constant constructors.';
 
 const _details = r'''
 **PREFER** using `const` for instantiating constant constructors.

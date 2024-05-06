@@ -5,8 +5,8 @@
 import '../analyzer.dart';
 import '../util/unrelated_types_visitor.dart';
 
-const _desc = r'Invocation of Iterable<E>.contains with references of unrelated'
-    r' types.';
+const _desc = r'Invocation of `Iterable<E>.contains` with references of'
+    r' unrelated types.';
 
 const _details = r'''
 **DON'T** invoke `contains` on `Iterable` with an instance of different type
