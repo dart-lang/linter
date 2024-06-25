@@ -1,3 +1,7 @@
+# 1.30.1
+
+- Clearly mark discontinued in readme.
+
 # 1.30.0
 
 - new lint: `enable_null_safety`

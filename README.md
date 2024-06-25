@@ -1,3 +1,7 @@
+# This package is discontinued.
+
+Please see the current source code at https://github.com/dart-lang/sdk/tree/main/pkg/linter
+
 # Linter for Dart
 
 The Dart Linter package defines lint rules that identify and report on "lints" found in Dart code.  Linting is performed by the Dart
